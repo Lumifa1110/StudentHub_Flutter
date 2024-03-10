@@ -2,21 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:studenthub/components/index.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:studenthub/models/index.dart';
-import 'package:studenthub/pages/index.dart';
 
-class StudentProfileInputScreen extends StatefulWidget {
-  const StudentProfileInputScreen({super.key});
+class StudentSelectSkillsetScreen extends StatefulWidget {
+  final List<Skillset> studentSkillsets;
+  final Function(String) addSkillset;
+  final Function(String) removeSkillset;
+
+  const StudentSelectSkillsetScreen({
+    super.key, 
+    required this.studentSkillsets,
+    required this.addSkillset,
+    required this.removeSkillset
+  });
 
   @override
-  State<StudentProfileInputScreen> createState() => _StudentProfileInputScreenState();
+  State<StudentSelectSkillsetScreen> createState() => _StudentSelectSkillsetScreenState();
 }
 
-class _StudentProfileInputScreenState extends State<StudentProfileInputScreen> {
-  // TextField controller
-  final techStackController = TextEditingController();
-
-  late List<Skillset> studentSkillsets;
-
+class _StudentSelectSkillsetScreenState extends State<StudentSelectSkillsetScreen> {
   final List<Skillset> skillsets =  [
     Skillset('AWS'),
     Skillset('ReactJS'),
@@ -28,33 +31,8 @@ class _StudentProfileInputScreenState extends State<StudentProfileInputScreen> {
     Skillset('Git')
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    studentSkillsets = [];
-  }
-
-  void addSkillset(String name) {
-    setState(() {
-      Skillset newSkillset = Skillset(name);
-      studentSkillsets.add(newSkillset);
-    });
-    
-    List<String> skillsetNames = studentSkillsets.map((skillset) => skillset.name).toList();
-    print('${skillsetNames.join(', ')}');
-  }
-
-  void removeSkillset(String name) {
-    setState(() {
-      studentSkillsets.removeWhere((skillset) => skillset.name == name);
-    });
-    
-    List<String> skillsetNames = studentSkillsets.map((skillset) => skillset.name).toList();
-    print('${skillsetNames.join(', ')}');
-  }
-
   bool isSkillsetIncluded(String name) {
-    return studentSkillsets.any((skillset) => skillset.name == name);
+    return widget.studentSkillsets.any((skillset) => skillset.name == name);
   }
 
   @override
@@ -90,49 +68,9 @@ class _StudentProfileInputScreenState extends State<StudentProfileInputScreen> {
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
           child: Column (
             children: [
-              // TEXT: Welcome
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      alignment: Alignment.topCenter,
-                      child: const Text('Welcome to Student Hub!',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold
-                        ),
-                      )
-                    ),
-                  ),
-                ]
-              ),
-              // TEXT: Guidance
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      alignment: Alignment.topCenter,
-                      child: const Text(
-                        'Tell us about yourself and you will be your way connect with real-world projects',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal
-                        ),
-                      )
-                    ),
-                  ),
-                ]
-              ),
               const SizedBox(
                 height: 20,
               ),
-              // TextFields
-              TextFieldWithLabel(label: 'Techstack', controller: techStackController, lineCount: 1),
               // Skillset selection
               Column(
                 children: [
@@ -164,7 +102,7 @@ class _StudentProfileInputScreenState extends State<StudentProfileInputScreen> {
                           child: Wrap(
                             spacing: 8.0, // Adjust the spacing between items
                             runSpacing: 8.0, // Adjust the spacing between lines
-                            children: studentSkillsets.isEmpty
+                            children: widget.studentSkillsets.isEmpty
                               ? [
                                   const SizedBox(
                                     height: 100, // Set your desired height here
@@ -176,11 +114,11 @@ class _StudentProfileInputScreenState extends State<StudentProfileInputScreen> {
                                     ),
                                   ),
                                 ]
-                              : studentSkillsets.map((skillset) {
+                              : widget.studentSkillsets.map((skillset) {
                                   return BoxSkillset(
                                     text: skillset.name,
                                     onDelete: () {
-                                      removeSkillset(skillset.name);
+                                      
                                     },
                                   );
                                 }).toList(),
@@ -192,7 +130,7 @@ class _StudentProfileInputScreenState extends State<StudentProfileInputScreen> {
                 ]
               ),
               Container(
-                height: 300, // Set a specific height,
+                height: 400, // Set a specific height,
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                 ),
@@ -201,8 +139,8 @@ class _StudentProfileInputScreenState extends State<StudentProfileInputScreen> {
                     return ListTileSkillset(
                       itemName: skillset.name,
                       isChecked: isSkillsetIncluded(skillset.name),
-                      addSkillset: addSkillset,
-                      removeSkillset: removeSkillset,
+                      addSkillset: widget.addSkillset,
+                      removeSkillset: widget.removeSkillset,
                     );
                   }
                 ).toList(),
@@ -213,9 +151,9 @@ class _StudentProfileInputScreenState extends State<StudentProfileInputScreen> {
                 alignment: Alignment.bottomRight,
                 margin: const EdgeInsets.only(top: 20),
                 child: ButtonSimple(
-                  label: 'Next', 
+                  label: 'Save', 
                   onPressed: () => {
-                    Navigator.pushNamed(context, '/company/welcome')
+                    Navigator.pushNamed(context, '/student/profile')
                   }
                 ),
               )
