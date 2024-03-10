@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const StudentProfileInputScreen(),
+      home: const StudentProfileInputScreen1(),
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/company':
@@ -28,9 +28,9 @@ class MyApp extends StatelessWidget {
           case '/company/dashboard':
             return MaterialPageRoute(builder: (context) => const CompanyDashboardScreen());
           case '/student':
-            return MaterialPageRoute(builder: (context) => const StudentProfileInputScreen());
-          case '/student/profile':
-            return MaterialPageRoute(builder: (context) => const StudentProfileInputScreen());
+            return MaterialPageRoute(builder: (context) => const StudentProfileInputScreen1());
+          case '/student/profileinput1':
+            return MaterialPageRoute(builder: (context) => const StudentProfileInputScreen1());
           default:
             return null;
         }
