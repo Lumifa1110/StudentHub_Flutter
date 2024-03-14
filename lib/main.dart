@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:studenthub/pages/signin_page.dart';
-import 'package:studenthub/pages/signuptype_page.dart';
+import 'package:studenthub/pages/mock_dashboard_page.dart';
+import 'package:studenthub/pages/mock_message_page.dart';
+import 'package:studenthub/pages/project_list_page.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -11,13 +12,18 @@ void main() {
 }
 
 class StudentHub extends StatelessWidget {
-  const StudentHub({super.key});
+  const StudentHub({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SigninPage(),
+      initialRoute: '/list',
+      routes: {
+        '/list': (context) => ProjectListPage(),
+        '/dashboard': (context) => MockDashboardPage(),
+        '/message': (context) => MessagePage(),
+      },
     );
   }
 }

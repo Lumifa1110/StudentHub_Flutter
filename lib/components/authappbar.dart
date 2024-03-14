@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:studenthub/utils/colors.dart';
 
 class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const AuthAppBar({Key? key}) : super(key: key);
+  const AuthAppBar({super.key});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
