@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import  'pages/index.dart';
 
 void main() {
-  runApp(const MyApp());
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.blue,
+  ));
+  runApp(const StudentHub());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class StudentHub extends StatelessWidget {
+  const StudentHub({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,3 +41,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
