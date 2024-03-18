@@ -2,42 +2,104 @@ import 'package:flutter/material.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/mock_data.dart';
 
-class CustomProjectItem extends StatelessWidget {
+class CustomProjectItem extends StatefulWidget {
   final Project project;
   final VoidCallback onTap;
+  final bool isFavorite; // New parameter
+  final Function(bool) onFavoriteToggle;
 
   const CustomProjectItem({
     Key? key,
     required this.project,
     required this.onTap,
+    required this.isFavorite,
+    required this.onFavoriteToggle,
   }) : super(key: key);
 
   @override
+  State<CustomProjectItem> createState() => _CustomProjectItemState();
+}
+
+class _CustomProjectItemState extends State<CustomProjectItem> {
+  late bool isFavorite; // Declare isFavorite as instance variable
+
+  @override
+  void initState() {
+    super.initState();
+    isFavorite = widget.isFavorite; // Set initial favorite status
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.only(top: 10),
-        decoration: const BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: blackTextColor, // Set the color of the border
-              width: 2.0, // Set the width of the border
+    return Container(
+      height: 164,
+      child: Stack(
+        children: [
+          const Divider(
+            color: blackTextColor,
+            thickness: 2.0,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            child: InkWell(
+              onTap: widget.onTap,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: Text(
+                      widget.project.timeCreated,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Flexible(
+                    child: Text(
+                      widget.project.titleOfJob,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Flexible(
+                    child: Text(
+                      '${widget.project.projectScope}, ${widget.project.requireStudents} needed',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Flexible(
+                    flex: 2,
+                    child: Text(
+                      widget.project.studentGain,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Flexible(
+                    child: Text(
+                      widget.project.numOfProposals,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(project.timeCreated),
-            Text(project.titleOfJob),
-            Text('${project.projectScope}, ${project.requireStudents} needed'),
-            Text(project.studentGain),
-            Text(project.numOfProposals),
-          ],
-        ),
+          Positioned(
+            top: 20,
+            right: 0,
+            child: IconButton(
+              onPressed: () {
+                setState(() {
+                  isFavorite = !isFavorite;
+                });
+                widget.onFavoriteToggle(isFavorite);
+              },
+              icon: Icon(
+                isFavorite ? Icons.favorite : Icons.favorite_border,
+                size: 30,
+              ),
+              color: mainColor,
+            ),
+          ),
+        ],
       ),
     );
   }

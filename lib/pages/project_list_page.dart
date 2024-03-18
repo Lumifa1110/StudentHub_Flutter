@@ -4,6 +4,7 @@ import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/components/customprojectitem.dart';
 import 'package:studenthub/components/searchbar.dart';
+import 'package:studenthub/pages/favorite_projects_page.dart';
 import 'package:studenthub/utils/colors.dart';
 
 import 'package:studenthub/utils/mock_data.dart';
@@ -17,6 +18,27 @@ class ProjectListPage extends StatefulWidget {
 
 class _ProjectListPageState extends State<ProjectListPage> {
   String searchQuery = '';
+  List<Project> myFavoriteProjects = [];
+
+  void removeFromFavorites(Project project) {
+    print(project.projectId);
+    setState(() {
+      myFavoriteProjects.remove(project);
+    });
+    print(myFavoriteProjects);
+  }
+
+  void updateFavoriteStatus(Project project, bool isFavorite) {
+    print(project.projectId);
+    setState(() {
+      if (isFavorite) {
+        myFavoriteProjects.add(project);
+      } else {
+        myFavoriteProjects.remove(project);
+      }
+    });
+    print(myFavoriteProjects);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +69,19 @@ class _ProjectListPageState extends State<ProjectListPage> {
                     ),
                     child: Center(
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FavoriteProjectsPage(
+                                favoriteList: myFavoriteProjects,
+                                onRemoveProject: (project) {
+                                  updateFavoriteStatus(project, false);
+                                },
+                              ),
+                            ),
+                          );
+                        },
                         icon: const FaIcon(
                           FontAwesomeIcons.solidHeart,
                           color: whiteTextColor,
@@ -57,6 +91,9 @@ class _ProjectListPageState extends State<ProjectListPage> {
                   ),
                 ],
               ),
+            ),
+            const SizedBox(
+              height: 10,
             ),
             Expanded(
               child: Padding(
@@ -69,8 +106,15 @@ class _ProjectListPageState extends State<ProjectListPage> {
                     return CustomProjectItem(
                       project: project,
                       onTap: () {
-                        // Handle onTap action for the project
-                        // For example, navigate to a project detail page
+                        Navigator.pushNamed(
+                          context,
+                          '/detail',
+                          arguments: project.projectId,
+                        );
+                      },
+                      isFavorite: myFavoriteProjects.contains(project),
+                      onFavoriteToggle: (isFavorite) {
+                        updateFavoriteStatus(project, isFavorite);
                       },
                     );
                   },
