@@ -37,8 +37,8 @@ List<Project> mockProjects = [
   ),
   Project(
     projectId: '00000002',
-    titleOfJob: 'Mobile App Development',
-    projectDetail: 'Develop a mobile app for task management',
+    titleOfJob: 'Wed App Development',
+    projectDetail: 'Develop a web app for task management',
     studentGain:
         'Student looking for:\n\t\t\t\t\t\t-clear expectation about your project or deliverable\n\t\t\t\t\t\t-the skill required for your project',
     projectScope: '3 to 6 months',
@@ -49,8 +49,8 @@ List<Project> mockProjects = [
   ),
   Project(
     projectId: '00000003',
-    titleOfJob: 'Mobile App Development',
-    projectDetail: 'Develop a mobile app for task management',
+    titleOfJob: 'Database Development',
+    projectDetail: 'Develop a database for task management',
     studentGain:
         'Student looking for:\t\n- clear expectation about your project or deliverable\t\n- the skill required for your project',
     projectScope: '3 to 6 months',

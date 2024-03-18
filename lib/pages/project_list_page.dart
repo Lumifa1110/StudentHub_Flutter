@@ -3,8 +3,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/components/customprojectitem.dart';
-import 'package:studenthub/components/searchbar.dart';
+import 'package:studenthub/components/customsearchbar.dart';
 import 'package:studenthub/pages/favorite_projects_page.dart';
+import 'package:studenthub/pages/search_list_page.dart';
 import 'package:studenthub/utils/colors.dart';
 
 import 'package:studenthub/utils/mock_data.dart';
@@ -21,15 +22,12 @@ class _ProjectListPageState extends State<ProjectListPage> {
   List<Project> myFavoriteProjects = [];
 
   void removeFromFavorites(Project project) {
-    print(project.projectId);
     setState(() {
       myFavoriteProjects.remove(project);
     });
-    print(myFavoriteProjects);
   }
 
   void updateFavoriteStatus(Project project, bool isFavorite) {
-    print(project.projectId);
     setState(() {
       if (isFavorite) {
         myFavoriteProjects.add(project);
@@ -37,7 +35,20 @@ class _ProjectListPageState extends State<ProjectListPage> {
         myFavoriteProjects.remove(project);
       }
     });
-    print(myFavoriteProjects);
+  }
+
+  void handleSearchSubmitted(String query) {
+    setState(() {
+      searchQuery = query;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SearchListPage(
+            seachQuery: searchQuery,
+          ),
+        ),
+      );
+    });
   }
 
   @override
@@ -59,6 +70,7 @@ class _ProjectListPageState extends State<ProjectListPage> {
                     onChanged: (query) => setState(
                       () => searchQuery = query.toLowerCase(),
                     ),
+                    onSubmitted: handleSearchSubmitted,
                   ),
                   Container(
                     width: 40,

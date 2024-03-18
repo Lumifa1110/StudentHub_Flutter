@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/mock_data.dart';
 
 class ProjectDetailPage extends StatelessWidget {
-  const ProjectDetailPage({Key? key}) : super(key: key);
+  const ProjectDetailPage({super.key});
 
   @override
   Widget build(BuildContext context) {

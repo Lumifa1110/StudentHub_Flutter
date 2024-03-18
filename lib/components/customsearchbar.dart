@@ -3,8 +3,13 @@ import 'package:studenthub/utils/colors.dart';
 
 class CustomSearchBar extends StatefulWidget {
   final Function(String z) onChanged;
+  final Function(String z) onSubmitted;
 
-  const CustomSearchBar({Key? key, required this.onChanged}) : super(key: key);
+  const CustomSearchBar({
+    Key? key,
+    required this.onChanged,
+    required this.onSubmitted,
+  }) : super(key: key);
 
   @override
   State<CustomSearchBar> createState() => _CustomSearchBarState();
@@ -25,7 +30,6 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             final double appBarHeight = AppBar().preferredSize.height;
             final double bottomSheetHeight = screenHeight - appBarHeight - 50;
             return Container(
-              // Customize the bottom sheet content as needed
               height: bottomSheetHeight,
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -69,17 +73,17 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                     decoration: BoxDecoration(
                       color: whiteTextColor,
                       borderRadius: BorderRadius.circular(30),
-                      border: Border.all(
-                          color: blackTextColor, width: 2.0), // Add border
+                      border: Border.all(color: blackTextColor, width: 2.0),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.search), // Prefix icon
+                        const Icon(Icons.search),
                         Expanded(
                           child: TextField(
                             textAlignVertical: TextAlignVertical.center,
                             controller: _searchController,
                             onChanged: widget.onChanged,
+                            onSubmitted: widget.onSubmitted,
                             style: const TextStyle(
                               color: blackTextColor,
                             ),
@@ -102,7 +106,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                       ],
                     ),
                   ),
-                  // Add your search results here
+                  // Add search results here
                 ],
               ),
             );
