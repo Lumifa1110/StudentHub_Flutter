@@ -19,7 +19,7 @@ class ProjectDetailPage extends StatelessWidget {
       }
     }
     return Scaffold(
-        appBar: const AuthAppBar(),
+        appBar: const AuthAppBar(canBack: false),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),

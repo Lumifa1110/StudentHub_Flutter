@@ -8,7 +8,7 @@ class MockDashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      appBar: AuthAppBar(),
+      appBar: AuthAppBar(canBack: false),
       body: Column(
         children: [
           Text('This is fake Dashboard'),

@@ -3,6 +3,8 @@ import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/components/customprojectitem.dart';
 import 'package:studenthub/components/customsearchbar.dart';
+import 'package:studenthub/components/radiolist_projectlength.dart';
+import 'package:studenthub/components/textfield_label.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/mock_data.dart';
 
@@ -22,6 +24,7 @@ class _SearchListPageState extends State<SearchListPage> {
   String searchQuery = '';
   List<Project> myFavoriteProjects = [];
   List<Project> filteredProjects = [];
+  String? selectedProjectLength = 'less than one';
 
   @override
   void initState() {
@@ -43,12 +46,9 @@ class _SearchListPageState extends State<SearchListPage> {
   void filterProjects(String query) {
     print(query);
     setState(() {
-      // Update the searchQuery
       searchQuery = query.toLowerCase();
 
-      // Filter the projects based on searchQuery
       if (searchQuery.isNotEmpty) {
-        // If searchQuery is not empty, filter projects
         filteredProjects = mockProjects.where((project) {
           return project.titleOfJob.toLowerCase().contains(searchQuery) ||
               project.projectDetail.toLowerCase().contains(searchQuery);
@@ -57,19 +57,24 @@ class _SearchListPageState extends State<SearchListPage> {
         // If searchQuery is empty, display all projects
         filteredProjects = List.from(mockProjects);
       }
+      Navigator.pop(context);
     });
   }
 
   final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _studentsNeededController =
+      TextEditingController();
+  final TextEditingController _proposalsController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: const AuthAppBar(),
+        appBar: const AuthAppBar(canBack: true),
         body: Column(
           children: [
             const SizedBox(
-              height: 25,
+              height: 20,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -115,31 +120,142 @@ class _SearchListPageState extends State<SearchListPage> {
                                           MainAxisAlignment.start,
                                       children: [
                                         Container(
-                                          height: 36,
-                                          width: 36,
+                                          height: 30,
+                                          width: 30,
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             color: whiteTextColor,
                                             border: Border.all(
                                               color: blackTextColor,
-                                              width: 1.0,
+                                              width: 2.0,
                                             ),
                                           ),
                                           child: IconButton(
+                                            padding: EdgeInsets.zero,
                                             onPressed: () {
                                               Navigator.pop(context);
                                             },
-                                            icon: const Icon(
-                                              Icons.close,
-                                              size: 20,
+                                            icon: const Center(
+                                              child: Icon(
+                                                Icons.close,
+                                                size: 18,
+                                                color: blackTextColor,
+                                                weight: 5.0,
+                                              ),
                                             ),
-                                            color: blackTextColor,
                                           ),
                                         ),
                                       ],
                                     ),
-
-                                    // Add search results here
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    const Text(
+                                      'Filter by',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: blackTextColor,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    const Divider(
+                                      height: 1.0,
+                                      thickness: 2.0,
+                                      color: blackTextColor,
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    const Text(
+                                      'Project length',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                          color: blackTextColor),
+                                    ),
+                                    RadioListProjectLength(
+                                      selectedLength:
+                                          selectedProjectLength, // Pass selected length here
+                                      onTypeSelected: (value) {
+                                        setState(() {
+                                          selectedProjectLength = value;
+                                        });
+                                      },
+                                    ),
+                                    TextFieldWithLabel(
+                                        label: 'Students needed',
+                                        controller: _studentsNeededController,
+                                        lineCount: 1),
+                                    TextFieldWithLabel(
+                                        label: 'Proposals less than',
+                                        controller: _proposalsController,
+                                        lineCount: 1),
+                                    const Spacer(),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          width: 180,
+                                          height: 40,
+                                          padding: const EdgeInsets.all(0),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: blackTextColor,
+                                                width: 2.0),
+                                            color: whiteTextColor,
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                color: blackTextColor,
+                                                offset: Offset(2, 3),
+                                              ),
+                                            ],
+                                          ),
+                                          child: TextButton(
+                                            onPressed: () {},
+                                            child: const Text(
+                                              'Clear filters',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: blackTextColor,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: 180,
+                                          height: 40,
+                                          padding: const EdgeInsets.all(0),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: blackTextColor,
+                                                width: 2.0),
+                                            color: whiteTextColor,
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                color: blackTextColor,
+                                                offset: Offset(2, 3),
+                                              ),
+                                            ],
+                                          ),
+                                          child: TextButton(
+                                            onPressed: () {},
+                                            child: const Text(
+                                              'Apply',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: blackTextColor,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ],
                                 ),
                               );

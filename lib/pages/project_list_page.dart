@@ -55,11 +55,11 @@ class _ProjectListPageState extends State<ProjectListPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: const AuthAppBar(),
+        appBar: const AuthAppBar(canBack: false),
         body: Column(
           children: [
             const SizedBox(
-              height: 25,
+              height: 20,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),

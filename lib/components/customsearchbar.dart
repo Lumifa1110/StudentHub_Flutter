@@ -40,24 +40,22 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        height: 36,
-                        width: 36,
+                        height: 30,
+                        width: 30,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: whiteTextColor,
                           border: Border.all(
                             color: blackTextColor,
-                            width: 1.0,
+                            width: 2.0,
                           ),
                         ),
                         child: IconButton(
+                          padding: EdgeInsets.zero,
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          icon: const Icon(
-                            Icons.close,
-                            size: 20,
-                          ),
+                          icon: const Icon(Icons.close, size: 18),
                           color: blackTextColor,
                         ),
                       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/components/customprojectitem.dart';
 import 'package:studenthub/utils/colors.dart';
@@ -25,43 +26,7 @@ class FavoriteProjectsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 5.0,
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Color(0xFF4169E1),
-          ),
-          backgroundColor: mainColor,
-          title: const Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Student',
-                style: TextStyle(
-                  color: whiteTextColor,
-                  fontSize: 26,
-                ),
-              ),
-              Text(
-                'Hub',
-                style: TextStyle(
-                  color: blackTextColor,
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.person,
-                size: 26,
-                color: blackTextColor,
-              ),
-            )
-          ],
-        ),
+        appBar: const AuthAppBar(canBack: true),
         body: favoriteList.isEmpty
             ? const Center(
                 child: Text(
