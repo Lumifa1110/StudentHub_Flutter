@@ -28,7 +28,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
           builder: (BuildContext context) {
             final double screenHeight = MediaQuery.of(context).size.height;
             final double appBarHeight = AppBar().preferredSize.height;
-            final double bottomSheetHeight = screenHeight - appBarHeight - 50;
+            final double bottomSheetHeight = screenHeight - appBarHeight - 40;
             return Container(
               height: bottomSheetHeight,
               padding: const EdgeInsets.all(16),

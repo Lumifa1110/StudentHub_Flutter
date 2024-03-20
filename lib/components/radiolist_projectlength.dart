@@ -1,28 +1,27 @@
-// radio_list_types.dart
 import 'package:flutter/material.dart';
 import 'package:studenthub/utils/colors.dart';
 
 class RadioListProjectLength extends StatefulWidget {
   final String? selectedLength;
-  final Function(String) onTypeSelected;
+  final Function(String) onLengthSelected;
 
   const RadioListProjectLength({
-    Key? key, // Changed super.key to Key? key
+    Key? key,
     required this.selectedLength,
-    required this.onTypeSelected,
-  });
+    required this.onLengthSelected,
+  }) : super(key: key);
 
   @override
   State<RadioListProjectLength> createState() => _RadioListProjectLengthState();
 }
 
 class _RadioListProjectLengthState extends State<RadioListProjectLength> {
-  String? _selectedLength; // Remove initialization here
+  String? _selectedLength;
 
   @override
   void initState() {
     super.initState();
-    _selectedLength = widget.selectedLength; // Initialize _selectedLength here
+    _selectedLength = widget.selectedLength;
   }
 
   @override
@@ -30,67 +29,40 @@ class _RadioListProjectLengthState extends State<RadioListProjectLength> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        RadioListTile(
-          title: const Text(
-            "Less than 1 month",
-            style: TextStyle(color: blackTextColor),
-          ),
-          value: 'less than one',
-          contentPadding: EdgeInsets.zero,
-          groupValue: _selectedLength,
-          onChanged: (value) {
-            setState(() {
-              _selectedLength = value as String?;
-            });
-            widget.onTypeSelected(value as String);
-          },
-        ),
-        RadioListTile(
-          title: const Text(
-            '1 to 3 months',
-            style: TextStyle(color: blackTextColor),
-          ),
-          value: 'one to three',
-          contentPadding: EdgeInsets.zero,
-          groupValue: _selectedLength,
-          onChanged: (value) {
-            setState(() {
-              _selectedLength = value as String?;
-            });
-            widget.onTypeSelected(value as String);
-          },
-        ),
-        RadioListTile(
-          title: const Text(
-            '3 to 6 months',
-            style: TextStyle(color: blackTextColor),
-          ),
-          value: 'three to six',
-          contentPadding: EdgeInsets.zero,
-          groupValue: _selectedLength,
-          onChanged: (value) {
-            setState(() {
-              _selectedLength = value as String?;
-            });
-            widget.onTypeSelected(value as String);
-          },
-        ),
-        RadioListTile(
-          title: const Text(
-            'More than 6 months',
-            style: TextStyle(color: blackTextColor),
-          ),
-          value: 'more than six',
-          contentPadding: EdgeInsets.zero,
-          groupValue: _selectedLength,
-          onChanged: (value) {
-            setState(() {
-              _selectedLength = value as String?;
-            });
-            widget.onTypeSelected(value as String);
-          },
-        ),
+        buildRadioItem('less than one', 'Less than 1 month'),
+        buildRadioItem('one to three', '1 to 3 months'),
+        buildRadioItem('three to six', '3 to 6 months'),
+        buildRadioItem('more than six', 'More than 6 months'),
       ],
+    );
+  }
+
+  Widget buildRadioItem(String value, String label) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _selectedLength = value;
+        });
+        widget.onLengthSelected(value);
+      },
+      child: Row(
+        children: [
+          Radio(
+            value: value,
+            groupValue: _selectedLength,
+            onChanged: (newValue) {
+              setState(() {
+                _selectedLength = newValue as String?;
+              });
+              widget.onLengthSelected(newValue as String);
+            },
+          ),
+          Text(
+            label,
+            style: TextStyle(color: blackTextColor, fontSize: 16),
+          ),
+        ],
+      ),
     );
   }
 }
