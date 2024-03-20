@@ -71,8 +71,6 @@ class _SearchListPageState extends State<SearchListPage> {
     return SafeArea(
       child: Scaffold(
         appBar: const AuthAppBar(canBack: true),
-        resizeToAvoidBottomInset:
-            true, // Set to true to resize the Scaffold to avoid bottom insets (keyboard)
         body: Column(
           children: [
             const SizedBox(
@@ -172,6 +170,16 @@ class _SearchListPageState extends State<SearchListPage> {
                                         thickness: 2.0,
                                         color: blackTextColor,
                                       ),
+                                      TextFieldWithLabel(
+                                        label: 'Students needed',
+                                        controller: _studentsNeededController,
+                                        lineCount: 1,
+                                      ),
+                                      TextFieldWithLabel(
+                                        label: 'Proposals less than',
+                                        controller: _proposalsController,
+                                        lineCount: 1,
+                                      ),
                                       const SizedBox(
                                         height: 20,
                                       ),
@@ -190,14 +198,6 @@ class _SearchListPageState extends State<SearchListPage> {
                                           });
                                         },
                                       ),
-                                      TextFieldWithLabel(
-                                          label: 'Students needed',
-                                          controller: _studentsNeededController,
-                                          lineCount: 1),
-                                      TextFieldWithLabel(
-                                          label: 'Proposals less than',
-                                          controller: _proposalsController,
-                                          lineCount: 1),
                                       const Spacer(),
                                       Row(
                                         crossAxisAlignment:
