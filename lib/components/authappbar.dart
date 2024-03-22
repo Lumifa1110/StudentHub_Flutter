@@ -4,10 +4,12 @@ import 'package:studenthub/utils/colors.dart';
 
 class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool canBack;
+  final String? title; // Remove const here
 
   const AuthAppBar({
-    super.key,
+    Key? key, // Add Key? key here
     required this.canBack,
+    this.title,
   });
 
   @override
@@ -22,26 +24,28 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
         statusBarColor: Color(0xFF4169E1),
       ),
       backgroundColor: mainColor,
-      title: const Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            'Student',
-            style: TextStyle(
-              color: whiteTextColor,
-              fontSize: 26,
+      title: title != null
+          ? Text(title!)
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Student',
+                  style: TextStyle(
+                    color: whiteTextColor,
+                    fontSize: 26,
+                  ),
+                ),
+                Text(
+                  'Hub',
+                  style: TextStyle(
+                    color: blackTextColor,
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-          ),
-          Text(
-            'Hub',
-            style: TextStyle(
-              color: blackTextColor,
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
       actions: [
         IconButton(
           onPressed: () {},
