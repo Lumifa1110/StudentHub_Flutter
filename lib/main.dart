@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:studenthub/data/test/data_project.dart';
-import 'package:studenthub/pages/company_review_proposal/project_proposal_list.dart';
 import  'pages/index.dart';
 
 void main() {
@@ -37,6 +35,8 @@ class StudentHub extends StatelessWidget {
             return MaterialPageRoute(builder: (context) => const StudentProfileInputScreen1());
           case '/student/profileinput1':
             return MaterialPageRoute(builder: (context) => const StudentProfileInputScreen1());
+          case '/chatter':
+            return MaterialPageRoute(builder: (context) => const ChatScreen());
           default:
             return null;
         }
