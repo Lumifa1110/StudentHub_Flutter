@@ -20,7 +20,7 @@ class StudentHub extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const StudentProfileInputScreen1(),
+      home: ProjectProposalListScreen(project: dataProject[0]),
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/company':
