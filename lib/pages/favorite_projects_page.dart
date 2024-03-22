@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/components/customprojectitem.dart';
-import 'package:studenthub/utils/colors.dart';
+
 import 'package:studenthub/utils/mock_data.dart';
 
 class FavoriteProjectsPage extends StatelessWidget {

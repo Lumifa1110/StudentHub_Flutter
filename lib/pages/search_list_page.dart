@@ -173,12 +173,10 @@ class _SearchListPageState extends State<SearchListPage> {
                                       TextFieldWithLabel(
                                         label: 'Students needed',
                                         controller: _studentsNeededController,
-                                        lineCount: 1,
                                       ),
                                       TextFieldWithLabel(
                                         label: 'Proposals less than',
                                         controller: _proposalsController,
-                                        lineCount: 1,
                                       ),
                                       const SizedBox(
                                         height: 20,
