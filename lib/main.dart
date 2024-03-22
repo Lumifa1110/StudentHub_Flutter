@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:studenthub/pages/mock_dashboard_page.dart';
 import 'package:studenthub/pages/mock_message_page.dart';
+import 'package:studenthub/pages/notification_page.dart';
 import 'package:studenthub/pages/project_detail_page.dart';
 import 'package:studenthub/pages/project_list_page.dart';
 
@@ -25,6 +26,7 @@ class StudentHub extends StatelessWidget {
         '/dashboard': (context) => MockDashboardPage(),
         '/message': (context) => MessagePage(),
         '/detail': (context) => ProjectDetailPage(),
+        '/notification': (context) => NotificationPage(),
       },
     );
   }
