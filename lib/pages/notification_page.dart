@@ -121,6 +121,13 @@ class NotificationPage extends StatelessWidget {
                             ),
                             child: TextButton(
                               onPressed: () {},
+                              style: ButtonStyle(
+                                shape:
+                                    MaterialStateProperty.all<OutlinedBorder>(
+                                  const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.zero),
+                                ),
+                              ),
                               child: const Text(
                                 'Join',
                                 style: TextStyle(
@@ -197,6 +204,13 @@ class NotificationPage extends StatelessWidget {
                             ),
                             child: TextButton(
                               onPressed: () {},
+                              style: ButtonStyle(
+                                shape:
+                                    MaterialStateProperty.all<OutlinedBorder>(
+                                  const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.zero),
+                                ),
+                              ),
                               child: const Text(
                                 'View offer',
                                 style: TextStyle(

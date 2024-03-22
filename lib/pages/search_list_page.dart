@@ -223,6 +223,14 @@ class _SearchListPageState extends State<SearchListPage> {
                                             ),
                                             child: TextButton(
                                               onPressed: () {},
+                                              style: ButtonStyle(
+                                                shape: MaterialStateProperty
+                                                    .all<OutlinedBorder>(
+                                                  const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.zero),
+                                                ),
+                                              ),
                                               child: const Text(
                                                 'Clear filters',
                                                 style: TextStyle(
@@ -250,6 +258,14 @@ class _SearchListPageState extends State<SearchListPage> {
                                             ),
                                             child: TextButton(
                                               onPressed: () {},
+                                              style: ButtonStyle(
+                                                shape: MaterialStateProperty
+                                                    .all<OutlinedBorder>(
+                                                  const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.zero),
+                                                ),
+                                              ),
                                               child: const Text(
                                                 'Apply',
                                                 style: TextStyle(
