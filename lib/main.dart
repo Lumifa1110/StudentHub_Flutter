@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:studenthub/data/test/data_project.dart';
+import 'package:studenthub/pages/company_review_proposal/project_proposal_list.dart';
+import 'pages/chat_flow/index.dart';
 import  'pages/index.dart';
 
 void main() {
@@ -20,7 +23,7 @@ class StudentHub extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: ProjectProposalListScreen(project: dataProject[0]),
+      home: ChatScreen(),
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/company':
