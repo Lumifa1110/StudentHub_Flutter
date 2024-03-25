@@ -18,15 +18,28 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      leading: canBack
+          ? IconButton(
+              icon: const Icon(Icons.chevron_left, color: whiteTextColor),
+              onPressed: () => Navigator.of(context).pop(),
+            )
+          : null,
       elevation: 5.0,
-      automaticallyImplyLeading: canBack,
+      // automaticallyImplyLeading: canBack,
       systemOverlayStyle: const SystemUiOverlayStyle(
         statusBarColor: Color(0xFF4169E1),
       ),
       backgroundColor: mainColor,
       title: title != null
-          ? Text(title!)
-          : Row(
+          ? Text(
+              title!,
+              style: const TextStyle(
+                color: whiteTextColor,
+                fontSize: 26,
+                fontWeight: FontWeight.w600,
+              ),
+            )
+          : const Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
