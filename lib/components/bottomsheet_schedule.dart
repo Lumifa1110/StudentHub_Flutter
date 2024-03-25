@@ -99,12 +99,13 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
                   ),
                 ),
               ),
-              const SizedBox(width: 10), // Add some space between widgets
+              const SizedBox(width: 10),
               IconButton(
                 onPressed: () => _selectDate(context, true),
                 icon: const FaIcon(FontAwesomeIcons.calendarDays),
               ),
-              const SizedBox(width: 10), // Add some space between widgets
+              const SizedBox(width: 10),
+              // Display time
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -114,7 +115,20 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
                 ),
                 width: 80,
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () async {
+                    final TimeOfDay? timeOfDay = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay(
+                          hour: _startDate.hour, minute: _startDate.minute),
+                    );
+                    if (timeOfDay != null) {
+                      setState(() {
+                        _startDate = DateTime(_startDate.year, _startDate.month,
+                            _startDate.day, timeOfDay.hour, timeOfDay.minute);
+                        validateDate(_startDate, _endDate);
+                      });
+                    }
+                  },
                   child: Text(
                     "${_startDate.hour}:${_startDate.minute}",
                     style: const TextStyle(
@@ -123,7 +137,6 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
                   ),
                 ),
               ),
-
               const SizedBox(width: 30),
             ],
           ),
@@ -168,12 +181,12 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
                   ),
                 ),
               ),
-              const SizedBox(width: 10), // Add some space between widgets
+              const SizedBox(width: 10),
               IconButton(
                 onPressed: () => _selectDate(context, false),
                 icon: const FaIcon(FontAwesomeIcons.calendarDays),
               ),
-              const SizedBox(width: 10), // Add some space between widgets
+              const SizedBox(width: 10),
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -183,7 +196,20 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
                 ),
                 width: 80,
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () async {
+                    final TimeOfDay? timeOfDay = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay(
+                          hour: _endDate.hour, minute: _endDate.minute),
+                    );
+                    if (timeOfDay != null) {
+                      setState(() {
+                        _endDate = DateTime(_endDate.year, _endDate.month,
+                            _endDate.day, timeOfDay.hour, timeOfDay.minute);
+                        validateDate(_startDate, _endDate);
+                      });
+                    }
+                  },
                   child: Text(
                     "${_endDate.hour}:${_endDate.minute}",
                     style: const TextStyle(
