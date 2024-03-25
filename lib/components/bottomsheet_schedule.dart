@@ -80,22 +80,25 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
                   border: Border.all(color: blackTextColor),
                   borderRadius: BorderRadius.circular(4),
                 ),
-                child: InputDecorator(
-                  decoration: const InputDecoration(
-                    isDense: true,
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "${_startDate.day}/${_startDate.month}/${_startDate.year}",
-                        style: const TextStyle(
-                          fontSize: 16,
+                child: InkWell(
+                  onTap: () => _selectDate(context, true),
+                  child: InputDecorator(
+                    decoration: const InputDecoration(
+                      isDense: true,
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "${_startDate.day}/${_startDate.month}/${_startDate.year}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -162,22 +165,25 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
                   border: Border.all(color: blackTextColor),
                   borderRadius: BorderRadius.circular(4),
                 ),
-                child: InputDecorator(
-                  decoration: const InputDecoration(
-                    isDense: true,
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "${_endDate.day}/${_endDate.month}/${_endDate.year}",
-                        style: const TextStyle(
-                          fontSize: 16,
+                child: InkWell(
+                  onTap: () => _selectDate(context, false),
+                  child: InputDecorator(
+                    decoration: const InputDecoration(
+                      isDense: true,
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "${_endDate.day}/${_endDate.month}/${_endDate.year}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
