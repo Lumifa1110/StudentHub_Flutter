@@ -8,9 +8,9 @@ class SignupInfoPage extends StatefulWidget {
   final AccountTypes selectedType;
 
   const SignupInfoPage({
-    Key? key,
+    super.key,
     required this.selectedType,
-  }) : super(key: key);
+  });
 
   @override
   State<SignupInfoPage> createState() => _SignupInfoPageState();
@@ -23,9 +23,8 @@ class _SignupInfoPageState extends State<SignupInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: const AuthAppBar(
-        canBack: false,
+        canBack: true,
       ),
       body: Center(
         child: Column(

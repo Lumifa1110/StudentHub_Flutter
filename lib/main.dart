@@ -5,6 +5,9 @@ import 'package:studenthub/components/radiolisttypes.dart';
 import 'package:studenthub/pages/chat_flow/chat_screen.dart';
 // import 'package:studenthub/pages/company_review_proposal/project_proposal_list.dart';
 import 'package:studenthub/pages/home_page.dart';
+import 'package:studenthub/pages/mock_message_page.dart';
+import 'package:studenthub/pages/project_detail_page.dart';
+import 'package:studenthub/pages/project_list_page.dart';
 import 'package:studenthub/pages/signin_page.dart';
 import 'package:studenthub/pages/signupinfo_page.dart';
 import 'package:studenthub/pages/signuptype_page.dart';
@@ -28,7 +31,7 @@ class StudentHub extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HomePage(),
+      home: ProjectListPage(),
       initialRoute: '/',
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
@@ -58,12 +61,12 @@ class StudentHub extends StatelessWidget {
           case '/signup/step1':
             return MaterialPageRoute(
                 builder: (context) => const SignupTypePage());
-          case '/signup/step2':
-            MaterialPageRoute(builder: (context, {arguments}) {
-              // Extract the type parameter from the arguments
-              final AccountTypes type = AccountTypes.company;
-              return SignupInfoPage(selectedType: type);
-            });
+          case '/list':
+            return MaterialPageRoute(builder: (context) => ProjectListPage());
+          case '/message':
+            return MaterialPageRoute(builder: (context) => MessagePage());
+          case '/detail':
+            return MaterialPageRoute(builder: (context) => ProjectDetailPage());
           default:
             return null;
         }
