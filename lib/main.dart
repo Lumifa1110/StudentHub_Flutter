@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:studenthub/components/radiolisttypes.dart';
+
 // import 'package:studenthub/data/test/data_project.dart';
 import 'package:studenthub/pages/chat_flow/chat_screen.dart';
 // import 'package:studenthub/pages/company_review_proposal/project_proposal_list.dart';
-import 'package:studenthub/pages/home_page.dart';
+
 import 'package:studenthub/pages/mock_message_page.dart';
 import 'package:studenthub/pages/project_detail_page.dart';
 import 'package:studenthub/pages/project_list_page.dart';
 import 'package:studenthub/pages/signin_page.dart';
-import 'package:studenthub/pages/signupinfo_page.dart';
+// import 'package:studenthub/pages/signupinfo_page.dart';
 import 'package:studenthub/pages/signuptype_page.dart';
 import 'pages/index.dart';
 
@@ -62,11 +62,11 @@ class StudentHub extends StatelessWidget {
             return MaterialPageRoute(
                 builder: (context) => const SignupTypePage());
           case '/list':
-            return MaterialPageRoute(builder: (context) => ProjectListPage());
+            return MaterialPageRoute(
+                builder: (context) => const ProjectListPage());
           case '/message':
-            return MaterialPageRoute(builder: (context) => MessagePage());
-          case '/detail':
-            return MaterialPageRoute(builder: (context) => ProjectDetailPage());
+            return MaterialPageRoute(builder: (context) => const MessagePage());
+
           default:
             return null;
         }

@@ -5,6 +5,7 @@ import 'package:studenthub/components/customprojectitem.dart';
 import 'package:studenthub/components/bottomsheet_customsearchbar.dart';
 import 'package:studenthub/components/radiolist_projectlength.dart';
 import 'package:studenthub/components/textfield_label_v2.dart';
+import 'package:studenthub/pages/project_detail_page.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/mock_data.dart';
 
@@ -309,10 +310,12 @@ class _SearchListPageState extends State<SearchListPage> {
                     return CustomProjectItem(
                       project: project,
                       onTap: () {
-                        Navigator.pushNamed(
+                        Navigator.push(
                           context,
-                          '/detail',
-                          arguments: project.projectId,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ProjectDetailPage(itemId: project.projectId),
+                          ),
                         );
                       },
                       isFavorite: myFavoriteProjects.contains(project),

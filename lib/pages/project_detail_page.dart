@@ -5,19 +5,23 @@ import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/mock_data.dart';
 
 class ProjectDetailPage extends StatelessWidget {
-  const ProjectDetailPage({super.key});
+  final String? itemId;
+
+  const ProjectDetailPage({Key? key, this.itemId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final String itemId = ModalRoute.of(context)!.settings.arguments as String;
     // Fetch project details based on the itemId and display them
     Project? selectedProject;
-    for (Project project in mockProjects) {
-      if (project.projectId == itemId) {
-        selectedProject = project;
-        break;
+    if (itemId != null) {
+      for (Project project in mockProjects) {
+        if (project.projectId == itemId) {
+          selectedProject = project;
+          break;
+        }
       }
     }
+
     return Scaffold(
         appBar: const AuthAppBar(
           canBack: true,
@@ -35,7 +39,7 @@ class ProjectDetailPage extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.symmetric(vertical: 10),
                   child: Text.rich(
-                    TextSpan(text: selectedProject!.projectDetail),
+                    TextSpan(text: selectedProject?.projectDetail),
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -46,7 +50,7 @@ class ProjectDetailPage extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.symmetric(vertical: 10),
                   child: Text(
-                    selectedProject.titleOfJob,
+                    selectedProject?.titleOfJob ?? 'No project selected',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w900,
@@ -62,7 +66,7 @@ class ProjectDetailPage extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Text(
-                    selectedProject.studentGain,
+                    selectedProject?.studentGain ?? 'No project selected',
                     style: const TextStyle(
                       fontSize: 15,
                     ),
@@ -84,7 +88,7 @@ class ProjectDetailPage extends StatelessWidget {
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      '\t\t\t\t\t\t-${selectedProject.projectScope}',
+                      '\t\t\t\t\t\t-${selectedProject?.projectScope ?? 'No project selected'}',
                       style: const TextStyle(fontSize: 15),
                     ),
                     dense: true,
@@ -104,7 +108,7 @@ class ProjectDetailPage extends StatelessWidget {
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      '\t\t\t\t\t\t-${selectedProject.requireStudents}',
+                      '\t\t\t\t\t\t-${selectedProject?.requireStudents ?? 'No project selected'}',
                       style: const TextStyle(fontSize: 15),
                     ),
                     dense: true,
