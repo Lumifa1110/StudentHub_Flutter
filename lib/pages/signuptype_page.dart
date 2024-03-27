@@ -18,7 +18,9 @@ class _SignupTypePageState extends State<SignupTypePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AuthAppBar(),
+      appBar: const AuthAppBar(
+        canBack: false,
+      ),
       body: Column(
         children: [
           const SizedBox(

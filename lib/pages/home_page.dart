@@ -10,14 +10,14 @@ class HomePage extends StatelessWidget {
       child: Scaffold(
           appBar: AppBar(
             backgroundColor: mainColor,
-            title: Row(
+            title: const Row(
               children: [
                 const Text(
                   'Student',
                   style: TextStyle(color: Colors.white),
                 ),
                 const Text(
-                  'Hub',
+                  'Hub  ',
                 ),
                 Spacer(),
                 Icon(Icons.person)

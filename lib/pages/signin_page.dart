@@ -18,7 +18,9 @@ class _SigninPageState extends State<SigninPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: const AuthAppBar(),
+      appBar: const AuthAppBar(
+        canBack: false,
+      ),
       body: Center(
         child: Column(
           children: [

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:studenthub/components/radiolisttypes.dart';
-import 'package:studenthub/data/test/data_project.dart';
+// import 'package:studenthub/data/test/data_project.dart';
 import 'package:studenthub/pages/chat_flow/chat_screen.dart';
-import 'package:studenthub/pages/company_review_proposal/project_proposal_list.dart';
+// import 'package:studenthub/pages/company_review_proposal/project_proposal_list.dart';
 import 'package:studenthub/pages/home_page.dart';
 import 'package:studenthub/pages/signin_page.dart';
 import 'package:studenthub/pages/signupinfo_page.dart';
@@ -60,12 +60,13 @@ class StudentHub extends StatelessWidget {
           case '/signup/step2':
             MaterialPageRoute(builder: (context, {arguments}) {
               // Extract the type parameter from the arguments
-              final AccountTypes type = AccountTypes.company;
-              return SignupInfoPage(selectedType: type);
+              const AccountTypes type = AccountTypes.company;
+              return const SignupInfoPage(selectedType: type);
             });
           default:
             return null;
         }
+        return null;
       },
     );
   }
