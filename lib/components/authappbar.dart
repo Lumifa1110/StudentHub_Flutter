@@ -3,7 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:studenthub/utils/colors.dart';
 
 class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const AuthAppBar({Key? key}) : super(key: key);
+  final bool canBack;
+
+  const AuthAppBar({
+    super.key,
+    required this.canBack,
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -12,7 +17,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       elevation: 5.0,
-      automaticallyImplyLeading: false,
+      automaticallyImplyLeading: canBack,
       systemOverlayStyle: const SystemUiOverlayStyle(
         statusBarColor: Color(0xFF4169E1),
       ),
