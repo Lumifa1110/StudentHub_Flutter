@@ -30,6 +30,7 @@ class StudentHub extends StatelessWidget {
       ),
       home: HomePage(),
       initialRoute: '/',
+      debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/company':
@@ -60,13 +61,12 @@ class StudentHub extends StatelessWidget {
           case '/signup/step2':
             MaterialPageRoute(builder: (context, {arguments}) {
               // Extract the type parameter from the arguments
-              const AccountTypes type = AccountTypes.company;
-              return const SignupInfoPage(selectedType: type);
+              final AccountTypes type = AccountTypes.company;
+              return SignupInfoPage(selectedType: type);
             });
           default:
             return null;
         }
-        return null;
       },
     );
   }
