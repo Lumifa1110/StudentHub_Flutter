@@ -19,15 +19,6 @@ class RadioListTypes extends StatefulWidget {
 }
 
 class _RadiolisttypesState extends State<RadioListTypes> {
-  AccountTypes? _selectedType;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _selectedType = widget.selectedType;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
