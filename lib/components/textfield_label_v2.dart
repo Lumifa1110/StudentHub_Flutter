@@ -4,13 +4,14 @@ import 'package:studenthub/utils/colors.dart';
 class TextFieldWithLabel extends StatelessWidget {
   final String label;
   final TextEditingController controller;
-  final double lineCount;
+  final String? hint;
 
-  const TextFieldWithLabel(
-      {super.key,
-      required this.label,
-      required this.controller,
-      required this.lineCount});
+  const TextFieldWithLabel({
+    super.key,
+    required this.label,
+    required this.controller,
+    this.hint,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +42,10 @@ class TextFieldWithLabel extends StatelessWidget {
               controller: controller,
               textAlign: TextAlign.start,
               style: const TextStyle(
-                fontSize: 15,
+                fontSize: 16,
               ),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
+                hintText: hint,
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
               ),
