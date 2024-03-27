@@ -5,8 +5,8 @@ import 'custom_radiocard.dart';
 enum AccountTypes { company, student }
 
 class RadioListTypes extends StatefulWidget {
-  AccountTypes? selectedType;
-  Function(AccountTypes) onTypeSelected;
+  final AccountTypes? selectedType;
+  final Function(AccountTypes) onTypeSelected;
 
   RadioListTypes({
     Key? key,
@@ -19,6 +19,15 @@ class RadioListTypes extends StatefulWidget {
 }
 
 class _RadiolisttypesState extends State<RadioListTypes> {
+  AccountTypes? _selectedType;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _selectedType = widget.selectedType;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(

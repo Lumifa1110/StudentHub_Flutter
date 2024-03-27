@@ -15,6 +15,10 @@ class SignupTypePage extends StatefulWidget {
 class _SignupTypePageState extends State<SignupTypePage> {
   AccountTypes _selectedType = AccountTypes.student;
 
+  void changeTypeAccount(type) {
+    _selectedType = type;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +43,7 @@ class _SignupTypePageState extends State<SignupTypePage> {
             selectedType: _selectedType,
             onTypeSelected: (type) {
               setState(() {
-                _selectedType = type;
+                changeTypeAccount(type);
               });
             },
           ),

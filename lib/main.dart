@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import  'pages/index.dart';
+import 'package:flutter/services.dart';
+import 'package:studenthub/pages/signin_page.dart';
+import 'pages/index.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -19,21 +21,27 @@ class StudentHub extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const StudentProfileInputScreen1(),
+      home: const SigninPage(),
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/company':
-            return MaterialPageRoute(builder: (context) => const CompanyProfileInputScreen());
+            return MaterialPageRoute(
+                builder: (context) => const CompanyProfileInputScreen());
           case '/company/profile':
-            return MaterialPageRoute(builder: (context) => const CompanyProfileInputScreen());
+            return MaterialPageRoute(
+                builder: (context) => const CompanyProfileInputScreen());
           case '/company/welcome':
-            return MaterialPageRoute(builder: (context) => const CompanyWelcomeScreen());
+            return MaterialPageRoute(
+                builder: (context) => const CompanyWelcomeScreen());
           case '/company/dashboard':
-            return MaterialPageRoute(builder: (context) => const CompanyDashboardScreen());
+            return MaterialPageRoute(
+                builder: (context) => const CompanyDashboardScreen());
           case '/student':
-            return MaterialPageRoute(builder: (context) => const StudentProfileInputScreen1());
+            return MaterialPageRoute(
+                builder: (context) => const StudentProfileInputScreen1());
           case '/student/profileinput1':
-            return MaterialPageRoute(builder: (context) => const StudentProfileInputScreen1());
+            return MaterialPageRoute(
+                builder: (context) => const StudentProfileInputScreen1());
           default:
             return null;
         }
@@ -41,4 +49,3 @@ class StudentHub extends StatelessWidget {
     );
   }
 }
-
