@@ -3,7 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:studenthub/utils/colors.dart';
 
 class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const AuthAppBar({Key? key}) : super(key: key);
+  final bool canBack;
+  final String? title; // Remove const here
+
+  const AuthAppBar({
+    Key? key, // Add Key? key here
+    required this.canBack,
+    this.title,
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -11,32 +18,47 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      leading: canBack
+          ? IconButton(
+              icon: const Icon(Icons.chevron_left, color: whiteTextColor),
+              onPressed: () => Navigator.of(context).pop(),
+            )
+          : null,
       elevation: 5.0,
-      automaticallyImplyLeading: false,
+      // automaticallyImplyLeading: canBack,
       systemOverlayStyle: const SystemUiOverlayStyle(
         statusBarColor: Color(0xFF4169E1),
       ),
       backgroundColor: mainColor,
-      title: const Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            'Student',
-            style: TextStyle(
-              color: whiteTextColor,
-              fontSize: 26,
+      title: title != null
+          ? Text(
+              title!,
+              style: const TextStyle(
+                color: whiteTextColor,
+                fontSize: 26,
+                fontWeight: FontWeight.w600,
+              ),
+            )
+          : const Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Student',
+                  style: TextStyle(
+                    color: whiteTextColor,
+                    fontSize: 26,
+                  ),
+                ),
+                Text(
+                  'Hub',
+                  style: TextStyle(
+                    color: blackTextColor,
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-          ),
-          Text(
-            'Hub',
-            style: TextStyle(
-              color: blackTextColor,
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
       actions: [
         IconButton(
           onPressed: () {},

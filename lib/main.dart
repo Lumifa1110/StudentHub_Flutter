@@ -18,7 +18,7 @@ void main() {
 }
 
 class StudentHub extends StatelessWidget {
-  const StudentHub({super.key});
+  const StudentHub({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
