@@ -31,8 +31,7 @@ class StudentHub extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: ProjectListPage(),
-      initialRoute: '/',
+      home: SigninPage(),
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
         switch (settings.name) {
@@ -58,9 +57,6 @@ class StudentHub extends StatelessWidget {
             return MaterialPageRoute(builder: (context) => const ChatScreen());
           case '/signin':
             return MaterialPageRoute(builder: (context) => const SigninPage());
-          case '/signup/step1':
-            return MaterialPageRoute(
-                builder: (context) => const SignupTypePage());
           case '/list':
             return MaterialPageRoute(
                 builder: (context) => const ProjectListPage());
