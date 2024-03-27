@@ -42,20 +42,20 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
         switch (newIndex) {
           case 0:
             {
-              _navigateWithAnimation(
-                  '/list', ProjectListPage(), widget.initialIndex, newIndex);
+              _navigateWithAnimation('/list', const ProjectListPage(),
+                  widget.initialIndex, newIndex);
               break;
             }
           case 1:
             {
-              _navigateWithAnimation('/dashboard', MockDashboardPage(),
+              _navigateWithAnimation('/dashboard', const MockDashboardPage(),
                   widget.initialIndex, newIndex);
               break;
             }
           case 2:
             {
-              _navigateWithAnimation(
-                  '/message', MessagePage(), widget.initialIndex, newIndex);
+              _navigateWithAnimation('/message', const MessagePage(),
+                  widget.initialIndex, newIndex);
               break;
             }
           // Add cases for additional pages if needed
@@ -104,11 +104,11 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => widgetname,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          var begin = Offset(1.0, 0.0);
+          var begin = const Offset(1.0, 0.0);
           const end = Offset.zero;
           const curve = Curves.ease;
           if (newindex < currentindex) {
-            begin = Offset(-1.0, 0.0);
+            begin = const Offset(-1.0, 0.0);
           }
 
           var tween =

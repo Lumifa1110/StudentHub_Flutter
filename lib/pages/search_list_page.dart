@@ -70,7 +70,10 @@ class _SearchListPageState extends State<SearchListPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: const AuthAppBar(canBack: true),
+        appBar: const AuthAppBar(
+          canBack: true,
+          title: 'Project Search',
+        ),
         body: Column(
           children: [
             const SizedBox(
@@ -221,6 +224,14 @@ class _SearchListPageState extends State<SearchListPage> {
                                             ),
                                             child: TextButton(
                                               onPressed: () {},
+                                              style: ButtonStyle(
+                                                shape: MaterialStateProperty
+                                                    .all<OutlinedBorder>(
+                                                  const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.zero),
+                                                ),
+                                              ),
                                               child: const Text(
                                                 'Clear filters',
                                                 style: TextStyle(
@@ -248,6 +259,14 @@ class _SearchListPageState extends State<SearchListPage> {
                                             ),
                                             child: TextButton(
                                               onPressed: () {},
+                                              style: ButtonStyle(
+                                                shape: MaterialStateProperty
+                                                    .all<OutlinedBorder>(
+                                                  const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.zero),
+                                                ),
+                                              ),
                                               child: const Text(
                                                 'Apply',
                                                 style: TextStyle(
