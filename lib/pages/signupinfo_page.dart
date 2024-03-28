@@ -17,7 +17,6 @@ class SignupInfoPage extends StatefulWidget {
 }
 
 class _SignupInfoPageState extends State<SignupInfoPage> {
-  bool _isObscure = true;
   bool? _isAgree = false;
   TextEditingController _fullnameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();

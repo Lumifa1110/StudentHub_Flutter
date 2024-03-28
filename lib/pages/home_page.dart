@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/authappbar.dart';
+import 'package:studenthub/utils/colors.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -8,6 +9,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+          backgroundColor: bgColor,
           appBar: const AuthAppBar(canBack: false),
           body: Center(
               child: Padding(
@@ -32,22 +34,86 @@ class HomePage extends StatelessWidget {
                 const SizedBox(
                   height: 40,
                 ),
-                ElevatedButton(
+                Container(
+                  width: 180,
+                  height: 40,
+                  padding: const EdgeInsets.all(0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: blackTextColor, width: 2.0),
+                    color: mainColor,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: blackTextColor,
+                        offset: Offset(2, 3),
+                      ),
+                    ],
+                  ),
+                  child: TextButton(
                     onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                        shape: const RoundedRectangleBorder(),
-                        fixedSize: const Size(150, 40)),
-                    child: const Text("Company")),
-                const SizedBox(
-                  height: 10,
-                ),
-                ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      shape: const RoundedRectangleBorder(),
-                      fixedSize: const Size(150, 40),
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                        const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero),
+                      ),
                     ),
-                    child: const Text("Student")),
+                    child: const Text(
+                      'Company',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: blackTextColor,
+                      ),
+                    ),
+                  ),
+                ),
+                // ElevatedButton(
+                //     onPressed: () {},
+                //     style: ElevatedButton.styleFrom(
+                //       shape: const RoundedRectangleBorder(),
+                //       fixedSize: const Size(150, 40),
+                //     ),
+                //     child: const Text("Student")),
+
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: 180,
+                  height: 40,
+                  padding: const EdgeInsets.all(0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: blackTextColor, width: 2.0),
+                    color: mainColor,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: blackTextColor,
+                        offset: Offset(2, 3),
+                      ),
+                    ],
+                  ),
+                  child: TextButton(
+                    onPressed: () {},
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                        const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero),
+                      ),
+                    ),
+                    child: const Text(
+                      'Student',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: blackTextColor,
+                      ),
+                    ),
+                  ),
+                ),
+                // ElevatedButton(
+                //     onPressed: () {},
+                //     style: ElevatedButton.styleFrom(
+                //       shape: const RoundedRectangleBorder(),
+                //       fixedSize: const Size(150, 40),
+                //     ),
+                //     child: const Text("Student")),
                 const SizedBox(
                   height: 40,
                 ),
