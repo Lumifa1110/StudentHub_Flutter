@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/components/customprojectitem.dart';
-import 'package:studenthub/utils/colors.dart';
+import 'package:studenthub/pages/project_detail_page.dart';
+
 import 'package:studenthub/utils/mock_data.dart';
 
 class FavoriteProjectsPage extends StatelessWidget {
@@ -47,10 +48,12 @@ class FavoriteProjectsPage extends StatelessWidget {
                           return CustomProjectItem(
                             project: project,
                             onTap: () {
-                              Navigator.pushNamed(
+                              Navigator.push(
                                 context,
-                                '/detail',
-                                arguments: project.projectId,
+                                MaterialPageRoute(
+                                  builder: (context) => ProjectDetailPage(
+                                      itemId: project.projectId),
+                                ),
                               );
                             },
                             isFavorite: favoriteList.contains(project),

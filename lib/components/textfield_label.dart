@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:studenthub/utils/colors.dart';
 
 class TextFieldWithLabel extends StatelessWidget {
   final String label;
   final TextEditingController controller;
-  final String? hint;
+  final double lineCount;
 
   const TextFieldWithLabel({
     super.key,
     required this.label,
     required this.controller,
-    this.hint,
+    required this.lineCount
   });
 
   @override
@@ -23,36 +22,38 @@ class TextFieldWithLabel extends StatelessWidget {
           child: Text(
             label,
             style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: blackTextColor,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
         Container(
-          height: 50,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
-            color: whiteTextColor,
             borderRadius: BorderRadius.circular(4),
-            border: Border.all(color: blackTextColor, width: 1),
+            border: Border.all(
+              color: Colors.grey,
+              width: 1
+            )
           ),
-          child: Center(
+          child: Container(
+            height: 40 * lineCount,
+            alignment: Alignment.topLeft,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: TextField(
               controller: controller,
-              textAlign: TextAlign.start,
+              textAlign: TextAlign.left,
+              maxLines: null,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: 14,
               ),
-              decoration: InputDecoration(
-                hintText: hint,
+              decoration: const InputDecoration(
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
+                contentPadding: EdgeInsets.zero
               ),
-            ),
+            )
           ),
         )
-      ],
+      ]
     );
   }
 }
