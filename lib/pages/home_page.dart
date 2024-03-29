@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
                 ),
                 Container(
                   width: 180,
-                  height: 40,
+                  height: 45,
                   padding: const EdgeInsets.all(0),
                   decoration: BoxDecoration(
                     border: Border.all(color: blackTextColor, width: 2.0),
@@ -44,7 +44,9 @@ class HomePage extends StatelessWidget {
                     boxShadow: const [
                       BoxShadow(
                         color: blackTextColor,
-                        offset: Offset(2, 3),
+                        offset: Offset(0, 0),
+                        blurRadius: 1.0,
+                        spreadRadius: 1.0,
                       ),
                     ],
                   ),
@@ -59,8 +61,8 @@ class HomePage extends StatelessWidget {
                     child: const Text(
                       'Company',
                       style: TextStyle(
-                        fontSize: 16,
-                        color: blackTextColor,
+                        fontSize: 18,
+                        color: whiteTextColor,
                       ),
                     ),
                   ),
@@ -72,13 +74,12 @@ class HomePage extends StatelessWidget {
                 //       fixedSize: const Size(150, 40),
                 //     ),
                 //     child: const Text("Student")),
-
                 const SizedBox(
                   height: 20,
                 ),
                 Container(
                   width: 180,
-                  height: 40,
+                  height: 45,
                   padding: const EdgeInsets.all(0),
                   decoration: BoxDecoration(
                     border: Border.all(color: blackTextColor, width: 2.0),
@@ -86,27 +87,33 @@ class HomePage extends StatelessWidget {
                     boxShadow: const [
                       BoxShadow(
                         color: blackTextColor,
-                        offset: Offset(2, 3),
+                        offset: Offset(0, 0),
+                        blurRadius: 1.0,
+                        spreadRadius: 1.0,
                       ),
                     ],
                   ),
-                  child: TextButton(
+                  child: ElevatedButton(
                     onPressed: () {},
                     style: ButtonStyle(
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                         const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero),
+                          borderRadius: BorderRadius.zero,
+                        ),
                       ),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(mainColor),
                     ),
                     child: const Text(
                       'Student',
                       style: TextStyle(
-                        fontSize: 16,
-                        color: blackTextColor,
+                        fontSize: 18,
+                        color: whiteTextColor,
                       ),
                     ),
                   ),
                 ),
+
                 // ElevatedButton(
                 //     onPressed: () {},
                 //     style: ElevatedButton.styleFrom(

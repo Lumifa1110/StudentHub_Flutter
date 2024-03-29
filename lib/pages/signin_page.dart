@@ -14,8 +14,8 @@ class SigninPage extends StatefulWidget {
 
 class _SigninPageState extends State<SigninPage> {
   // bool _isObscure = true;
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -221,7 +221,8 @@ class _SigninPageState extends State<SigninPage> {
                   Navigator.pop(context);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SignupTypePage()),
+                    MaterialPageRoute(
+                        builder: (context) => const SignupTypePage()),
                   );
                 },
                 child: const Text(

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/authappbar.dart';
-import 'package:studenthub/components/radiolisttypes.dart';
 import 'package:studenthub/components/textfield_floatinglabel.dart';
+import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/utils/colors.dart';
 
 class SignupInfoPage extends StatefulWidget {
-  final AccountTypes selectedType;
+  final UserRole selectedType;
 
   const SignupInfoPage({
     super.key,
@@ -35,7 +35,7 @@ class _SignupInfoPageState extends State<SignupInfoPage> {
             const SizedBox(
               height: 30,
             ),
-            widget.selectedType == AccountTypes.company
+            widget.selectedType == UserRole.company
                 ? const Text(
                     'Sign up as Company',
                     style: TextStyle(
@@ -270,7 +270,7 @@ class _SignupInfoPageState extends State<SignupInfoPage> {
             const SizedBox(
               height: 20,
             ),
-            widget.selectedType == AccountTypes.company
+            widget.selectedType == UserRole.company
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

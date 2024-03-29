@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/radiolisttypes.dart';
+import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/pages/signin_page.dart';
 import 'package:studenthub/pages/signupinfo_page.dart';
 import 'package:studenthub/utils/colors.dart';
@@ -13,7 +14,7 @@ class SignupTypePage extends StatefulWidget {
 }
 
 class _SignupTypePageState extends State<SignupTypePage> {
-  AccountTypes _selectedType = AccountTypes.student;
+  UserRole _selectedType = UserRole.student;
 
   @override
   Widget build(BuildContext context) {
