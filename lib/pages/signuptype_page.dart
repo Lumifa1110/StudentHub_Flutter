@@ -55,11 +55,13 @@ class _SignupTypePageState extends State<SignupTypePage> {
             padding: const EdgeInsets.all(0),
             decoration: BoxDecoration(
               border: Border.all(color: blackTextColor, width: 2.0),
-              color: darkgrayColor,
+              color: mainColor,
               boxShadow: const [
                 BoxShadow(
                   color: blackTextColor,
-                  offset: Offset(2, 2), // Bottom shadow
+                  offset: Offset(0, 0),
+                  blurRadius: 1.0,
+                  spreadRadius: 1.0,
                 ),
               ],
             ),
@@ -104,14 +106,12 @@ class _SignupTypePageState extends State<SignupTypePage> {
                 child: const Text(
                   'Log in',
                   style: TextStyle(
-                    shadows: [
-                      Shadow(color: Colors.blue, offset: Offset(0, -3))
-                    ],
+                    shadows: [Shadow(color: mainColor, offset: Offset(0, -3))],
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                     color: Colors.transparent,
                     decoration: TextDecoration.underline,
-                    decorationColor: Colors.blue,
+                    decorationColor: mainColor,
                     decorationThickness: 2,
                   ),
                 ),

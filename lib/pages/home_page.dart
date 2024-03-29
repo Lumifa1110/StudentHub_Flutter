@@ -39,11 +39,11 @@ class HomePage extends StatelessWidget {
                   height: 45,
                   padding: const EdgeInsets.all(0),
                   decoration: BoxDecoration(
-                    border: Border.all(color: blackTextColor, width: 2.0),
+                    border: Border.all(color: lightgrayColor, width: 2.0),
                     color: mainColor,
                     boxShadow: const [
                       BoxShadow(
-                        color: blackTextColor,
+                        color: lightgrayColor,
                         offset: Offset(0, 0),
                         blurRadius: 1.0,
                         spreadRadius: 1.0,
@@ -84,11 +84,11 @@ class HomePage extends StatelessWidget {
                   height: 45,
                   padding: const EdgeInsets.all(0),
                   decoration: BoxDecoration(
-                    border: Border.all(color: blackTextColor, width: 2.0),
+                    border: Border.all(color: lightgrayColor, width: 2.0),
                     color: mainColor,
                     boxShadow: const [
                       BoxShadow(
-                        color: blackTextColor,
+                        color: lightgrayColor,
                         offset: Offset(0, 0),
                         blurRadius: 1.0,
                         spreadRadius: 1.0,
@@ -117,7 +117,6 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 // ElevatedButton(
                 //     onPressed: () {},
                 //     style: ElevatedButton.styleFrom(
@@ -132,7 +131,48 @@ class HomePage extends StatelessWidget {
                   'StudentHub is university market place to connect high-skilled student and company on a real-world project',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16),
-                )
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: 200,
+                  height: 45,
+                  padding: const EdgeInsets.all(0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: lightgrayColor, width: 2.0),
+                    color: mainColor,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: lightgrayColor,
+                        offset: Offset(0, 0),
+                        blurRadius: 1.0,
+                        spreadRadius: 1.0,
+                      ),
+                    ],
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/signin');
+                    },
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                      ),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(mainColor),
+                    ),
+                    child: const Text(
+                      'Start StudentHub',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: whiteTextColor,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ))),

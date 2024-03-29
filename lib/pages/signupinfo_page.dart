@@ -96,12 +96,14 @@ class _SignupInfoPageState extends State<SignupInfoPage> {
               margin: const EdgeInsets.symmetric(horizontal: 20),
               padding: const EdgeInsets.all(0),
               decoration: BoxDecoration(
-                border: Border.all(color: blackTextColor, width: 2.0),
-                color: lightgrayColor,
+                border: Border.all(color: lightgrayColor, width: 2.0),
+                color: mainColor,
                 boxShadow: const [
                   BoxShadow(
-                    color: blackTextColor,
-                    offset: Offset(3, 3), // Bottom shadow
+                    color: lightgrayColor,
+                    offset: Offset(0, 0),
+                    blurRadius: 1.0,
+                    spreadRadius: 1.0,
                   ),
                 ],
               ),
