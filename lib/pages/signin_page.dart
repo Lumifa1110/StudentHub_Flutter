@@ -50,51 +50,7 @@ class _SigninPageState extends State<SigninPage> {
             // TextField for Username or email
             TextFieldFloatingLabel(
                 label: 'Username or Email', controller: _usernameController),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 20),
-            //   child: Container(
-            //     decoration: BoxDecoration(
-            //       boxShadow: [
-            //         BoxShadow(
-            //           color: const Color(0xFF636363).withOpacity(0.5),
-            //           spreadRadius: 3,
-            //           blurRadius: 5,
-            //           offset: const Offset(0, 3),
-            //         ),
-            //       ],
-            //     ),
-            //     child: const TextField(
-            //       style: TextStyle(
-            //         fontSize: 18,
-            //       ),
-            //       cursorColor: blackTextColor,
-            //       textAlignVertical: TextAlignVertical.center,
-            //       decoration: InputDecoration(
-            //         filled: true,
-            //         fillColor: whiteTextColor,
-            //         labelText: 'Username or Email',
-            //         labelStyle: TextStyle(
-            //           color: darkgrayColor,
-            //         ),
-            //         contentPadding:
-            //             EdgeInsets.symmetric(vertical: 6, horizontal: 1),
-            //         floatingLabelStyle: TextStyle(
-            //           color: mainColor,
-            //           fontSize: 18,
-            //           height: 0.6,
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //         focusedBorder: UnderlineInputBorder(
-            //           borderSide: BorderSide(
-            //             color: mainColor,
-            //             width: 3.0,
-            //           ),
-            //         ),
-            //         focusColor: blackTextColor,
-            //       ),
-            //     ),
-            //   ),
-            // ),
+
             const SizedBox(
               height: 20,
             ),
@@ -104,62 +60,6 @@ class _SigninPageState extends State<SigninPage> {
               controller: _passwordController,
               isPassword: true,
             ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 20),
-            //   child: Container(
-            //     decoration: BoxDecoration(
-            //       boxShadow: [
-            //         BoxShadow(
-            //           color: const Color(0xFF636363).withOpacity(0.5),
-            //           spreadRadius: 3,
-            //           blurRadius: 5,
-            //           offset: const Offset(0, 3),
-            //         ),
-            //       ],
-            //     ),
-            //     child: TextField(
-            //       style: const TextStyle(
-            //         fontSize: 18,
-            //       ),
-            //       cursorColor: blackTextColor,
-            //       obscureText: _isObscure,
-            //       textAlignVertical: TextAlignVertical.center,
-            //       decoration: InputDecoration(
-            //         labelText: 'Password',
-            //         labelStyle: const TextStyle(
-            //           color: darkgrayColor,
-            //         ),
-            //         filled: true,
-            //         fillColor: bgColor,
-            //         contentPadding:
-            //             const EdgeInsets.symmetric(vertical: 6, horizontal: 1),
-            //         floatingLabelStyle: const TextStyle(
-            //           color: mainColor,
-            //           fontSize: 18,
-            //           height: 0.6,
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //         focusedBorder: const UnderlineInputBorder(
-            //           borderSide: BorderSide(
-            //             color: mainColor,
-            //             width: 3.0,
-            //           ),
-            //         ),
-            //         suffixIcon: IconButton(
-            //           icon: Icon(
-            //             _isObscure ? Icons.visibility : Icons.visibility_off,
-            //             color: blackTextColor,
-            //           ),
-            //           onPressed: () {
-            //             setState(() {
-            //               _isObscure = !_isObscure;
-            //             });
-            //           },
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
             const SizedBox(
               height: 20,
             ),

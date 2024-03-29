@@ -26,6 +26,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
           : null,
       elevation: 5.0,
       // automaticallyImplyLeading: canBack,
+      automaticallyImplyLeading: canBack,
       title: title != null
           ? Text(
               title!,

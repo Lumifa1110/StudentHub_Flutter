@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:studenthub/enums/user_role.dart';
 
 // import 'package:studenthub/data/test/data_project.dart';
 import 'package:studenthub/pages/chat_flow/chat_screen.dart';
@@ -9,6 +10,8 @@ import 'package:studenthub/pages/mock_message_page.dart';
 // import 'package:studenthub/pages/project_detail_page.dart';
 import 'package:studenthub/pages/project_list_page.dart';
 import 'package:studenthub/pages/signin_page.dart';
+import 'package:studenthub/pages/signupinfo_page.dart';
+import 'package:studenthub/pages/signuptype_page.dart';
 import 'package:studenthub/theme/theme.dart';
 import 'package:studenthub/theme/theme_controller.dart';
 // import 'package:studenthub/pages/signupinfo_page.dart';
@@ -88,6 +91,19 @@ class _StudentHubState extends State<StudentHub> {
             return MaterialPageRoute(builder: (context) => const ChatScreen());
           case '/signin':
             return MaterialPageRoute(builder: (context) => const SigninPage());
+          case '/signup':
+            return MaterialPageRoute(
+                builder: (context) => const SignupTypePage());
+          case '/signup/company':
+            return MaterialPageRoute(
+              builder: (context) =>
+                  const SignupInfoPage(selectedType: UserRole.company),
+            );
+          case '/signup/student':
+            return MaterialPageRoute(
+              builder: (context) =>
+                  const SignupInfoPage(selectedType: UserRole.student),
+            );
           case '/list':
             return MaterialPageRoute(
                 builder: (context) => const ProjectListPage());
