@@ -6,6 +6,7 @@ import 'package:studenthub/pages/chat_flow/chat_screen.dart';
 // import 'package:studenthub/pages/company_review_proposal/project_proposal_list.dart';
 
 import 'package:studenthub/pages/mock_message_page.dart';
+import 'package:studenthub/pages/notification_page.dart';
 import 'package:studenthub/pages/project_detail_page.dart';
 import 'package:studenthub/pages/project_list_page.dart';
 import 'package:studenthub/pages/signin_page.dart';
