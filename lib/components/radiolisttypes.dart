@@ -5,8 +5,8 @@ import 'custom_radiocard.dart';
 enum AccountTypes { company, student }
 
 class RadioListTypes extends StatefulWidget {
-  AccountTypes? selectedType;
-  Function(AccountTypes) onTypeSelected;
+  final AccountTypes? selectedType;
+  final Function(AccountTypes) onTypeSelected;
 
   RadioListTypes({
     Key? key,
