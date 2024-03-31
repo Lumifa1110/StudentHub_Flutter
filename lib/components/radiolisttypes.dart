@@ -1,12 +1,11 @@
 // radio_list_types.dart
 import 'package:flutter/material.dart';
+import 'package:studenthub/enums/user_role.dart';
 import 'custom_radiocard.dart';
 
-enum AccountTypes { company, student }
-
 class RadioListTypes extends StatefulWidget {
-  final AccountTypes? selectedType;
-  final Function(AccountTypes) onTypeSelected;
+  final UserRole? selectedType;
+  final Function(UserRole) onTypeSelected;
 
   RadioListTypes({
     Key? key,
@@ -25,9 +24,9 @@ class _RadiolisttypesState extends State<RadioListTypes> {
       children: [
         ListView.builder(
           shrinkWrap: true,
-          itemCount: AccountTypes.values.length,
+          itemCount: UserRole.values.length,
           itemBuilder: (context, index) {
-            final type = AccountTypes.values[index];
+            final type = UserRole.values[index];
             return CustomRadioCard(
               accountType: type,
               selectedType: widget.selectedType,

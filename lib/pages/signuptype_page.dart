@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/radiolisttypes.dart';
+import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/pages/signin_page.dart';
 import 'package:studenthub/pages/signupinfo_page.dart';
 import 'package:studenthub/utils/colors.dart';
@@ -13,7 +14,7 @@ class SignupTypePage extends StatefulWidget {
 }
 
 class _SignupTypePageState extends State<SignupTypePage> {
-  AccountTypes _selectedType = AccountTypes.student;
+  UserRole _selectedType = UserRole.student;
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +55,13 @@ class _SignupTypePageState extends State<SignupTypePage> {
             padding: const EdgeInsets.all(0),
             decoration: BoxDecoration(
               border: Border.all(color: blackTextColor, width: 2.0),
-              color: darkgrayColor,
+              color: mainColor,
               boxShadow: const [
                 BoxShadow(
                   color: blackTextColor,
-                  offset: Offset(2, 2), // Bottom shadow
+                  offset: Offset(0, 0),
+                  blurRadius: 1.0,
+                  spreadRadius: 1.0,
                 ),
               ],
             ),
@@ -103,22 +106,23 @@ class _SignupTypePageState extends State<SignupTypePage> {
                 child: const Text(
                   'Log in',
                   style: TextStyle(
-                    shadows: [
-                      Shadow(color: Colors.blue, offset: Offset(0, -3))
-                    ],
+                    shadows: [Shadow(color: mainColor, offset: Offset(0, -3))],
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                     color: Colors.transparent,
                     decoration: TextDecoration.underline,
-                    decorationColor: Colors.blue,
+                    decorationColor: mainColor,
                     decorationThickness: 2,
                   ),
                 ),
                 onTap: () {
-                  Navigator.pop(context);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SigninPage()),
+                    MaterialPageRoute(
+                      builder: (context) => SigninPage(
+                        role: _selectedType,
+                      ),
+                    ),
                   );
                 },
               ),

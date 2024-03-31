@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/authappbar.dart';
+import 'package:studenthub/enums/user_role.dart';
+import 'package:studenthub/pages/signin_page.dart';
+import 'package:studenthub/utils/colors.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -8,6 +11,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+          backgroundColor: bgColor,
           appBar: const AuthAppBar(canBack: false),
           body: Center(
               child: Padding(
@@ -32,22 +36,108 @@ class HomePage extends StatelessWidget {
                 const SizedBox(
                   height: 40,
                 ),
-                ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                        shape: const RoundedRectangleBorder(),
-                        fixedSize: const Size(150, 40)),
-                    child: const Text("Company")),
-                const SizedBox(
-                  height: 10,
-                ),
-                ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      shape: const RoundedRectangleBorder(),
-                      fixedSize: const Size(150, 40),
+                Container(
+                  width: 180,
+                  height: 45,
+                  padding: const EdgeInsets.all(0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: lightgrayColor, width: 2.0),
+                    color: mainColor,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: lightgrayColor,
+                        offset: Offset(0, 0),
+                        blurRadius: 1.0,
+                        spreadRadius: 1.0,
+                      ),
+                    ],
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SigninPage(
+                                  role: UserRole.company,
+                                )),
+                      );
+                    },
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                        const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero),
+                      ),
                     ),
-                    child: const Text("Student")),
+                    child: const Text(
+                      'Company',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: whiteTextColor,
+                      ),
+                    ),
+                  ),
+                ),
+                // ElevatedButton(
+                //     onPressed: () {},
+                //     style: ElevatedButton.styleFrom(
+                //       shape: const RoundedRectangleBorder(),
+                //       fixedSize: const Size(150, 40),
+                //     ),
+                //     child: const Text("Student")),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: 180,
+                  height: 45,
+                  padding: const EdgeInsets.all(0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: lightgrayColor, width: 2.0),
+                    color: mainColor,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: lightgrayColor,
+                        offset: Offset(0, 0),
+                        blurRadius: 1.0,
+                        spreadRadius: 1.0,
+                      ),
+                    ],
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SigninPage(
+                                  role: UserRole.student,
+                                )),
+                      );
+                    },
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                      ),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(mainColor),
+                    ),
+                    child: const Text(
+                      'Student',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: whiteTextColor,
+                      ),
+                    ),
+                  ),
+                ),
+                // ElevatedButton(
+                //     onPressed: () {},
+                //     style: ElevatedButton.styleFrom(
+                //       shape: const RoundedRectangleBorder(),
+                //       fixedSize: const Size(150, 40),
+                //     ),
+                //     child: const Text("Student")),
                 const SizedBox(
                   height: 40,
                 ),
@@ -55,7 +145,7 @@ class HomePage extends StatelessWidget {
                   'StudentHub is university market place to connect high-skilled student and company on a real-world project',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16),
-                )
+                ),
               ],
             ),
           ))),
