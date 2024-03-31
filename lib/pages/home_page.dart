@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/authappbar.dart';
+import 'package:studenthub/enums/user_role.dart';
+import 'package:studenthub/pages/signin_page.dart';
 import 'package:studenthub/utils/colors.dart';
 
 class HomePage extends StatelessWidget {
@@ -52,7 +54,13 @@ class HomePage extends StatelessWidget {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/signup/company');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SigninPage(
+                                  role: UserRole.company,
+                                )),
+                      );
                     },
                     style: ButtonStyle(
                       shape: MaterialStateProperty.all<OutlinedBorder>(
@@ -97,7 +105,13 @@ class HomePage extends StatelessWidget {
                   ),
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/signup/student');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SigninPage(
+                                  role: UserRole.student,
+                                )),
+                      );
                     },
                     style: ButtonStyle(
                       shape: MaterialStateProperty.all<OutlinedBorder>(
@@ -131,47 +145,6 @@ class HomePage extends StatelessWidget {
                   'StudentHub is university market place to connect high-skilled student and company on a real-world project',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: 200,
-                  height: 45,
-                  padding: const EdgeInsets.all(0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: lightgrayColor, width: 2.0),
-                    color: mainColor,
-                    boxShadow: const [
-                      BoxShadow(
-                        color: lightgrayColor,
-                        offset: Offset(0, 0),
-                        blurRadius: 1.0,
-                        spreadRadius: 1.0,
-                      ),
-                    ],
-                  ),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/signin');
-                    },
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<OutlinedBorder>(
-                        const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(mainColor),
-                    ),
-                    child: const Text(
-                      'Start StudentHub',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: whiteTextColor,
-                      ),
-                    ),
-                  ),
                 ),
               ],
             ),

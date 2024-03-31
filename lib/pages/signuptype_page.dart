@@ -116,10 +116,13 @@ class _SignupTypePageState extends State<SignupTypePage> {
                   ),
                 ),
                 onTap: () {
-                  Navigator.pop(context);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SigninPage()),
+                    MaterialPageRoute(
+                      builder: (context) => SigninPage(
+                        role: _selectedType,
+                      ),
+                    ),
                   );
                 },
               ),

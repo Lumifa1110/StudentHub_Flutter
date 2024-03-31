@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/textfield_floatinglabel.dart';
+import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/pages/signuptype_page.dart';
 import 'package:studenthub/utils/colors.dart';
 
 class SigninPage extends StatefulWidget {
-  const SigninPage({super.key});
+  final UserRole role;
+
+  const SigninPage({super.key, required this.role});
 
   @override
   State<SigninPage> createState() => _SigninPageState();
@@ -23,7 +26,7 @@ class _SigninPageState extends State<SigninPage> {
       backgroundColor: bgColor,
       resizeToAvoidBottomInset: false,
       appBar: const AuthAppBar(
-        canBack: false,
+        canBack: true,
       ),
       body: Center(
         child: Column(
@@ -49,7 +52,7 @@ class _SigninPageState extends State<SigninPage> {
             ),
             // TextField for Username or email
             TextFieldFloatingLabel(
-                label: 'Username or Email', controller: _usernameController),
+                label: 'Email', controller: _usernameController),
 
             const SizedBox(
               height: 20,
