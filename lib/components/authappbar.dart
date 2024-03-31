@@ -26,10 +26,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
           : null,
       elevation: 5.0,
       // automaticallyImplyLeading: canBack,
-      systemOverlayStyle: const SystemUiOverlayStyle(
-        statusBarColor: Color(0xFF4169E1),
-      ),
-      backgroundColor: mainColor,
+      automaticallyImplyLeading: canBack,
       title: title != null
           ? Text(
               title!,

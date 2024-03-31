@@ -1,11 +1,12 @@
 // custom_radiocard.dart
 import 'package:flutter/material.dart';
-import 'package:studenthub/components/radiolisttypes.dart';
+
+import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/utils/colors.dart';
 
 class CustomRadioCard extends StatelessWidget {
-  final AccountTypes accountType;
-  final AccountTypes? selectedType;
+  final UserRole accountType;
+  final UserRole? selectedType;
   final VoidCallback onTap;
 
   const CustomRadioCard({
@@ -49,11 +50,11 @@ class CustomRadioCard extends StatelessWidget {
                       size: 40,
                     ),
                   ),
-                  Radio<AccountTypes>(
+                  Radio<UserRole>(
                     value: accountType,
                     activeColor: blackTextColor,
                     groupValue: selectedType,
-                    onChanged: (AccountTypes? value) {
+                    onChanged: (UserRole? value) {
                       onTap();
                     },
                   ),
@@ -77,11 +78,11 @@ class CustomRadioCard extends StatelessWidget {
     );
   }
 
-  String _getTypeDisplayName(AccountTypes type) {
+  String _getTypeDisplayName(UserRole type) {
     switch (type) {
-      case AccountTypes.company:
+      case UserRole.company:
         return 'I am a company, find engineer for project';
-      case AccountTypes.student:
+      case UserRole.student:
         return 'I am a student, find a project';
     }
   }

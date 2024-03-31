@@ -29,8 +29,8 @@ class _TextFieldFloatingLabelState extends State<TextFieldFloatingLabel> {
           boxShadow: [
             BoxShadow(
               color: const Color(0xFF636363).withOpacity(0.5),
-              spreadRadius: 3,
-              blurRadius: 5,
+              spreadRadius: 3.0,
+              blurRadius: 6.0,
               offset: const Offset(0, 3),
             ),
           ],

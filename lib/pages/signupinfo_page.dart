@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/authappbar.dart';
-import 'package:studenthub/components/radiolisttypes.dart';
 import 'package:studenthub/components/textfield_floatinglabel.dart';
+import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/utils/colors.dart';
 
 class SignupInfoPage extends StatefulWidget {
-  final AccountTypes selectedType;
+  final UserRole selectedType;
 
   const SignupInfoPage({
     super.key,
@@ -17,7 +17,6 @@ class SignupInfoPage extends StatefulWidget {
 }
 
 class _SignupInfoPageState extends State<SignupInfoPage> {
-  bool _isObscure = true;
   bool? _isAgree = false;
   TextEditingController _fullnameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
@@ -28,7 +27,7 @@ class _SignupInfoPageState extends State<SignupInfoPage> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: const AuthAppBar(
-        canBack: true,
+        canBack: false,
       ),
       body: Center(
         child: Column(
@@ -36,7 +35,7 @@ class _SignupInfoPageState extends State<SignupInfoPage> {
             const SizedBox(
               height: 30,
             ),
-            widget.selectedType == AccountTypes.company
+            widget.selectedType == UserRole.company
                 ? const Text(
                     'Sign up as Company',
                     style: TextStyle(
@@ -58,101 +57,11 @@ class _SignupInfoPageState extends State<SignupInfoPage> {
             ),
             TextFieldFloatingLabel(
                 label: 'Fullname', controller: _fullnameController),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 20),
-            //   child: Container(
-            //     decoration: BoxDecoration(
-            //       boxShadow: [
-            //         BoxShadow(
-            //           color: const Color(0xFF636363).withOpacity(0.5),
-            //           spreadRadius: 3,
-            //           blurRadius: 5,
-            //           offset: const Offset(0, 3),
-            //         ),
-            //       ],
-            //     ),
-            //     child: const TextField(
-            //       style: TextStyle(
-            //         fontSize: 18,
-            //       ),
-            //       cursorColor: blackTextColor,
-            //       textAlignVertical: TextAlignVertical.center,
-            //       decoration: InputDecoration(
-            //         filled: true,
-            //         fillColor: whiteTextColor,
-            //         labelText: 'Fullname',
-            //         labelStyle: TextStyle(
-            //           color: darkgrayColor,
-            //         ),
-            //         contentPadding:
-            //             EdgeInsets.symmetric(vertical: 6, horizontal: 1),
-            //         floatingLabelStyle: TextStyle(
-            //           color: mainColor,
-            //           fontSize: 18,
-            //           height: 0.6,
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //         focusedBorder: UnderlineInputBorder(
-            //           borderSide: BorderSide(
-            //             color: mainColor,
-            //             width: 3.0,
-            //           ),
-            //         ),
-            //         focusColor: blackTextColor,
-            //       ),
-            //     ),
-            //   ),
-            // ),
             const SizedBox(
               height: 20,
             ),
             TextFieldFloatingLabel(
                 label: 'Work email address', controller: _emailController),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 20),
-            //   child: Container(
-            //     decoration: BoxDecoration(
-            //       boxShadow: [
-            //         BoxShadow(
-            //           color: const Color(0xFF636363).withOpacity(0.5),
-            //           spreadRadius: 3,
-            //           blurRadius: 5,
-            //           offset: const Offset(0, 3),
-            //         ),
-            //       ],
-            //     ),
-            //     child: const TextField(
-            //       style: TextStyle(
-            //         fontSize: 18,
-            //       ),
-            //       cursorColor: blackTextColor,
-            //       textAlignVertical: TextAlignVertical.center,
-            //       decoration: InputDecoration(
-            //         filled: true,
-            //         fillColor: whiteTextColor,
-            //         labelText: 'Work email address',
-            //         labelStyle: TextStyle(
-            //           color: darkgrayColor,
-            //         ),
-            //         contentPadding:
-            //             EdgeInsets.symmetric(vertical: 6, horizontal: 1),
-            //         floatingLabelStyle: TextStyle(
-            //           color: mainColor,
-            //           fontSize: 18,
-            //           height: 0.6,
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //         focusedBorder: UnderlineInputBorder(
-            //           borderSide: BorderSide(
-            //             color: mainColor,
-            //             width: 3.0,
-            //           ),
-            //         ),
-            //         focusColor: blackTextColor,
-            //       ),
-            //     ),
-            //   ),
-            // ),
             const SizedBox(
               height: 20,
             ),
@@ -161,65 +70,6 @@ class _SignupInfoPageState extends State<SignupInfoPage> {
               controller: _passwordController,
               isPassword: true,
             ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 20),
-            //   child: Container(
-            //     decoration: BoxDecoration(
-            //       boxShadow: [
-            //         BoxShadow(
-            //           color: const Color(0xFF636363).withOpacity(0.5),
-            //           spreadRadius: 3,
-            //           blurRadius: 5,
-            //           offset: const Offset(0, 3),
-            //         ),
-            //       ],
-            //     ),
-            //     child: TextField(
-            //       style: const TextStyle(
-            //         fontSize: 18,
-            //       ),
-            //       cursorColor: blackTextColor,
-            //       obscureText: _isObscure,
-            //       textAlignVertical: TextAlignVertical.center,
-            //       decoration: InputDecoration(
-            //         labelText: 'Password',
-            //         labelStyle: const TextStyle(
-            //           color: darkgrayColor,
-            //         ),
-            //         hintText: '8 or more characters',
-            //         hintStyle:
-            //             TextStyle(color: blackTextColor.withOpacity(0.5)),
-            //         filled: true,
-            //         fillColor: whiteTextColor,
-            //         contentPadding:
-            //             const EdgeInsets.symmetric(vertical: 6, horizontal: 1),
-            //         floatingLabelStyle: const TextStyle(
-            //           color: mainColor,
-            //           fontSize: 18,
-            //           height: 0.6,
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //         focusedBorder: const UnderlineInputBorder(
-            //           borderSide: BorderSide(
-            //             color: mainColor,
-            //             width: 3.0,
-            //           ),
-            //         ),
-            //         suffixIcon: IconButton(
-            //           icon: Icon(
-            //             _isObscure ? Icons.visibility : Icons.visibility_off,
-            //             color: blackTextColor,
-            //           ),
-            //           onPressed: () {
-            //             setState(() {
-            //               _isObscure = !_isObscure;
-            //             });
-            //           },
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
             const SizedBox(
               height: 10,
             ),
@@ -246,12 +96,14 @@ class _SignupInfoPageState extends State<SignupInfoPage> {
               margin: const EdgeInsets.symmetric(horizontal: 20),
               padding: const EdgeInsets.all(0),
               decoration: BoxDecoration(
-                border: Border.all(color: blackTextColor, width: 2.0),
-                color: lightgrayColor,
+                border: Border.all(color: lightgrayColor, width: 2.0),
+                color: mainColor,
                 boxShadow: const [
                   BoxShadow(
-                    color: blackTextColor,
-                    offset: Offset(3, 3), // Bottom shadow
+                    color: lightgrayColor,
+                    offset: Offset(0, 0),
+                    blurRadius: 1.0,
+                    spreadRadius: 1.0,
                   ),
                 ],
               ),
@@ -271,7 +123,7 @@ class _SignupInfoPageState extends State<SignupInfoPage> {
             const SizedBox(
               height: 20,
             ),
-            widget.selectedType == AccountTypes.company
+            widget.selectedType == UserRole.company
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
