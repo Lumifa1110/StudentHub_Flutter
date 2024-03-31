@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/pages/all_project_page.dart';
+import 'pages/submit_proposal_page.dart';
+import 'pages/all_project_page.dart';
+
 import 'package:flutter/services.dart';
 
 // import 'package:studenthub/data/test/data_project.dart';
