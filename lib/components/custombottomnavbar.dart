@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/pages/mock_dashboard_page.dart';
 import 'package:studenthub/pages/mock_message_page.dart';
+import 'package:studenthub/pages/notification_page.dart';
 import 'package:studenthub/pages/project_list_page.dart';
 import 'package:studenthub/utils/colors.dart';
 
@@ -55,6 +56,12 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
           case 2:
             {
               _navigateWithAnimation('/message', const MessagePage(),
+                  widget.initialIndex, newIndex);
+              break;
+            }
+          case 3:
+            {
+              _navigateWithAnimation('/notification', NotificationPage(),
                   widget.initialIndex, newIndex);
               break;
             }

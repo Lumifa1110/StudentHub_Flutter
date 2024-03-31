@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/pages/all_project_page.dart';
+import 'pages/submit_proposal_page.dart';
+import 'pages/all_project_page.dart';
+
 import 'package:flutter/services.dart';
 import 'package:studenthub/enums/user_role.dart';
 
@@ -8,6 +12,8 @@ import 'package:studenthub/pages/home_page.dart';
 // import 'package:studenthub/pages/company_review_proposal/project_proposal_list.dart';
 import 'package:studenthub/pages/mock_message_page.dart';
 // import 'package:studenthub/pages/project_detail_page.dart';
+import 'package:studenthub/pages/notification_page.dart';
+import 'package:studenthub/pages/project_detail_page.dart';
 import 'package:studenthub/pages/project_list_page.dart';
 import 'package:studenthub/pages/signin_page.dart';
 import 'package:studenthub/pages/signupinfo_page.dart';
