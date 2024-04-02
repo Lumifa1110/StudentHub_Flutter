@@ -1,4 +1,6 @@
 enum UserRole {
-  student,
-  company,
+  student, // 0
+  company, // 1
+  admin, // 2
+  manage, // 3
 }

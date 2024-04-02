@@ -5,16 +5,15 @@ import 'package:flutter/widgets.dart';
 import '../components/appbar_ps1.dart';
 import '../components/appbar_dashboard.dart';
 
-
 class Dashboard_page extends StatelessWidget {
   const Dashboard_page({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
+      child: Scaffold(
           appBar: AppbarDashboard(),
-          body:Padding(
+          body: Padding(
             padding: EdgeInsets.all(20),
             child: DefaultTabController(
               length: 3,
@@ -23,27 +22,39 @@ class Dashboard_page extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(width: 5,),
-                      Text('Your projects', style: TextStyle(fontWeight: FontWeight.bold),),
-                      SizedBox(width: 30,),
-                      ElevatedButton(onPressed: (){}, child: Text('Post a jobs'),style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder()),)
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      const Text(
+                        'Your projects',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(
+                        width: 30,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {},
+                        child: const Text('Post a jobs'),
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder()),
+                      )
                     ],
                   ),
-                  SizedBox(height: 10,),
-
+                  SizedBox(
+                    height: 10,
+                  ),
                   Container(
                     decoration: BoxDecoration(
-                      border: Border.all(width: 2),
-                      borderRadius: BorderRadius.circular(12)
-                    ),
+                        border: Border.all(width: 2),
+                        borderRadius: BorderRadius.circular(12)),
                     child: TabBar(
-                      indicator: BoxDecoration(
-                        color: Colors.greenAccent,
-                        borderRadius: BorderRadius.circular(11),
-                        border: Border.all(width: 1),
-                      ),
+                        indicator: BoxDecoration(
+                          color: Colors.greenAccent,
+                          borderRadius: BorderRadius.circular(11),
+                          border: Border.all(width: 1),
+                        ),
                         indicatorSize: TabBarIndicatorSize.tab,
-                        tabs:  <Widget> [
+                        tabs: <Widget>[
                           Tab(
                             child: Container(
                               height: 50,
@@ -52,14 +63,16 @@ class Dashboard_page extends StatelessWidget {
                                 child: Text('All project'),
                               ),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12)
-                              ),
+                                  borderRadius: BorderRadius.circular(12)),
                             ),
                           ),
-                          Tab(text: 'working',),
-                          Tab(text: 'Archieved',)
-                        ]
-                    ),
+                          Tab(
+                            text: 'working',
+                          ),
+                          Tab(
+                            text: 'Archieved',
+                          )
+                        ]),
                   ),
                   Expanded(
                     child: TabBarView(
@@ -67,7 +80,9 @@ class Dashboard_page extends StatelessWidget {
                         Container(
                           child: Column(
                             children: [
-                              SizedBox(height: 30,),
+                              SizedBox(
+                                height: 30,
+                              ),
                               Text('Welcom, Hai!'),
                               Text('You have no jobs!'),
                             ],
@@ -81,8 +96,7 @@ class Dashboard_page extends StatelessWidget {
                 ],
               ),
             ),
-          )
-      ),
+          )),
     );
   }
 }

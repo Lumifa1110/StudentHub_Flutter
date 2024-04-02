@@ -84,6 +84,8 @@ class CustomRadioCard extends StatelessWidget {
         return 'I am a company, find engineer for project';
       case UserRole.student:
         return 'I am a student, find a project';
+      default:
+        return '';
     }
   }
 }

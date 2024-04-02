@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:studenthub/pages/all_project_page.dart';
 import 'pages/submit_proposal_page.dart';
 import 'pages/all_project_page.dart';
-
 import 'package:flutter/services.dart';
 import 'package:studenthub/enums/user_role.dart';
-
 // import 'package:studenthub/data/test/data_project.dart';
 import 'package:studenthub/pages/chat_flow/chat_screen.dart';
 import 'package:studenthub/pages/home_page.dart';
