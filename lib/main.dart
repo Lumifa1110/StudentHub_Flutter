@@ -3,6 +3,9 @@ import 'package:studenthub/pages/all_project_page.dart';
 import 'pages/submit_proposal_page.dart';
 import 'pages/all_project_page.dart';
 import 'package:flutter/services.dart';
+import 'pages/chat_flow/index.dart';
+import  'pages/index.dart';
+// import 'package:studenthub/data/test/data_project.dart';
 import 'package:studenthub/enums/user_role.dart';
 // import 'package:studenthub/data/test/data_project.dart';
 import 'package:studenthub/pages/chat_flow/chat_screen.dart';
@@ -20,7 +23,6 @@ import 'package:studenthub/theme/theme.dart';
 import 'package:studenthub/theme/theme_controller.dart';
 // import 'package:studenthub/pages/signupinfo_page.dart';
 // import 'package:studenthub/pages/signuptype_page.dart';
-import 'pages/index.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -92,7 +94,7 @@ class _StudentHubState extends State<StudentHub> {
             return MaterialPageRoute(
                 builder: (context) => const StudentProfileInputScreen1());
           case '/chatter':
-            return MaterialPageRoute(builder: (context) => const ChatScreen());
+            return MaterialPageRoute(builder: (context) => const MessageListScreen());
           // case '/signin':
           //   return MaterialPageRoute(builder: (context) => const SigninPage());
           case '/signup':
