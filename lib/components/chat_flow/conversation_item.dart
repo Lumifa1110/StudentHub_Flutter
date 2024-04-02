@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/user/user_avatar.dart';
 import 'package:studenthub/models/index.dart';
-import 'package:studenthub/pages/chat_flow/message_detail_screen.dart';
+import 'package:studenthub/screens/chat_flow/message_detail_screen.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 

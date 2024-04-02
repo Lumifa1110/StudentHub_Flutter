@@ -1,28 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:studenthub/pages/all_project_page.dart';
-import 'pages/submit_proposal_page.dart';
-import 'pages/all_project_page.dart';
 import 'package:flutter/services.dart';
-import 'pages/chat_flow/index.dart';
-import  'pages/index.dart';
-// import 'package:studenthub/data/test/data_project.dart';
 import 'package:studenthub/enums/user_role.dart';
-// import 'package:studenthub/data/test/data_project.dart';
-import 'package:studenthub/pages/chat_flow/chat_screen.dart';
-import 'package:studenthub/pages/home_page.dart';
-// import 'package:studenthub/pages/company_review_proposal/project_proposal_list.dart';
-import 'package:studenthub/pages/mock_message_page.dart';
-// import 'package:studenthub/pages/project_detail_page.dart';
-import 'package:studenthub/pages/notification_page.dart';
-import 'package:studenthub/pages/project_detail_page.dart';
-import 'package:studenthub/pages/project_list_page.dart';
-import 'package:studenthub/pages/signin_page.dart';
-import 'package:studenthub/pages/signupinfo_page.dart';
-import 'package:studenthub/pages/signuptype_page.dart';
+import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/theme/theme.dart';
 import 'package:studenthub/theme/theme_controller.dart';
-// import 'package:studenthub/pages/signupinfo_page.dart';
-// import 'package:studenthub/pages/signuptype_page.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -70,7 +51,7 @@ class _StudentHubState extends State<StudentHub> {
       theme: lightTheme,
       darkTheme: darkTheme,
       // themeMode: _themeController.themeMode,
-      home: const HomePage(),
+      home: const HomeScreen(),
       initialRoute: '/',
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
@@ -99,22 +80,20 @@ class _StudentHubState extends State<StudentHub> {
           //   return MaterialPageRoute(builder: (context) => const SigninPage());
           case '/signup':
             return MaterialPageRoute(
-                builder: (context) => const SignupTypePage());
+                builder: (context) => const SignupTypeScreen());
           case '/signup/company':
             return MaterialPageRoute(
               builder: (context) =>
-                  const SignupInfoPage(selectedType: UserRole.company),
+                  const SignupInfoScreen(selectedType: UserRole.company),
             );
           case '/signup/student':
             return MaterialPageRoute(
               builder: (context) =>
-                  const SignupInfoPage(selectedType: UserRole.student),
+                  const SignupInfoScreen(selectedType: UserRole.student),
             );
           case '/list':
             return MaterialPageRoute(
-                builder: (context) => const ProjectListPage());
-          case '/message':
-            return MaterialPageRoute(builder: (context) => const MessagePage());
+                builder: (context) => const ProjectListScreen());
           default:
             return null;
         }

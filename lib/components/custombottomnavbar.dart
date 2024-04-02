@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studenthub/pages/mock_dashboard_page.dart';
-import 'package:studenthub/pages/mock_message_page.dart';
-import 'package:studenthub/pages/notification_page.dart';
-import 'package:studenthub/pages/project_list_page.dart';
+import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/utils/colors.dart';
 
 class CustomBottomNavBar extends StatefulWidget {
@@ -43,25 +40,25 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
         switch (newIndex) {
           case 0:
             {
-              _navigateWithAnimation('/list', const ProjectListPage(),
+              _navigateWithAnimation('/list', const ProjectListScreen(),
                   widget.initialIndex, newIndex);
               break;
             }
           case 1:
             {
-              _navigateWithAnimation('/dashboard', const MockDashboardPage(),
+              _navigateWithAnimation('/dashboard', const StudentDashboardScreen(),
                   widget.initialIndex, newIndex);
               break;
             }
           case 2:
             {
-              _navigateWithAnimation('/message', const MessagePage(),
+              _navigateWithAnimation('/message', const MessageListScreen(),
                   widget.initialIndex, newIndex);
               break;
             }
           case 3:
             {
-              _navigateWithAnimation('/notification', NotificationPage(),
+              _navigateWithAnimation('/notification', const NotificationScreen(),
                   widget.initialIndex, newIndex);
               break;
             }
