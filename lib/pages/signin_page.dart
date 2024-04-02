@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/textfield_floatinglabel.dart';
 import 'package:studenthub/enums/user_role.dart';
@@ -17,17 +18,27 @@ class SigninPage extends StatefulWidget {
 
 class _SigninPageState extends State<SigninPage> {
   // bool _isObscure = true;
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  Future<void> handleSignin() async {
+    final String _userEmail = _emailController.text.trim();
+    final String _usePassword = _passwordController.text.trim();
+    final UserRole _userRole = widget.role;
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userEmail', _userEmail);
+    final String? storedEmail = prefs.getString('userEmail');
+
+    print(storedEmail);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
       resizeToAvoidBottomInset: false,
-      appBar: const AuthAppBar(
-        canBack: true,
-      ),
+      appBar: const AuthAppBar(canBack: false),
       body: Center(
         child: Column(
           children: [
@@ -47,12 +58,20 @@ class _SigninPageState extends State<SigninPage> {
                 color: darkblueColor,
               ),
             ),
+            Text(
+              'as ${widget.role == UserRole.company ? 'Company' : 'Student'}',
+              style: const TextStyle(
+                fontSize: 33,
+                fontWeight: FontWeight.bold,
+                color: darkblueColor,
+              ),
+            ),
             const SizedBox(
               height: 20,
             ),
             // TextField for Username or email
             TextFieldFloatingLabel(
-                label: 'Email', controller: _usernameController),
+                label: 'Email', controller: _emailController),
 
             const SizedBox(
               height: 20,
@@ -81,7 +100,7 @@ class _SigninPageState extends State<SigninPage> {
                 ],
               ),
               child: TextButton(
-                onPressed: () {},
+                onPressed: handleSignin,
                 child: const Text(
                   'Sign in',
                   style: TextStyle(

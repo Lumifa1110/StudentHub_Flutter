@@ -152,7 +152,10 @@ class _SignupInfoPageState extends State<SignupInfoPage> {
                             decorationThickness: 2,
                           ),
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.pushNamed(context, '/signup/student');
+                        },
                       ),
                     ],
                   )
@@ -184,7 +187,10 @@ class _SignupInfoPageState extends State<SignupInfoPage> {
                             decorationThickness: 2,
                           ),
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.pushNamed(context, '/signup/company');
+                        },
                       ),
                     ],
                   ),

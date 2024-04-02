@@ -4,9 +4,14 @@ import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/pages/signin_page.dart';
 import 'package:studenthub/utils/colors.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -52,21 +57,25 @@ class HomePage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: TextButton(
+                  child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const SigninPage(
-                                  role: UserRole.company,
-                                )),
+                          builder: (context) => const SigninPage(
+                            role: UserRole.company,
+                          ),
+                        ),
                       );
                     },
                     style: ButtonStyle(
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                         const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero),
+                          borderRadius: BorderRadius.zero,
+                        ),
                       ),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(mainColor),
                     ),
                     child: const Text(
                       'Company',

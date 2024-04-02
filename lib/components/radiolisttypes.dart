@@ -24,7 +24,7 @@ class _RadiolisttypesState extends State<RadioListTypes> {
       children: [
         ListView.builder(
           shrinkWrap: true,
-          itemCount: UserRole.values.length,
+          itemCount: 2,
           itemBuilder: (context, index) {
             final type = UserRole.values[index];
             return CustomRadioCard(

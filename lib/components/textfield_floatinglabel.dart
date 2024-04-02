@@ -18,7 +18,14 @@ class TextFieldFloatingLabel extends StatefulWidget {
 }
 
 class _TextFieldFloatingLabelState extends State<TextFieldFloatingLabel> {
-  bool _isObscure = true;
+  late bool _isObscure;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _isObscure = widget.isPassword;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
