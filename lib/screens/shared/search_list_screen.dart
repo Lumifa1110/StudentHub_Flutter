@@ -13,9 +13,9 @@ class SearchListScreen extends StatefulWidget {
   final String seachQuery;
 
   const SearchListScreen({
-    Key? key,
+    super.key,
     required this.seachQuery,
-  }) : super(key: key);
+  });
 
   @override
   State<SearchListScreen> createState() => _SearchListScreenState();

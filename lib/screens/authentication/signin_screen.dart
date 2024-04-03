@@ -21,12 +21,11 @@ class _SigninScreenState extends State<SigninScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> handleSignin() async {
-    final String _userEmail = _emailController.text.trim();
-    final String _usePassword = _passwordController.text.trim();
-    final UserRole _userRole = widget.role;
+    final String userEmail = _emailController.text.trim();
+    _passwordController.text.trim();
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userEmail', _userEmail);
+    await prefs.setString('userEmail', userEmail);
     final String? storedEmail = prefs.getString('userEmail');
 
     print(storedEmail);

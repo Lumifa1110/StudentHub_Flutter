@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
@@ -39,7 +37,7 @@ class NotificationScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'You have submitted to join project \"Javis - AI Copilot\"',
+                            'You have submitted to join project "Javis - AI Copilot"',
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -86,7 +84,7 @@ class NotificationScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'You have invited to interview for project \"Javis - AI Copilot\" at 14:00 March 20, Thurday',
+                            'You have invited to interview for project "Javis - AI Copilot" at 14:00 March 20, Thurday',
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -169,7 +167,7 @@ class NotificationScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'You have invited to interview for project \"Javis - AI Copilot\" at 14:00 March 20, Thurday',
+                            'You have invited to interview for project "Javis - AI Copilot" at 14:00 March 20, Thurday',
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -283,7 +281,7 @@ class NotificationScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const Divider(
+                    Divider(
                       height: 1.0,
                       thickness: 3.0,
                       color: blackTextColor,

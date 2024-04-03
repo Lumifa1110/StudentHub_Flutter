@@ -226,7 +226,7 @@ class OptionItemWorkingScreen extends StatefulWidget {
   final VoidCallback onTap;
   final Proposal proposal;
 
-  const OptionItemWorkingScreen({
+  const OptionItemWorkingScreen({super.key,
     required this.onTap,
     required this.proposal,
   });
@@ -248,7 +248,7 @@ class _OptionItemWorkingScreenState extends State<OptionItemWorkingScreen> {
           children: <Widget>[
             Text(
               widget.proposal.position,
-              style: TextStyle(color: Colors.green),
+              style: const TextStyle(color: Colors.green),
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(
@@ -256,7 +256,7 @@ class _OptionItemWorkingScreenState extends State<OptionItemWorkingScreen> {
             ),
             Text(
               'Time ${widget.proposal.executionTime}, ${widget.proposal.numberOfStudents} students',
-              style: TextStyle(color: Colors.grey),
+              style: const TextStyle(color: Colors.grey),
             ),
             const SizedBox(
               height: 10,

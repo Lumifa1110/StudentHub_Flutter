@@ -6,7 +6,7 @@ import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class SwitchScreen extends StatefulWidget {
-  const SwitchScreen({Key? key}) : super(key: key);
+  const SwitchScreen({super.key});
 
   @override
   State<SwitchScreen> createState() => _SwitchScreenState();
@@ -46,7 +46,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
         backgroundColor: mainColor,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             color: Colors.white,
             onPressed: () {
               setState(() {
@@ -86,7 +86,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
               thickness: 3.0,
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
                   InkWell(

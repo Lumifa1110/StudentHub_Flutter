@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
 import '../../../components/appbar_ps1.dart';
 class ProjectPostStep2Page extends StatelessWidget{
+  const ProjectPostStep2Page({super.key});
+
   @override
   Widget build(BuildContext context){
     return SafeArea(
         child: Scaffold(
-          appBar: AppBar_PostPS1(),
+          appBar: const AppBar_PostPS1(),
           body: Center(
             child: Padding(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  SizedBox(height: 30,),
-                  Text('2/4 \t\t Next, estimate the scope of your job', style: TextStyle(fontWeight: FontWeight.bold),),
-                  SizedBox(height: 10,),
-                  Text('Consider the size of your project and the timeline'),
-                  SizedBox(height: 30,),
-                  Text('How long will your project take?'),
-                  SizedBox(height: 20,),
-                  CheckboxListPrPS2(),
-                  SizedBox(height: 20,),
-                  Text('How many students do you want for this project?'),
-                  SizedBox(height: 20,),
-                  TextField(
+                  const SizedBox(height: 30,),
+                  const Text('2/4 \t\t Next, estimate the scope of your job', style: TextStyle(fontWeight: FontWeight.bold),),
+                  const SizedBox(height: 10,),
+                  const Text('Consider the size of your project and the timeline'),
+                  const SizedBox(height: 30,),
+                  const Text('How long will your project take?'),
+                  const SizedBox(height: 20,),
+                  const CheckboxListPrPS2(),
+                  const SizedBox(height: 20,),
+                  const Text('How many students do you want for this project?'),
+                  const SizedBox(height: 20,),
+                  const TextField(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'number of students',
@@ -32,13 +34,13 @@ class ProjectPostStep2Page extends StatelessWidget{
                       contentPadding: EdgeInsets.all(5)
                     ),
                   ),
-                  SizedBox(height: 40,),
+                  const SizedBox(height: 40,),
                   Align(
                     alignment: Alignment.centerRight,
                     child:ElevatedButton(
                       onPressed: (){},
-                      child: Text('Next: Description'),
-                      style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder()),
+                      style: ElevatedButton.styleFrom(shape: const RoundedRectangleBorder()),
+                      child: const Text('Next: Description'),
                     ),
                   )
                 ],
@@ -52,6 +54,8 @@ class ProjectPostStep2Page extends StatelessWidget{
 
 enum radius_value{to3, to6}
 class CheckboxListPrPS2 extends StatefulWidget{
+  const CheckboxListPrPS2({super.key});
+
   @override
   _CheckboxListPrPS2State createState()=> _CheckboxListPrPS2State();
 }
@@ -68,7 +72,7 @@ class _CheckboxListPrPS2State extends State<CheckboxListPrPS2>{
             groupValue: _isChecked,
             onChanged: (value){
               setState(() {
-                this._isChecked = value as radius_value;
+                _isChecked = value as radius_value;
               });
             },
           ),
@@ -80,7 +84,7 @@ class _CheckboxListPrPS2State extends State<CheckboxListPrPS2>{
             groupValue: _isChecked,
             onChanged: (value){
               setState(() {
-                this._isChecked = value as radius_value;
+                _isChecked = value as radius_value;
               });
             },
           ),
