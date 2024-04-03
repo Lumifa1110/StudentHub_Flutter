@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/screens/authentication/signin_screen.dart';
@@ -12,6 +13,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late SharedPreferences _prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadToken(); // Gọi hàm _loadToken() khi màn hình được tạo
+  }
+
+  // Hàm kiểm tra và chuyển hướng tới trang profile nếu có token
+  Future<void> _loadToken() async {
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+    if (token != null) {
+      Navigator.pushReplacementNamed(context, '/student/profileinput1');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

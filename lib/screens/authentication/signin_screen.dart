@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/textfield_floatinglabel.dart';
 import 'package:studenthub/enums/user_role.dart';
+import 'package:studenthub/models/user_model.dart';
 import 'package:studenthub/screens/authentication/signuptype_screen.dart';
 import 'package:studenthub/utils/colors.dart';
 
@@ -20,16 +23,57 @@ class _SigninScreenState extends State<SigninScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  late SharedPreferences _prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadToken(); // Gọi hàm _loadToken() khi màn hình được tạo
+  }
+
+  // Hàm kiểm tra và chuyển hướng tới trang profile nếu có token
+  Future<void> _loadToken() async {
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+    if (token != null) {
+      Navigator.pushReplacementNamed(context, '/student/profileinput1');
+    }
+  }
+
   Future<void> handleSignin() async {
-    final String _userEmail = _emailController.text.trim();
-    final String _usePassword = _passwordController.text.trim();
-    final UserRole _userRole = widget.role;
+    print(_emailController.text.trim());
+    print(_passwordController.text.trim());
+    final User user = User(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+      role: widget.role.index,
+    );
+    print(user.toJson());
+    try {
+      final response = await http.post(
+        Uri.parse('http://34.16.137.128/api/auth/sign-in'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(user.toJson()),
+      );
+      print(response.body);
+      print('success');
+      if (response.statusCode == 201) {
+        // Lưu token vào SharedPreferences
+        final token = jsonDecode(response.body)['result']['token'];
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', token);
 
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userEmail', _userEmail);
-    final String? storedEmail = prefs.getString('userEmail');
-
-    print(storedEmail);
+        // Điều hướng tới trang profile
+        Navigator.pushReplacementNamed(context, '/student/profileinput1');
+      } else {
+        // Xử lý lỗi nếu cần
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 
   @override

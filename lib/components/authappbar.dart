@@ -4,12 +4,16 @@ import 'package:studenthub/utils/colors.dart';
 
 class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool canBack;
-  final String? title; // Remove const here
+  final String? title;
+  final IconData? icon;
+  final VoidCallback? onTapIcon;
 
   const AuthAppBar({
     Key? key, // Add Key? key here
     required this.canBack,
     this.title,
+    this.icon, // Thêm icon vào
+    this.onTapIcon,
   });
 
   @override
@@ -58,12 +62,18 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
       actions: [
         IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.person,
-            size: 26,
-            color: blackTextColor,
-          ),
+          onPressed: onTapIcon,
+          icon: icon != null
+              ? Icon(
+                  icon,
+                  size: 26,
+                  color: blackTextColor,
+                )
+              : const Icon(
+                  Icons.person,
+                  size: 26,
+                  color: blackTextColor,
+                ),
         )
       ],
     );
