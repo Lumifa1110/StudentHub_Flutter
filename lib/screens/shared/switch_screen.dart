@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:studenthub/components/card_switchaccount.dart';
 import 'package:studenthub/components/textfield/search_bar.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
@@ -68,48 +69,14 @@ class _SwitchScreenState extends State<SwitchScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    SizedBox(
-                      child: ListTile(
-                        dense: true,
-                        leading: Icon(
-                          Icons.person,
-                          size: 50,
-                        ),
-                        title: Text(
-                          'Luu Minh Phat',
-                          style: TextStyle(
-                            overflow: TextOverflow.ellipsis,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Text(
-                          'Company',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      child: ListTile(
-                        dense: true,
-                        leading: Icon(
-                          Icons.person,
-                          size: 50,
-                        ),
-                        title: Text(
-                          'Luu Minh Phat Student',
-                          style: TextStyle(
-                            overflow: TextOverflow.ellipsis,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Text(
-                          'Student',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                    ),
+                    CardSwitchAccount(
+                        accountAvt: Icons.person,
+                        accountName: 'Luu Minh Phat',
+                        accountRole: 'Company'),
+                    CardSwitchAccount(
+                        accountAvt: Icons.person,
+                        accountName: 'Luu Minh Phat Student',
+                        accountRole: 'Student'),
                   ],
                 ),
               ),
