@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:studenthub/components/textfield/search_bar.dart';
 import 'package:studenthub/utils/colors.dart';
+import 'package:studenthub/utils/font.dart';
 
 class SwitchScreen extends StatefulWidget {
   const SwitchScreen({Key? key}) : super(key: key);
@@ -117,10 +118,59 @@ class _SwitchScreenState extends State<SwitchScreen> {
               color: blackTextColor,
               thickness: 3.0,
             ),
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Column(
-                children: [],
+                children: [
+                  InkWell(
+                    onTap: () {},
+                    child: const ListTile(
+                      leading: Icon(
+                        Icons.person_2_outlined,
+                        size: 36,
+                      ),
+                      title: Text(
+                        'Profile',
+                        style: TextStyle(
+                          fontSize: AppFonts.h2FontSize,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {},
+                    child: const ListTile(
+                      leading: Icon(
+                        Icons.settings,
+                        size: 36,
+                      ),
+                      title: Text(
+                        'Setting',
+                        style: TextStyle(
+                          fontSize: AppFonts.h2FontSize,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {},
+                    child: const ListTile(
+                      leading: Icon(
+                        Icons.logout,
+                        size: 36,
+                      ),
+                      title: Text(
+                        'Log out',
+                        style: TextStyle(
+                          fontSize: AppFonts.h2FontSize,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
           ],
