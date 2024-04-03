@@ -51,7 +51,7 @@ class _StudentHubState extends State<StudentHub> {
       theme: lightTheme,
       darkTheme: darkTheme,
       // themeMode: _themeController.themeMode,
-      home: const HomeScreen(),
+      home: const SwitchScreen(),
       initialRoute: '/',
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
@@ -75,7 +75,8 @@ class _StudentHubState extends State<StudentHub> {
             return MaterialPageRoute(
                 builder: (context) => const StudentProfileInputScreen1());
           case '/chatter':
-            return MaterialPageRoute(builder: (context) => const MessageListScreen());
+            return MaterialPageRoute(
+                builder: (context) => const MessageListScreen());
           // case '/signin':
           //   return MaterialPageRoute(builder: (context) => const SigninPage());
           case '/signup':
