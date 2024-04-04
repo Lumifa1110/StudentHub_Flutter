@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 import 'package:studenthub/components/card_switchaccount.dart';
 import 'package:studenthub/components/textfield/search_bar.dart';
 import 'package:studenthub/utils/colors.dart';
@@ -14,6 +16,37 @@ class SwitchScreen extends StatefulWidget {
 
 class _SwitchScreenState extends State<SwitchScreen> {
   bool isSearchActive = false;
+
+  Future<void> handleLogout() async {
+    // Lấy token từ SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    print(token);
+
+    if (token != null) {
+      try {
+        final response = await http.post(
+          Uri.parse('http://34.16.137.128/api/auth/logout'),
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        );
+
+        if (response.statusCode == 201) {
+          await prefs.remove('token');
+          await prefs.remove('currole');
+          Navigator.pushReplacementNamed(context, '/');
+        } else {
+          // Xử lý lỗi nếu cần
+          print('Logout failed: ${response.body}');
+        }
+      } catch (e) {
+        print('Error: $e');
+      }
+    } else {
+      print('Token not found');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +155,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
                     ),
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: handleLogout,
                     child: const ListTile(
                       leading: Icon(
                         Icons.logout,

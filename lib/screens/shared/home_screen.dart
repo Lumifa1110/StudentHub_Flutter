@@ -18,15 +18,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _loadToken(); // Gọi hàm _loadToken() khi màn hình được tạo
+    _loadToken();
   }
 
-  // Hàm kiểm tra và chuyển hướng tới trang profile nếu có token
   Future<void> _loadToken() async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     if (token != null) {
-      Navigator.pushReplacementNamed(context, '/student/profileinput1');
+      Navigator.pushReplacementNamed(context, '/profile');
     }
   }
 

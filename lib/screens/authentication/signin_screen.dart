@@ -8,6 +8,7 @@ import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/models/user_model.dart';
 import 'package:studenthub/screens/authentication/signuptype_screen.dart';
 import 'package:studenthub/utils/colors.dart';
+import 'package:studenthub/utils/font.dart';
 
 class SigninScreen extends StatefulWidget {
   final UserRole role;
@@ -19,6 +20,7 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
+  List<String> errorMessages = [];
   // bool _isObscure = true;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -28,27 +30,27 @@ class _SigninScreenState extends State<SigninScreen> {
   @override
   void initState() {
     super.initState();
-    _loadToken(); // Gọi hàm _loadToken() khi màn hình được tạo
+    _loadToken();
   }
 
-  // Hàm kiểm tra và chuyển hướng tới trang profile nếu có token
   Future<void> _loadToken() async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     if (token != null) {
-      Navigator.pushReplacementNamed(context, '/student/profileinput1');
+      Navigator.pushReplacementNamed(context, '/profile');
     }
   }
 
   Future<void> handleSignin() async {
-    print(_emailController.text.trim());
-    print(_passwordController.text.trim());
+    final prefs = await SharedPreferences.getInstance();
     final User user = User(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
-      role: widget.role.index,
     );
-    print(user.toJson());
+    final userJson = jsonEncode(user.toJson());
+    await prefs.setString('user', userJson);
+    // print(user.toJson());
+
     try {
       final response = await http.post(
         Uri.parse('http://34.16.137.128/api/auth/sign-in'),
@@ -57,22 +59,58 @@ class _SigninScreenState extends State<SigninScreen> {
         },
         body: jsonEncode(user.toJson()),
       );
-      print(response.body);
-      print('success');
+      print('Res: ${response.body}');
+
       if (response.statusCode == 201) {
         // Lưu token vào SharedPreferences
         final token = jsonDecode(response.body)['result']['token'];
-        final prefs = await SharedPreferences.getInstance();
+        fetchUserData();
         await prefs.setString('token', token);
-
-        // Điều hướng tới trang profile
-        Navigator.pushReplacementNamed(context, '/student/profileinput1');
+        await prefs.setInt('currole', widget.role.index);
       } else {
-        // Xử lý lỗi nếu cần
         print('Error: ${response.statusCode}');
+        final errorBody = jsonDecode(response.body);
+        final errorDetails = errorBody['errorDetails'];
+        if (errorDetails is List<dynamic>) {
+          setState(() {
+            errorMessages.clear();
+            errorMessages.addAll(errorDetails.cast<String>());
+          });
+        } else if (errorDetails is String) {
+          setState(() {
+            errorMessages.clear();
+            errorMessages.add(errorDetails);
+          });
+        }
       }
     } catch (e) {
       print('Error: $e');
+    }
+  }
+
+  Future<void> fetchUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final current_role = prefs.getInt('currole');
+
+    if (token != null) {
+      try {
+        final response = await http.get(
+          Uri.parse('http://34.16.137.128/api/auth/me'),
+          headers: {'Authorization': 'Bearer $token'},
+        );
+        print(response.body);
+        if (response.statusCode == 200) {
+          print('success');
+          Navigator.pushReplacementNamed(context, '/profile');
+        } else {
+          // Handle error
+        }
+      } catch (e) {
+        // Handle network errors
+      }
+    } else {
+      // Handle case where token is not available
     }
   }
 
@@ -101,14 +139,14 @@ class _SigninScreenState extends State<SigninScreen> {
                 color: darkblueColor,
               ),
             ),
-            Text(
-              'as ${widget.role == UserRole.company ? 'Company' : 'Student'}',
-              style: const TextStyle(
-                fontSize: 33,
-                fontWeight: FontWeight.bold,
-                color: darkblueColor,
-              ),
-            ),
+            // Text(
+            //   'as ${widget.role == UserRole.company ? 'Company' : 'Student'}',
+            //   style: const TextStyle(
+            //     fontSize: 33,
+            //     fontWeight: FontWeight.bold,
+            //     color: darkblueColor,
+            //   ),
+            // ),
             const SizedBox(
               height: 20,
             ),
@@ -126,7 +164,28 @@ class _SigninScreenState extends State<SigninScreen> {
               isPassword: true,
             ),
             const SizedBox(
-              height: 20,
+              height: 10,
+            ),
+
+            // Hiển thị thông báo lỗi
+            if (errorMessages.isNotEmpty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: errorMessages.map((error) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      error,
+                      style: const TextStyle(
+                          color: errorColor, fontSize: AppFonts.h3FontSize),
+                    ),
+                  );
+                }).toList(),
+              ),
+
+            const SizedBox(
+              height: 10,
             ),
             Container(
               width: MediaQuery.of(context).size.width,
