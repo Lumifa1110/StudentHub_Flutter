@@ -33,6 +33,14 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
   Future<void> handleSignup() async {
     final prefs = await SharedPreferences.getInstance();
 
+    if (!_isAgree!) {
+      setState(() {
+        errorMessages.clear();
+        errorMessages.add("Please agree to the terms and conditions.");
+      });
+      return; // Stop further execution
+    }
+
     final CreateUser createUser = CreateUser(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
@@ -79,7 +87,7 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: const AuthAppBar(
-        canBack: false,
+        canBack: true,
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -114,9 +122,11 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  if (errorMessages.any((error) => error.contains('fullname')))
+                  if (errorMessages
+                      .any((error) => error.toLowerCase().contains('fullname')))
                     ...errorMessages
-                        .where((error) => error.contains('fullname'))
+                        .where(
+                            (error) => error.toLowerCase().contains('fullname'))
                         .map((error) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(
@@ -143,9 +153,10 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  if (errorMessages.any((error) => error.contains('email')))
+                  if (errorMessages
+                      .any((error) => error.toLowerCase().contains('email')))
                     ...errorMessages
-                        .where((error) => error.contains('email'))
+                        .where((error) => error.toLowerCase().contains('email'))
                         .map((error) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(
@@ -174,9 +185,11 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  if (errorMessages.any((error) => error.contains('password')))
+                  if (errorMessages
+                      .any((error) => error.toLowerCase().contains('password')))
                     ...errorMessages
-                        .where((error) => error.contains('password'))
+                        .where(
+                            (error) => error.toLowerCase().contains('password'))
                         .map((error) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(
@@ -215,20 +228,37 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
                 contentPadding: const EdgeInsets.symmetric(horizontal: 10),
               ),
               // if (errorMessages.isNotEmpty)
-              //   Column(
-              //     crossAxisAlignment: CrossAxisAlignment.stretch,
-              //     mainAxisAlignment: MainAxisAlignment.start,
-              //     children: errorMessages.map((error) {
-              //       return Padding(
-              //         padding: const EdgeInsets.symmetric(horizontal: 20),
-              //         child: Text(
-              //           error,
-              //           style: const TextStyle(
-              //               color: errorColor, fontSize: AppFonts.h3FontSize),
-              //         ),
-              //       );
-              //     }).toList(),
-              //   ),
+              // Column(
+              //   crossAxisAlignment: CrossAxisAlignment.stretch,
+              //   mainAxisAlignment: MainAxisAlignment.start,
+              //   children: errorMessages.map((error) {
+              //     return Padding(
+              //       padding: const EdgeInsets.symmetric(horizontal: 20),
+              //       child: Text(
+              //         error,
+              //         style: const TextStyle(
+              //             color: errorColor, fontSize: AppFonts.h3FontSize),
+              //       ),
+              //     );
+              //   }).toList(),
+              // ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: errorMessages
+                    .where((error) => error.contains('agree'))
+                    .map((error) {
+                  return Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    child: Text(
+                      error,
+                      style: const TextStyle(
+                          color: errorColor, fontSize: AppFonts.h3FontSize),
+                    ),
+                  );
+                }).toList(),
+              ),
               Container(
                 width: MediaQuery.of(context).size.width,
                 margin: const EdgeInsets.symmetric(horizontal: 20),

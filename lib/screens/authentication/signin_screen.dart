@@ -157,9 +157,10 @@ class _SigninScreenState extends State<SigninScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                if (errorMessages.any((error) => error.contains('email')))
+                if (errorMessages
+                    .any((error) => error.toLowerCase().contains('email')))
                   ...errorMessages
-                      .where((error) => error.contains('email'))
+                      .where((error) => error.toLowerCase().contains('email'))
                       .map((error) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(
@@ -190,9 +191,11 @@ class _SigninScreenState extends State<SigninScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                if (errorMessages.any((error) => error.contains('password')))
+                if (errorMessages
+                    .any((error) => error.toLowerCase().contains('password')))
                   ...errorMessages
-                      .where((error) => error.contains('password'))
+                      .where(
+                          (error) => error.toLowerCase().contains('password'))
                       .map((error) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(
@@ -217,9 +220,10 @@ class _SigninScreenState extends State<SigninScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                if (errorMessages.any((error) => error.contains('user')))
+                if (errorMessages
+                    .any((error) => error.toLowerCase().contains('user')))
                   ...errorMessages
-                      .where((error) => error.contains('user'))
+                      .where((error) => error.toLowerCase().contains('user'))
                       .map((error) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(
