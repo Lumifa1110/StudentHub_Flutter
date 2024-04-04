@@ -20,10 +20,10 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
-  List<String> errorMessages = [];
-  // bool _isObscure = true;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  List<String> errorMessages = [];
 
   late SharedPreferences _prefs;
 
@@ -47,8 +47,8 @@ class _SigninScreenState extends State<SigninScreen> {
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     );
-    final userJson = jsonEncode(user.toJson());
-    await prefs.setString('user', userJson);
+    final userJson = user.toJson();
+    await prefs.setString('user', jsonEncode(userJson));
     // print(user.toJson());
 
     try {
@@ -64,9 +64,9 @@ class _SigninScreenState extends State<SigninScreen> {
       if (response.statusCode == 201) {
         // Lưu token vào SharedPreferences
         final token = jsonDecode(response.body)['result']['token'];
-        fetchUserData();
         await prefs.setString('token', token);
         await prefs.setInt('currole', widget.role.index);
+        fetchUserData();
       } else {
         print('Error: ${response.statusCode}');
         final errorBody = jsonDecode(response.body);
@@ -153,40 +153,109 @@ class _SigninScreenState extends State<SigninScreen> {
             // TextField for Username or email
             TextFieldFloatingLabel(
                 label: 'Email', controller: _emailController),
-
-            const SizedBox(
-              height: 20,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                if (errorMessages.any((error) => error.contains('email')))
+                  ...errorMessages
+                      .where((error) => error.contains('email'))
+                      .map((error) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 5),
+                      child: Text(
+                        error,
+                        style: const TextStyle(
+                          color: errorColor,
+                          fontSize: AppFonts.h3FontSize,
+                        ),
+                      ),
+                    );
+                  }).toList()
+                else
+                  const SizedBox(
+                    height: 20,
+                  ),
+              ],
             ),
+
             // TextField for Password
             TextFieldFloatingLabel(
               label: 'Password',
               controller: _passwordController,
               isPassword: true,
             ),
-            const SizedBox(
-              height: 10,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                if (errorMessages.any((error) => error.contains('password')))
+                  ...errorMessages
+                      .where((error) => error.contains('password'))
+                      .map((error) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 5),
+                      child: Text(
+                        error,
+                        style: const TextStyle(
+                          color: errorColor,
+                          fontSize: AppFonts.h3FontSize,
+                        ),
+                      ),
+                    );
+                  }).toList()
+                else
+                  const SizedBox(
+                    height: 10,
+                  ),
+              ],
             ),
 
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                if (errorMessages.any((error) => error.contains('user')))
+                  ...errorMessages
+                      .where((error) => error.contains('user'))
+                      .map((error) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 5),
+                      child: Text(
+                        error,
+                        style: const TextStyle(
+                          color: errorColor,
+                          fontSize: AppFonts.h3FontSize,
+                        ),
+                      ),
+                    );
+                  }).toList()
+                else
+                  const SizedBox(
+                    height: 10,
+                  ),
+              ],
+            ),
             // Hiển thị thông báo lỗi
-            if (errorMessages.isNotEmpty)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: errorMessages.map((error) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      error,
-                      style: const TextStyle(
-                          color: errorColor, fontSize: AppFonts.h3FontSize),
-                    ),
-                  );
-                }).toList(),
-              ),
+            // if (errorMessages.isNotEmpty)
+            //   Column(
+            //     crossAxisAlignment: CrossAxisAlignment.stretch,
+            //     mainAxisAlignment: MainAxisAlignment.start,
+            //     children: errorMessages.map((error) {
+            //       return Padding(
+            //         padding: const EdgeInsets.symmetric(horizontal: 20),
+            //         child: Text(
+            //           error,
+            //           style: const TextStyle(
+            //               color: errorColor, fontSize: AppFonts.h3FontSize),
+            //         ),
+            //       );
+            //     }).toList(),
+            //   ),
 
-            const SizedBox(
-              height: 10,
-            ),
             Container(
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(horizontal: 20),
