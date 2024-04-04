@@ -157,10 +157,13 @@ class _SigninScreenState extends State<SigninScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                if (errorMessages
-                    .any((error) => error.toLowerCase().contains('email')))
+                if (errorMessages.any((error) =>
+                    error.toLowerCase().contains('email') &&
+                    !error.toLowerCase().contains('inbox')))
                   ...errorMessages
-                      .where((error) => error.toLowerCase().contains('email'))
+                      .where((error) =>
+                          error.toLowerCase().contains('email') &&
+                          !error.toLowerCase().contains('inbox'))
                       .map((error) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(
