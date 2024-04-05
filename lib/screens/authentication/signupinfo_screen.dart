@@ -7,6 +7,7 @@ import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/textfield_floatinglabel.dart';
 import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/models/index.dart';
+import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
@@ -51,7 +52,7 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://34.16.137.128/api/auth/sign-up'),
+        Uri.parse('http://localhost:4400/api/auth/sign-up'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -61,6 +62,11 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
       print(response.body);
       if (response.statusCode == 201) {
         print('success');
+        Navigator.pop(context);
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(
+            builder: (context) => SigninScreen(
+          role: widget.selectedType),));
       } else {
         print('Error: ${response.statusCode}');
         final errorBody = jsonDecode(response.body);

@@ -53,22 +53,41 @@ class _SigninScreenState extends State<SigninScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://34.16.137.128/api/auth/sign-in'),
+        Uri.parse('http://localhost:4400/api/auth/sign-in'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(user.toJson()),
       );
       print('Res: ${response.body}');
+      print(response.statusCode);
 
       if (response.statusCode == 201) {
         // Lưu token vào SharedPreferences
-        final token = jsonDecode(response.body)['result']['token'];
-        await prefs.setString('token', token);
-        await prefs.setInt('currole', widget.role.index);
-        fetchUserData();
+        print(response.statusCode);
+        final result = jsonDecode(response.body)["result"];
+        // final token = jsonDecode(response.body)['result']['token'];
+        // print(token);
+        if(result is String) {
+          print(result);
+          setState(() {
+            errorMessages.clear();
+            errorMessages.add(result);
+          });
+        } else if (result is Map<String, dynamic>) {
+          final token = jsonDecode(response.body)['result']['token'];
+          await prefs.setString('token', token);
+          await prefs.setInt('currole', widget.role.index);
+          fetchUserData();
+        }
+
+
+
+        // await prefs.setString('token', token);
+        // await prefs.setInt('currole', widget.role.index);
+        // fetchUserData();
       } else {
-        print('Error: ${response.statusCode}');
+        print('Error this: ${response.statusCode}');
         final errorBody = jsonDecode(response.body);
         final errorDetails = errorBody['errorDetails'];
         if (errorDetails is List<dynamic>) {
@@ -96,7 +115,7 @@ class _SigninScreenState extends State<SigninScreen> {
     if (token != null) {
       try {
         final response = await http.get(
-          Uri.parse('http://34.16.137.128/api/auth/me'),
+          Uri.parse('http://localhost:4400/api/auth/me'),
           headers: {'Authorization': 'Bearer $token'},
         );
         print(response.body);
@@ -224,12 +243,10 @@ class _SigninScreenState extends State<SigninScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 if (errorMessages.any((error) =>
-                    error.toLowerCase().contains('user') ||
-                    error.toLowerCase().contains('inbox')))
+                    error.toLowerCase().contains('user') || error.toLowerCase().contains('inbox')))
                   ...errorMessages
                       .where((error) =>
-                          error.toLowerCase().contains('user') ||
-                          error.toLowerCase().contains('inbox'))
+                          error.toLowerCase().contains('user') || error.toLowerCase().contains('inbox'))
                       .map((error) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(
