@@ -31,6 +31,8 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
   bool? _isAgree = false;
   List<String> errorMessages = [];
 
+  final String uriBase = 'http://34.16.137.128';
+
   Future<void> handleSignup() async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -52,7 +54,7 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:4400/api/auth/sign-up'),
+        Uri.parse('${uriBase}/api/auth/sign-up'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -63,10 +65,11 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
       if (response.statusCode == 201) {
         print('success');
         Navigator.pop(context);
-        Navigator.pushReplacement(context,
+        Navigator.pushReplacement(
+            context,
             MaterialPageRoute(
-            builder: (context) => SigninScreen(
-          role: widget.selectedType),));
+              builder: (context) => SigninScreen(role: widget.selectedType),
+            ));
       } else {
         print('Error: ${response.statusCode}');
         final errorBody = jsonDecode(response.body);
