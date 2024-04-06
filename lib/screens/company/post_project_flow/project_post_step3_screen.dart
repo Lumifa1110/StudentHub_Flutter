@@ -68,7 +68,6 @@ class ProjectPostStep3Screen extends StatelessWidget{
                   child: const Text('Review your post')
                 ),
               )
-              
             ],
           ),
         ),

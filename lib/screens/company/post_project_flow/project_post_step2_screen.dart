@@ -62,6 +62,8 @@ class ProjectPostStep2Screen extends StatelessWidget{
 
 enum radius_value{to3, to6}
 class CheckboxListPrPS2 extends StatefulWidget{
+  const CheckboxListPrPS2({super.key});
+
   @override
   _CheckboxListPrPS2State createState()=> _CheckboxListPrPS2State();
 }
