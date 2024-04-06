@@ -25,51 +25,49 @@ class FavoriteProjectsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: const AuthAppBar(canBack: true),
-        body: favoriteList.isEmpty
-            ? const Center(
-                child: Text(
-                  "You don't have any favorites.",
-                  style: TextStyle(fontSize: 20),
-                ),
-              )
-            : Column(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
-                      child: ListView.builder(
-                        itemCount: favoriteList.length,
-                        itemBuilder: (context, index) {
-                          final project = favoriteList[index];
-                          return CustomProjectItem(
-                            project: project,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProjectDetailScreen(
-                                      itemId: project.projectId),
-                                ),
-                              );
-                            },
-                            isFavorite: favoriteList.contains(project),
-                            onFavoriteToggle: (isFavorite) {
-                              onRemoveProject(project);
-                            },
-                          );
-                        },
-                      ),
+    return Scaffold(
+      appBar: const AuthAppBar(canBack: true),
+      body: favoriteList.isEmpty
+          ? const Center(
+              child: Text(
+                "You don't have any favorites.",
+                style: TextStyle(fontSize: 20),
+              ),
+            )
+          : Column(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    child: ListView.builder(
+                      itemCount: favoriteList.length,
+                      itemBuilder: (context, index) {
+                        final project = favoriteList[index];
+                        return CustomProjectItem(
+                          project: project,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProjectDetailScreen(
+                                    itemId: project.projectId),
+                              ),
+                            );
+                          },
+                          isFavorite: favoriteList.contains(project),
+                          onFavoriteToggle: (isFavorite) {
+                            onRemoveProject(project);
+                          },
+                        );
+                      },
                     ),
                   ),
-                ],
-              ),
-        bottomNavigationBar: const CustomBottomNavBar(
-          initialIndex: 0,
-        ),
+                ),
+              ],
+            ),
+      bottomNavigationBar: const CustomBottomNavBar(
+        initialIndex: 0,
       ),
     );
   }

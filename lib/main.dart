@@ -4,10 +4,12 @@ import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/theme/theme.dart';
 import 'package:studenthub/theme/theme_controller.dart';
+import 'package:studenthub/utils/colors.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.blue,
+    statusBarColor: AppColor.primary,
+    systemNavigationBarColor: AppColor.primary
   ));
   runApp(const StudentHub());
 }
@@ -51,7 +53,7 @@ class _StudentHubState extends State<StudentHub> {
       theme: lightTheme,
       darkTheme: darkTheme,
       // themeMode: _themeController.themeMode,
-      home: const SwitchScreen(),
+      home: const HomeScreen(),
       initialRoute: '/',
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {

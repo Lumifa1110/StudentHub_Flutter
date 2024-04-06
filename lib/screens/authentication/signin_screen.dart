@@ -4,6 +4,7 @@ import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/textfield_floatinglabel.dart';
 import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/screens/authentication/signuptype_screen.dart';
+import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/utils/colors.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -30,6 +31,7 @@ class _SigninScreenState extends State<SigninScreen> {
     final String? storedEmail = prefs.getString('userEmail');
 
     print(storedEmail);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => SwitchScreen()));
   }
 
   @override
@@ -37,7 +39,7 @@ class _SigninScreenState extends State<SigninScreen> {
     return Scaffold(
       backgroundColor: bgColor,
       resizeToAvoidBottomInset: false,
-      appBar: const AuthAppBar(canBack: false),
+      appBar: const AuthAppBar(canBack: true),
       body: Center(
         child: Column(
           children: [
@@ -71,7 +73,6 @@ class _SigninScreenState extends State<SigninScreen> {
             // TextField for Username or email
             TextFieldFloatingLabel(
                 label: 'Email', controller: _emailController),
-
             const SizedBox(
               height: 20,
             ),

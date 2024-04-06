@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:studenthub/components/app_bar.dart';
+import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/chat_flow/conversation_item.dart';
+import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/components/textfield/search_bar.dart';
 import 'package:studenthub/data/test/data_message.dart';
 import 'package:studenthub/models/message_model.dart';
@@ -15,6 +16,7 @@ class MessageListScreen extends StatefulWidget {
 class _MessageListScreenState extends State<MessageListScreen> {
   late List<MessageModel> conversationList;
   late List<int> messageCounts;
+  final TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -71,19 +73,15 @@ class _MessageListScreenState extends State<MessageListScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(60),
-        child: MyAppBar(title: 'Chat')
-      ),
+      appBar: const AuthAppBar(canBack: false, title: 'Chat'),
       backgroundColor: const Color(0xFFF8F8F8),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              const ChatSearchBar(placeholder: 'Search...'),
+              CustomSearchBar(controller: searchController, placeholder: 'Search'),
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -100,7 +98,8 @@ class _MessageListScreenState extends State<MessageListScreen> {
             ],
           )
         )
-      )
+      ),
+      bottomNavigationBar: const CustomBottomNavBar(initialIndex: 2),
     );
   }
 }
