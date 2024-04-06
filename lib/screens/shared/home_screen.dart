@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => const SigninScreen(
@@ -131,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const SigninScreen(

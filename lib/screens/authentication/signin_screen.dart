@@ -23,6 +23,8 @@ class _SigninScreenState extends State<SigninScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  final String uriBase = 'http://34.16.137.128';
+
   List<String> errorMessages = [];
 
   late SharedPreferences _prefs;
@@ -53,7 +55,7 @@ class _SigninScreenState extends State<SigninScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:4400/api/auth/sign-in'),
+        Uri.parse('$uriBase/api/auth/sign-in'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -63,29 +65,21 @@ class _SigninScreenState extends State<SigninScreen> {
       print(response.statusCode);
 
       if (response.statusCode == 201) {
-        // Lưu token vào SharedPreferences
-        print(response.statusCode);
         final result = jsonDecode(response.body)["result"];
-        // final token = jsonDecode(response.body)['result']['token'];
-        // print(token);
-        if(result is String) {
-          print(result);
+        if (result is String) {
+          print('Result: $result');
           setState(() {
             errorMessages.clear();
             errorMessages.add(result);
           });
         } else if (result is Map<String, dynamic>) {
           final token = jsonDecode(response.body)['result']['token'];
+          print('Token: $token');
           await prefs.setString('token', token);
           await prefs.setInt('currole', widget.role.index);
-          fetchUserData();
+          await fetchUserData();
+          Navigator.pushReplacementNamed(context, '/profile');
         }
-
-
-
-        // await prefs.setString('token', token);
-        // await prefs.setInt('currole', widget.role.index);
-        // fetchUserData();
       } else {
         print('Error this: ${response.statusCode}');
         final errorBody = jsonDecode(response.body);
@@ -110,18 +104,38 @@ class _SigninScreenState extends State<SigninScreen> {
   Future<void> fetchUserData() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    final current_role = prefs.getInt('currole');
+    final currole = prefs.getInt('currole');
 
     if (token != null) {
       try {
         final response = await http.get(
-          Uri.parse('http://localhost:4400/api/auth/me'),
+          Uri.parse('$uriBase/api/auth/me'),
           headers: {'Authorization': 'Bearer $token'},
         );
-        print(response.body);
+        print('Fetch User Data: ${response.body}');
         if (response.statusCode == 200) {
-          print('success');
-          Navigator.pushReplacementNamed(context, '/profile');
+          final userData = jsonDecode(response.body)['result'];
+          print('User Data:  $userData');
+
+          // Save user id
+          await prefs.setInt('userid', userData['id']);
+          print(userData['id']);
+
+          // Save roles
+          List<dynamic> roles = userData['roles'];
+          List<String> rolesStringList =
+              roles.map((role) => role.toString()).toList();
+          await prefs.setStringList('roles', rolesStringList);
+          print(rolesStringList);
+
+          // Save role profile
+          if (currole == 0) {
+            final roledata = userData['student'];
+            await prefs.setString('roleprofile', jsonEncode(roledata));
+          } else {
+            final roledata = userData['company'];
+            await prefs.setString('roleprofile', jsonEncode(roledata));
+          }
         } else {
           // Handle error
         }
@@ -243,10 +257,12 @@ class _SigninScreenState extends State<SigninScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 if (errorMessages.any((error) =>
-                    error.toLowerCase().contains('user') || error.toLowerCase().contains('inbox')))
+                    error.toLowerCase().contains('user') ||
+                    error.toLowerCase().contains('inbox')))
                   ...errorMessages
                       .where((error) =>
-                          error.toLowerCase().contains('user') || error.toLowerCase().contains('inbox'))
+                          error.toLowerCase().contains('user') ||
+                          error.toLowerCase().contains('inbox'))
                       .map((error) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(

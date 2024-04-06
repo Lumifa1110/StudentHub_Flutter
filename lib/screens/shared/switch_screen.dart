@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +18,47 @@ class SwitchScreen extends StatefulWidget {
 
 class _SwitchScreenState extends State<SwitchScreen> {
   bool isSearchActive = false;
+  List<String> roles = [];
+  int? currentRole;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRoles().then((_) {
+      _loadCurrentRole().then((_) {
+        _check();
+      });
+    });
+  }
+
+  Future<void> _loadRoles() async {
+    final prefs = await SharedPreferences.getInstance();
+    final rolesList = prefs.getStringList('roles');
+    if (rolesList != null) {
+      // Remove duplicates
+      final uniqueRoles = rolesList.toSet().toList();
+      setState(() {
+        roles = uniqueRoles;
+      });
+    }
+  }
+
+  Future<void> _loadCurrentRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    final curRole = prefs.getInt('currole');
+    if (curRole != null) {
+      setState(() {
+        currentRole = curRole;
+      });
+    }
+  }
+
+  void _check() {
+    setState(() {
+      print('This is list roles: $roles');
+      print('This is user selected role: $currentRole');
+    });
+  }
 
   Future<void> handleLogout() async {
     // Lấy token từ SharedPreferences
@@ -53,6 +96,13 @@ class _SwitchScreenState extends State<SwitchScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 5.0,
+        leadingWidth: 20,
+        leading: Navigator.canPop(context)
+            ? IconButton(
+                icon: const Icon(Icons.chevron_left, color: whiteTextColor),
+                onPressed: () => Navigator.of(context).pop(),
+              )
+            : null,
         title: const Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -79,11 +129,11 @@ class _SwitchScreenState extends State<SwitchScreen> {
         backgroundColor: mainColor,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             color: Colors.white,
             onPressed: () {
               setState(() {
-                isSearchActive = !isSearchActive; // Toggle the search state
+                isSearchActive = !isSearchActive;
               });
             },
           ),
@@ -119,7 +169,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
               thickness: 3.0,
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
                   InkWell(

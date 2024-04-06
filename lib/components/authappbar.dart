@@ -22,6 +22,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      leadingWidth: 20,
       leading: canBack
           ? IconButton(
               icon: const Icon(Icons.chevron_left, color: whiteTextColor),
