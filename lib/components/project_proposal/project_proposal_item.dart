@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/components/project_proposal/dialog_send_hire.dart';
+import 'package:studenthub/components/user/user_avatar.dart';
 import 'package:studenthub/models/student_model.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
-class ProjectProposalItem extends StatelessWidget {
+class ProjectProposalItem extends StatefulWidget {
   final StudentModel student;
   
   const ProjectProposalItem({
@@ -12,21 +14,33 @@ class ProjectProposalItem extends StatelessWidget {
   });
 
   @override
+  State<ProjectProposalItem> createState() => _ProjectProposalItemState();
+}
+
+class _ProjectProposalItemState extends State<ProjectProposalItem> {
+  late bool sentHireOffer;
+
+  @override
+  void initState() {
+    super.initState();
+    sentHireOffer = false;
+  }
+
+  void sendHireOffer() {
+    setState(() {
+      sentHireOffer = true;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.only(bottom: 8, left: 12, right: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(6),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 2)
-          )
-        ]
+        border: Border.all(color: Colors.black12),
       ),
       child: Column(
         children: [
@@ -34,16 +48,13 @@ class ProjectProposalItem extends StatelessWidget {
           Row(
             children: [
               // Student Avatar
-              Expanded(
+              const Expanded(
                 flex: 1,
-                child: Container(
-                  height: 70,
-                  color: Colors.black
-                )
+                child: UserAvatar(icon: Icons.person)
               ),
               // Student Name + Educational level
               Expanded(
-                flex: 4,
+                flex: 8,
                 child: Container(
                   padding: const EdgeInsets.only(left: 20, top: 10, bottom: 10),
                   height: 70,
@@ -52,7 +63,7 @@ class ProjectProposalItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        student.name,
+                        widget.student.name,
                         style: const TextStyle(
                           color: AppFonts.primaryColor,
                           fontSize: AppFonts.h2FontSize,
@@ -60,7 +71,7 @@ class ProjectProposalItem extends StatelessWidget {
                         )
                       ),
                       Text(
-                        student.educationalLevel,
+                        widget.student.educationalLevel,
                         style: const TextStyle(
                           color: AppFonts.secondaryColor,
                           fontSize: AppFonts.h3FontSize,
@@ -75,13 +86,13 @@ class ProjectProposalItem extends StatelessWidget {
           ),
           // Student Techstack + Rating status
           Container(
-            margin: const EdgeInsets.symmetric(vertical: 14),
+            margin: const EdgeInsets.only(top: 4, bottom: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  student.techstack,
+                  widget.student.techstack,
                   style: const TextStyle(
                     color: AppColor.primary,
                     fontSize: AppFonts.h3FontSize,
@@ -108,21 +119,14 @@ class ProjectProposalItem extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 2)
-                      )
-                    ]
+                    border: Border.all(color: Colors.black12)
                   ),
-                  margin: const EdgeInsets.only(bottom: 10),
+                  margin: const EdgeInsets.only(bottom: 6),
                   child: const Text(
-                    'After reviewing your project, I\'m really impressed with its creativity and potential. I\'m confident that I\'m a great fit for the role and I\'m excited to commit to its success. Thanks for considering me—I\'m looking forward to being part of such an exciting project!',
+                    'I have gone through your project and it seem like a good project. I will commit for your project.',
                     style: TextStyle(
                       color: AppFonts.secondaryColor,
-                      fontSize: AppFonts.h4FontSize
+                      fontSize: AppFonts.h3FontSize
                     ),
                   )
                 )
@@ -138,8 +142,8 @@ class ProjectProposalItem extends StatelessWidget {
                   flex: 1,
                   child: Container(
                     alignment: Alignment.center,
-                    margin: const EdgeInsets.only(right: 6),
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+                    margin: const EdgeInsets.only(right: 12),
+                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
                     decoration: BoxDecoration(
                       color: AppColor.primary,
                       borderRadius: BorderRadius.circular(6)
@@ -156,22 +160,32 @@ class ProjectProposalItem extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 1,
-                  child: Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(left: 6),
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-                    decoration: BoxDecoration(
-                      color: AppColor.tertiary,
-                      borderRadius: BorderRadius.circular(6)
-                    ),
-                    child: const Text(
-                      'Hire',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: AppFonts.h3FontSize,
-                        fontWeight: FontWeight.w500
+                  child: GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return DialogSendHire(sendHireOffer: sendHireOffer);
+                        },
+                      );
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.only(left: 12),
+                      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+                      decoration: BoxDecoration(
+                        color: AppColor.tertiary,
+                        borderRadius: BorderRadius.circular(6)
+                      ),
+                      child: Text(
+                        sentHireOffer ? 'Sent hired offer' : 'Hire',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: AppFonts.h3FontSize,
+                          fontWeight: FontWeight.w500
+                        )
                       )
-                    )
+                    ),
                   ),
                 )
               ],

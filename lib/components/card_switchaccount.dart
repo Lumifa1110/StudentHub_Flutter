@@ -6,11 +6,11 @@ class CardSwitchAccount extends StatelessWidget {
   final String accountName;
   final String accountRole;
   const CardSwitchAccount({
-    Key? key,
+    super.key,
     required this.accountAvt,
     required this.accountName,
     required this.accountRole,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +20,13 @@ class CardSwitchAccount extends StatelessWidget {
         dense: true,
         leading: Icon(
           accountAvt,
-          size: 40,
+          size: 36,
         ),
         title: Text(
           accountName,
           style: const TextStyle(
             overflow: TextOverflow.ellipsis,
-            fontSize: AppFonts.h1FontSize,
+            fontSize: AppFonts.h3FontSize,
             fontWeight: FontWeight.bold,
           ),
         ),

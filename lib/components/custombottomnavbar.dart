@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/enums/user_role.dart';
+import 'package:studenthub/preferences/user_preferences.dart';
 import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/utils/colors.dart';
+import 'package:studenthub/utils/font.dart';
 
 class CustomBottomNavBar extends StatefulWidget {
   final int initialIndex;
@@ -15,90 +18,123 @@ class CustomBottomNavBar extends StatefulWidget {
 }
 
 class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
+  UserRole? _userRole;
   late int _selectedIndex;
 
   @override
   void initState() {
     super.initState();
+    loadUserRole();
     _selectedIndex = widget.initialIndex;
+  }
+
+  Future<void> loadUserRole() async {
+    UserRole? userRole = await UserPreferences.getUserRole();
+    setState(() {
+      _userRole = userRole;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      backgroundColor: mainColor,
-      iconSize: 30,
-      unselectedFontSize: 16,
-      selectedFontSize: 16,
-      currentIndex: _selectedIndex,
-      onTap: (newIndex) {
-        if (newIndex == _selectedIndex) return;
-        setState(() {
-          _selectedIndex = newIndex;
-        });
-        switch (newIndex) {
-          case 0:
-            {
-              _navigateWithAnimation('/list', const ProjectListScreen(),
-                  widget.initialIndex, newIndex);
-              break;
-            }
-          case 1:
-            {
-              _navigateWithAnimation('/dashboard', const StudentDashboardScreen(),
-                  widget.initialIndex, newIndex);
-              break;
-            }
-          case 2:
-            {
-              _navigateWithAnimation('/message', const MessageListScreen(),
-                  widget.initialIndex, newIndex);
-              break;
-            }
-          case 3:
-            {
-              _navigateWithAnimation('/notification', const NotificationScreen(),
-                  widget.initialIndex, newIndex);
-              break;
-            }
-          // Add cases for additional pages if needed
-        }
-      },
-      items: const [
-        BottomNavigationBarItem(
-          icon: Padding(
-            padding: EdgeInsets.only(bottom: 3),
-            child: Icon(
-              Icons.list_alt,
+      return Container(
+        decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2), // Shadow color
+            spreadRadius: 2, // Spread radius
+            blurRadius: 2, // Blur radius
+            offset: const Offset(0, -3), // Offset from the bottom
+          ),
+        ],
+      ),
+      child: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        iconSize: 24,
+        selectedFontSize: AppFonts.h3FontSize,
+        selectedItemColor: AppColor.primary,
+        selectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.w500
+        ),
+        unselectedFontSize: AppFonts.h3FontSize,
+        unselectedItemColor: AppFonts.secondaryColor,
+        currentIndex: _selectedIndex,
+        onTap: (newIndex) {
+          if (newIndex == _selectedIndex) return;
+          setState(() {
+            _selectedIndex = newIndex;
+          });
+          switch (newIndex) {
+            case 0:
+              {
+                _navigateWithAnimation('/list', const ProjectListScreen(),
+                    widget.initialIndex, newIndex);
+                break;
+              }
+            case 1:
+              {
+                if (_userRole == UserRole.company) {
+                  _navigateWithAnimation('/dashboard', const CompanyDashboardScreen(), widget.initialIndex, newIndex);
+                }
+                else if (_userRole == UserRole.student) {
+                  _navigateWithAnimation('/dashboard', const StudentDashboardScreen(), widget.initialIndex, newIndex);
+                }
+                break;
+              }
+            case 2:
+              {
+                _navigateWithAnimation('/message', const MessageListScreen(),
+                    widget.initialIndex, newIndex);
+                break;
+              }
+            case 3:
+              {
+                _navigateWithAnimation('/notification', const NotificationScreen(),
+                    widget.initialIndex, newIndex);
+                break;
+              }
+            // Add cases for additional pages if needed
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(bottom: 3),
+              child: Icon(
+                Icons.list_alt,
+              ),
             ),
+            label: 'Project',
           ),
-          label: 'Project',
-        ),
-        BottomNavigationBarItem(
-          icon: Padding(
-            padding: EdgeInsets.only(bottom: 3),
-            child: Icon(
-              Icons.dashboard_customize,
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(bottom: 3),
+              child: Icon(
+                Icons.dashboard_customize,
+              ),
             ),
+            label: 'Dashboard',
           ),
-          label: 'Dashboard',
-        ),
-        BottomNavigationBarItem(
-          icon: Padding(
-            padding: EdgeInsets.only(bottom: 3),
-            child: Icon(Icons.message_outlined),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(bottom: 3),
+              child: Icon(
+                Icons.message_outlined,
+              ),
+            ),
+            label: 'Message',
           ),
-          label: 'Message',
-        ),
-        BottomNavigationBarItem(
-          icon: Padding(
-            padding: EdgeInsets.only(bottom: 3),
-            child: Icon(Icons.notifications),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(bottom: 3),
+              child: Icon(
+                Icons.notifications,
+              ),
+            ),
+            label: 'Alerts',
           ),
-          label: 'Alerts',
-        ),
-      ],
+        ],
+      ),
     );
   }
 

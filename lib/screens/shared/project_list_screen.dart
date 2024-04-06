@@ -54,93 +54,91 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: const AuthAppBar(canBack: false),
-        body: Column(
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  CustomSearchBar(
-                    onChanged: (query) => setState(
-                      () => searchQuery = query.toLowerCase(),
-                    ),
-                    onSubmitted: handleSearchSubmitted,
+    return Scaffold(
+      appBar: const AuthAppBar(canBack: false),
+      body: Column(
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                CustomSearchBar(
+                  onChanged: (query) => setState(
+                    () => searchQuery = query.toLowerCase(),
                   ),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: blackTextColor,
-                    ),
-                    child: Center(
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FavoriteProjectsScreen(
-                                favoriteList: myFavoriteProjects,
-                                onRemoveProject: (project) {
-                                  updateFavoriteStatus(project, false);
-                                },
-                              ),
-                            ),
-                          );
-                        },
-                        icon: const FaIcon(
-                          FontAwesomeIcons.solidHeart,
-                          color: whiteTextColor,
-                        ),
-                      ),
-                    ),
+                  onSubmitted: handleSearchSubmitted,
+                ),
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: blackTextColor,
                   ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Expanded(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child: ListView.builder(
-                  itemCount: mockProjects.length,
-                  itemBuilder: (context, index) {
-                    final project = mockProjects[index];
-                    return CustomProjectItem(
-                      project: project,
-                      onTap: () {
+                  child: Center(
+                    child: IconButton(
+                      onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                ProjectDetailScreen(itemId: project.projectId),
+                            builder: (context) => FavoriteProjectsScreen(
+                              favoriteList: myFavoriteProjects,
+                              onRemoveProject: (project) {
+                                updateFavoriteStatus(project, false);
+                              },
+                            ),
                           ),
                         );
                       },
-                      isFavorite: myFavoriteProjects.contains(project),
-                      onFavoriteToggle: (isFavorite) {
-                        updateFavoriteStatus(project, isFavorite);
-                      },
-                    );
-                  },
+                      icon: const FaIcon(
+                        FontAwesomeIcons.solidHeart,
+                        color: whiteTextColor,
+                      ),
+                    ),
+                  ),
                 ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Expanded(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: ListView.builder(
+                itemCount: mockProjects.length,
+                itemBuilder: (context, index) {
+                  final project = mockProjects[index];
+                  return CustomProjectItem(
+                    project: project,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ProjectDetailScreen(itemId: project.projectId),
+                        ),
+                      );
+                    },
+                    isFavorite: myFavoriteProjects.contains(project),
+                    onFavoriteToggle: (isFavorite) {
+                      updateFavoriteStatus(project, isFavorite);
+                    },
+                  );
+                },
               ),
             ),
-          ],
-        ),
-        bottomNavigationBar: const CustomBottomNavBar(
-          initialIndex: 0,
-        ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: const CustomBottomNavBar(
+        initialIndex: 0,
       ),
     );
   }
