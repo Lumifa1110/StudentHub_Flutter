@@ -1,20 +1,55 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
 import '../../components/appbar_ps1.dart';
+import 'package:studenthub/models/company_model.dart';
+import 'package:studenthub/data/test/data_project.dart';
+import 'package:http/http.dart' as http;
 
-
-class CompanyDashboardScreen extends StatelessWidget {
+class CompanyDashboardScreen extends StatefulWidget{
   const CompanyDashboardScreen({super.key});
 
   @override
+  State<CompanyDashboardScreen> createState()=> CompanyDashboardScreenState();
+}
+
+class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
+
+  late List<Project> listProjectGet = [];
+
+  Future<void> fechProjectData() async{
+
+    final token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZnVsbG5hbWUiOiJBIiwiZW1haWwiOiJwdmxvYzIwQHZwLmZpdHVzLmVkdS52biIsInJvbGVzIjpbIjAiXSwiaWF0IjoxNzEyNDAzMzY3LCJleHAiOjE3MTM2MTI5Njd9.TFOLLg5ThYGkJ0J0_B9Z9Fdi4gPTMX8H-ORt41FWKSI';
+    try{
+        final response = await http.get(Uri.parse('http://localhost:4400/api/project'),
+            headers: {'Authorization' : 'Bearer ${token}'},
+        );
+        // print('${jsonDecode(response.body)["result"]}');
+        final listProjectEncode = jsonDecode(response.body)["result"];
+        for(int i = 0; i < listProjectEncode.length; i++){
+          listProjectGet.add(Project(title: listProjectEncode[i]['title'], implementationTime: "Null", qualityStudent: 0, describe: listProjectEncode[i]['description'], createdAt: listProjectEncode[i]['createdAt']));
+        }
+    }
+    catch(e){
+      print(e);
+    }
+  }
+  Future<void> _loadProject() async{
+    fechProjectData();
+  }
+  @override
+  void initState(){
+    super.initState();
+    _loadProject();
+  }
+  @override
+
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          appBar: AppBar_PostPS1(),
+          appBar: const AppBar_PostPS1(),
           body:Padding(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: DefaultTabController(
               length: 2,
               child: Column(
@@ -22,13 +57,13 @@ class CompanyDashboardScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(width: 5,),
-                      Text('Your projects', style: TextStyle(fontWeight: FontWeight.bold),),
-                      SizedBox(width: 30,),
-                      ElevatedButton(onPressed: (){}, child: Text('Post a jobs'),style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder()),)
+                      const SizedBox(width: 5,),
+                      const Text('Your projects', style: TextStyle(fontWeight: FontWeight.bold),),
+                      const SizedBox(width: 30,),
+                      ElevatedButton(onPressed: (){},style: ElevatedButton.styleFrom(shape: const RoundedRectangleBorder()), child: const Text('Post a jobs'),)
                     ],
                   ),
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
 
                   Container(
                     decoration: BoxDecoration(
@@ -42,7 +77,7 @@ class CompanyDashboardScreen extends StatelessWidget {
                           border: Border.all(width: 1),
                         ),
                         indicatorSize: TabBarIndicatorSize.tab,
-                        tabs:  <Widget> [
+                        tabs:  const <Widget> [
                           Tab(text: 'All project',),
                           Tab(text: 'Archieved',)
                         ]
@@ -51,282 +86,32 @@ class CompanyDashboardScreen extends StatelessWidget {
                   Expanded(
                     child: TabBarView(
                       children: [
-                        Center(
-                          child: Column(
-                            children:[
-                              SizedBox(height: 20,),
-                              Container(
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children:[
-                                            SizedBox(height: 15,),
-                                            Text('Senior frontend developer (Fintech)', style: TextStyle(color: Colors.green),),
-                                            Text('Created 3 days ago',style: TextStyle(color: Colors.grey),),
-                                            SizedBox(height: 10,),
-                                            Text('Students are looking for'),
-                                            Padding(
-                                              padding: EdgeInsets.only(left: 20),
-                                              child: Text('• Clear expectation about your project or deliverables'),),
-                                            SizedBox(height: 20,),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text('0'),
-                                                    Text('Proposals')
-                                                  ],
-                                                ),
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text('8'),
-                                                    Text('Messages')
-                                                  ],
-                                                ),
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text('2'),
-                                                    Text('Hired')
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ]
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: (){
-                                        showModalBottomSheet<void>(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return Container(
-                                              height: 350,
-                                              child: Center(
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  // mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    ElevatedButton(
-                                                      child: const Text('View Proposals'),
-                                                      onPressed: () => Navigator.pop(context),
-                                                      style: ElevatedButton.styleFrom(
-                                                        padding: EdgeInsets.all(16.0),
-                                                        minimumSize: Size(double.infinity, 0),
-                                                        shape: RoundedRectangleBorder()
-                                                      ),
-                                                    ),
-                                                    ElevatedButton(
-                                                      child: const Text('View messages'),
-                                                      onPressed: () => Navigator.pop(context),
-                                                      style: ElevatedButton.styleFrom(
-                                                        padding: EdgeInsets.all(16.0),
-                                                        minimumSize: Size(double.infinity, 0),
-                                                        shape:  RoundedRectangleBorder()
-
-                                                      ),
-                                                    ),
-                                                    ElevatedButton(
-                                                      child: const Text('View hired'),
-                                                      onPressed: () => Navigator.pop(context),
-                                                      style: ElevatedButton.styleFrom(
-                                                        padding: EdgeInsets.all(16.0),
-                                                        minimumSize: Size(double.infinity, 0),
-                                                        shape: RoundedRectangleBorder()
-                                                      ),
-                                                    ),
-                                                    Divider(
-                                                      thickness: 2,
-                                                      indent: 10,
-                                                      endIndent: 10,
-                                                      color: Colors.black,
-                                                    ),
-                                                    ElevatedButton(
-                                                      child: const Text('View job posting'),
-                                                      onPressed: () => Navigator.pop(context),
-                                                      style: ElevatedButton.styleFrom(
-                                                        padding: EdgeInsets.all(16.0),
-                                                        minimumSize: Size(double.infinity, 0),
-                                                        shape: RoundedRectangleBorder()
-                                                      ),
-                                                    ),
-                                                    ElevatedButton(
-                                                      child: const Text('Edit posting'),
-                                                      onPressed: () => Navigator.pop(context),
-                                                      style: ElevatedButton.styleFrom(
-                                                        padding: EdgeInsets.all(16.0),
-                                                        minimumSize: Size(double.infinity, 0),
-                                                        shape: RoundedRectangleBorder()
-                                                      ),
-                                                    ),
-                                                    ElevatedButton(
-                                                      child: const Text('Remove posting'),
-                                                      onPressed: () => Navigator.pop(context),
-                                                      style: ElevatedButton.styleFrom(
-                                                        padding: EdgeInsets.all(16.0),
-                                                        minimumSize: Size(double.infinity, 0),
-                                                        shape: RoundedRectangleBorder()
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        );
+                        Expanded(
+                            child: ListView.builder(
+                            itemCount: listProjectGet.length,
+                            itemBuilder: (BuildContext context, int index){
+                              final project = listProjectGet[index];
+                              return Column(
+                                children: [
+                                  const SizedBox(height: 20,),
+                                  OptionProjectCompany(
+                                      onTap: (){
                                       },
-                                      child: const Text('...'), style: ElevatedButton.styleFrom(shape: const CircleBorder()),
+                                      project: project,
+                                  ),
+                                  if(index < listProjectGet.length - 1)
+                                    const Divider(
+                                      thickness: 2,
+                                      indent: 10,
+                                      endIndent: 10,
+                                      color: Colors.black,
                                     ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 20,),
-                              Divider(
-                                thickness: 2,
-                                endIndent: 10,
-                                color: Colors.black,
-                              ),
-                              Container(
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children:[
-                                            SizedBox(height: 15,),
-                                            Text('Senior frontend developer (Fintech)', style: TextStyle(color: Colors.green),),
-                                            Text('Created 5 days ago', style: TextStyle(color: Colors.grey)),
-                                            SizedBox(height: 10,),
-                                            Text('Students are looking for'),
-                                            Padding(
-                                              padding: EdgeInsets.only(left: 20),
-                                              child: Text('• Clear expectation about your project or deliverables'),),
-                                            SizedBox(height: 20,),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text('0'),
-                                                    Text('Proposals')
-                                                  ],
-                                                ),
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text('8'),
-                                                    Text('Messages')
-                                                  ],
-                                                ),
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text('2'),
-                                                    Text('Hired')
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ]
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: (){
-                                        showModalBottomSheet<void>(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return Container(
-                                              height: 350,
-                                              child: Center(
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  // mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    ElevatedButton(
-                                                      child: const Text('View Proposals'),
-                                                      onPressed: () => Navigator.pop(context),
-                                                      style: ElevatedButton.styleFrom(
-                                                        padding: EdgeInsets.all(16.0),
-                                                        minimumSize: Size(double.infinity, 0),
-                                                        shape: RoundedRectangleBorder()
-                                                      ),
-                                                    ),
-                                                    ElevatedButton(
-                                                      child: const Text('View messages'),
-                                                      onPressed: () => Navigator.pop(context),
-                                                      style: ElevatedButton.styleFrom(
-                                                        padding: EdgeInsets.all(16.0),
-                                                        minimumSize: Size(double.infinity, 0),
-                                                        shape: RoundedRectangleBorder()
-                                                      ),
-                                                    ),
-                                                    ElevatedButton(
-                                                      child: const Text('View hired'),
-                                                      onPressed: () => Navigator.pop(context),
-                                                      style: ElevatedButton.styleFrom(
-                                                        padding: EdgeInsets.all(16.0),
-                                                        minimumSize: Size(double.infinity, 0),
-                                                        shape: RoundedRectangleBorder()
-                                                      ),
-                                                    ),
-                                                    Divider(
-                                                      thickness: 2,
-                                                      indent: 10,
-                                                      endIndent: 10,
-                                                      color: Colors.black,
-                                                    ),
-                                                    ElevatedButton(
-                                                      child: const Text('View job posting'),
-                                                      onPressed: () => Navigator.pop(context),
-                                                      style: ElevatedButton.styleFrom(
-                                                        padding: EdgeInsets.all(16.0),
-                                                        minimumSize: Size(double.infinity, 0),
-                                                        shape: RoundedRectangleBorder()
-                                                      ),
-                                                    ),
-                                                    ElevatedButton(
-                                                      child: const Text('Edit posting'),
-                                                      onPressed: () => Navigator.pop(context),
-                                                      style: ElevatedButton.styleFrom(
-                                                        padding: EdgeInsets.all(16.0),
-                                                        minimumSize: Size(double.infinity, 0),
-                                                        shape: RoundedRectangleBorder()
-                                                      ),
-                                                    ),
-                                                    ElevatedButton(
-                                                      child: const Text('Remove posting'),
-                                                      onPressed: () => Navigator.pop(context),
-                                                      style: ElevatedButton.styleFrom(
-                                                        padding: EdgeInsets.all(16.0),
-                                                        minimumSize: Size(double.infinity, 0),
-                                                        shape: RoundedRectangleBorder()
-                                                      ),
-
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      },
-                                      child: const Text('...'), style: ElevatedButton.styleFrom(shape: const CircleBorder()),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ]
-                          ),
+                                ],
+                              );
+                              },
+                            ),
                         ),
-                        Center(child: Text('Tab 3 content')),
+                        const Center(child: Text('Tab 3 content')),
                       ],
                     ),
                   ),
@@ -338,3 +123,161 @@ class CompanyDashboardScreen extends StatelessWidget {
     );
   }
 }
+
+class OptionProjectCompany extends StatefulWidget{
+  final VoidCallback onTap;
+  final Project project;
+
+  const OptionProjectCompany({super.key, required this.onTap, required this.project});
+  //function
+  int f_dayCreatedAgo(String createdAt){
+    DateTime timeParse = DateTime.parse(createdAt);
+    DateTime now = DateTime.now();
+    Duration difference = now.difference(timeParse);
+
+    return difference.inDays;
+  }
+  @override
+  State<OptionProjectCompany> createState()=>
+      OptionProjectCompanyState();
+
+}
+
+class OptionProjectCompanyState extends State<OptionProjectCompany>{
+  @override
+  Widget build(BuildContext context){
+    return InkWell(
+      onTap: widget.onTap,
+      child:  Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children:[
+                  const SizedBox(height: 15,),
+                  Text(widget.project.title, style: const TextStyle(color: Colors.green),),
+                  Text('Created ${widget.f_dayCreatedAgo(widget.project.createdAt)} days ago',style: const TextStyle(color: Colors.grey),),
+                  const SizedBox(height: 10,),
+                  const Text('Students are looking for'),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 20),
+                    child: Text('• Clear expectation about your project or deliverables'),),
+                  const SizedBox(height: 20,),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('0'),
+                          Text('Proposals')
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('8'),
+                          Text('Messages')
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('2'),
+                          Text('Hired')
+                        ],
+                      ),
+                    ],
+                  ),
+                ]
+            ),
+          ),
+          ElevatedButton(
+            onPressed: (){
+              showModalBottomSheet<void>(
+                context: context,
+                builder: (BuildContext context) {
+                  return SizedBox(
+                    height: 350,
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        // mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          ElevatedButton(
+                            onPressed: () => Navigator.pop(context),
+                            style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.all(16.0),
+                                minimumSize: const Size(double.infinity, 0),
+                                shape: const RoundedRectangleBorder()
+                            ),
+                            child: const Text('View Proposals'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => Navigator.pop(context),
+                            style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.all(16.0),
+                                minimumSize: const Size(double.infinity, 0),
+                                shape:  const RoundedRectangleBorder()
+
+                            ),
+                            child: const Text('View messages'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => Navigator.pop(context),
+                            style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.all(16.0),
+                                minimumSize: const Size(double.infinity, 0),
+                                shape: const RoundedRectangleBorder()
+                            ),
+                            child: const Text('View hired'),
+                          ),
+                          const Divider(
+                            thickness: 2,
+                            indent: 10,
+                            endIndent: 10,
+                            color: Colors.black,
+                          ),
+                          ElevatedButton(
+                            onPressed: () => Navigator.pop(context),
+                            style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.all(16.0),
+                                minimumSize: const Size(double.infinity, 0),
+                                shape: const RoundedRectangleBorder()
+                            ),
+                            child: const Text('View job posting'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => Navigator.pop(context),
+                            style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.all(16.0),
+                                minimumSize: const Size(double.infinity, 0),
+                                shape: const RoundedRectangleBorder()
+                            ),
+                            child: const Text('Edit posting'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => Navigator.pop(context),
+                            style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.all(16.0),
+                                minimumSize: const Size(double.infinity, 0),
+                                shape: const RoundedRectangleBorder()
+                            ),
+                            child: const Text('Remove posting'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            }, style: ElevatedButton.styleFrom(shape: const CircleBorder()),
+            child: const Text('...'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
