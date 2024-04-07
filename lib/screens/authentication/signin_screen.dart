@@ -11,9 +11,7 @@ import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class SigninScreen extends StatefulWidget {
-  final UserRole role;
-
-  const SigninScreen({super.key, required this.role});
+  const SigninScreen({super.key});
 
   @override
   State<SigninScreen> createState() => _SigninScreenState();
@@ -39,7 +37,7 @@ class _SigninScreenState extends State<SigninScreen> {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     if (token != null) {
-      Navigator.pushReplacementNamed(context, '/profile');
+      Navigator.pushReplacementNamed(context, '/home');
     }
   }
 
@@ -66,35 +64,21 @@ class _SigninScreenState extends State<SigninScreen> {
 
       if (response.statusCode == 201) {
         final result = jsonDecode(response.body)["result"];
-        if (result is String) {
-          print('Result: $result');
-          setState(() {
-            errorMessages.clear();
-            errorMessages.add(result);
-          });
-        } else if (result is Map<String, dynamic>) {
-          final token = jsonDecode(response.body)['result']['token'];
-          print('Token: $token');
-          await prefs.setString('token', token);
-          await prefs.setInt('currole', widget.role.index);
-          await fetchUserData();
-          Navigator.pushReplacementNamed(context, '/profile');
-        }
+        final token = result['token'];
+        print('Token: $token');
+        await prefs.setString('token', token);
+        await fetchUserData();
+        Navigator.pushReplacementNamed(context, '/home');
       } else {
         print('Error this: ${response.statusCode}');
-        final errorBody = jsonDecode(response.body);
-        final errorDetails = errorBody['errorDetails'];
-        if (errorDetails is List<dynamic>) {
-          setState(() {
-            errorMessages.clear();
-            errorMessages.addAll(errorDetails.cast<String>());
-          });
-        } else if (errorDetails is String) {
-          setState(() {
-            errorMessages.clear();
-            errorMessages.add(errorDetails);
-          });
-        }
+        final errorDetails = jsonDecode(response.body)['errorDetails'];
+        setState(() {
+          if (errorDetails is List<dynamic>) {
+            errorMessages = errorDetails.cast<String>();
+          } else if (errorDetails is String) {
+            errorMessages = [errorDetails];
+          }
+        });
       }
     } catch (e) {
       print('Error: $e');
@@ -104,7 +88,6 @@ class _SigninScreenState extends State<SigninScreen> {
   Future<void> fetchUserData() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    final currole = prefs.getInt('currole');
 
     if (token != null) {
       try {
@@ -119,23 +102,28 @@ class _SigninScreenState extends State<SigninScreen> {
 
           // Save user id
           await prefs.setInt('userid', userData['id']);
-          print(userData['id']);
+          print('User ID: ${userData['id']}');
+
+          // Save user full name
+          await prefs.setString('username', userData['fullname']);
+          print('User FullName: ${userData['fullname']}');
 
           // Save roles
           List<dynamic> roles = userData['roles'];
           List<String> rolesStringList =
               roles.map((role) => role.toString()).toList();
           await prefs.setStringList('roles', rolesStringList);
-          print(rolesStringList);
+          print('User assigned roles: ${userData['roles']}');
 
-          // Save role profile
-          if (currole == 0) {
-            final roledata = userData['student'];
-            await prefs.setString('roleprofile', jsonEncode(roledata));
-          } else {
-            final roledata = userData['company'];
-            await prefs.setString('roleprofile', jsonEncode(roledata));
-          }
+          // Save student profile
+          await prefs.setString(
+              'studentprofile', jsonEncode(userData['student']));
+          print('User role Student: ${jsonEncode(userData['student'])}');
+
+          // Save company profile
+          await prefs.setString(
+              'companyprofile', jsonEncode(userData['company']));
+          print('User role Company: ${jsonEncode(userData['company'])}');
         } else {
           // Handle error
         }
@@ -172,14 +160,6 @@ class _SigninScreenState extends State<SigninScreen> {
                 color: darkblueColor,
               ),
             ),
-            // Text(
-            //   'as ${widget.role == UserRole.company ? 'Company' : 'Student'}',
-            //   style: const TextStyle(
-            //     fontSize: 33,
-            //     fontWeight: FontWeight.bold,
-            //     color: darkblueColor,
-            //   ),
-            // ),
             const SizedBox(
               height: 20,
             ),
@@ -247,7 +227,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   }).toList()
                 else
                   const SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
               ],
             ),
@@ -278,7 +258,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   }).toList()
                 else
                   const SizedBox(
-                    height: 10,
+                    height: 0,
                   ),
               ],
             ),
@@ -354,12 +334,7 @@ class _SigninScreenState extends State<SigninScreen> {
               ),
               child: TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SignupTypeScreen()),
-                  );
+                  Navigator.pushNamed(context, '/signup');
                 },
                 child: const Text(
                   'Sign up',

@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 
 class ListTileSkillset extends StatefulWidget {
   final String itemName;
+  final int itemId;
   final bool isChecked;
-  final Function(String) addSkillset;
-  final Function(String) removeSkillset;
+  final Function(int) addSkillset;
+  final Function(int) removeSkillset;
 
   const ListTileSkillset({
-    super.key, 
+    Key? key,
     required this.itemName,
+    required this.itemId,
     required this.isChecked,
     required this.addSkillset,
-    required this.removeSkillset
-  });
+    required this.removeSkillset,
+  }) : super(key: key);
 
   @override
-  State<ListTileSkillset> createState() => _ListTileSkillsetState();
+  _ListTileSkillsetState createState() => _ListTileSkillsetState();
 }
 
 class _ListTileSkillsetState extends State<ListTileSkillset> {
@@ -25,6 +27,7 @@ class _ListTileSkillsetState extends State<ListTileSkillset> {
   void initState() {
     super.initState();
     isSelected = widget.isChecked;
+    print(isSelected);
   }
 
   @override
@@ -34,10 +37,11 @@ class _ListTileSkillsetState extends State<ListTileSkillset> {
         setState(() {
           isSelected = !isSelected;
           if (isSelected) {
-            widget.addSkillset(widget.itemName);
-          }
-          else {
-            widget.removeSkillset(widget.itemName);
+            widget
+                .addSkillset(widget.itemId); // Pass itemId instead of itemName
+          } else {
+            widget.removeSkillset(
+                widget.itemId); // Pass itemId instead of itemName
           }
         });
       },
@@ -45,11 +49,11 @@ class _ListTileSkillsetState extends State<ListTileSkillset> {
         title: Text(
           widget.itemName,
           style: TextStyle(
-            color: isSelected ? Colors.green : Colors.black45,
-            fontWeight: FontWeight.w500
-          )
+            color: widget.isChecked ? Colors.green : Colors.black45,
+            fontWeight: FontWeight.w500,
+          ),
         ),
-        trailing: isSelected ? const Icon(Icons.check) : null,
+        trailing: widget.isChecked ? const Icon(Icons.check) : null,
       ),
     );
   }

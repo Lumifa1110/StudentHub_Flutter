@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:studenthub/components/index.dart';
+import 'package:studenthub/components/authappbar.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:studenthub/components/button_simple.dart';
+import 'package:studenthub/components/textfield_label_v2.dart';
+import 'package:studenthub/enums/company_size.dart';
+import 'package:studenthub/models/company_profile_model.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:studenthub/utils/font.dart';
 
 class CompanyProfileInputScreen extends StatefulWidget {
-  const CompanyProfileInputScreen({super.key});
+  const CompanyProfileInputScreen({Key? key}) : super(key: key);
 
   @override
-  State<CompanyProfileInputScreen> createState() => _CompanyProfileInputScreenState();
+  State<CompanyProfileInputScreen> createState() =>
+      _CompanyProfileInputScreenState();
 }
 
 class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
@@ -15,134 +24,126 @@ class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
   final companyWebsiteController = TextEditingController();
   final companyDescriptionController = TextEditingController();
 
-  String companySizeState = '';
+  CompanySize companySizeState = CompanySize.justme;
 
-  void handleCompanySizeChange(String? value) {
+  void handleCompanySizeChange(CompanySize? value) {
     setState(() {
       companySizeState = value!;
     });
   }
 
+  Future<void> postCompanyProfile() async {
+    final companyProfile = CompanyProfile(
+      title: companyNameController.text,
+      size: companySizeState.index,
+      website: companyWebsiteController.text,
+      description: companyDescriptionController.text,
+    );
+
+    final response = await http.post(
+      Uri.parse('/api/profile/company'), // Replace with your API endpoint
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(companyProfile.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      // Handle successful response
+      print('Company profile posted successfully');
+    } else {
+      // Handle error response
+      print('Failed to post company profile');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Row(
-          children: [
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Student Hub',
-                  style: TextStyle(
-                    color: Color(0xffffffff),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold
-                  ),
-                ),
-              ),
-            ),
-            FaIcon(
-              FontAwesomeIcons.solidUser,
-              color: Color(0xffffffff),
-              size: 24
-            )
-          ],
-        ),
-        backgroundColor: Colors.blue,
-      ),
+      appBar: const AuthAppBar(canBack: false),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-          child: Column (
+          child: Column(
             children: [
               // TEXT: Welcome
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      alignment: Alignment.topCenter,
-                      child: const Text('Welcome to Student Hub!',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold
-                        ),
-                      )
+              Row(children: [
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    alignment: Alignment.topCenter,
+                    child: const Text(
+                      'Welcome to Student Hub!',
+                      style: TextStyle(
+                          fontSize: AppFonts.h1FontSize,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
-                ]
-              ),
+                ),
+              ]),
               // TEXT: Guidance
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      alignment: Alignment.topCenter,
-                      child: const Text(
-                        'Tell us about your company and you will be on your way connect with high skilled students',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal
-                        ),
-                      )
+              Row(children: [
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    alignment: Alignment.topCenter,
+                    child: const Text(
+                      'Tell us about your company and you will be on your way connect with high skilled students',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.normal),
                     ),
                   ),
-                ]
-              ),
+                ),
+              ]),
               // RADIO BUTTON: Select company size
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      alignment: Alignment.topLeft,
-                      child: const Text('How many people are there in your company?',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal
-                        ),
-                      )
+              Row(children: [
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    alignment: Alignment.topLeft,
+                    child: const Text(
+                      'How many people are there in your company?',
+                      style: TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.normal),
                     ),
                   ),
-                ]
-              ),
-              Column (
+                ),
+              ]),
+              Column(
                 children: [
                   CompanySizeTile(
-                    title: 'Only me', 
-                    value: 'Only me', 
-                    companySizeState: companySizeState, 
-                    onChanged: handleCompanySizeChange
+                    title: 'It\'s just me',
+                    value: CompanySize.justme,
+                    companySizeState: companySizeState,
+                    onChanged: handleCompanySizeChange,
                   ),
                   CompanySizeTile(
-                    title: '2 to 9 people', 
-                    value: '2 to 9 people', 
-                    companySizeState: companySizeState, 
-                    onChanged: handleCompanySizeChange
+                    title: '2 to 9 people',
+                    value: CompanySize.small,
+                    companySizeState: companySizeState,
+                    onChanged: handleCompanySizeChange,
                   ),
                   CompanySizeTile(
-                    title: '10 to 99 people', 
-                    value: '10 to 99 people', 
-                    companySizeState: companySizeState, 
-                    onChanged: handleCompanySizeChange
+                    title: '10 to 99 people',
+                    value: CompanySize.medium,
+                    companySizeState: companySizeState,
+                    onChanged: handleCompanySizeChange,
                   ),
                   CompanySizeTile(
-                    title: '100 to 1000 people', 
-                    value: '1000 to 1000 people', 
-                    companySizeState: companySizeState, 
-                    onChanged: handleCompanySizeChange
+                    title: '100 to 1000 people',
+                    value: CompanySize.large,
+                    companySizeState: companySizeState,
+                    onChanged: handleCompanySizeChange,
                   ),
                   CompanySizeTile(
-                    title: 'Over 1000 people', 
-                    value: 'Over 1000 people',
-                    companySizeState: companySizeState, 
-                    onChanged: handleCompanySizeChange
+                    title: 'Over 1000 people',
+                    value: CompanySize.verylarge,
+                    companySizeState: companySizeState,
+                    onChanged: handleCompanySizeChange,
                   ),
                 ],
               ),
@@ -150,23 +151,29 @@ class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
                 height: 20,
               ),
               // TextFields
-              TextFieldWithLabel(label: 'Company name', controller: companyNameController, lineCount: 1),
-              TextFieldWithLabel(label: 'Website', controller: companyWebsiteController, lineCount: 1),
-              TextFieldWithLabel(label: 'Description', controller: companyDescriptionController, lineCount: 2),
+              TextFieldWithLabel(
+                label: 'Company name',
+                controller: companyNameController,
+              ),
+              TextFieldWithLabel(
+                label: 'Website',
+                controller: companyWebsiteController,
+              ),
+              TextFieldWithLabel(
+                label: 'Description',
+                controller: companyDescriptionController,
+              ),
               // Continue button
-              
               Container(
                 alignment: Alignment.bottomRight,
                 margin: const EdgeInsets.only(top: 20),
                 child: ButtonSimple(
-                  label: 'Continue', 
-                  onPressed: () => {
-                    Navigator.pushNamed(context, '/company/welcome')
-                  }
+                  label: 'Continue',
+                  onPressed: () => postCompanyProfile(),
                 ),
               )
             ],
-          )
+          ),
         ),
       ),
     );
@@ -175,12 +182,12 @@ class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
 
 class CompanySizeTile extends StatelessWidget {
   final String title;
-  final String value;
-  final String companySizeState;
-  final ValueChanged<String?> onChanged;
+  final CompanySize value;
+  final CompanySize companySizeState;
+  final ValueChanged<CompanySize?> onChanged;
 
   const CompanySizeTile({
-    super.key,
+    Key? key,
     required this.title,
     required this.value,
     required this.companySizeState,
@@ -193,12 +200,7 @@ class CompanySizeTile extends StatelessWidget {
       height: 30,
       child: ListTile(
         contentPadding: EdgeInsets.zero,
-        title: Text(
-          title, 
-          style: const TextStyle(
-            fontSize: 14
-          )
-        ),
+        title: Text(title, style: const TextStyle(fontSize: 16)),
         leading: Radio(
           value: value,
           groupValue: companySizeState,

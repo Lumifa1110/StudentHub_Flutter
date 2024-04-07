@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/utils/colors.dart';
 
 class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool canBack;
   final String? title;
-  final IconData? icon;
-  final VoidCallback? onTapIcon;
 
   const AuthAppBar({
     Key? key, // Add Key? key here
     required this.canBack,
     this.title,
-    this.icon, // Thêm icon vào
-    this.onTapIcon,
   });
 
   @override
@@ -21,6 +19,34 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _navigateWithAnimation(String routeName, Widget widgetname) {
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => widgetname,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var begin = const Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        ),
+      );
+    }
+
+    Future<void> handlePressIcon() async {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+      if (token != null) {
+        _navigateWithAnimation('/profile', SwitchScreen());
+      }
+    }
+
     return AppBar(
       leadingWidth: 20,
       leading: canBack
@@ -63,18 +89,12 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
       actions: [
         IconButton(
-          onPressed: onTapIcon,
-          icon: icon != null
-              ? Icon(
-                  icon,
-                  size: 26,
-                  color: blackTextColor,
-                )
-              : const Icon(
-                  Icons.person,
-                  size: 26,
-                  color: blackTextColor,
-                ),
+          onPressed: handlePressIcon,
+          icon: const Icon(
+            Icons.person,
+            size: 26,
+            color: blackTextColor,
+          ),
         )
       ],
     );

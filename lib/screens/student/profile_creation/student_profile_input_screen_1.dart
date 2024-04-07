@@ -3,7 +3,8 @@ import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/index.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:studenthub/models/index.dart';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'index.dart';
 
 class StudentProfileInputScreen1 extends StatefulWidget {
@@ -16,47 +17,71 @@ class StudentProfileInputScreen1 extends StatefulWidget {
 
 class _StudentProfileInputScreen1State
     extends State<StudentProfileInputScreen1> {
-  // TextField controller
   final techStackController = TextEditingController();
+  List<SkillSet> techStacks = [];
 
-  late List<Skillset> studentSkillsets;
+  final List<SkillSet> studentSelectedSkills = [];
 
-  final List<Skillset> skillsets = [
-    Skillset('AWS'),
-    Skillset('ReactJS'),
-    Skillset('Flutter'),
-    Skillset('NodeJS'),
-    Skillset('Android Development'),
-    Skillset('IOS Development'),
-    Skillset('MongoDB'),
-    Skillset('Git')
+  final List<SkillSet> skillSets = const [
+    SkillSet(id: 0, name: 'C'),
+    SkillSet(id: 1, name: 'C++'),
+    SkillSet(id: 2, name: 'C#'),
+    SkillSet(id: 3, name: 'Python'),
+    SkillSet(id: 4, name: 'Java'),
+    SkillSet(id: 5, name: 'JavaScript'),
+    SkillSet(id: 6, name: 'Kotlin'),
+    SkillSet(id: 7, name: 'HTML/CSS'),
   ];
+
+  late List<bool> isCheckedList;
 
   @override
   void initState() {
     super.initState();
-    studentSkillsets = [];
+    isCheckedList = List.generate(skillSets.length, (index) => false);
   }
 
-  void addSkillset(String name) {
+  // void addSkillset(String name) {
+  //   setState(() {
+  //     Skillset newSkillset = Skillset(name);
+  //     studentSkillsets.add(newSkillset);
+  //   });
+  // }
+
+  // void removeSkillset(String name) {
+  //   setState(() {
+  //     studentSkillsets.removeWhere((skillset) => skillset.name == name);
+  //   });
+  // }
+
+  void addSelectedSkills(int id) {
     setState(() {
-      Skillset newSkillset = Skillset(name);
-      studentSkillsets.add(newSkillset);
+      if (!isSkillIncluded(id)) {
+        SkillSet skill = skillSets.firstWhere((element) => element.id == id);
+        studentSelectedSkills.add(skill);
+        isCheckedList[id] = true;
+        print(isCheckedList);
+      }
+      print(studentSelectedSkills.map((skill) => skill.name).toList());
     });
   }
 
-  void removeSkillset(String name) {
+  void removeSelectedSkills(int id) {
     setState(() {
-      studentSkillsets.removeWhere((skillset) => skillset.name == name);
+      studentSelectedSkills.removeWhere((skill) => skill.id == id);
+      print(studentSelectedSkills);
+      isCheckedList[id] = false;
+      print(isCheckedList);
     });
   }
 
-  bool isSkillsetIncluded(String name) {
-    return studentSkillsets.any((skillset) => skillset.name == name);
+  bool isSkillIncluded(int id) {
+    return studentSelectedSkills.any((skillset) => skillset.id == id);
   }
 
   @override
   Widget build(BuildContext context) {
+    // late List<bool> checkedItemList = [];
     return Scaffold(
       appBar: const AuthAppBar(canBack: false),
       body: SingleChildScrollView(
@@ -121,7 +146,7 @@ class _StudentProfileInputScreen1State
                           child: Wrap(
                             spacing: 8.0, // Adjust the spacing between items
                             runSpacing: 8.0, // Adjust the spacing between lines
-                            children: studentSkillsets.isEmpty
+                            children: studentSelectedSkills.isEmpty
                                 ? [
                                     const SizedBox(
                                       height:
@@ -134,12 +159,11 @@ class _StudentProfileInputScreen1State
                                       ),
                                     ),
                                   ]
-                                : studentSkillsets.map((skillset) {
+                                : studentSelectedSkills.map((skillset) {
                                     return BoxSkillset(
+                                      id: skillset.id,
                                       text: skillset.name,
-                                      onDelete: () {
-                                        removeSkillset(skillset.name);
-                                      },
+                                      onDelete: removeSelectedSkills,
                                     );
                                   }).toList(),
                           ),
@@ -154,12 +178,13 @@ class _StudentProfileInputScreen1State
                     border: Border.all(color: Colors.grey),
                   ),
                   child: ListView(
-                    children: skillsets.map((skillset) {
+                    children: skillSets.map((skillset) {
                       return ListTileSkillset(
                         itemName: skillset.name,
-                        isChecked: isSkillsetIncluded(skillset.name),
-                        addSkillset: addSkillset,
-                        removeSkillset: removeSkillset,
+                        itemId: skillset.id,
+                        isChecked: isCheckedList[skillset.id],
+                        addSkillset: addSelectedSkills,
+                        removeSkillset: removeSelectedSkills,
                       );
                     }).toList(),
                   ),
@@ -363,7 +388,8 @@ class _StudentProfileInputScreen1State
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         StudentProfileInputScreen2(
-                                          studentSkillsets: studentSkillsets,
+                                          studentSkillsets:
+                                              studentSelectedSkills,
                                         )))
                           }),
                 )

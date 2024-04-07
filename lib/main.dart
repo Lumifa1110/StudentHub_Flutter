@@ -51,11 +51,12 @@ class _StudentHubState extends State<StudentHub> {
       theme: lightTheme,
       darkTheme: darkTheme,
       // themeMode: _themeController.themeMode,
-      home: const HomeScreen(),
-      initialRoute: '/',
+      initialRoute: '/student',
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
         switch (settings.name) {
+          case '/home':
+            return MaterialPageRoute(builder: (context) => const HomeScreen());
           case '/company':
             return MaterialPageRoute(
                 builder: (context) => const CompanyProfileInputScreen());
@@ -74,11 +75,15 @@ class _StudentHubState extends State<StudentHub> {
           case '/student/profileinput1':
             return MaterialPageRoute(
                 builder: (context) => const StudentProfileInputScreen1());
+          case '/student/dashboard':
+            return MaterialPageRoute(
+                builder: (context) => const StudentDashboardScreen());
           case '/chatter':
             return MaterialPageRoute(
                 builder: (context) => const MessageListScreen());
-          // case '/signin':
-          //   return MaterialPageRoute(builder: (context) => const SigninPage());
+          case '/signin':
+            return MaterialPageRoute(
+                builder: (context) => const SigninScreen());
           case '/signup':
             return MaterialPageRoute(
                 builder: (context) => const SignupTypeScreen());

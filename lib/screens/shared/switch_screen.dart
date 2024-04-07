@@ -78,7 +78,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
         if (response.statusCode == 201) {
           await prefs.remove('token');
           await prefs.remove('currole');
-          Navigator.pushReplacementNamed(context, '/');
+          Navigator.pushReplacementNamed(context, '/signin');
         } else {
           // Xử lý lỗi nếu cần
           print('Logout failed: ${response.body}');

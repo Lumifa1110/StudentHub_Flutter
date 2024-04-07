@@ -15,17 +15,41 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late SharedPreferences _prefs;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadToken();
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _loadToken();
+  // }
+
+  // Future<void> _loadToken() async {
+  //   _prefs = await SharedPreferences.getInstance();
+  //   final token = _prefs.getString('token');
+  //   if (token != null) {
+  //     Navigator.pushReplacementNamed(context, '/profile');
+  //   }
+  // }
+
+  Future<void> handleCompany() async {
+    _prefs = await SharedPreferences.getInstance();
+    final profile = _prefs.getString('companyprofile');
+    print(profile.runtimeType);
+    print(profile);
+    if (profile != 'null') {
+      Navigator.pushReplacementNamed(context, '/company/dashboard');
+    } else {
+      Navigator.pushNamed(context, '/company');
+    }
   }
 
-  Future<void> _loadToken() async {
+  Future<void> handleStudent() async {
     _prefs = await SharedPreferences.getInstance();
-    final token = _prefs.getString('token');
-    if (token != null) {
-      Navigator.pushReplacementNamed(context, '/profile');
+    final profile = _prefs.getString('studentprofile');
+    print(profile.runtimeType);
+    print(profile);
+    if (profile != 'null') {
+      Navigator.pushReplacementNamed(context, '/student/dashboard');
+    } else {
+      Navigator.pushReplacementNamed(context, '/student');
     }
   }
 
@@ -75,16 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SigninScreen(
-                            role: UserRole.company,
-                          ),
-                        ),
-                      );
-                    },
+                    onPressed: handleCompany,
                     style: ButtonStyle(
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                         const RoundedRectangleBorder(
@@ -130,15 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SigninScreen(
-                                  role: UserRole.student,
-                                )),
-                      );
-                    },
+                    onPressed: handleStudent,
                     style: ButtonStyle(
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                         const RoundedRectangleBorder(

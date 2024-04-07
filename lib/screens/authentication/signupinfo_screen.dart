@@ -65,11 +65,7 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
       if (response.statusCode == 201) {
         print('success');
         Navigator.pop(context);
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SigninScreen(role: widget.selectedType),
-            ));
+        Navigator.pushReplacementNamed(context, '/signin');
       } else {
         print('Error: ${response.statusCode}');
         final errorBody = jsonDecode(response.body);
