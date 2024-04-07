@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     if (token != null) {
-      Navigator.pushReplacementNamed(context, '/profile');
+      Navigator.pushReplacementNamed(context, '/company/dashboard');
     }
   }
 

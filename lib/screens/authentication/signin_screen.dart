@@ -23,7 +23,7 @@ class _SigninScreenState extends State<SigninScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  final String uriBase = 'http://34.16.137.128';
+  final String uriBase = 'http://localhost:4400';
 
   List<String> errorMessages = [];
 
@@ -39,7 +39,7 @@ class _SigninScreenState extends State<SigninScreen> {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     if (token != null) {
-      Navigator.pushReplacementNamed(context, '/profile');
+      Navigator.pushReplacementNamed(context, '/company/dashboard');
     }
   }
 
@@ -78,7 +78,7 @@ class _SigninScreenState extends State<SigninScreen> {
           await prefs.setString('token', token);
           await prefs.setInt('currole', widget.role.index);
           await fetchUserData();
-          Navigator.pushReplacementNamed(context, '/profile');
+          Navigator.pushReplacementNamed(context, '/company/dashboard');
         }
       } else {
         print('Error this: ${response.statusCode}');

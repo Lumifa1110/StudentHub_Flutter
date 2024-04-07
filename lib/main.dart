@@ -99,6 +99,9 @@ class _StudentHubState extends State<StudentHub> {
           case '/list':
             return MaterialPageRoute(
                 builder: (context) => const ProjectListScreen());
+          case '/company/project/step1':
+            return MaterialPageRoute(
+                builder: (context) => ProjectPostStep1Page());
           default:
             return null;
         }

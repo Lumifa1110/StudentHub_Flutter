@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/appbar_ps1.dart';
 import 'package:studenthub/models/company_model.dart';
-import 'package:studenthub/data/test/data_project.dart';
 import 'package:http/http.dart' as http;
 
 class CompanyDashboardScreen extends StatefulWidget{
@@ -16,110 +16,117 @@ class CompanyDashboardScreen extends StatefulWidget{
 class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
 
   late List<Project> listProjectGet = [];
+  late SharedPreferences _prefs;
 
-  Future<void> fechProjectData() async{
 
-    final token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZnVsbG5hbWUiOiJBIiwiZW1haWwiOiJwdmxvYzIwQHZwLmZpdHVzLmVkdS52biIsInJvbGVzIjpbIjAiXSwiaWF0IjoxNzEyNDAzMzY3LCJleHAiOjE3MTM2MTI5Njd9.TFOLLg5ThYGkJ0J0_B9Z9Fdi4gPTMX8H-ORt41FWKSI';
+  //Get projects data on /api/project
+  Future<void> _loadProject() async{
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
     try{
-        final response = await http.get(Uri.parse('http://localhost:4400/api/project'),
-            headers: {'Authorization' : 'Bearer ${token}'},
-        );
-        // print('${jsonDecode(response.body)["result"]}');
-        final listProjectEncode = jsonDecode(response.body)["result"];
-        for(int i = 0; i < listProjectEncode.length; i++){
-          listProjectGet.add(Project(title: listProjectEncode[i]['title'], implementationTime: "Null", qualityStudent: 0, describe: listProjectEncode[i]['description'], createdAt: listProjectEncode[i]['createdAt']));
-        }
+      final responseJson = await http.get(Uri.parse('http://localhost:4400/api/project'),
+        headers: {'Authorization' : 'Bearer $token'},
+      );
+      final responseDecode = jsonDecode(responseJson.body)["result"];
+      for(int i = 0; i < responseDecode.length; i++){
+        listProjectGet.add(Project(title: responseDecode[i]['title'], implementationTime: "Null", qualityStudent: 0, describe: responseDecode[i]['description'], createdAt: responseDecode[i]['createdAt']));
+      }
     }
     catch(e){
       print(e);
     }
   }
-  Future<void> _loadProject() async{
-    fechProjectData();
-  }
   @override
-  void initState(){
-    super.initState();
-    _loadProject();
-  }
-  @override
-
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          appBar: const AppBar_PostPS1(),
-          body:Padding(
-            padding: const EdgeInsets.all(20),
-            child: DefaultTabController(
-              length: 2,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const SizedBox(width: 5,),
-                      const Text('Your projects', style: TextStyle(fontWeight: FontWeight.bold),),
-                      const SizedBox(width: 30,),
-                      ElevatedButton(onPressed: (){},style: ElevatedButton.styleFrom(shape: const RoundedRectangleBorder()), child: const Text('Post a jobs'),)
-                    ],
-                  ),
-                  const SizedBox(height: 10,),
-
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 2),
-                        borderRadius: BorderRadius.circular(12)
-                    ),
-                    child: TabBar(
-                        indicator: BoxDecoration(
-                          color: Colors.greenAccent,
-                          borderRadius: BorderRadius.circular(11),
-                          border: Border.all(width: 1),
-                        ),
-                        indicatorSize: TabBarIndicatorSize.tab,
-                        tabs:  const <Widget> [
-                          Tab(text: 'All project',),
-                          Tab(text: 'Archieved',)
-                        ]
-                    ),
-                  ),
-                  Expanded(
-                    child: TabBarView(
+    return FutureBuilder<void>(
+      future: _loadProject(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else {
+          return SafeArea(
+            child: Scaffold(
+                appBar: const AppBar_PostPS1(),
+                body:Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: DefaultTabController(
+                    length: 2,
+                    child: Column(
                       children: [
-                        Expanded(
-                            child: ListView.builder(
-                            itemCount: listProjectGet.length,
-                            itemBuilder: (BuildContext context, int index){
-                              final project = listProjectGet[index];
-                              return Column(
-                                children: [
-                                  const SizedBox(height: 20,),
-                                  OptionProjectCompany(
-                                      onTap: (){
-                                      },
-                                      project: project,
-                                  ),
-                                  if(index < listProjectGet.length - 1)
-                                    const Divider(
-                                      thickness: 2,
-                                      indent: 10,
-                                      endIndent: 10,
-                                      color: Colors.black,
-                                    ),
-                                ],
-                              );
-                              },
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const SizedBox(width: 5,),
+                            const Text('Your projects', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(width: 30,),
+                            ElevatedButton(onPressed: (){
+                              Navigator.pushReplacementNamed(context, '/company/project/step1');
+                            },
+                              style: ElevatedButton.styleFrom(shape: const RoundedRectangleBorder()),
+                              child: const Text('Post a jobs'),
                             ),
+                          ],
                         ),
-                        const Center(child: Text('Tab 3 content')),
+                        const SizedBox(height: 10,),
+
+                        Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(width: 2),
+                              borderRadius: BorderRadius.circular(12)
+                          ),
+                          child: TabBar(
+                              indicator: BoxDecoration(
+                                color: Colors.greenAccent,
+                                borderRadius: BorderRadius.circular(11),
+                                border: Border.all(width: 1),
+                              ),
+                              indicatorSize: TabBarIndicatorSize.tab,
+                              tabs:  const <Widget> [
+                                Tab(text: 'All project',),
+                                Tab(text: 'Archieved',)
+                              ]
+                          ),
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            children: [
+                              Expanded(
+                                child: ListView.builder(
+                                  itemCount: listProjectGet.length,
+                                  itemBuilder: (BuildContext context, int index){
+                                    final project = listProjectGet[index];
+                                    return Column(
+                                      children: [
+                                        const SizedBox(height: 20,),
+                                        OptionProjectCompany(
+                                          onTap: (){
+                                          },
+                                          project: project,
+                                        ),
+                                        if(index < listProjectGet.length - 1)
+                                          const Divider(
+                                            thickness: 2,
+                                            indent: 10,
+                                            endIndent: 10,
+                                            color: Colors.black,
+                                          ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                              const Center(child: Text('Tab 3 content')),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ],
-              ),
+                )
             ),
-          )
-      ),
+          );
+        }
+      },
     );
   }
 }
