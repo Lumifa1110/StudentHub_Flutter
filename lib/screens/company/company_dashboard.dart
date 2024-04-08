@@ -52,16 +52,6 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
     }
   }
 
-  Future<void> _loadProject() async {
-    fechProjectData();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _loadProject();
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<void>(
@@ -72,7 +62,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
         } else {
           return SafeArea(
             child: Scaffold(
-                appBar: const AppBar_PostPS1(),
+                appBar: const AuthAppBar(
+                  canBack: false,
+                ),
                 body: Padding(
                   padding: const EdgeInsets.all(20),
                   child: DefaultTabController(
@@ -94,7 +86,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.pushReplacementNamed(
+                                Navigator.pushNamed(
                                     context, '/company/project/step1');
                               },
                               style: ElevatedButton.styleFrom(

@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
     print(profile.runtimeType);
     print('Company: $profile');
     if (profile != null) {
-      Navigator.pushReplacementNamed(context, '/list');
+      Navigator.pushReplacementNamed(context, '/company/dashboard');
     } else {
       Navigator.pushNamed(context, '/company');
     }

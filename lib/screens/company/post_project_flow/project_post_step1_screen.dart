@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/appbar_ps1.dart';
+import 'package:studenthub/components/authappbar.dart';
 import 'project_post_step2_screen.dart';
 
 class ProjectPostStep1Page extends StatefulWidget {
@@ -27,7 +28,7 @@ class ProjectPostStep1PageState extends State<ProjectPostStep1Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBar_PostPS1(),
+      appBar: const AuthAppBar(canBack: true),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -93,7 +94,7 @@ class ProjectPostStep1PageState extends State<ProjectPostStep1Page> {
                       final Map<String, dynamic> box_title = {};
                       var putIfAbsent = box_title.putIfAbsent(
                           'title', () => _titleProject.text);
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => ProjectPostStep2Page(

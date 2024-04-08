@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/components/authappbar.dart';
 import '../../../components/appbar_ps1.dart';
 import 'project_post_step3_screen.dart';
 
@@ -38,7 +39,7 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: const AppBar_PostPS1(),
+      appBar: const AuthAppBar(canBack: true),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -146,7 +147,7 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
                       widget.box.putIfAbsent('projectScore', () => _isChecked);
                       widget.box.putIfAbsent('quantityStudent',
                           () => int.parse(_quantityStudent.text));
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => ProjectPostStep3Page(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/components/authappbar.dart';
 import '../../../components/appbar_ps1.dart';
 import 'project_post_step4_screen.dart';
 
@@ -29,7 +30,7 @@ class ProjectPostStep3PageState extends State<ProjectPostStep3Page> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: const AppBar_PostPS1(),
+      appBar: const AuthAppBar(canBack: true),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -92,7 +93,7 @@ class ProjectPostStep3PageState extends State<ProjectPostStep3Page> {
                 onPressed: () {
                   if (!_erro) {
                     widget.box.putIfAbsent('description', () => _describe.text);
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ProjectPostStep4Page(

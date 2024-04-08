@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studenthub/components/authappbar.dart';
 import '../../../components/appbar_ps1.dart';
 import 'package:studenthub/models/company_model.dart';
 import 'package:http/http.dart' as http;
@@ -42,7 +43,7 @@ class ProjectPostStep4Page extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: const AppBar_PostPS1(),
+      appBar: const AuthAppBar(canBack: true),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20),
