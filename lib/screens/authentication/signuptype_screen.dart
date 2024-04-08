@@ -20,6 +20,7 @@ class _SignupTypeScreenState extends State<SignupTypeScreen> {
     return Scaffold(
       appBar: const AuthAppBar(
         canBack: false,
+        isShowIcon: false,
       ),
       body: Column(
         children: [

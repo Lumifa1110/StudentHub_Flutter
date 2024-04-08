@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,6 +9,7 @@ import 'package:studenthub/enums/company_size.dart';
 import 'package:studenthub/models/company_profile_model.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:studenthub/utils/apiBase.dart';
 import 'package:studenthub/utils/font.dart';
 
 class CompanyProfileInputScreen extends StatefulWidget {
@@ -33,6 +35,9 @@ class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
   }
 
   Future<void> postCompanyProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    print(token);
     final companyProfile = CompanyProfile(
       title: companyNameController.text,
       size: companySizeState.index,
@@ -41,16 +46,21 @@ class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
     );
 
     final response = await http.post(
-      Uri.parse('/api/profile/company'), // Replace with your API endpoint
+      Uri.parse(
+          '${BASE_URL}api/profile/company'), // Replace with your API endpoint
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
       },
       body: jsonEncode(companyProfile.toJson()),
     );
 
-    if (response.statusCode == 200) {
+    print(response.body);
+
+    if (response.statusCode == 201) {
       // Handle successful response
       print('Company profile posted successfully');
+      Navigator.pushReplacementNamed(context, '/company/welcome');
     } else {
       // Handle error response
       print('Failed to post company profile');
@@ -60,7 +70,7 @@ class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AuthAppBar(canBack: false),
+      appBar: const AuthAppBar(canBack: true),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),

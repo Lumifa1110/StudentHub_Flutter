@@ -7,6 +7,7 @@ import 'package:studenthub/components/textfield_floatinglabel.dart';
 import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/models/user_model.dart';
 import 'package:studenthub/screens/authentication/signuptype_screen.dart';
+import 'package:studenthub/utils/apiBase.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
@@ -53,7 +54,7 @@ class _SigninScreenState extends State<SigninScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('$uriBase/api/auth/sign-in'),
+        Uri.parse('${BASE_URL}api/auth/sign-in'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -92,7 +93,7 @@ class _SigninScreenState extends State<SigninScreen> {
     if (token != null) {
       try {
         final response = await http.get(
-          Uri.parse('$uriBase/api/auth/me'),
+          Uri.parse('${BASE_URL}api/auth/me'),
           headers: {'Authorization': 'Bearer $token'},
         );
         print('Fetch User Data: ${response.body}');
@@ -140,7 +141,10 @@ class _SigninScreenState extends State<SigninScreen> {
     return Scaffold(
       backgroundColor: bgColor,
       resizeToAvoidBottomInset: false,
-      appBar: const AuthAppBar(canBack: false),
+      appBar: const AuthAppBar(
+        canBack: false,
+        isShowIcon: false,
+      ),
       body: Center(
         child: Column(
           children: [

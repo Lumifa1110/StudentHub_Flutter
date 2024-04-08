@@ -8,6 +8,7 @@ import 'package:studenthub/components/textfield_floatinglabel.dart';
 import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/models/index.dart';
 import 'package:studenthub/screens/index.dart';
+import 'package:studenthub/utils/apiBase.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
@@ -54,7 +55,7 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('${uriBase}/api/auth/sign-up'),
+        Uri.parse('${BASE_URL}api/auth/sign-up'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -93,6 +94,7 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
       backgroundColor: bgColor,
       appBar: const AuthAppBar(
         canBack: true,
+        isShowIcon: false,
       ),
       body: SingleChildScrollView(
         child: Center(

@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:studenthub/components/card_switchaccount.dart';
 import 'package:studenthub/components/textfield/search_bar.dart';
+import 'package:studenthub/utils/apiBase.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
@@ -69,7 +70,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
     if (token != null) {
       try {
         final response = await http.post(
-          Uri.parse('http://34.16.137.128/api/auth/logout'),
+          Uri.parse('${BASE_URL}api/auth/logout'),
           headers: {
             'Authorization': 'Bearer $token',
           },
@@ -96,11 +97,25 @@ class _SwitchScreenState extends State<SwitchScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 5.0,
-        leadingWidth: 20,
+        leadingWidth: 40,
         leading: Navigator.canPop(context)
-            ? IconButton(
-                icon: const Icon(Icons.chevron_left, color: whiteTextColor),
-                onPressed: () => Navigator.of(context).pop(),
+            ? SizedBox(
+                width: kToolbarHeight,
+                height: kToolbarHeight,
+                child: Material(
+                  borderRadius: BorderRadius.zero,
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: const Center(
+                      child: Icon(
+                        Icons.chevron_left,
+                        color: whiteTextColor,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                ),
               )
             : null,
         title: const Row(

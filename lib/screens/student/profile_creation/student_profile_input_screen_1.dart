@@ -83,7 +83,7 @@ class _StudentProfileInputScreen1State
   Widget build(BuildContext context) {
     // late List<bool> checkedItemList = [];
     return Scaffold(
-      appBar: const AuthAppBar(canBack: false),
+      appBar: const AuthAppBar(canBack: true),
       body: SingleChildScrollView(
         child: Container(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),

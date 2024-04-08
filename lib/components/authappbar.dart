@@ -7,11 +7,13 @@ import 'package:studenthub/utils/colors.dart';
 class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool canBack;
   final String? title;
+  final bool isShowIcon;
 
   const AuthAppBar({
     Key? key, // Add Key? key here
     required this.canBack,
     this.title,
+    this.isShowIcon = true,
   });
 
   @override
@@ -42,17 +44,32 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
     Future<void> handlePressIcon() async {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
+      print(token);
       if (token != null) {
         _navigateWithAnimation('/profile', SwitchScreen());
       }
     }
 
     return AppBar(
-      leadingWidth: 20,
+      leadingWidth: 40,
       leading: canBack
-          ? IconButton(
-              icon: const Icon(Icons.chevron_left, color: whiteTextColor),
-              onPressed: () => Navigator.of(context).pop(),
+          ? SizedBox(
+              width: kToolbarHeight,
+              height: kToolbarHeight,
+              child: Material(
+                borderRadius: BorderRadius.zero,
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: const Center(
+                    child: Icon(
+                      Icons.chevron_left,
+                      color: whiteTextColor,
+                      size: 24,
+                    ),
+                  ),
+                ),
+              ),
             )
           : null,
       elevation: 5.0,
@@ -87,16 +104,18 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ],
             ),
-      actions: [
-        IconButton(
-          onPressed: handlePressIcon,
-          icon: const Icon(
-            Icons.person,
-            size: 26,
-            color: blackTextColor,
-          ),
-        )
-      ],
+      actions: isShowIcon
+          ? [
+              IconButton(
+                onPressed: handlePressIcon,
+                icon: const Icon(
+                  Icons.person,
+                  size: 26,
+                  color: whiteTextColor,
+                ),
+              ),
+            ]
+          : [],
     );
   }
 }
