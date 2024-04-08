@@ -14,7 +14,7 @@ class ProjectPostStep2Page extends StatefulWidget{
 class ProjectPostStep2PageState extends State<ProjectPostStep2Page>{
   bool _erro = false;
   final TextEditingController _quantityStudent = TextEditingController();
-  int _isChecked = 3;
+  int _isChecked = 0;
 
   void validateTextfield(String value){
     setState(() {
@@ -52,9 +52,21 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page>{
                   const Text('How long will your project take?'),
                   const SizedBox(height: 20,),
                   ListTile(
+                    title: const Text('Less Than 1 Month', style: TextStyle(fontSize: 14)),
+                    leading: Radio(
+                      value: 0, // Set value to 3
+                      groupValue: _isChecked,
+                      onChanged: (value) {
+                        setState(() {
+                          _isChecked = value as int;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
                     title: const Text('1 to 3 months', style: TextStyle(fontSize: 14)),
                     leading: Radio(
-                      value: 3, // Set value to 3
+                      value: 1, // Set value to 6
                       groupValue: _isChecked,
                       onChanged: (value) {
                         setState(() {
@@ -66,7 +78,19 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page>{
                   ListTile(
                     title: const Text('3 to 6 months', style: TextStyle(fontSize: 14)),
                     leading: Radio(
-                      value: 6, // Set value to 6
+                      value: 2, // Set value to 6
+                      groupValue: _isChecked,
+                      onChanged: (value) {
+                        setState(() {
+                          _isChecked = value as int;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('More than 6 months', style: TextStyle(fontSize: 14)),
+                    leading: Radio(
+                      value: 3, // Set value to 6
                       groupValue: _isChecked,
                       onChanged: (value) {
                         setState(() {
@@ -96,8 +120,9 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page>{
                     child:ElevatedButton(
                       onPressed: (){
                         if(!_erro){
+                          print(_isChecked.runtimeType);
                           widget.box.putIfAbsent('projectScore', () => _isChecked);
-                          widget.box.putIfAbsent('qualityStudent', () => int.parse(_quantityStudent.text));
+                          widget.box.putIfAbsent('quantityStudent', () => int.parse(_quantityStudent.text));
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => ProjectPostStep3Page(box: widget.box,)),

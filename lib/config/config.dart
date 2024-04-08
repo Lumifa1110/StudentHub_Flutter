@@ -1,0 +1,1 @@
+const String uriBase = 'http://34.16.137.128';

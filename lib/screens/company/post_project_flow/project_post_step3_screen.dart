@@ -75,9 +75,6 @@ class ProjectPostStep3PageState extends State<ProjectPostStep3Page>{
                     onPressed: (){
                       if(!_erro){
                         widget.box.putIfAbsent('description', () => _describe.text);
-                        // widget.box.forEach((key, value) {
-                        //   print('$key: $value');
-                        // });
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => ProjectPostStep4Page(box: widget.box,)),

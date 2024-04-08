@@ -9,6 +9,7 @@ import 'package:studenthub/models/user_model.dart';
 import 'package:studenthub/screens/authentication/signuptype_screen.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
+import 'package:studenthub/config/config.dart';
 
 class SigninScreen extends StatefulWidget {
   final UserRole role;
@@ -22,8 +23,6 @@ class SigninScreen extends StatefulWidget {
 class _SigninScreenState extends State<SigninScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  final String uriBase = 'http://localhost:4400';
 
   List<String> errorMessages = [];
 

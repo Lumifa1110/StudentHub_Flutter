@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/appbar_ps1.dart';
 import 'package:studenthub/models/company_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:studenthub/config/config.dart';
+import 'package:studenthub/business/company_business.dart';
 
 class CompanyDashboardScreen extends StatefulWidget{
   const CompanyDashboardScreen({super.key});
@@ -18,18 +20,20 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
   late List<Project> listProjectGet = [];
   late SharedPreferences _prefs;
 
-
   //Get projects data on /api/project
   Future<void> _loadProject() async{
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     try{
-      final responseJson = await http.get(Uri.parse('http://localhost:4400/api/project'),
+      final responseJson = await http.get(Uri.parse('${uriBase}/api/project'),
         headers: {'Authorization' : 'Bearer $token'},
       );
       final responseDecode = jsonDecode(responseJson.body)["result"];
+
+      listProjectGet.clear();
       for(int i = 0; i < responseDecode.length; i++){
-        listProjectGet.add(Project(title: responseDecode[i]['title'], implementationTime: "Null", qualityStudent: 0, describe: responseDecode[i]['description'], createdAt: responseDecode[i]['createdAt']));
+        final projectScore = convertProjectScoreFlagToTime(responseDecode[i]['projectScopeFlag']);
+        listProjectGet.add(Project(title: responseDecode[i]['title'], implementationTime: projectScore, qualityStudent: responseDecode[i]['numberOfStudents'], describe: responseDecode[i]['description'], createdAt: responseDecode[i]['createdAt']));
       }
     }
     catch(e){
@@ -184,14 +188,14 @@ class OptionProjectCompanyState extends State<OptionProjectCompany>{
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('8'),
+                          Text('0'),
                           Text('Messages')
                         ],
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('2'),
+                          Text('0'),
                           Text('Hired')
                         ],
                       ),

@@ -14,6 +14,7 @@ class ProjectPost {
   late String companyId;
   late int projectScopeFlag;
   late String title;
+  late int numberOfStudents;
   late String description;
   late int typeFlag;
 
@@ -22,6 +23,7 @@ class ProjectPost {
       this.companyId,
       this.projectScopeFlag,
       this.title,
+      this.numberOfStudents,
       this.description,
       this.typeFlag,
       );
@@ -31,6 +33,7 @@ class ProjectPost {
       'companyId': companyId,
       'projectScopeFlag': projectScopeFlag,
       'title': title,
+      'numberOfStudents': numberOfStudents,
       'description': description,
       'typeFlag': typeFlag,
     };

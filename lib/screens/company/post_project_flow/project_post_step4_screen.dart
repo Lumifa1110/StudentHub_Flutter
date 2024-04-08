@@ -2,30 +2,38 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../components/appbar_ps1.dart';
 import 'package:studenthub/models/company_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:studenthub/business/company_business.dart';
+import 'package:studenthub/config/config.dart';
 
 class ProjectPostStep4Page extends StatelessWidget{
   final Map<String, dynamic> box;
-  final String uriBase = 'http://localhost:4400';
   const ProjectPostStep4Page({super.key, required this.box});
 
-  Future<void> postProject() async{
-    // final prefs = await SharedPreferences.getInstance();
-    ProjectPost modelDataProject = ProjectPost('1', 1, box['title'], box['description'], 1);
+  Future<void> postProject(BuildContext context) async{
+
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+
+    ProjectPost modelDataProject = ProjectPost('1', box['projectScore'], box['title'], box['quantityStudent'], box['description'], 1);
     final modelDataProjectJson = modelDataProject.toJson();
     try{
       final response = await http.post(
         Uri.parse('$uriBase/api/project'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token'
         },
         body: jsonEncode(modelDataProjectJson),
       );
       if(response.statusCode == 201){
-        print('okeeeee');
+        Navigator.pushReplacementNamed(context, '/company/dashboard');
       }
+      else
+        print(response.body);
     }
     catch(e){
       print(e);
@@ -46,9 +54,9 @@ class ProjectPostStep4Page extends StatelessWidget{
                     child:  Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('4/4       Next, provide project description', style: TextStyle(fontWeight: FontWeight.bold),),
+                        const Text('4/4       Project details', style: TextStyle(fontWeight: FontWeight.bold),),
                         const SizedBox(height: 30,),
-                        Text(box['title'], style: const TextStyle(fontWeight: FontWeight.bold),),
+                        Text('Title of the job: ${box['title']}', style: const TextStyle(fontWeight: FontWeight.bold),),
                         const SizedBox(height: 10,),
                         const Divider(
                           thickness: 2,
@@ -57,18 +65,10 @@ class ProjectPostStep4Page extends StatelessWidget{
                           color: Colors.black,
                         ),
                         const SizedBox(height: 10,),
-                        const Text('Students are looking for'),
-                        const Padding(
+                        const Text('Describe your project:', style: TextStyle(fontWeight: FontWeight.bold),),
+                        Padding(
                           padding: EdgeInsets.only(left: 20),
-                          child: Text('• Clear expectation about your project or deliverables'),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Text('• The skills required for your project'),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Text('• Detail about your project'),
+                          child: Text(box['description'], overflow: TextOverflow.ellipsis, maxLines: 10, softWrap: true,),
                         ),
                         const SizedBox(height: 10,),
                         const Divider(
@@ -81,11 +81,18 @@ class ProjectPostStep4Page extends StatelessWidget{
                         Row(
                           children: [
                             const Icon(CupertinoIcons.clock, size: 40,),
-                            Column(
-                              children: [
-                                const Text('Project scope'),
-                                Padding(padding: const EdgeInsets.only(left: 30), child: Text('• ${box['projectScore']} months'),),
-                              ],
+                            Padding(
+                              padding: const EdgeInsets.only(left: 30),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('Project scope',style: TextStyle(fontWeight: FontWeight.bold),),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 15.0),
+                                    child: Text('• ${convertProjectScoreFlagToTime(box['projectScore'])} months'),
+                                  )
+                                ],
+                              ),
                             )
                           ],
                         ),
@@ -93,12 +100,18 @@ class ProjectPostStep4Page extends StatelessWidget{
                         Row(
                           children: [
                             const Icon(CupertinoIcons.person_2, size: 40,),
-                            const SizedBox(width: 20,),
-                            Column(
-                              children: [
-                                const Text('Student required'),
-                                Text('• ${box['qualityStudent']} students'),
-                              ],
+                            Padding(
+                              padding: const EdgeInsets.only(left: 30.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  const Text('Student required',style: TextStyle(fontWeight: FontWeight.bold),),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 15.0),
+                                    child: Text('• ${box['quantityStudent']} students'),
+                                  ),
+                                ],
+                              ),
                             )
                           ],
                         ),
@@ -109,7 +122,7 @@ class ProjectPostStep4Page extends StatelessWidget{
                     alignment: Alignment.bottomRight,
                     child: ElevatedButton(
                       onPressed: (){
-                        postProject();
+                        postProject(context);
                       },
                       style: ElevatedButton.styleFrom(shape:const RoundedRectangleBorder()),
                       child: const Text('Post job'),
