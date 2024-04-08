@@ -11,6 +11,7 @@ import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/utils/apiBase.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
+import 'package:studenthub/config/config.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -22,8 +23,6 @@ class SigninScreen extends StatefulWidget {
 class _SigninScreenState extends State<SigninScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  final String uriBase = 'http://34.16.137.128';
 
   List<String> errorMessages = [];
 

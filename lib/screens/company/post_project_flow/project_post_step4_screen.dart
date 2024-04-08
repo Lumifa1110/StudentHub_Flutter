@@ -1,107 +1,177 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:studenthub/components/authappbar.dart';
-import 'package:studenthub/screens/index.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../components/appbar_ps1.dart';
+import 'package:studenthub/models/company_model.dart';
+import 'package:http/http.dart' as http;
+import 'package:studenthub/business/company_business.dart';
+import 'package:studenthub/config/config.dart';
 
-class ProjectPostStep4Screen extends StatelessWidget{
-  final String _titleProject;
-  final int _numberStudent;
-  final String _decribe;
-  final String _projectScore;
+class ProjectPostStep4Page extends StatelessWidget {
+  final Map<String, dynamic> box;
+  const ProjectPostStep4Page({super.key, required this.box});
 
-  const ProjectPostStep4Screen(this._titleProject, this._numberStudent, this._projectScore,  this._decribe, {super.key});
+  Future<void> postProject(BuildContext context) async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+
+    ProjectPost modelDataProject = ProjectPost('1', box['projectScore'],
+        box['title'], box['quantityStudent'], box['description'], 1);
+    final modelDataProjectJson = modelDataProject.toJson();
+    try {
+      final response = await http.post(
+        Uri.parse('$uriBase/api/project'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token'
+        },
+        body: jsonEncode(modelDataProjectJson),
+      );
+      if (response.statusCode == 201) {
+        Navigator.pushReplacementNamed(context, '/company/dashboard');
+      } else
+        print(response.body);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
-  Widget build(BuildContext context){
-
-    return Scaffold(
-      appBar: const AuthAppBar(canBack: true, title: 'Post project'),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
+  Widget build(BuildContext context) {
+    return SafeArea(
+        child: Scaffold(
+      appBar: const AppBar_PostPS1(),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('4/4       Next, provide project description', style: TextStyle(fontWeight: FontWeight.bold),),
-                    const SizedBox(height: 30,),
-                    Text(_titleProject, style: const TextStyle(fontWeight: FontWeight.bold),),
-                    const SizedBox(height: 10,),
+                    const Text(
+                      '4/4       Project details',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      'Title of the job: ${box['title']}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     const Divider(
                       thickness: 2,
                       indent: 10,
                       endIndent: 10,
                       color: Colors.black,
                     ),
-                    const SizedBox(height: 10,),
-                    const Text('Students are looking for'),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 20),
-                      child: Text('• Clear expectation about your project or deliverables'),
+                    const SizedBox(
+                      height: 10,
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 20),
-                      child: Text('• The skills required for your project'),
+                    const Text(
+                      'Describe your project:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(left: 20),
-                      child: Text('• Detail about your project'),
+                      child: Text(
+                        box['description'],
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 10,
+                        softWrap: true,
+                      ),
                     ),
-                    const SizedBox(height: 10,),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     const Divider(
                       thickness: 2,
                       indent: 10,
                       endIndent: 10,
                       color: Colors.black,
                     ),
-                    const SizedBox(height: 10,),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Row(
                       children: [
-                        const Icon(CupertinoIcons.clock, size: 40,),
-                        Column(
-                          children: [
-                            const Text('Project scope'),
-                            Padding(padding: const EdgeInsets.only(left: 30), child: Text('• $_projectScore'),),
-                          ],
+                        const Icon(
+                          CupertinoIcons.clock,
+                          size: 40,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 30),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Project scope',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 15.0),
+                                child: Text(
+                                    '• ${convertProjectScoreFlagToTime(box['projectScore'])} months'),
+                              )
+                            ],
+                          ),
                         )
                       ],
                     ),
-                    const SizedBox(height: 20,),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     Row(
                       children: [
-                        const Icon(CupertinoIcons.person_2, size: 40,),
-                        const SizedBox(width: 20,),
-                        Column(
-                          children: [
-                            const Text('Student required'),
-                            Text('• $_numberStudent students'),
-                          ],
+                        const Icon(
+                          CupertinoIcons.person_2,
+                          size: 40,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 30.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Student required',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 15.0),
+                                child: Text(
+                                    '• ${box['quantityStudent']} students'),
+                              ),
+                            ],
+                          ),
                         )
                       ],
                     ),
                   ],
                 ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: ElevatedButton(
-                    onPressed: (){
-                      Navigator.push(context, PageTransition(
-                        type: PageTransitionType.rightToLeft, 
-                        child: const CompanyDashboardScreen()
-                      ));
-                    },
-                    style: ElevatedButton.styleFrom(shape: const RoundedRectangleBorder()), 
-                    child: const Text('Post job')
-                  ),
-                )
-              ],
-            ),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: ElevatedButton(
+                  onPressed: () {
+                    postProject(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      shape: const RoundedRectangleBorder()),
+                  child: const Text('Post job'),
+                ),
+              )
+            ],
           ),
         ),
       ),
-    );
+    ));
   }
 }

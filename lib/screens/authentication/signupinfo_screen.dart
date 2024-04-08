@@ -11,6 +11,7 @@ import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/utils/apiBase.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
+import 'package:studenthub/config/config.dart';
 
 class SignupInfoScreen extends StatefulWidget {
   final UserRole selectedType;
@@ -31,8 +32,6 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
 
   bool? _isAgree = false;
   List<String> errorMessages = [];
-
-  final String uriBase = 'http://34.16.137.128';
 
   Future<void> handleSignup() async {
     final prefs = await SharedPreferences.getInstance();

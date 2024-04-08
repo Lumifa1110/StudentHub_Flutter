@@ -1,65 +1,112 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:studenthub/components/authappbar.dart';
-import 'package:studenthub/screens/index.dart';
+import 'package:studenthub/components/appbar_ps1.dart';
+import 'project_post_step2_screen.dart';
 
-class ProjectPostStep1Screen extends StatelessWidget{
-  const ProjectPostStep1Screen({super.key});
-  
+class ProjectPostStep1Page extends StatefulWidget {
+  const ProjectPostStep1Page({super.key});
+
   @override
-  Widget build(BuildContext context){
+  State<ProjectPostStep1Page> createState() => ProjectPostStep1PageState();
+}
+
+class ProjectPostStep1PageState extends State<ProjectPostStep1Page> {
+  final TextEditingController _titleProject = TextEditingController();
+  bool _erro = false;
+  @override
+  void dispose() {
+    _titleProject.dispose();
+    super.dispose();
+  }
+
+  void _fValiteDate(String value) {
+    setState(() {
+      _erro = value.isEmpty;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AuthAppBar(canBack: true, title: 'Post project'),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-                  const SizedBox(height: 30,),
-                  const Text('1/4 \t \t Let\'s start with a strong tittle', style: TextStyle(fontWeight: FontWeight.bold),),
-                  const SizedBox(height: 30,),
-                  const Center(
-                    child: Text('This helps your post stand out to the right students. It\'s the first thing they\' see, so make it impressive!'),
-                  ),
-                  const SizedBox(height: 10,),
-                  const Center(
-                    child: TextField(
-                        decoration: InputDecoration(
-                        border:OutlineInputBorder(),
-                        hintStyle: TextStyle(fontSize: 15),
-                        isDense: true,
-                        contentPadding: EdgeInsets.all(5),
-                        hintText: 'write a title for your post',
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30,),
-                  const Text('Example titles', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                  const SizedBox(height: 10,),
-                  const Padding(
-                      padding: EdgeInsets.only(left: 20),
-                      child: Text('• Build responsive WordPress site with booking/payment functionality')
-                  ),
-                  const Padding(
-                      padding: EdgeInsets.only(left: 20),
-                      child: Text('• Facebook ad specialist need for product launch'),),
-                  const SizedBox(height: 30,),
-                  Align(
-                      alignment: Alignment.centerRight,
-                      child: ElevatedButton(
-                        onPressed: (){
-                          Navigator.push(context, PageTransition(
-                            type: PageTransitionType.rightToLeft, 
-                            child: const ProjectPostStep2Screen()
-                          ));
-                        }, 
-                        style: ElevatedButton.styleFrom(shape: const RoundedRectangleBorder()), 
-                        child: const Text("Next: Score")
-                      )
-                  ),
-                ],
+      appBar: const AppBar_PostPS1(),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 30,
+            ),
+            const Text(
+              '1/4 \t \t Let\'s start with a strong tittle',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            const Center(
+              child: Text(
+                  'This helps your post stand out to the right students. It\'s the first thing they\' see, so make it impressive!'),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Center(
+              child: TextField(
+                controller: _titleProject,
+                onChanged: _fValiteDate,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintStyle: TextStyle(fontSize: 15),
+                  isDense: true,
+                  contentPadding: EdgeInsets.all(5),
+                  errorText: _erro ? 'Please enter a title' : null,
+                  hintText: 'write a title for jour post',
+                ),
               ),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            const Text(
+              'Example titles',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: Text(
+                    '• Build responsive WordPress site with booking/payment functionality')),
+            const Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: Text('• Facebook ad specialist need for product launch'),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (!_erro) {
+                      final Map<String, dynamic> box_title = {};
+                      var putIfAbsent = box_title.putIfAbsent(
+                          'title', () => _titleProject.text);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ProjectPostStep2Page(
+                                  box: box_title,
+                                )),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                      shape: const RoundedRectangleBorder()),
+                  child: const Text("Next: Score"),
+                )),
+          ],
         ),
       ),
     );
