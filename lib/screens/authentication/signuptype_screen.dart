@@ -20,6 +20,7 @@ class _SignupTypeScreenState extends State<SignupTypeScreen> {
     return Scaffold(
       appBar: const AuthAppBar(
         canBack: false,
+        isShowIcon: false,
       ),
       body: Column(
         children: [
@@ -115,14 +116,8 @@ class _SignupTypeScreenState extends State<SignupTypeScreen> {
                   ),
                 ),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SigninScreen(
-                        role: _selectedType,
-                      ),
-                    ),
-                  );
+                  Navigator.pop(context);
+                  Navigator.pushReplacementNamed(context, '/signin');
                 },
               ),
             ],

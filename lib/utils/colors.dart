@@ -16,6 +16,8 @@ const Color lightestgrayColor = Color(0xFFCECECE);
 
 const Color darkblueColor = Color(0xFF085394);
 
+const Color errorColor = Color(0xFFC40606);
+
 class AppColor {
   static const primary = Color(0xFF0F90F0);
   static const secondary = Color(0xFF1E6AE1);

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
@@ -6,11 +8,13 @@ import 'package:studenthub/utils/font.dart';
 class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool canBack;
   final String? title;
+  final bool isShowIcon;
 
   const AuthAppBar({
-    super.key, 
+    super.key,
     required this.canBack,
     this.title,
+    this.isShowIcon = true,
   });
 
   @override
@@ -18,14 +22,55 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _navigateWithAnimation(String routeName, Widget widgetname) {
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => widgetname,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var begin = const Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        ),
+      );
+    }
+
+    Future<void> handlePressIcon() async {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+      print(token);
+      if (token != null) {
+        _navigateWithAnimation('/profile', SwitchScreen());
+      }
+    }
+
     return AppBar(
-      leadingWidth: 24,
-      centerTitle: false,
+      leadingWidth: 40,
       leading: canBack
-          ? IconButton(
-              icon: const Icon(Icons.chevron_left, color: whiteTextColor),
-              onPressed: () => Navigator.of(context).pop(),
-              color: Colors.white
+          ? SizedBox(
+              width: kToolbarHeight,
+              height: kToolbarHeight,
+              child: Material(
+                borderRadius: BorderRadius.zero,
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: const Center(
+                    child: Icon(
+                      Icons.chevron_left,
+                      color: whiteTextColor,
+                      size: 24,
+                    ),
+                  ),
+                ),
+              ),
             )
           : null,
       elevation: 5.0,
@@ -61,18 +106,18 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ],
             ),
-      actions: [
-        IconButton(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const SwitchScreen()));
-          },
-          icon: const Icon(
-            Icons.person,
-            size: 26,
-            color: Colors.white,
-          ),
-        )
-      ],
+      actions: isShowIcon
+          ? [
+              IconButton(
+                onPressed: handlePressIcon,
+                icon: const Icon(
+                  Icons.person,
+                  size: 26,
+                  color: whiteTextColor,
+                ),
+              ),
+            ]
+          : [],
     );
   }
 }

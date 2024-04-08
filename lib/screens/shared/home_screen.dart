@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/preferences/user_preferences.dart';
 import 'package:studenthub/screens/authentication/signin_screen.dart';
+import 'package:studenthub/utils/apiBase.dart';
 import 'package:studenthub/utils/colors.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,11 +16,116 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late SharedPreferences _prefs;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _loadToken();
+  // }
+
+  // Future<void> _loadToken() async {
+  //   _prefs = await SharedPreferences.getInstance();
+  //   final token = _prefs.getString('token');
+  //   if (token != null) {
+  //     Navigator.pushReplacementNamed(context, '/profile');
+  //   }
+  // }
+
+  Future<void> handleCompany() async {
+    _prefs = await SharedPreferences.getInstance();
+    await _prefs.setInt('currentRole', UserRole.company.index);
+    final profile = _prefs.getString('companyprofile');
+    print(profile.runtimeType);
+    print('Company: $profile');
+    if (profile != null) {
+      Navigator.pushReplacementNamed(context, '/list');
+    } else {
+      Navigator.pushNamed(context, '/company');
+    }
+  }
+
+  Future<void> handleStudent() async {
+    _prefs = await SharedPreferences.getInstance();
+    await _prefs.setInt('currentRole', UserRole.company.index);
+    final profile = _prefs.getString('studentprofile');
+    print(profile.runtimeType);
+    print('Student: $profile');
+    if (profile != null) {
+      Navigator.pushReplacementNamed(context, '/student/dashboard');
+    } else {
+      Navigator.pushNamed(context, '/student');
+    }
+  }
+
+  Future<void> handleLogout() async {
+    // Lấy token từ SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    print(token);
+
+    if (token != null) {
+      try {
+        final response = await http.post(
+          Uri.parse('${BASE_URL}auth/logout'),
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        );
+
+        if (response.statusCode == 201) {
+          await prefs.remove('token');
+          await prefs.remove('currentrole');
+          Navigator.pushReplacementNamed(context, '/signin');
+        } else {
+          // Xử lý lỗi nếu cần
+          print('Logout failed: ${response.body}');
+        }
+      } catch (e) {
+        print('Error: $e');
+      }
+    } else {
+      print('Token not found');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: bgColor,
-        appBar: const AuthAppBar(canBack: false),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: const Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Student',
+                style: TextStyle(
+                  color: whiteTextColor,
+                  fontSize: 26,
+                ),
+              ),
+              Text(
+                'Hub',
+                style: TextStyle(
+                  color: blackTextColor,
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            IconButton(
+              onPressed: handleLogout,
+              icon: const Icon(
+                Icons.logout,
+                size: 26,
+                color: whiteTextColor,
+              ),
+            ),
+          ],
+        ),
         body: Center(
             child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -58,17 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 child: ElevatedButton(
-                  onPressed: () {
-                    UserPreferences.setUserRole(UserRole.company);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SigninScreen(
-                          role: UserRole.company,
-                        ),
-                      ),
-                    );
-                  },
+                  onPressed: handleCompany,
                   style: ButtonStyle(
                     shape: MaterialStateProperty.all<OutlinedBorder>(
                       const RoundedRectangleBorder(
@@ -114,16 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 child: ElevatedButton(
-                  onPressed: () {
-                    UserPreferences.setUserRole(UserRole.student);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SigninScreen(
-                                role: UserRole.student,
-                              )),
-                    );
-                  },
+                  onPressed: handleStudent,
                   style: ButtonStyle(
                     shape: MaterialStateProperty.all<OutlinedBorder>(
                       const RoundedRectangleBorder(

@@ -8,9 +8,8 @@ import 'package:studenthub/utils/colors.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: AppColor.primary,
-    systemNavigationBarColor: AppColor.primary
-  ));
+      statusBarColor: AppColor.primary,
+      systemNavigationBarColor: AppColor.primary));
   runApp(const StudentHub());
 }
 
@@ -53,11 +52,12 @@ class _StudentHubState extends State<StudentHub> {
       theme: lightTheme,
       darkTheme: darkTheme,
       // themeMode: _themeController.themeMode,
-      home: const HomeScreen(),
-      initialRoute: '/',
+      initialRoute: '/signin',
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
         switch (settings.name) {
+          case '/home':
+            return MaterialPageRoute(builder: (context) => const HomeScreen());
           case '/company':
             return MaterialPageRoute(
                 builder: (context) => const CompanyProfileInputScreen());
@@ -69,18 +69,22 @@ class _StudentHubState extends State<StudentHub> {
                 builder: (context) => const CompanyWelcomeScreen());
           case '/company/dashboard':
             return MaterialPageRoute(
-                builder: (context) => const CompanyDashboardScreen());
+                builder: (context) => CompanyDashboardScreen());
           case '/student':
             return MaterialPageRoute(
                 builder: (context) => const StudentProfileInputScreen1());
           case '/student/profileinput1':
             return MaterialPageRoute(
                 builder: (context) => const StudentProfileInputScreen1());
+          case '/student/dashboard':
+            return MaterialPageRoute(
+                builder: (context) => const StudentDashboardScreen());
           case '/chatter':
             return MaterialPageRoute(
                 builder: (context) => const MessageListScreen());
-          // case '/signin':
-          //   return MaterialPageRoute(builder: (context) => const SigninPage());
+          case '/signin':
+            return MaterialPageRoute(
+                builder: (context) => const SigninScreen());
           case '/signup':
             return MaterialPageRoute(
                 builder: (context) => const SignupTypeScreen());
@@ -93,6 +97,10 @@ class _StudentHubState extends State<StudentHub> {
             return MaterialPageRoute(
               builder: (context) =>
                   const SignupInfoScreen(selectedType: UserRole.student),
+            );
+          case '/profile':
+            return MaterialPageRoute(
+              builder: (context) => const SwitchScreen(),
             );
           case '/list':
             return MaterialPageRoute(
