@@ -2,7 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/enums/user_role.dart';
 
 class UserPreferences {
-  static const String _userRoleKey = 'user_role';
+  static const String _userRoleKey = 'current_role';
 
   static Future<void> setUserRole(UserRole role) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

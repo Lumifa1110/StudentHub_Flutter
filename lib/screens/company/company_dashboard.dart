@@ -62,100 +62,103 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
         } else {
           return SafeArea(
             child: Scaffold(
-                appBar: const AuthAppBar(
-                  canBack: false,
-                ),
-                body: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: DefaultTabController(
-                    length: 2,
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              appBar: const AuthAppBar(
+                canBack: false,
+              ),
+              body: Padding(
+                padding: const EdgeInsets.all(20),
+                child: DefaultTabController(
+                  length: 2,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          const Text(
+                            'Your projects',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(
+                            width: 30,
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, '/company/project/step1');
+                            },
+                            style: ElevatedButton.styleFrom(
+                                shape: const RoundedRectangleBorder()),
+                            child: const Text('Post a jobs'),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(width: 2),
+                            borderRadius: BorderRadius.circular(12)),
+                        child: TabBar(
+                            indicator: BoxDecoration(
+                              color: Colors.greenAccent,
+                              borderRadius: BorderRadius.circular(11),
+                              border: Border.all(width: 1),
+                            ),
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            tabs: const <Widget>[
+                              Tab(
+                                text: 'All project',
+                              ),
+                              Tab(
+                                text: 'Archieved',
+                              )
+                            ]),
+                      ),
+                      Expanded(
+                        child: TabBarView(
                           children: [
-                            const SizedBox(
-                              width: 5,
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: listProjectGet.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final project = listProjectGet[index];
+                                  return Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      OptionProjectCompany(
+                                        onTap: () {},
+                                        project: project,
+                                      ),
+                                      if (index < listProjectGet.length - 1)
+                                        const Divider(
+                                          thickness: 2,
+                                          indent: 10,
+                                          endIndent: 10,
+                                          color: Colors.black,
+                                        ),
+                                    ],
+                                  );
+                                },
+                              ),
                             ),
-                            const Text(
-                              'Your projects',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(
-                              width: 30,
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                    context, '/company/project/step1');
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  shape: const RoundedRectangleBorder()),
-                              child: const Text('Post a jobs'),
-                            ),
+                            const Center(child: Text('Tab 3 content')),
                           ],
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(width: 2),
-                              borderRadius: BorderRadius.circular(12)),
-                          child: TabBar(
-                              indicator: BoxDecoration(
-                                color: Colors.greenAccent,
-                                borderRadius: BorderRadius.circular(11),
-                                border: Border.all(width: 1),
-                              ),
-                              indicatorSize: TabBarIndicatorSize.tab,
-                              tabs: const <Widget>[
-                                Tab(
-                                  text: 'All project',
-                                ),
-                                Tab(
-                                  text: 'Archieved',
-                                )
-                              ]),
-                        ),
-                        Expanded(
-                          child: TabBarView(
-                            children: [
-                              Expanded(
-                                child: ListView.builder(
-                                  itemCount: listProjectGet.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    final project = listProjectGet[index];
-                                    return Column(
-                                      children: [
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        OptionProjectCompany(
-                                          onTap: () {},
-                                          project: project,
-                                        ),
-                                        if (index < listProjectGet.length - 1)
-                                          const Divider(
-                                            thickness: 2,
-                                            indent: 10,
-                                            endIndent: 10,
-                                            color: Colors.black,
-                                          ),
-                                      ],
-                                    );
-                                  },
-                                ),
-                              ),
-                              const Center(child: Text('Tab 3 content')),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                )),
+                ),
+              ),
+              bottomNavigationBar: const CustomBottomNavBar(
+                initialIndex: 1,
+              ),
+            ),
           );
         }
       },

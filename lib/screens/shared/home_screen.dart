@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> handleCompany() async {
     _prefs = await SharedPreferences.getInstance();
-    await _prefs.setInt('currentRole', UserRole.company.index);
+    await _prefs.setInt('current_role', UserRole.company.index);
     final profile = _prefs.getString('companyprofile');
     print(profile.runtimeType);
     print('Company: $profile');
@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> handleStudent() async {
     _prefs = await SharedPreferences.getInstance();
-    await _prefs.setInt('currentRole', UserRole.company.index);
+    await _prefs.setInt('current_role', UserRole.company.index);
     final profile = _prefs.getString('studentprofile');
     print(profile.runtimeType);
     print('Student: $profile');
