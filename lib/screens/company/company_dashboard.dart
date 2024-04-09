@@ -218,9 +218,9 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                 const SizedBox(
                   height: 20,
                 ),
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
+                  children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [Text('0'), Text('Proposals')],
