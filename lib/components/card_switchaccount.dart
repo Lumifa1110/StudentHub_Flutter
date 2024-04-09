@@ -21,13 +21,14 @@ class CardSwitchAccount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: onTap,
       child: ListTile(
         tileColor: isSelected ? Colors.green : null,
         dense: true,
         leading: Icon(
           accountAvt,
           size: 36,
+          color: isSelected ? whiteTextColor : blackTextColor,
         ),
         title: Text(
           accountFullname,

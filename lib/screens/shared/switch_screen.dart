@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:studenthub/components/card_switchaccount.dart';
 import 'package:studenthub/components/textfield/search_bar.dart';
 import 'package:studenthub/config/config.dart';
+import 'package:studenthub/preferences/index.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
@@ -25,7 +26,6 @@ class _SwitchScreenState extends State<SwitchScreen> {
   @override
   void initState() {
     super.initState();
-
     _loadRoles().then((_) {
       _loadCurrentData().then((_) {
         _check();
@@ -95,10 +95,14 @@ class _SwitchScreenState extends State<SwitchScreen> {
     }
   }
 
-  void _handleRoleSelection(String role) {
+  void _handleRoleSelection(String role) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('current_role', int.parse(role));
+
+    // Update the current role in the app state
     setState(() {
-      _currentRole = role as int;
-      // Save the selected role to SharedPreferences or any other storage
+      _currentRole = int.parse(role);
+      print(UserPreferences.getUserRole());
     });
   }
 
@@ -116,7 +120,16 @@ class _SwitchScreenState extends State<SwitchScreen> {
                   borderRadius: BorderRadius.zero,
                   color: Colors.transparent,
                   child: InkWell(
-                    onTap: () => Navigator.of(context).pop(),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      if (_currentRole == 0) {
+                        Navigator.pushReplacementNamed(
+                            context, '/student/dashboard');
+                      } else if (_currentRole == 1) {
+                        Navigator.pushReplacementNamed(
+                            context, '/company/dashboard');
+                      }
+                    },
                     child: const Center(
                       child: Icon(
                         Icons.chevron_left,
