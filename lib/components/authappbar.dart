@@ -9,12 +9,14 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool canBack;
   final String? title;
   final bool isShowIcon;
+  final bool? isFromDashBoard;
 
   const AuthAppBar({
     super.key,
     required this.canBack,
     this.title,
     this.isShowIcon = true,
+    this.isFromDashBoard = false,
   });
 
   @override
@@ -47,13 +49,22 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
       final token = prefs.getString('token');
       print(token);
       if (token != null) {
-        _navigateWithAnimation('/profile', SwitchScreen());
+        if (isFromDashBoard == true) {
+          _navigateWithAnimation(
+              '/profile',
+              SwitchScreen(
+                isDashboard: true,
+              ));
+        } else {
+          _navigateWithAnimation('/profile', SwitchScreen());
+        }
       }
     }
 
     return AppBar(
+      backgroundColor: mainColor,
       leadingWidth: 40,
-      leading: canBack
+      leading: canBack && Navigator.canPop(context)
           ? SizedBox(
               width: kToolbarHeight,
               height: kToolbarHeight,
@@ -93,7 +104,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
                   style: TextStyle(
                     color: whiteTextColor,
                     fontSize: AppFonts.h1FontSize,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
@@ -101,7 +112,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
                   style: TextStyle(
                     color: blackTextColor,
                     fontSize: AppFonts.h1FontSize,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],

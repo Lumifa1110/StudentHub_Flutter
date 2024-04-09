@@ -39,10 +39,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final profile = _prefs.getString('companyprofile');
     print(profile.runtimeType);
     print('Company: $profile');
-    if (profile != null) {
-      Navigator.pushReplacementNamed(context, '/company/dashboard');
-    } else {
+    if (profile == 'null') {
       Navigator.pushNamed(context, '/company');
+    } else {
+      Navigator.pushReplacementNamed(context, '/company/dashboard');
     }
   }
 
@@ -52,10 +52,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final profile = _prefs.getString('studentprofile');
     print(profile.runtimeType);
     print('Student: $profile');
-    if (profile != null) {
-      Navigator.pushReplacementNamed(context, '/student/dashboard');
-    } else {
+    if (profile == 'null') {
       Navigator.pushNamed(context, '/student');
+    } else {
+      Navigator.pushReplacementNamed(context, '/student/dashboard');
     }
   }
 

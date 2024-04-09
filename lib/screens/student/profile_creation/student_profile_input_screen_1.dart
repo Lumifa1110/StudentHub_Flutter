@@ -41,19 +41,6 @@ class _StudentProfileInputScreen1State
     isCheckedList = List.generate(skillSets.length, (index) => false);
   }
 
-  // void addSkillset(String name) {
-  //   setState(() {
-  //     Skillset newSkillset = Skillset(name);
-  //     studentSkillsets.add(newSkillset);
-  //   });
-  // }
-
-  // void removeSkillset(String name) {
-  //   setState(() {
-  //     studentSkillsets.removeWhere((skillset) => skillset.name == name);
-  //   });
-  // }
-
   void addSelectedSkills(int id) {
     setState(() {
       if (!isSkillIncluded(id)) {

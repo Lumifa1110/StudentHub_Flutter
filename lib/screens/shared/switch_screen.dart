@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:studenthub/components/card_switchaccount.dart';
@@ -10,7 +11,9 @@ import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class SwitchScreen extends StatefulWidget {
-  const SwitchScreen({super.key});
+  final bool isDashboard;
+
+  const SwitchScreen({super.key, this.isDashboard = false});
 
   @override
   State<SwitchScreen> createState() => _SwitchScreenState();
@@ -36,6 +39,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
   Future<void> _loadRoles() async {
     final prefs = await SharedPreferences.getInstance();
     final rolesList = prefs.getStringList('roles');
+
     if (rolesList != null) {
       // Remove duplicates
       final uniqueRoles = rolesList.toSet().toList();
@@ -61,6 +65,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
     setState(() {
       print('List roles: $_roles');
       print('User selected role: $_currentRole');
+      print(widget.isDashboard);
     });
   }
 
@@ -121,13 +126,17 @@ class _SwitchScreenState extends State<SwitchScreen> {
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
-                      Navigator.of(context).pop();
-                      if (_currentRole == 0) {
-                        Navigator.pushReplacementNamed(
-                            context, '/student/dashboard');
-                      } else if (_currentRole == 1) {
-                        Navigator.pushReplacementNamed(
-                            context, '/company/dashboard');
+                      if (widget.isDashboard) {
+                        Navigator.of(context).pop();
+                        if (_currentRole == 0) {
+                          Navigator.pushReplacementNamed(
+                              context, '/student/dashboard');
+                        } else if (_currentRole == 1) {
+                          Navigator.pushReplacementNamed(
+                              context, '/company/dashboard');
+                        }
+                      } else {
+                        Navigator.of(context).pop();
                       }
                     },
                     child: const Center(

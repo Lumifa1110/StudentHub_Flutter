@@ -27,7 +27,16 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
   @override
   void initState() {
     super.initState();
-    _loadProject();
+    _loadScreen().then((_) => _loadProject());
+  }
+
+  Future<void> _loadScreen() async {
+    _prefs = await SharedPreferences.getInstance();
+    final profile = _prefs.getString('companyprofile');
+    print('Company Profile: $profile');
+    if (profile == null) {
+      Navigator.pushReplacementNamed(context, '/company/profile');
+    }
   }
 
   Future<void> _loadProject() async {
@@ -69,6 +78,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
     return Scaffold(
       appBar: const AuthAppBar(
         canBack: false,
+        isFromDashBoard: true,
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())

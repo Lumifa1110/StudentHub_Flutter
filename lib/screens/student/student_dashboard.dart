@@ -1,17 +1,42 @@
-
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
 
 import '../../utils/mock_data.dart';
 
-class StudentDashboardScreen extends StatelessWidget {
+class StudentDashboardScreen extends StatefulWidget {
   const StudentDashboardScreen({super.key});
+
+  @override
+  State<StudentDashboardScreen> createState() => _StudentDashboardScreenState();
+}
+
+class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
+  late SharedPreferences _prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadScreen();
+  }
+
+  Future<void> _loadScreen() async {
+    _prefs = await SharedPreferences.getInstance();
+    final profile = _prefs.getString('studentprofile');
+    print('Student Profile: $profile');
+    if (profile == 'null') {
+      Navigator.pushReplacementNamed(context, '/student');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AuthAppBar(canBack: false, title: 'Dashboard'),
+      appBar: const AuthAppBar(
+        canBack: false,
+        isFromDashBoard: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: DefaultTabController(
@@ -74,8 +99,8 @@ class StudentDashboardScreen extends StatelessWidget {
                                 children: [
                                   const Text(
                                     'Active proposal(0)',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Expanded(
                                     child: ListView.builder(
@@ -103,8 +128,7 @@ class StudentDashboardScreen extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       'Submitted proposal(${mockProposal.length})',
@@ -118,13 +142,11 @@ class StudentDashboardScreen extends StatelessWidget {
                                       child: ListView.builder(
                                         itemCount: mockProposal
                                             .length, // Number of items in your list
-                                        itemBuilder: (BuildContext context,
-                                            int index) {
-                                          final proposal =
-                                              mockProposal[index];
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          final proposal = mockProposal[index];
                                           return OptionItemAllProjectScreen(
-                                              onTap: () {},
-                                              proposal: proposal);
+                                              onTap: () {}, proposal: proposal);
                                         },
                                       ),
                                     ),
@@ -183,7 +205,8 @@ class OptionItemAllProjectScreen extends StatefulWidget {
       _OptionItemAllProjectScreenState();
 }
 
-class _OptionItemAllProjectScreenState extends State<OptionItemAllProjectScreen> {
+class _OptionItemAllProjectScreenState
+    extends State<OptionItemAllProjectScreen> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -226,7 +249,8 @@ class OptionItemWorkingScreen extends StatefulWidget {
   final VoidCallback onTap;
   final Proposal proposal;
 
-  const OptionItemWorkingScreen({super.key,
+  const OptionItemWorkingScreen({
+    super.key,
     required this.onTap,
     required this.proposal,
   });
