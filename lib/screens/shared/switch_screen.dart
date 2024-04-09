@@ -1,12 +1,10 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:studenthub/components/card_switchaccount.dart';
 import 'package:studenthub/components/textfield/search_bar.dart';
-import 'package:studenthub/utils/apiBase.dart';
+import 'package:studenthub/config/config.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
@@ -20,14 +18,16 @@ class SwitchScreen extends StatefulWidget {
 class _SwitchScreenState extends State<SwitchScreen> {
   bool isSearchActive = false;
   final TextEditingController searchController = TextEditingController();
-  List<String> roles = [];
-  int? currentRole;
+  List<String> _roles = [];
+  int? _currentRole;
+  String? _accountFullname;
 
   @override
   void initState() {
     super.initState();
+
     _loadRoles().then((_) {
-      _loadCurrentRole().then((_) {
+      _loadCurrentData().then((_) {
         _check();
       });
     });
@@ -40,25 +40,27 @@ class _SwitchScreenState extends State<SwitchScreen> {
       // Remove duplicates
       final uniqueRoles = rolesList.toSet().toList();
       setState(() {
-        roles = uniqueRoles;
+        _roles = uniqueRoles;
       });
     }
   }
 
-  Future<void> _loadCurrentRole() async {
+  Future<void> _loadCurrentData() async {
     final prefs = await SharedPreferences.getInstance();
-    final curRole = prefs.getInt('currole');
-    if (curRole != null) {
+    final currRole = prefs.getInt('current_role');
+    final accName = prefs.getString('username');
+    if (currRole != null) {
       setState(() {
-        currentRole = curRole;
+        _currentRole = currRole;
+        _accountFullname = accName;
       });
     }
   }
 
   void _check() {
     setState(() {
-      print('This is list roles: $roles');
-      print('This is user selected role: $currentRole');
+      print('List roles: $_roles');
+      print('User selected role: $_currentRole');
     });
   }
 
@@ -71,7 +73,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
     if (token != null) {
       try {
         final response = await http.post(
-          Uri.parse('${BASE_URL}api/auth/logout'),
+          Uri.parse('${uriBase}/api/auth/logout'),
           headers: {
             'Authorization': 'Bearer $token',
           },
@@ -91,6 +93,13 @@ class _SwitchScreenState extends State<SwitchScreen> {
     } else {
       print('Token not found');
     }
+  }
+
+  void _handleRoleSelection(String role) {
+    setState(() {
+      _currentRole = role as int;
+      // Save the selected role to SharedPreferences or any other storage
+    });
   }
 
   @override
@@ -156,17 +165,17 @@ class _SwitchScreenState extends State<SwitchScreen> {
                 : const SizedBox(
                     height: 10,
                   ),
-            const SingleChildScrollView(
+            SingleChildScrollView(
               child: Column(
                 children: [
-                  CardSwitchAccount(
+                  for (var role in _roles)
+                    CardSwitchAccount(
                       accountAvt: Icons.person,
-                      accountName: 'Luu Minh Phat',
-                      accountRole: 'Company'),
-                  CardSwitchAccount(
-                      accountAvt: Icons.person,
-                      accountName: 'Luu Minh Phat Student',
-                      accountRole: 'Student'),
+                      accountFullname: _accountFullname ?? '',
+                      accountRole: role,
+                      isSelected: role == _currentRole.toString(),
+                      onTap: () => _handleRoleSelection(role),
+                    ),
                 ],
               ),
             ),

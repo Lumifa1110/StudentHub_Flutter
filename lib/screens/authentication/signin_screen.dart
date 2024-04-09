@@ -8,7 +8,6 @@ import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/models/user_model.dart';
 import 'package:studenthub/screens/authentication/signuptype_screen.dart';
 import 'package:studenthub/screens/index.dart';
-import 'package:studenthub/utils/apiBase.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 import 'package:studenthub/config/config.dart';
@@ -54,7 +53,7 @@ class _SigninScreenState extends State<SigninScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('${BASE_URL}api/auth/sign-in'),
+        Uri.parse('${uriBase}/api/auth/sign-in'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -93,7 +92,7 @@ class _SigninScreenState extends State<SigninScreen> {
     if (token != null) {
       try {
         final response = await http.get(
-          Uri.parse('${BASE_URL}api/auth/me'),
+          Uri.parse('${uriBase}/api/auth/me'),
           headers: {'Authorization': 'Bearer $token'},
         );
         print('Fetch User Data: ${response.body}');
@@ -193,7 +192,7 @@ class _SigninScreenState extends State<SigninScreen> {
                         ),
                       ),
                     );
-                  }).toList()
+                  })
                 else
                   const SizedBox(
                     height: 20,
@@ -228,7 +227,7 @@ class _SigninScreenState extends State<SigninScreen> {
                         ),
                       ),
                     );
-                  }).toList()
+                  })
                 else
                   const SizedBox(
                     height: 20,
@@ -259,30 +258,13 @@ class _SigninScreenState extends State<SigninScreen> {
                         ),
                       ),
                     );
-                  }).toList()
+                  })
                 else
                   const SizedBox(
                     height: 0,
                   ),
               ],
             ),
-            // Hiển thị thông báo lỗi
-            // if (errorMessages.isNotEmpty)
-            //   Column(
-            //     crossAxisAlignment: CrossAxisAlignment.stretch,
-            //     mainAxisAlignment: MainAxisAlignment.start,
-            //     children: errorMessages.map((error) {
-            //       return Padding(
-            //         padding: const EdgeInsets.symmetric(horizontal: 20),
-            //         child: Text(
-            //           error,
-            //           style: const TextStyle(
-            //               color: errorColor, fontSize: AppFonts.h3FontSize),
-            //         ),
-            //       );
-            //     }).toList(),
-            //   ),
-
             Container(
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(horizontal: 20),

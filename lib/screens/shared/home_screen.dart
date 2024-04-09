@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
+import 'package:studenthub/config/config.dart';
 import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/preferences/user_preferences.dart';
 import 'package:studenthub/screens/authentication/signin_screen.dart';
-import 'package:studenthub/utils/apiBase.dart';
+
 import 'package:studenthub/utils/colors.dart';
 import 'package:http/http.dart' as http;
 
@@ -67,15 +68,16 @@ class _HomeScreenState extends State<HomeScreen> {
     if (token != null) {
       try {
         final response = await http.post(
-          Uri.parse('${BASE_URL}auth/logout'),
+          Uri.parse('${uriBase}/api/auth/logout'),
           headers: {
             'Authorization': 'Bearer $token',
           },
         );
+        print('Code: ${response.statusCode}');
 
         if (response.statusCode == 201) {
           await prefs.remove('token');
-          await prefs.remove('currentrole');
+          await prefs.remove('current_role');
           Navigator.pushReplacementNamed(context, '/signin');
         } else {
           // Xử lý lỗi nếu cần
@@ -185,13 +187,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              // ElevatedButton(
-              //     onPressed: () {},
-              //     style: ElevatedButton.styleFrom(
-              //       shape: const RoundedRectangleBorder(),
-              //       fixedSize: const Size(150, 40),
-              //     ),
-              //     child: const Text("Student")),
               const SizedBox(
                 height: 20,
               ),

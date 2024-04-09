@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:studenthub/components/button_simple.dart';
 import 'package:studenthub/components/textfield_label_v2.dart';
+import 'package:studenthub/config/config.dart';
 import 'package:studenthub/enums/company_size.dart';
 import 'package:studenthub/models/company_profile_model.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:studenthub/utils/apiBase.dart';
 import 'package:studenthub/utils/font.dart';
 
 class CompanyProfileInputScreen extends StatefulWidget {
@@ -47,7 +46,7 @@ class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
 
     final response = await http.post(
       Uri.parse(
-          '${BASE_URL}api/profile/company'), // Replace with your API endpoint
+          '${uriBase}/api/profile/company'), // Replace with your API endpoint
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',

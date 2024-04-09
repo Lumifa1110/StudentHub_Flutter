@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/enums/user_role.dart';
+import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class CardSwitchAccount extends StatelessWidget {
   final IconData accountAvt;
-  final String accountName;
+  final String accountFullname;
   final String accountRole;
+  final bool isSelected;
+  final VoidCallback onTap;
   const CardSwitchAccount({
     super.key,
     required this.accountAvt,
-    required this.accountName,
+    required this.accountFullname,
     required this.accountRole,
+    required this.isSelected,
+    required this.onTap,
   });
 
   @override
@@ -17,22 +23,25 @@ class CardSwitchAccount extends StatelessWidget {
     return InkWell(
       onTap: () {},
       child: ListTile(
+        tileColor: isSelected ? Colors.green : null,
         dense: true,
         leading: Icon(
           accountAvt,
           size: 36,
         ),
         title: Text(
-          accountName,
-          style: const TextStyle(
-            overflow: TextOverflow.ellipsis,
-            fontSize: AppFonts.h3FontSize,
-            fontWeight: FontWeight.bold,
-          ),
+          accountFullname,
+          style: TextStyle(
+              overflow: TextOverflow.ellipsis,
+              fontSize: AppFonts.h2FontSize,
+              fontWeight: FontWeight.w500,
+              color: isSelected ? whiteTextColor : blackTextColor),
         ),
         subtitle: Text(
-          accountRole,
-          style: const TextStyle(fontSize: AppFonts.h3FontSize),
+          accountRole == '0' ? 'Student' : 'Company',
+          style: TextStyle(
+              fontSize: AppFonts.h3FontSize,
+              color: isSelected ? whiteTextColor : blackTextColor),
         ),
       ),
     );
