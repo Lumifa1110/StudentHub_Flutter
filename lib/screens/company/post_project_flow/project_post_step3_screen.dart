@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:studenthub/components/authappbar.dart';
+import 'package:studenthub/utils/font.dart';
 import '../../../components/appbar_ps1.dart';
 import 'project_post_step4_screen.dart';
 
@@ -18,32 +20,37 @@ class ProjectPostStep3PageState extends State<ProjectPostStep3Page> {
     setState(() {
       _erro = value.isEmpty;
     });
+    print(_describe.text);
   }
 
   @override
-  void dispose() {
-    _describe.dispose();
-    super.dispose();
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(widget.box);
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       appBar: const AuthAppBar(canBack: true),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(right: 90),
-              child: Column(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: 20,
+                  ),
                   Text(
-                    '3/4       Next, provide project description',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    '3/4 \t \t Next, provide project description',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: AppFonts.h2FontSize),
                   ),
                   SizedBox(
                     height: 30,
@@ -64,52 +71,56 @@ class ProjectPostStep3PageState extends State<ProjectPostStep3Page> {
                   ),
                 ],
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Text(
-              'Describe your project',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextField(
-              maxLines: 8,
-              controller: _describe,
-              onChanged: _validateDicribe,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  isDense: true,
-                  errorText: _erro ? 'Please enter description' : null),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: ElevatedButton(
-                onPressed: () {
-                  if (!_erro) {
-                    widget.box.putIfAbsent('description', () => _describe.text);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ProjectPostStep4Page(
-                                box: widget.box,
-                              )),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                    shape: const RoundedRectangleBorder()),
-                child: const Text('Review your post'),
+              const SizedBox(
+                height: 20,
               ),
-            )
-          ],
+              const Text(
+                'Describe your project',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextField(
+                maxLines: 8,
+                controller: _describe,
+                onChanged: _validateDicribe,
+                decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    isDense: true,
+                    errorText: _erro ? 'Please enter description' : null),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (!_erro) {
+                      String description = _describe.text.isEmpty
+                          ? 'Description of the project'
+                          : _describe.text;
+                      widget.box.putIfAbsent('description', () => description);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProjectPostStep4Page(
+                            box: widget.box,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                      shape: const RoundedRectangleBorder()),
+                  child: const Text('Review your post'),
+                ),
+              )
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 }

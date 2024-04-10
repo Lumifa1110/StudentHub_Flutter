@@ -4,22 +4,33 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
+import 'package:studenthub/utils/font.dart';
 import '../../../components/appbar_ps1.dart';
 import 'package:studenthub/models/company_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:studenthub/business/company_business.dart';
 import 'package:studenthub/config/config.dart';
 
-class ProjectPostStep4Page extends StatelessWidget {
+class ProjectPostStep4Page extends StatefulWidget {
   final Map<String, dynamic> box;
   const ProjectPostStep4Page({super.key, required this.box});
 
+  @override
+  State<ProjectPostStep4Page> createState() => _ProjectPostStep4PageState();
+}
+
+class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
   Future<void> postProject(BuildContext context) async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
 
-    ProjectPost modelDataProject = ProjectPost('1', box['projectScore'],
-        box['title'], box['quantityStudent'], box['description'], 1);
+    ProjectPost modelDataProject = ProjectPost(
+        '1',
+        widget.box['projectScore'],
+        widget.box['title'],
+        widget.box['quantityStudent'],
+        widget.box['description'],
+        1);
     final modelDataProjectJson = modelDataProject.toJson();
     try {
       final response = await http.post(
@@ -40,6 +51,13 @@ class ProjectPostStep4Page extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(widget.box);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
@@ -55,14 +73,16 @@ class ProjectPostStep4Page extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      '4/4       Project details',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      '4/4 \t \t Project details',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: AppFonts.h2FontSize),
                     ),
                     const SizedBox(
                       height: 30,
                     ),
                     Text(
-                      'Title of the job: ${box['title']}',
+                      'Title of the job: ${widget.box['title']}',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
@@ -84,7 +104,7 @@ class ProjectPostStep4Page extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 20),
                       child: Text(
-                        box['description'],
+                        widget.box['description'],
                         overflow: TextOverflow.ellipsis,
                         maxLines: 10,
                         softWrap: true,
@@ -120,7 +140,7 @@ class ProjectPostStep4Page extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(left: 15.0),
                                 child: Text(
-                                    '• ${convertProjectScoreFlagToTime(box['projectScore'])} months'),
+                                    '• ${convertProjectScoreFlagToTime(widget.box['projectScore'])} months'),
                               )
                             ],
                           ),
@@ -148,7 +168,7 @@ class ProjectPostStep4Page extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(left: 15.0),
                                 child: Text(
-                                    '• ${box['quantityStudent']} students'),
+                                    '• ${widget.box['quantityStudent']} students'),
                               ),
                             ],
                           ),
