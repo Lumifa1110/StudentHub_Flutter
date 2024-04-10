@@ -52,11 +52,11 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
         if (isFromDashBoard == true) {
           _navigateWithAnimation(
               '/profile',
-              SwitchScreen(
+              const SwitchScreen(
                 isDashboard: true,
               ));
         } else {
-          _navigateWithAnimation('/profile', SwitchScreen());
+          _navigateWithAnimation('/profile', const SwitchScreen());
         }
       }
     }
