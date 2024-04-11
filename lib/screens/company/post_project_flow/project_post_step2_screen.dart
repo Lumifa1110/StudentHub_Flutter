@@ -34,7 +34,6 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print(widget.box);
   }
 
   @override

@@ -20,10 +20,12 @@ class ProjectPostStep4Page extends StatefulWidget {
 }
 
 class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
+  late SharedPreferences _prefs;
+  
   Future<void> postProject(BuildContext context) async {
-    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-
+    // final idCompany = _prefs.
     ProjectPost modelDataProject = ProjectPost(
         '1',
         widget.box['projectScore'],
@@ -181,8 +183,14 @@ class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
               Align(
                 alignment: Alignment.bottomRight,
                 child: ElevatedButton(
-                  onPressed: () {
-                    postProject(context);
+                  onPressed: () async{
+                    // postProject(context);
+
+                    _prefs = await SharedPreferences.getInstance();
+                    final idCompany = _prefs.getString('companyprofile');
+                    // jsonDecode(idCompany);
+                    print(idCompany);
+
                   },
                   style: ElevatedButton.styleFrom(
                       shape: const RoundedRectangleBorder()),
