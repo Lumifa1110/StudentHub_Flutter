@@ -42,7 +42,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     final companyProfile = _prefs.getString('companyprofile');
-    final companyId = jsonDecode(_prefs.getString('companyprofile')?? '{}')['id'];
+    final companyId = jsonDecode(_prefs.getString('companyprofile')!)['id'];
 
     try {
       final responseJson = await http.get(
