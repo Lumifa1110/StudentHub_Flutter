@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -5,6 +8,7 @@ import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/button_simple.dart';
 import 'package:studenthub/components/textfield_label_v2.dart';
 import 'package:studenthub/config/config.dart';
+import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 import 'package:http/http.dart' as http;
@@ -21,28 +25,70 @@ class EditProjectScreen extends StatefulWidget {
 }
 
 class _EditProjectScreenState extends State<EditProjectScreen> {
+  late bool isLoading = true;
   late SharedPreferences _prefs;
-  late TextEditingController _titleProject = TextEditingController();
-  late TextEditingController _quantityStudent = TextEditingController();
-  late TextEditingController _descriptionPrject = TextEditingController();
-  int _isChecked = 0;
+  late final _token;
+  late TextEditingController _titleProject;
+  late TextEditingController _quantityStudent;
+  late TextEditingController _descriptionPrject;
+  late int _isChecked;
+  late int _typeFlag;
+
+  Future<void> patchProject() async{
+
+    final Map<String, dynamic> data = {
+      'projectScopeFlag': _isChecked,
+      'title': _titleProject.text,
+      'description': _descriptionPrject.text,
+      'numberOfStudents': int.parse(_quantityStudent.text),
+      'typeFlag': _typeFlag,
+    };
+
+    // print(_typeFlag);
+    // print(_titleProject.text);
+    // print(_descriptionPrject.text);
+    // print(_isChecked);
+    // print(_t);
+
+    final response = await http.patch(
+      Uri.parse('$uriBase/api/project/${widget.projectId}'),
+      headers: {
+        'Authorization': 'Bearer $_token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+    if(response.statusCode == 200){
+      Navigator.pushReplacementNamed(context, '/company/dashboard');
+    }
+    else
+      print('erro');
+  }
 
   Future<void> _loadProject() async {
     _prefs = await SharedPreferences.getInstance();
-    final token = _prefs.getString('token');
-    print(token);
+    _token = _prefs.getString('token');
     try {
       final response = await http.get(
         Uri.parse('${uriBase}/api/project/${widget.projectId}'),
-        headers: {'Authorization': 'Bearer $token'},
+        headers: {'Authorization': 'Bearer $_token'},
       );
-      print(response.body);
+      final responseDecode = jsonDecode(response.body)['result'];
+
+      _typeFlag = responseDecode['typeFlag'];
+      _isChecked = responseDecode['projectScopeFlag'];
+      _titleProject = TextEditingController(text: responseDecode['title']);
+      _quantityStudent = TextEditingController(text: '${responseDecode['numberOfStudents']}');
+      _descriptionPrject = TextEditingController(text: responseDecode['description']);
+
+      setState(() {
+        isLoading = false;
+      });
     } catch (e) {}
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadProject();
   }
@@ -52,10 +98,11 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
     return Scaffold(
       appBar: const AuthAppBar(canBack: true),
       backgroundColor: bgColor,
-      body: SingleChildScrollView(
+      body: isLoading ? Center(child: CircularProgressIndicator(),)
+      : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
+          child:  Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFieldWithLabel2(
@@ -124,6 +171,46 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                   },
                 ),
               ),
+              const SizedBox(
+                height: 20,
+              ),
+              const Text(
+                'Status of project:',
+                style: TextStyle(
+                  fontSize: AppFonts.h3FontSize,
+                  fontWeight: FontWeight.w500,
+                  color: blackTextColor,
+                ),
+              ),
+              ListTile(
+                title:
+                const Text('0: working', style: TextStyle(fontSize: 14)),
+                leading: Radio(
+                  value: 0, // Set value to 6
+                  groupValue: _typeFlag,
+                  onChanged: (value) {
+                    setState(() {
+                      _typeFlag = value as int;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title:
+                const Text('1: Archieved', style: TextStyle(fontSize: 14)),
+                leading: Radio(
+                  value: 1, // Set value to 6
+                  groupValue: _typeFlag,
+                  onChanged: (value) {
+                    setState(() {
+                      _typeFlag = value as int;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
               TextFieldWithLabel2(
                   label: "How many student do you want for this project",
                   controller: _quantityStudent),
@@ -158,7 +245,11 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  ButtonSimple(label: 'Save', onPressed: () {}),
+                  ButtonSimple(
+                      label: 'Save',
+                      onPressed: () {
+                        patchProject();
+                  }),
                 ],
               ),
             ],

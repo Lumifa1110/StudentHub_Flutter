@@ -23,6 +23,32 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
   bool isLoading = true;
   String errorMessage = '';
 
+  // reomove a project id
+  Future<void> removeAProject(int projectId) async {
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+    final response = await http.delete(
+      Uri.parse(
+          '$uriBase/api/project/$projectId'), // Replace $projectId with the actual ID
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    setState(() {
+      isLoading = true;
+      _loadScreen().then((_) => _loadProject());
+    });
+  }
+// edit a project
+  void editAProject(BuildContext context, int? projectId) {
+    print(projectId);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditProjectScreen(projectId: projectId),
+      ),
+    );
+  }
+
+
   @override
   void initState() {
     super.initState();
@@ -40,7 +66,6 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
   Future<void> _loadProject() async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    final companyProfile = _prefs.getString('companyprofile');
     final companyId = jsonDecode(_prefs.getString('companyprofile')!)['id'];
 
     try {
@@ -159,6 +184,8 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                           print(project.projectId);
                                         },
                                         project: project,
+                                        removeAProject: removeAProject,
+                                        editAProject: editAProject,
                                       ),
                                       if (index < listProjectGet.length - 1)
                                         const Divider(
@@ -189,10 +216,12 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
 class OptionProjectCompany extends StatefulWidget {
   final VoidCallback onTap;
   final Project project;
+  final Future<void> Function(int idProject) removeAProject;
+  final Function(BuildContext context, int projectId) editAProject;
 
-  const OptionProjectCompany(
-      {Key? key, required this.onTap, required this.project})
-      : super(key: key);
+  const OptionProjectCompany({super.key, required this.onTap, required this.project,
+                              required this.removeAProject, required this.editAProject});
+
 
   int f_dayCreatedAgo(String createdAt) {
     DateTime timeParse = DateTime.parse(createdAt);
@@ -208,33 +237,6 @@ class OptionProjectCompany extends StatefulWidget {
 
 class OptionProjectCompanyState extends State<OptionProjectCompany> {
   late SharedPreferences _prefs;
-
-  Future<void> removeAProject(int? projectId) async {
-    _prefs = await SharedPreferences.getInstance();
-    final token = _prefs.getString('token');
-    final response = await http.delete(
-      Uri.parse(
-          '$uriBase/api/project/$projectId'), // Replace $projectId with the actual ID
-      headers: {'Authorization': 'Bearer $token'},
-    );
-    print(response.statusCode);
-    print(projectId);
-
-    if (response.statusCode == 200) {
-      print('okee');
-    } else
-      print('error remove a project');
-  }
-
-  void editAProject(BuildContext context, int? projectId) {
-    print(projectId);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EditProjectScreen(projectId: projectId),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -299,7 +301,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                     height: 350,
                     child: Center(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           ElevatedButton(
                             onPressed: () {
@@ -338,15 +340,15 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                           ElevatedButton(
                             onPressed: () {
                               // Implement your action
-                              editAProject(context, widget.project.projectId);
+                              widget.editAProject(context, widget.project.projectId!);
                             },
                             child: const Text('Edit posting'),
                           ),
                           ElevatedButton(
                             onPressed: () {
                               // print(widget.project.projectId.runtimeType);
-                              removeAProject(widget.project.projectId);
-                              // print(widget.project.projectId);
+                              Navigator.pop(context);
+                              widget.removeAProject(widget.project.projectId!);
                             },
                             child: const Text('Remove posting'),
                           ),

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/utils/font.dart';
-import '../../../components/appbar_ps1.dart';
 import 'package:studenthub/models/company_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:studenthub/business/company_business.dart';

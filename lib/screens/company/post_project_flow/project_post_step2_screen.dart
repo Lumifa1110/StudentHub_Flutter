@@ -24,7 +24,10 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
         _erro = true;
       } else if (!(num.tryParse(value) != null)) {
         _erro = true;
-      } else {
+      } else if(num.tryParse(value) == 0){
+        _erro = true;
+      }
+      else {
         _erro = false;
       }
     });
