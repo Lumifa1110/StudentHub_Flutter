@@ -7,7 +7,6 @@ import 'package:studenthub/business/company_business.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/models/company_model.dart';
-import 'package:studenthub/models/project_model.dart';
 import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/config/config.dart';
 
@@ -42,7 +41,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     final companyProfile = _prefs.getString('companyprofile');
-    final companyId = jsonDecode(_prefs.getString('companyprofile')?? '{}')['id'];
+    final companyId = jsonDecode(_prefs.getString('companyprofile')!)['id'];
 
     try {
       final responseJson = await http.get(
@@ -54,7 +53,19 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
       for (int i = 0; i < responseDecode.length; i++) {
         final projectScore = convertProjectScoreFlagToTime(
             responseDecode[i]['projectScopeFlag']);
-        listProjectGet.add(Project(projectId: responseDecode[i]['id'], createdAt: responseDecode[i]['createdAt'], updatedAt: responseDecode[i]['updatedAt'], deletedAt: responseDecode[i]['deletedAt'], companyId: responseDecode[i]['companyId'], projectScopeFlag: responseDecode[i]['projectScopeFlag'], title: responseDecode[i]['title'], description: responseDecode[i]['description'], numberOfStudents: responseDecode[i]['numberOfStudents'], typeFlag: responseDecode[i]['typeFlag'], countProposals: responseDecode[i]['countProposals'], isFavorite: responseDecode[i]['isFavorite']));
+        listProjectGet.add(Project(
+            projectId: responseDecode[i]['id'],
+            createdAt: responseDecode[i]['createdAt'],
+            updatedAt: responseDecode[i]['updatedAt'],
+            deletedAt: responseDecode[i]['deletedAt'],
+            companyId: responseDecode[i]['companyId'],
+            projectScopeFlag: responseDecode[i]['projectScopeFlag'],
+            title: responseDecode[i]['title'],
+            description: responseDecode[i]['description'],
+            numberOfStudents: responseDecode[i]['numberOfStudents'],
+            typeFlag: responseDecode[i]['typeFlag'],
+            countProposals: responseDecode[i]['countProposals'],
+            isFavorite: responseDecode[i]['isFavorite']));
       }
       setState(() {
         isLoading = false;
@@ -145,7 +156,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                       ),
                                       OptionProjectCompany(
                                         onTap: () {
-                                          print (project.projectId);
+                                          print(project.projectId);
                                         },
                                         project: project,
                                       ),
@@ -183,7 +194,7 @@ class OptionProjectCompany extends StatefulWidget {
       {Key? key, required this.onTap, required this.project})
       : super(key: key);
 
-  int f_dayCreatedAgo(String createdAt){
+  int f_dayCreatedAgo(String createdAt) {
     DateTime timeParse = DateTime.parse(createdAt);
     DateTime now = DateTime.now();
     Duration difference = now.difference(timeParse);
@@ -191,9 +202,6 @@ class OptionProjectCompany extends StatefulWidget {
     return difference.inDays;
   }
 
-  Future<void> deleteAProject(int projectID) async{
-
-  }
   @override
   State<OptionProjectCompany> createState() => OptionProjectCompanyState();
 }
@@ -201,22 +209,33 @@ class OptionProjectCompany extends StatefulWidget {
 class OptionProjectCompanyState extends State<OptionProjectCompany> {
   late SharedPreferences _prefs;
 
-  Future<void> removeAProject(int? projectId) async{
+  Future<void> removeAProject(int? projectId) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     final response = await http.delete(
-      Uri.parse('$uriBase/api/project/$projectId'), // Replace $projectId with the actual ID
+      Uri.parse(
+          '$uriBase/api/project/$projectId'), // Replace $projectId with the actual ID
       headers: {'Authorization': 'Bearer $token'},
     );
     print(response.statusCode);
     print(projectId);
 
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       print('okee');
-    }
-    else
-      print('erro remove a project');
+    } else
+      print('error remove a project');
   }
+
+  void editAProject(BuildContext context, int? projectId) {
+    print(projectId);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditProjectScreen(projectId: projectId),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -281,7 +300,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                     child: Center(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
+                        children: [
                           ElevatedButton(
                             onPressed: () {
                               // Implement your action
@@ -319,7 +338,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                           ElevatedButton(
                             onPressed: () {
                               // Implement your action
-                              Navigator.pop(context);
+                              editAProject(context, widget.project.projectId);
                             },
                             child: const Text('Edit posting'),
                           ),

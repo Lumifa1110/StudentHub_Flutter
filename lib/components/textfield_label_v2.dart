@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
-class TextFieldWithLabel extends StatelessWidget {
+class TextFieldWithLabel2 extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final String? hint;
 
-  const TextFieldWithLabel({
+  const TextFieldWithLabel2({
     super.key,
     required this.label,
     required this.controller,

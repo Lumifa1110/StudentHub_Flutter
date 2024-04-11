@@ -23,6 +23,8 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   List<Project> allProject = [];
   List<Project> myFavoriteProjects = [];
 
+  Future<void> _loadProjects() async {}
+
   void removeFromFavorites(Project project) {
     setState(() {
       myFavoriteProjects.remove(project);

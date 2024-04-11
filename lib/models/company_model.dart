@@ -12,8 +12,19 @@ class Project {
   final int? countProposals;
   final bool? isFavorite;
 
-  Project({required this.projectId, required this.createdAt, required this.updatedAt, required this.deletedAt, required this.companyId, required this.projectScopeFlag, required this.title, required this.description, required this.numberOfStudents, required this.typeFlag, required this.countProposals, required this.isFavorite});
-
+  Project(
+      {required this.projectId,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.deletedAt,
+      required this.companyId,
+      required this.projectScopeFlag,
+      required this.title,
+      required this.description,
+      required this.numberOfStudents,
+      required this.typeFlag,
+      required this.countProposals,
+      required this.isFavorite});
 }
 
 class ProjectPost {
