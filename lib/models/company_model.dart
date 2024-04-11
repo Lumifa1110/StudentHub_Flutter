@@ -1,16 +1,19 @@
 class Project {
-  final String title;
-  final String implementationTime;
-  final int qualityStudent;
-  final String describe;
+  final int? projectId;
   final String createdAt;
+  final String? updatedAt;
+  final String? deletedAt;
+  final String? companyId;
+  final int? projectScopeFlag;
+  final String title;
+  final String? description;
+  final int? numberOfStudents;
+  final int? typeFlag;
+  final int? countProposals;
+  final bool? isFavorite;
 
-  Project(
-      {required this.title,
-      required this.implementationTime,
-      required this.qualityStudent,
-      required this.describe,
-      required this.createdAt});
+  Project({required this.projectId, required this.createdAt, required this.updatedAt, required this.deletedAt, required this.companyId, required this.projectScopeFlag, required this.title, required this.description, required this.numberOfStudents, required this.typeFlag, required this.countProposals, required this.isFavorite});
+
 }
 
 class ProjectPost {

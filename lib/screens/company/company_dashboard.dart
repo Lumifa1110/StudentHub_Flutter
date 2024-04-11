@@ -33,7 +33,6 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
   Future<void> _loadScreen() async {
     _prefs = await SharedPreferences.getInstance();
     final profile = _prefs.getString('companyprofile');
-    print('Company Profile: $profile');
     if (profile == null) {
       Navigator.pushReplacementNamed(context, '/company/profile');
     }
@@ -42,6 +41,8 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
   Future<void> _loadProject() async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
+    // final companyId = jsonDecode(_prefs.getString('companyprofile'));
+    
     try {
       final responseJson = await http.get(
         Uri.parse('${uriBase}/api/project'),
@@ -53,13 +54,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
       for (int i = 0; i < responseDecode.length; i++) {
         final projectScore = convertProjectScoreFlagToTime(
             responseDecode[i]['projectScopeFlag']);
-        listProjectGet.add(Project(
-          title: responseDecode[i]['title'],
-          implementationTime: projectScore,
-          qualityStudent: responseDecode[i]['numberOfStudents'],
-          describe: responseDecode[i]['description'],
-          createdAt: responseDecode[i]['createdAt'],
-        ));
+        listProjectGet.add(Project(projectId: responseDecode[i]['projectId'], createdAt: responseDecode[i]['createdAt'], updatedAt: responseDecode[i]['updatedAt'], deletedAt: responseDecode[i]['deletedAt'], companyId: responseDecode[i]['companyId'], projectScopeFlag: responseDecode[i]['projectScopeFlag'], title: responseDecode[i]['title'], description: responseDecode[i]['description'], numberOfStudents: responseDecode[i]['numberOfStudents'], typeFlag: responseDecode[i]['typeFlag'], countProposals: responseDecode[i]['countProposals'], isFavorite: responseDecode[i]['isFavorite']));
       }
       setState(() {
         isLoading = false;
@@ -194,11 +189,30 @@ class OptionProjectCompany extends StatefulWidget {
     return difference.inDays;
   }
 
+  Future<void> deleteAProject(int projectID) async{
+
+  }
   @override
   State<OptionProjectCompany> createState() => OptionProjectCompanyState();
 }
 
 class OptionProjectCompanyState extends State<OptionProjectCompany> {
+  late SharedPreferences _prefs;
+
+  Future<void> removeAProject(int? projectId) async{
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+    final response = await http.delete(
+      Uri.parse('$uriBase/api/project/$projectId'), // Replace $projectId with the actual ID
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if(response.statusCode == 200){
+      print('okee');
+    }
+    else
+      print('erro remove a project');
+  }
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -307,7 +321,8 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              // Implement your action
+                              // print(widget.project.projectId.runtimeType);
+                              removeAProject(widget.project.projectId);
                             },
                             child: const Text('Remove posting'),
                           ),
