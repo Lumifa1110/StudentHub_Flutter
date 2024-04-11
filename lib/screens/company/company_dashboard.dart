@@ -41,20 +41,20 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
   Future<void> _loadProject() async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    // final companyId = jsonDecode(_prefs.getString('companyprofile'));
-    
+    final companyProfile = _prefs.getString('companyprofile');
+    final companyId = jsonDecode(_prefs.getString('companyprofile')?? '{}')['id'];
+
     try {
       final responseJson = await http.get(
-        Uri.parse('${uriBase}/api/project'),
+        Uri.parse('${uriBase}/api/project/company/$companyId'),
         headers: {'Authorization': 'Bearer $token'},
       );
       final responseDecode = jsonDecode(responseJson.body)["result"];
-
       listProjectGet.clear();
       for (int i = 0; i < responseDecode.length; i++) {
         final projectScore = convertProjectScoreFlagToTime(
             responseDecode[i]['projectScopeFlag']);
-        listProjectGet.add(Project(projectId: responseDecode[i]['projectId'], createdAt: responseDecode[i]['createdAt'], updatedAt: responseDecode[i]['updatedAt'], deletedAt: responseDecode[i]['deletedAt'], companyId: responseDecode[i]['companyId'], projectScopeFlag: responseDecode[i]['projectScopeFlag'], title: responseDecode[i]['title'], description: responseDecode[i]['description'], numberOfStudents: responseDecode[i]['numberOfStudents'], typeFlag: responseDecode[i]['typeFlag'], countProposals: responseDecode[i]['countProposals'], isFavorite: responseDecode[i]['isFavorite']));
+        listProjectGet.add(Project(projectId: responseDecode[i]['id'], createdAt: responseDecode[i]['createdAt'], updatedAt: responseDecode[i]['updatedAt'], deletedAt: responseDecode[i]['deletedAt'], companyId: responseDecode[i]['companyId'], projectScopeFlag: responseDecode[i]['projectScopeFlag'], title: responseDecode[i]['title'], description: responseDecode[i]['description'], numberOfStudents: responseDecode[i]['numberOfStudents'], typeFlag: responseDecode[i]['typeFlag'], countProposals: responseDecode[i]['countProposals'], isFavorite: responseDecode[i]['isFavorite']));
       }
       setState(() {
         isLoading = false;
@@ -144,7 +144,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                         height: 20,
                                       ),
                                       OptionProjectCompany(
-                                        onTap: () {},
+                                        onTap: () {
+                                          print (project.projectId);
+                                        },
                                         project: project,
                                       ),
                                       if (index < listProjectGet.length - 1)
@@ -206,6 +208,8 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
       Uri.parse('$uriBase/api/project/$projectId'), // Replace $projectId with the actual ID
       headers: {'Authorization': 'Bearer $token'},
     );
+    print(response.statusCode);
+    print(projectId);
 
     if(response.statusCode == 200){
       print('okee');
@@ -323,6 +327,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                             onPressed: () {
                               // print(widget.project.projectId.runtimeType);
                               removeAProject(widget.project.projectId);
+                              // print(widget.project.projectId);
                             },
                             child: const Text('Remove posting'),
                           ),
