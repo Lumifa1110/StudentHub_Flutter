@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/authappbar.dart';
+import 'package:studenthub/components/button_simple.dart';
 import 'package:studenthub/components/textfield_label_v2.dart';
 
 class EditProjectScreen extends StatefulWidget {
@@ -87,15 +88,18 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
             const SizedBox(
               height: 20,
             ),
-            TextFieldWithLabel(label: "", controller: _quantityStudent),
+            TextFieldWithLabel(
+                label: "How many student do you want for this project",
+                controller: _quantityStudent),
             TextField(
               maxLines: 8,
               controller: _descriptionPrject,
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
                 isDense: true,
               ),
             ),
+            ButtonSimple(label: 'Save', onPressed: () {})
           ],
         ),
       ),

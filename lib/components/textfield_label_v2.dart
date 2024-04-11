@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/utils/colors.dart';
+import 'package:studenthub/utils/font.dart';
 
 class TextFieldWithLabel extends StatelessWidget {
   final String label;
@@ -23,7 +24,7 @@ class TextFieldWithLabel extends StatelessWidget {
           child: Text(
             label,
             style: const TextStyle(
-              fontSize: 18,
+              fontSize: AppFonts.h3FontSize,
               fontWeight: FontWeight.w500,
               color: blackTextColor,
             ),
