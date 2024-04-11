@@ -79,11 +79,14 @@ class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
                           fontSize: AppFonts.h2FontSize),
                     ),
                     const SizedBox(
-                      height: 30,
+                      height: 20,
                     ),
                     Text(
-                      'Title of the job: ${widget.box['title']}',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      '${widget.box['title']}',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: AppFonts.h1FontSize,
+                          overflow: TextOverflow.ellipsis),
                     ),
                     const SizedBox(
                       height: 10,

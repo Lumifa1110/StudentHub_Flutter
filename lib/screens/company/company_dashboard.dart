@@ -300,7 +300,6 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                           ElevatedButton(
                             onPressed: () {
                               // Implement your action
-                              Navigator.pop(context);
                             },
                             child: const Text('Remove posting'),
                           ),

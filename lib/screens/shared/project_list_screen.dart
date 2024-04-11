@@ -20,6 +20,7 @@ class ProjectListScreen extends StatefulWidget {
 
 class _ProjectListScreenState extends State<ProjectListScreen> {
   String searchQuery = '';
+  List<Project> allProject = [];
   List<Project> myFavoriteProjects = [];
 
   void removeFromFavorites(Project project) {
@@ -109,8 +110,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
           ),
           Expanded(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: ListView.builder(
                 itemCount: mockProjects.length,
                 itemBuilder: (context, index) {
