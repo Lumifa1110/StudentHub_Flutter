@@ -160,15 +160,15 @@ class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
                 height: 20,
               ),
               // TextFields
-              TextFieldWithLabel(
+              TextFieldWithLabel2(
                 label: 'Company name',
                 controller: companyNameController,
               ),
-              TextFieldWithLabel(
+              TextFieldWithLabel2(
                 label: 'Website',
                 controller: companyWebsiteController,
               ),
-              TextFieldWithLabel(
+              TextFieldWithLabel2(
                 label: 'Description',
                 controller: companyDescriptionController,
               ),

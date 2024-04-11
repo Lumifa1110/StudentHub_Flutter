@@ -53,7 +53,7 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
               color: blackTextColor,
             ),
           ),
-          TextFieldWithLabel(
+          TextFieldWithLabel2(
             label: 'Title',
             controller: _titleController,
             hint: 'Enter title for meeting',

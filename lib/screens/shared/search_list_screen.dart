@@ -117,8 +117,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                 padding: const EdgeInsets.all(20),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
                                       crossAxisAlignment:
@@ -173,11 +172,11 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                       thickness: 2.0,
                                       color: blackTextColor,
                                     ),
-                                    TextFieldWithLabel(
+                                    TextFieldWithLabel2(
                                       label: 'Students needed',
                                       controller: _studentsNeededController,
                                     ),
-                                    TextFieldWithLabel(
+                                    TextFieldWithLabel2(
                                       label: 'Proposals less than',
                                       controller: _proposalsController,
                                     ),
@@ -225,8 +224,8 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                           child: TextButton(
                                             onPressed: () {},
                                             style: ButtonStyle(
-                                              shape: MaterialStateProperty
-                                                  .all<OutlinedBorder>(
+                                              shape: MaterialStateProperty.all<
+                                                  OutlinedBorder>(
                                                 const RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.zero),
@@ -260,8 +259,8 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                           child: TextButton(
                                             onPressed: () {},
                                             style: ButtonStyle(
-                                              shape: MaterialStateProperty
-                                                  .all<OutlinedBorder>(
+                                              shape: MaterialStateProperty.all<
+                                                  OutlinedBorder>(
                                                 const RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.zero),
@@ -300,8 +299,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
           ),
           Expanded(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: ListView.builder(
                 itemCount: filteredProjects.length,
                 itemBuilder: (context, index) {
