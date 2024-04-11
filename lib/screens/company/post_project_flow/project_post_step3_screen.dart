@@ -20,7 +20,6 @@ class ProjectPostStep3PageState extends State<ProjectPostStep3Page> {
     setState(() {
       _erro = value.isEmpty;
     });
-    print(_describe.text);
   }
 
   @override
