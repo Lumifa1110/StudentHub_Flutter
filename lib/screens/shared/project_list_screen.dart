@@ -52,6 +52,31 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     }
   }
 
+  Future<void> _loadFavoriteProjects() async {
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+    final studentprofile = _prefs.getString('studentprofile');
+    try {
+      final response = await http.get(
+        Uri.parse('${uriBase}/api/favoriteProject/{studentId}'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = jsonDecode(response.body)['result'];
+        setState(() {
+          allProject =
+              responseData.map((json) => Project.fromJson(json)).toList();
+        });
+      } else {
+        // Handle error
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   void removeFromFavorites(Project project) {
     setState(() {
       myFavoriteProjects.remove(project);

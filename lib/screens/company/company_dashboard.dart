@@ -58,12 +58,19 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
   Future<void> _loadScreen() async {
     _prefs = await SharedPreferences.getInstance();
     final profile = _prefs.getString('companyprofile');
+    final role = _prefs.getInt('current_role');
     if (profile == null) {
       Navigator.pushReplacementNamed(context, '/company/profile');
+    } else {
+      if (role == 0) {
+        Navigator.pushReplacementNamed(context, '/student/dashboard');
+      }
     }
   }
 
   Future<void> _loadProject() async {
+    if (!mounted) return; // Check if the widget is still mounted
+
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     final companyId = jsonDecode(_prefs.getString('companyprofile')!)['id'];
@@ -92,14 +99,20 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
             countProposals: responseDecode[i]['countProposals'],
             isFavorite: responseDecode[i]['isFavorite']));
       }
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        // Check again if the widget is still mounted before calling setState
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-        errorMessage = 'Failed to load projects. Please try again later.';
-      });
+      if (mounted) {
+        // Check again if the widget is still mounted before calling setState
+        setState(() {
+          isLoading = false;
+          errorMessage = 'Failed to load projects. Please try again later.';
+        });
+      }
       print(e);
     }
   }

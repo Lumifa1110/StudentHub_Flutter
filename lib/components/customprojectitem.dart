@@ -45,6 +45,20 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
     }
   }
 
+  String checkCountProposal(int? count) {
+    if (count == null || count < 0) {
+      return 'Unknown';
+    } else if (count == 0) {
+      return 'No one';
+    } else if (count == 1) {
+      return 'Only one';
+    } else if (count > 1 && count < 5) {
+      return 'less than 5';
+    } else {
+      return '$count';
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -107,7 +121,7 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                   ),
                   Flexible(
                     child: Text(
-                      'Proposals: ${widget.project.countProposals}',
+                      'Proposals: ${checkCountProposal(widget.project.countProposals)}',
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           fontSize: AppFonts.h4FontSize, color: lightgrayColor),
