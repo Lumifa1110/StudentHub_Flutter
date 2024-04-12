@@ -25,6 +25,22 @@ class Project {
       required this.typeFlag,
       required this.countProposals,
       required this.isFavorite});
+  factory Project.fromJson(Map<String, dynamic> json) {
+    return Project(
+      projectId: json['projectId'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      deletedAt: json['deletedAt'],
+      companyId: json['companyId'],
+      projectScopeFlag: json['projectScopeFlag'],
+      title: json['title'],
+      description: json['description'],
+      numberOfStudents: json['numberOfStudents'],
+      typeFlag: json['typeFlag'],
+      countProposals: json['countProposals'],
+      isFavorite: json['isFavorite'],
+    );
+  }
 }
 
 class ProjectPost {

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/components/customprojectitem.dart';
 import 'package:studenthub/components/bottomsheet_customsearchbar.dart';
+import 'package:studenthub/config/config.dart';
+import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/screens/shared/favorite_projects_screen.dart';
 import 'package:studenthub/screens/shared/project_detail_screen.dart';
 import 'package:studenthub/screens/shared/search_list_screen.dart';
 import 'package:studenthub/utils/colors.dart';
-
-import 'package:studenthub/utils/mock_data.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class ProjectListScreen extends StatefulWidget {
   const ProjectListScreen({super.key});
@@ -22,8 +25,32 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   String searchQuery = '';
   List<Project> allProject = [];
   List<Project> myFavoriteProjects = [];
+  List<String> errorMessages = [];
+  late SharedPreferences _prefs;
 
-  Future<void> _loadProjects() async {}
+  Future<void> _loadProjects() async {
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+    try {
+      final response = await http.get(
+        Uri.parse('${uriBase}/api/project'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = jsonDecode(response.body)['result'];
+        setState(() {
+          allProject =
+              responseData.map((json) => Project.fromJson(json)).toList();
+        });
+      } else {
+        // Handle error
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 
   void removeFromFavorites(Project project) {
     setState(() {
@@ -53,6 +80,13 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         ),
       );
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadProjects();
   }
 
   @override
@@ -114,19 +148,19 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: ListView.builder(
-                itemCount: mockProjects.length,
+                itemCount: allProject.length,
                 itemBuilder: (context, index) {
-                  final project = mockProjects[index];
+                  final project = allProject[index];
                   return CustomProjectItem(
                     project: project,
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ProjectDetailScreen(itemId: project.projectId),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) =>
+                      //         ProjectDetailScreen(itemId: project.projectId),
+                      //   ),
+                      // );
                     },
                     isFavorite: myFavoriteProjects.contains(project),
                     onFavoriteToggle: (isFavorite) {

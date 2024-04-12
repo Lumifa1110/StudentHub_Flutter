@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/components/customprojectitem.dart';
+import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/screens/shared/project_detail_screen.dart';
-
-import 'package:studenthub/utils/mock_data.dart';
 
 class FavoriteProjectsScreen extends StatelessWidget {
   final List<Project> favoriteList;
@@ -47,13 +46,13 @@ class FavoriteProjectsScreen extends StatelessWidget {
                         return CustomProjectItem(
                           project: project,
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProjectDetailScreen(
-                                    itemId: project.projectId),
-                              ),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => ProjectDetailScreen(
+                            //         itemId: project.projectId),
+                            //   ),
+                            // );
                           },
                           isFavorite: favoriteList.contains(project),
                           onFavoriteToggle: (isFavorite) {

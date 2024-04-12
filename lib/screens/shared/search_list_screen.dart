@@ -5,9 +5,9 @@ import 'package:studenthub/components/customprojectitem.dart';
 import 'package:studenthub/components/bottomsheet_customsearchbar.dart';
 import 'package:studenthub/components/radiolist_projectlength.dart';
 import 'package:studenthub/components/textfield_label_v2.dart';
+import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/screens/shared/project_detail_screen.dart';
 import 'package:studenthub/utils/colors.dart';
-import 'package:studenthub/utils/mock_data.dart';
 
 class SearchListScreen extends StatefulWidget {
   final String seachQuery;
@@ -31,7 +31,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
   void initState() {
     super.initState();
     // Initialize filteredProjects with all projects initially
-    filteredProjects = mockProjects;
+    filteredProjects = [];
   }
 
   void updateFavoriteStatus(Project project, bool isFavorite) {
@@ -50,13 +50,13 @@ class _SearchListScreenState extends State<SearchListScreen> {
       searchQuery = query.toLowerCase();
 
       if (searchQuery.isNotEmpty) {
-        filteredProjects = mockProjects.where((project) {
-          return project.titleOfJob.toLowerCase().contains(searchQuery) ||
-              project.projectDetail.toLowerCase().contains(searchQuery);
+        filteredProjects = myFavoriteProjects.where((project) {
+          return project.title.toLowerCase().contains(searchQuery) ||
+              project.description!.toLowerCase().contains(searchQuery);
         }).toList();
       } else {
         // If searchQuery is empty, display all projects
-        filteredProjects = List.from(mockProjects);
+        filteredProjects = List.from(filteredProjects);
       }
       Navigator.pop(context);
     });
@@ -303,17 +303,17 @@ class _SearchListScreenState extends State<SearchListScreen> {
               child: ListView.builder(
                 itemCount: filteredProjects.length,
                 itemBuilder: (context, index) {
-                  final project = mockProjects[index];
+                  final project = myFavoriteProjects[index];
                   return CustomProjectItem(
                     project: project,
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ProjectDetailScreen(itemId: project.projectId),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) =>
+                      //         ProjectDetailScreen(itemId: project.projectId),
+                      //   ),
+                      // );
                     },
                     isFavorite: myFavoriteProjects.contains(project),
                     onFavoriteToggle: (isFavorite) {

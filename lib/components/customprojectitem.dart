@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/utils/colors.dart';
-import 'package:studenthub/utils/mock_data.dart';
+import 'package:studenthub/utils/font.dart';
+import 'package:studenthub/utils/timer.dart';
 
 class CustomProjectItem extends StatefulWidget {
   final Project project;
@@ -32,49 +34,54 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 164,
+      height: 166,
       child: Stack(
         children: [
           const Divider(
             color: blackTextColor,
             thickness: 2.0,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 10),
             child: InkWell(
               onTap: widget.onTap,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Flexible(
                     child: Text(
-                      widget.project.timeCreated,
+                      'Created ${f_timeSinceCreated(widget.project.createdAt)}',
                       overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: AppFonts.h4FontSize),
                     ),
                   ),
                   Flexible(
                     child: Text(
-                      widget.project.titleOfJob,
+                      widget.project.title,
                       overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: AppFonts.h2FontSize,
+                          fontWeight: FontWeight.w500,
+                          color: AppColor.tertiary),
                     ),
                   ),
                   Flexible(
                     child: Text(
-                      '${widget.project.projectScope}, ${widget.project.requireStudents} needed',
+                      '${widget.project.projectScopeFlag}, ${widget.project.numberOfStudents} needed',
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Flexible(
                     flex: 2,
                     child: Text(
-                      widget.project.studentGain,
+                      widget.project.description!,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Flexible(
                     child: Text(
-                      widget.project.numOfProposals,
+                      widget.project.countProposals.toString(),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
