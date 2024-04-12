@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/enums/project_scope.dart';
 import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
@@ -25,6 +26,25 @@ class CustomProjectItem extends StatefulWidget {
 class _CustomProjectItemState extends State<CustomProjectItem> {
   late bool isFavorite; // Declare isFavorite as instance variable
 
+  String checkProjectScope(int? scope) {
+    switch (scope) {
+      case 0:
+        return 'less than 1 month';
+        break;
+      case 1:
+        return '1 To 3 months';
+        break;
+      case 2:
+        return '3 To 6 months';
+        break;
+      case 3:
+        return 'more than 6 months';
+        break;
+      default:
+        return 'Unknown';
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -34,7 +54,7 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 166,
+      height: 196,
       child: Stack(
         children: [
           const Divider(
@@ -53,7 +73,8 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                     child: Text(
                       'Created ${f_timeSinceCreated(widget.project.createdAt)}',
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: AppFonts.h4FontSize),
+                      style: const TextStyle(
+                          fontSize: AppFonts.h4FontSize, color: lightgrayColor),
                     ),
                   ),
                   Flexible(
@@ -68,21 +89,28 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                   ),
                   Flexible(
                     child: Text(
-                      '${widget.project.projectScopeFlag}, ${widget.project.numberOfStudents} needed',
+                      'Time: ${checkProjectScope(widget.project.projectScopeFlag)}, ${widget.project.numberOfStudents} students needed',
                       overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: AppFonts.h4FontSize, color: lightgrayColor),
                     ),
                   ),
                   Flexible(
-                    flex: 2,
+                    flex: 3,
                     child: Text(
+                      maxLines: 3,
                       widget.project.description!,
                       overflow: TextOverflow.ellipsis,
+                      style:
+                          const TextStyle(fontSize: 15, color: blackTextColor),
                     ),
                   ),
                   Flexible(
                     child: Text(
-                      widget.project.countProposals.toString(),
+                      'Proposals: ${widget.project.countProposals}',
                       overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: AppFonts.h4FontSize, color: lightgrayColor),
                     ),
                   ),
                 ],
