@@ -34,8 +34,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
   late int _isChecked;
   late int _typeFlag;
 
-  Future<void> patchProject() async{
-
+  Future<void> patchProject() async {
     final Map<String, dynamic> data = {
       'projectScopeFlag': _isChecked,
       'title': _titleProject.text,
@@ -58,10 +57,9 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
       },
       body: jsonEncode(data),
     );
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       Navigator.pushReplacementNamed(context, '/company/dashboard');
-    }
-    else
+    } else
       print('erro');
   }
 
@@ -78,13 +76,19 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
       _typeFlag = responseDecode['typeFlag'];
       _isChecked = responseDecode['projectScopeFlag'];
       _titleProject = TextEditingController(text: responseDecode['title']);
-      _quantityStudent = TextEditingController(text: '${responseDecode['numberOfStudents']}');
-      _descriptionPrject = TextEditingController(text: responseDecode['description']);
+      _quantityStudent =
+          TextEditingController(text: '${responseDecode['numberOfStudents']}');
+      _descriptionPrject =
+          TextEditingController(text: responseDecode['description']);
 
       setState(() {
         isLoading = false;
       });
     } catch (e) {}
+  }
+
+  Future<void> _saveChanged() async {
+    if (_titleProject.text.isEmpty) {}
   }
 
   @override
@@ -98,164 +102,167 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
     return Scaffold(
       appBar: const AuthAppBar(canBack: true),
       backgroundColor: bgColor,
-      body: isLoading ? Center(child: CircularProgressIndicator(),)
-      : SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child:  Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFieldWithLabel2(
-                  label: 'Title of project ${widget.projectId}',
-                  controller: _titleProject),
-              const SizedBox(
-                height: 20,
-              ),
-              const Text(
-                'How long will your project take?',
-                style: TextStyle(
-                  fontSize: AppFonts.h3FontSize,
-                  fontWeight: FontWeight.w500,
-                  color: blackTextColor,
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextFieldWithLabel2(
+                        label: 'Title of project ${widget.projectId}',
+                        controller: _titleProject),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text(
+                      'How long will your project take?',
+                      style: TextStyle(
+                        fontSize: AppFonts.h3FontSize,
+                        fontWeight: FontWeight.w500,
+                        color: blackTextColor,
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('Less Than 1 Month',
+                          style: TextStyle(fontSize: 14)),
+                      leading: Radio(
+                        value: 0, // Set value to 3
+                        groupValue: _isChecked,
+                        onChanged: (value) {
+                          setState(() {
+                            _isChecked = value as int;
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('1 to 3 months',
+                          style: TextStyle(fontSize: 14)),
+                      leading: Radio(
+                        value: 1, // Set value to 6
+                        groupValue: _isChecked,
+                        onChanged: (value) {
+                          setState(() {
+                            _isChecked = value as int;
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('3 to 6 months',
+                          style: TextStyle(fontSize: 14)),
+                      leading: Radio(
+                        value: 2, // Set value to 6
+                        groupValue: _isChecked,
+                        onChanged: (value) {
+                          setState(() {
+                            _isChecked = value as int;
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('More than 6 months',
+                          style: TextStyle(fontSize: 14)),
+                      leading: Radio(
+                        value: 3, // Set value to 6
+                        groupValue: _isChecked,
+                        onChanged: (value) {
+                          setState(() {
+                            _isChecked = value as int;
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text(
+                      'Status of project:',
+                      style: TextStyle(
+                        fontSize: AppFonts.h3FontSize,
+                        fontWeight: FontWeight.w500,
+                        color: blackTextColor,
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('0: working',
+                          style: TextStyle(fontSize: 14)),
+                      leading: Radio(
+                        value: 0, // Set value to 6
+                        groupValue: _typeFlag,
+                        onChanged: (value) {
+                          setState(() {
+                            _typeFlag = value as int;
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('1: Archieved',
+                          style: TextStyle(fontSize: 14)),
+                      leading: Radio(
+                        value: 1, // Set value to 6
+                        groupValue: _typeFlag,
+                        onChanged: (value) {
+                          setState(() {
+                            _typeFlag = value as int;
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextFieldWithLabel2(
+                        label: "How many student do you want for this project",
+                        controller: _quantityStudent),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text(
+                      'Describe your project',
+                      style: TextStyle(
+                        fontSize: AppFonts.h3FontSize,
+                        fontWeight: FontWeight.w500,
+                        color: blackTextColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextField(
+                      maxLines: 8,
+                      controller: _descriptionPrject,
+                      decoration: const InputDecoration(
+                        fillColor: whiteTextColor,
+                        filled: true,
+                        border: OutlineInputBorder(),
+                        isDense: true,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ButtonSimple(
+                            label: 'Save',
+                            onPressed: () {
+                              patchProject();
+                            }),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              ListTile(
-                title: const Text('Less Than 1 Month',
-                    style: TextStyle(fontSize: 14)),
-                leading: Radio(
-                  value: 0, // Set value to 3
-                  groupValue: _isChecked,
-                  onChanged: (value) {
-                    setState(() {
-                      _isChecked = value as int;
-                    });
-                  },
-                ),
-              ),
-              ListTile(
-                title:
-                    const Text('1 to 3 months', style: TextStyle(fontSize: 14)),
-                leading: Radio(
-                  value: 1, // Set value to 6
-                  groupValue: _isChecked,
-                  onChanged: (value) {
-                    setState(() {
-                      _isChecked = value as int;
-                    });
-                  },
-                ),
-              ),
-              ListTile(
-                title:
-                    const Text('3 to 6 months', style: TextStyle(fontSize: 14)),
-                leading: Radio(
-                  value: 2, // Set value to 6
-                  groupValue: _isChecked,
-                  onChanged: (value) {
-                    setState(() {
-                      _isChecked = value as int;
-                    });
-                  },
-                ),
-              ),
-              ListTile(
-                title: const Text('More than 6 months',
-                    style: TextStyle(fontSize: 14)),
-                leading: Radio(
-                  value: 3, // Set value to 6
-                  groupValue: _isChecked,
-                  onChanged: (value) {
-                    setState(() {
-                      _isChecked = value as int;
-                    });
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const Text(
-                'Status of project:',
-                style: TextStyle(
-                  fontSize: AppFonts.h3FontSize,
-                  fontWeight: FontWeight.w500,
-                  color: blackTextColor,
-                ),
-              ),
-              ListTile(
-                title:
-                const Text('0: working', style: TextStyle(fontSize: 14)),
-                leading: Radio(
-                  value: 0, // Set value to 6
-                  groupValue: _typeFlag,
-                  onChanged: (value) {
-                    setState(() {
-                      _typeFlag = value as int;
-                    });
-                  },
-                ),
-              ),
-              ListTile(
-                title:
-                const Text('1: Archieved', style: TextStyle(fontSize: 14)),
-                leading: Radio(
-                  value: 1, // Set value to 6
-                  groupValue: _typeFlag,
-                  onChanged: (value) {
-                    setState(() {
-                      _typeFlag = value as int;
-                    });
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextFieldWithLabel2(
-                  label: "How many student do you want for this project",
-                  controller: _quantityStudent),
-              const SizedBox(
-                height: 20,
-              ),
-              const Text(
-                'Describe your project',
-                style: TextStyle(
-                  fontSize: AppFonts.h3FontSize,
-                  fontWeight: FontWeight.w500,
-                  color: blackTextColor,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextField(
-                maxLines: 8,
-                controller: _descriptionPrject,
-                decoration: const InputDecoration(
-                  fillColor: whiteTextColor,
-                  filled: true,
-                  border: OutlineInputBorder(),
-                  isDense: true,
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ButtonSimple(
-                      label: 'Save',
-                      onPressed: () {
-                        patchProject();
-                  }),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

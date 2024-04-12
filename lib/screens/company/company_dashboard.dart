@@ -37,6 +37,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
       _loadScreen().then((_) => _loadProject());
     });
   }
+
 // edit a project
   void editAProject(BuildContext context, int? projectId) {
     print(projectId);
@@ -47,7 +48,6 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
       ),
     );
   }
-
 
   @override
   void initState() {
@@ -219,9 +219,12 @@ class OptionProjectCompany extends StatefulWidget {
   final Future<void> Function(int idProject) removeAProject;
   final Function(BuildContext context, int projectId) editAProject;
 
-  const OptionProjectCompany({super.key, required this.onTap, required this.project,
-                              required this.removeAProject, required this.editAProject});
-
+  const OptionProjectCompany(
+      {super.key,
+      required this.onTap,
+      required this.project,
+      required this.removeAProject,
+      required this.editAProject});
 
   int f_dayCreatedAgo(String createdAt) {
     DateTime timeParse = DateTime.parse(createdAt);
@@ -340,7 +343,8 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                           ElevatedButton(
                             onPressed: () {
                               // Implement your action
-                              widget.editAProject(context, widget.project.projectId!);
+                              widget.editAProject(
+                                  context, widget.project.projectId!);
                             },
                             child: const Text('Edit posting'),
                           ),
