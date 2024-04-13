@@ -28,12 +28,13 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
   late final Proposal _proposal;
   bool isLoading = true;
   String errorMessage = '';
+  List<ItemsProposal> listItemsHired = [];
 
 
   @override
   void initState(){
     super.initState();
-    _loadProposals();
+    _loadProposals().then((value) => _loadHired());
   }
   Future<List<ItemsProposal>> processData(Map<String, dynamic> responseDecode) async{
     List<ItemsProposal>listItemsProposal = [];
@@ -61,6 +62,45 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
       List<ItemsProposal>listItemsProposal = await processData(responseDecode) as List<ItemsProposal>;
 
       _proposal = Proposal(total: responseDecode['total'] , items: listItemsProposal);
+      // print(responseDecode['items'][0]['disableFlag'].runtimeType);
+      // print(responseDecode['items'][0]);
+      if (mounted) {
+        // Check again if the widget is still mounted before calling setState
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        print(e);
+        // Check again if the widget is still mounted before calling setState
+        setState(() {
+          isLoading = false;
+          errorMessage = 'Failed to load projects. Please try again later.';
+        });
+      }
+      print(e);
+    }
+  }
+
+  Future<void> _loadHired() async{
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+    try {
+      final responseJson = await http.get(
+        Uri.parse('$uriBase/api/proposal/getByProjectId/${widget.project.projectId}?limit=100&statusFlag=2'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      final responseDecode = jsonDecode(responseJson.body)["result"];
+      for(int i = 0; i < responseDecode['total']; i++)
+        {
+          TechStack techStack =  TechStack(id: responseDecode['items'][0]['student']['techStack']['id'], name: responseDecode['items'][0]['student']['techStack']['name']);
+          Student student =  Student(id: responseDecode['items'][0]['student']['id'], fullname: responseDecode['items'][0]['student']['user']['fullname'], techStack: techStack);
+          ItemsProposal itemsProposal = ItemsProposal(id: responseDecode['items'][0]['id'], coverLetter: responseDecode['items'][0]['coverLetter'], statusFlag: responseDecode['items'][0]['statusFlag'], disableFlag: responseDecode['items'][0]['disableFlag'], student: student);
+          listItemsHired.add(itemsProposal);
+        }
+
+      
       // print(responseDecode['items'][0]['disableFlag'].runtimeType);
       // print(responseDecode['items'][0]);
       if (mounted) {
@@ -256,10 +296,10 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                           child: ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: dataStudent.length,
+                            itemCount: listItemsHired.length,
                             itemBuilder: (BuildContext context, int index) {
                               return ProjectHiredStudentItem(
-                                student: dataStudent[index]
+                                itemsProposal: listItemsHired[index]
                               );
                             }
                           ),
