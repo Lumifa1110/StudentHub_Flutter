@@ -1,32 +1,98 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/project_proposal/index.dart';
 import 'package:studenthub/data/test/data_student.dart';
-import 'package:studenthub/models/project_model.dart';
+import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
+import 'package:studenthub/config/config.dart';
+import 'package:http/http.dart' as http;
+
+
 
 class ProjectProposalListScreen extends StatefulWidget {
-   ProjectProposalListScreen({
-    super.key,
-    // required this.project
-  });
+  final Project project;
+  const ProjectProposalListScreen({super.key, required this.project});
 
-  final ProjectModel project = ProjectModel('API');
 
   @override
   State<ProjectProposalListScreen> createState() => _ProjectProposalListScreenState();
 }
 
 class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
+  late SharedPreferences _prefs;
+  late final Proposal _proposal;
+  bool isLoading = true;
+  String errorMessage = '';
+
+
+  @override
+  void initState(){
+    super.initState();
+    _loadProposals();
+  }
+  Future<List<ItemsProposal>> processData(Map<String, dynamic> responseDecode) async{
+    List<ItemsProposal>listItemsProposal = [];
+    if (responseDecode['total'] ==0) {
+      return listItemsProposal;
+    }
+    for(int i = 0; i < responseDecode['items'].length; i++){
+      TechStack techStack =  TechStack(id: responseDecode['items'][0]['student']['techStack']['id'], name: responseDecode['items'][0]['student']['techStack']['name']);
+      Student student =  Student(id: responseDecode['items'][0]['student']['id'], fullname: responseDecode['items'][0]['student']['user']['fullname'], techStack: techStack);
+      ItemsProposal itemsProposal = ItemsProposal(id: responseDecode['items'][0]['id'], coverLetter: responseDecode['items'][0]['coverLetter'], statusFlag: responseDecode['items'][0]['statusFlag'], disableFlag: responseDecode['items'][0]['disableFlag'], student: student);
+      listItemsProposal.add(itemsProposal);
+    }
+    return listItemsProposal;
+  }
+  Future<void> _loadProposals() async{
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+    try {
+      final responseJson = await http.get(
+        Uri.parse('$uriBase/api/proposal/getByProjectId/${widget.project.projectId}'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      final responseDecode = jsonDecode(responseJson.body)["result"];
+
+      List<ItemsProposal>listItemsProposal = await processData(responseDecode) as List<ItemsProposal>;
+
+      _proposal = Proposal(total: responseDecode['total'] , items: listItemsProposal);
+      // print(responseDecode['items'][0]['disableFlag'].runtimeType);
+      // print(responseDecode['items'][0]);
+      if (mounted) {
+        // Check again if the widget is still mounted before calling setState
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        print(e);
+        // Check again if the widget is still mounted before calling setState
+        setState(() {
+          isLoading = false;
+          errorMessage = 'Failed to load projects. Please try again later.';
+        });
+      }
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AuthAppBar(canBack: true),
       body: DefaultTabController(
         length: 3,
-        child: Container(
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : errorMessage.isNotEmpty
+            ? Center(child: Text(errorMessage))
+            :Container(
           color: const Color(0xFFF8F8F8),
           child: Column(
             children: [
@@ -50,7 +116,7 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                   children: [
                     // Project Name
                     Text(
-                      widget.project.name,
+                      widget.project.title,
                       style: const TextStyle(
                         color: AppFonts.primaryColor,
                         fontSize: AppFonts.h1FontSize,
@@ -95,9 +161,9 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                               size: 12
                             ),
                           ),
-                          const Text(
-                            'Proposals - 4',
-                            style: TextStyle(
+                          Text(
+                            'Proposals - ${_proposal.total}',
+                            style: const TextStyle(
                               color: AppFonts.primaryColor,
                               fontSize: AppFonts.h3FontSize,
                               fontWeight: FontWeight.w400
@@ -165,7 +231,6 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                   tabs: [
                     Tab(text: 'Proposals'),
                     Tab(text: 'Detail'),
-                    // Tab(text: 'Message'),
                     Tab(text: 'Hire'),
                   ]
                 )
@@ -180,15 +245,13 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                           child: ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: dataStudent.length,
+                            itemCount: _proposal.total,
                             itemBuilder: (BuildContext context, int index) {
-                              return ProjectProposalItem(
-                                student: dataStudent[index]
-                              );
+                              return ProjectProposalItem(itemsProposal: _proposal.items[index]);
                             }
                           ),
                         ),
-                        const ProjectDetailTab(),
+                        ProjectDetailTab(project:widget.project,),
                         SingleChildScrollView(
                           child: ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),

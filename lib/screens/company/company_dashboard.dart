@@ -18,7 +18,10 @@ class CompanyDashboardScreen extends StatefulWidget {
 }
 
 class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
-  late List<Project> listProjectGet = [];
+  late List<Project> listAllProject = [];
+  late List<Project> listProjectWorking = [];
+  late List<Project> listProjectArchived = [];
+
   late SharedPreferences _prefs;
   bool isLoading = true;
   String errorMessage = '';
@@ -34,7 +37,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
     );
     setState(() {
       isLoading = true;
-      _loadScreen().then((_) => _loadProject());
+      _loadScreen().then((_) => _loadProject())
+                  .then((_) => _loadWorking())
+                  .then((_) => _loadArchived());
     });
   }
 
@@ -65,7 +70,39 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
       body: jsonEncode(data),
     );
     if (response.statusCode == 200) {
-      Navigator.pushReplacementNamed(context, '/company/dashboard');
+      setState(() {
+        isLoading = true;
+        _loadScreen().then((_) => _loadProject())
+            .then((_) => _loadWorking())
+            .then((_) => _loadArchived());
+      });
+    } else
+      print(response.body);
+  }
+
+  //Close a project
+  Future<void> archivedProject(Project project) async{
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+    final Map<String, dynamic> data = {
+      'numberOfStudents': project.numberOfStudents,
+      'typeFlag' : 1,
+    };
+    final response = await http.patch(
+      Uri.parse('$uriBase/api/project/${project.projectId}'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+    if (response.statusCode == 200) {
+      setState(() {
+        isLoading = true;
+        _loadScreen().then((_) => _loadProject())
+            .then((_) => _loadWorking())
+            .then((_) => _loadArchived());
+      });
     } else
       print(response.body);
   }
@@ -73,7 +110,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
   @override
   void initState() {
     super.initState();
-    _loadScreen().then((_) => _loadProject());
+    _loadScreen().then((_) => _loadProject())
+                  .then((_) => _loadWorking())
+                  .then((_) => _loadArchived());
   }
 
   Future<void> _loadScreen() async {
@@ -103,11 +142,112 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
       );
       final responseDecode = jsonDecode(responseJson.body)["result"];
 
-      listProjectGet.clear();
+      listAllProject.clear();
       for (int i = 0; i < responseDecode.length; i++) {
         final projectScore = convertProjectScoreFlagToTime(
             responseDecode[i]['projectScopeFlag']);
-        listProjectGet.add(Project(
+        listAllProject.add(Project(
+            projectId: responseDecode[i]['id'],
+            createdAt: responseDecode[i]['createdAt'],
+            updatedAt: responseDecode[i]['updatedAt'],
+            deletedAt: responseDecode[i]['deletedAt'],
+            companyId: responseDecode[i]['companyId'],
+            projectScopeFlag: responseDecode[i]['projectScopeFlag'],
+            title: responseDecode[i]['title'],
+            description: responseDecode[i]['description'],
+            numberOfStudents: responseDecode[i]['numberOfStudents'],
+            typeFlag: responseDecode[i]['typeFlag'],
+            countProposals: responseDecode[i]['countProposals'],
+            isFavorite: responseDecode[i]['isFavorite']));
+      }
+      if (mounted) {
+        // Check again if the widget is still mounted before calling setState
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        print(e);
+        // Check again if the widget is still mounted before calling setState
+        setState(() {
+          isLoading = false;
+          errorMessage = 'Failed to load projects. Please try again later.';
+        });
+      }
+      print(e);
+    }
+  }
+
+  Future<void> _loadWorking() async {
+    if (!mounted) return; // Check if the widget is still mounted
+
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+    final companyId = jsonDecode(_prefs.getString('companyprofile')!)['id'];
+
+    try {
+      final responseJson = await http.get(
+        Uri.parse('${uriBase}/api/project/company/$companyId/?typeFlag=0'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      final responseDecode = jsonDecode(responseJson.body)["result"];
+      listProjectWorking.clear();
+      if(responseDecode == null) {
+        return;
+      }
+      for (int i = 0; i < responseDecode.length; i++) {
+        listProjectWorking.add(Project(
+            projectId: responseDecode[i]['id'],
+            createdAt: responseDecode[i]['createdAt'],
+            updatedAt: responseDecode[i]['updatedAt'],
+            deletedAt: responseDecode[i]['deletedAt'],
+            companyId: responseDecode[i]['companyId'],
+            projectScopeFlag: responseDecode[i]['projectScopeFlag'],
+            title: responseDecode[i]['title'],
+            description: responseDecode[i]['description'],
+            numberOfStudents: responseDecode[i]['numberOfStudents'],
+            typeFlag: responseDecode[i]['typeFlag'],
+            countProposals: responseDecode[i]['countProposals'],
+            isFavorite: responseDecode[i]['isFavorite']));
+      }
+      if (mounted) {
+        // Check again if the widget is still mounted before calling setState
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        print(e);
+        // Check again if the widget is still mounted before calling setState
+        setState(() {
+          isLoading = false;
+          errorMessage = 'Failed to load projects. Please try again later.';
+        });
+      }
+      print(e);
+    }
+  }
+
+
+  Future<void> _loadArchived() async {
+    if (!mounted) return; // Check if the widget is still mounted
+
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+    final companyId = jsonDecode(_prefs.getString('companyprofile')!)['id'];
+
+    try {
+      final responseJson = await http.get(
+        Uri.parse('${uriBase}/api/project/company/$companyId/?typeFlag=1'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      final responseDecode = jsonDecode(responseJson.body)["result"];
+
+      listProjectArchived.clear();
+      for (int i = 0; i < responseDecode.length; i++) {
+        listProjectArchived.add(Project(
             projectId: responseDecode[i]['id'],
             createdAt: responseDecode[i]['createdAt'],
             updatedAt: responseDecode[i]['updatedAt'],
@@ -210,9 +350,47 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                           child: TabBarView(
                             children: [
                               ListView.builder(
-                                itemCount: listProjectGet.length,
+                                itemCount: listAllProject.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  final project = listProjectGet[index];
+                                  final project = listAllProject[index];
+                                  return Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      OptionProjectCompany(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => ProjectProposalListScreen(
+                                                project: project,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        project: project,
+                                        removeAProject: removeAProject,
+                                        editAProject: editAProject,
+                                        workingProject: workingProject,
+                                        archivedProject: archivedProject,
+                                        currentTab: 0,
+                                      ),
+                                      if (index < listAllProject.length - 1)
+                                        const Divider(
+                                          thickness: 2,
+                                          indent: 10,
+                                          endIndent: 10,
+                                          color: Colors.black,
+                                        ),
+                                    ],
+                                  );
+                                },
+                              ),
+                              ListView.builder(
+                                itemCount: listProjectWorking.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final project = listProjectWorking[index];
                                   return Column(
                                     children: [
                                       const SizedBox(
@@ -226,8 +404,10 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                         removeAProject: removeAProject,
                                         editAProject: editAProject,
                                         workingProject: workingProject,
+                                        archivedProject: archivedProject,
+                                        currentTab: 1,
                                       ),
-                                      if (index < listProjectGet.length - 1)
+                                      if (index < listProjectWorking.length - 1)
                                         const Divider(
                                           thickness: 2,
                                           indent: 10,
@@ -238,8 +418,37 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                   );
                                 },
                               ),
-                              const Center(child: Text('Working content')),
-                              const Center(child: Text('Archived content')),
+                              ListView.builder(
+                                itemCount: listProjectArchived.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final project = listProjectArchived[index];
+                                  return Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      OptionProjectCompany(
+                                        onTap: () {
+                                          print(project.projectId);
+                                        },
+                                        project: project,
+                                        removeAProject: removeAProject,
+                                        editAProject: editAProject,
+                                        workingProject: workingProject,
+                                        archivedProject: archivedProject,
+                                        currentTab: 2,
+                                      ),
+                                      if (index < listProjectArchived.length - 1)
+                                        const Divider(
+                                          thickness: 2,
+                                          indent: 10,
+                                          endIndent: 10,
+                                          color: Colors.black,
+                                        ),
+                                    ],
+                                  );
+                                },
+                              ),
                             ],
                           ),
                         ),
@@ -260,14 +469,17 @@ class OptionProjectCompany extends StatefulWidget {
   final Future<void> Function(int idProject) removeAProject;
   final Function(BuildContext context, int projectId) editAProject;
   final Future<void> Function(Project project) workingProject;
-
+  final Future<void> Function(Project project) archivedProject;
+  final int currentTab;
   const OptionProjectCompany(
       {super.key,
       required this.onTap,
       required this.project,
       required this.removeAProject,
       required this.editAProject,
-      required this.workingProject});
+      required this.workingProject,
+      required this.archivedProject,
+      required this.currentTab,});
 
   int f_dayCreatedAgo(String createdAt) {
     DateTime timeParse = DateTime.parse(createdAt);
@@ -338,7 +550,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                 context: context,
                 builder: (BuildContext context) {
                   return SizedBox(
-                    height: 400,
+                    height: widget.currentTab == 0 ? 450 : widget.currentTab == 1? 400 : 350,
                     child: Center(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -393,19 +605,33 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                             },
                             child: const Text('Remove posting'),
                           ),
-                          const Divider(
-                            thickness: 2,
-                            indent: 10,
-                            endIndent: 10,
-                            color: Colors.black,
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Implement your action
-                              widget.workingProject(widget.project);
-                              Navigator.pop(context);
-                            },
-                            child: const Text('Start working this project'),
+                          widget.currentTab == 2 ? const SizedBox():
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const Divider(
+                                thickness: 2,
+                                indent: 10,
+                                endIndent: 10,
+                                color: Colors.black,
+                              ),
+                              widget.currentTab == 1? const SizedBox():ElevatedButton(
+                                onPressed: () {
+                                  // Implement your action
+                                  widget.workingProject(widget.project);
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Start working this project'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Implement your action
+                                  widget.archivedProject(widget.project);
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Closed a project'),
+                              ),
+                            ],
                           ),
                         ],
                       ),
