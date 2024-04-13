@@ -7,6 +7,7 @@ import 'package:studenthub/components/card_switchaccount.dart';
 import 'package:studenthub/components/textfield/search_bar.dart';
 import 'package:studenthub/config/config.dart';
 import 'package:studenthub/preferences/index.dart';
+import 'package:studenthub/screens/shared/project_list_screen.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
@@ -69,6 +70,17 @@ class _SwitchScreenState extends State<SwitchScreen> {
     });
   }
 
+  void _handleRoleSelection(String role) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('current_role', int.parse(role));
+
+    // Update the current role in the app state
+    setState(() {
+      _currentRole = int.parse(role);
+      print(UserPreferences.getUserRole());
+    });
+  }
+
   Future<void> handleLogout() async {
     // Lấy token từ SharedPreferences
     final prefs = await SharedPreferences.getInstance();
@@ -85,8 +97,9 @@ class _SwitchScreenState extends State<SwitchScreen> {
         );
 
         if (response.statusCode == 201) {
-          await prefs.remove('token');
-          await prefs.remove('currole');
+          // await prefs.remove('token');
+          // await prefs.remove('currole');
+          await prefs.clear();
           Navigator.pushReplacementNamed(context, '/signin');
         } else {
           // Xử lý lỗi nếu cần
@@ -98,17 +111,6 @@ class _SwitchScreenState extends State<SwitchScreen> {
     } else {
       print('Token not found');
     }
-  }
-
-  void _handleRoleSelection(String role) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('current_role', int.parse(role));
-
-    // Update the current role in the app state
-    setState(() {
-      _currentRole = int.parse(role);
-      print(UserPreferences.getUserRole());
-    });
   }
 
   @override
@@ -136,7 +138,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
                               context, '/company/dashboard');
                         }
                       } else {
-                        Navigator.of(context).pop();
+                        Navigator.of(context).pop(true);
                       }
                     },
                     child: const Center(
