@@ -85,8 +85,10 @@ class _SearchListScreenState extends State<SearchListScreen> {
       if (_searchQuery.isNotEmpty) 'title': widget.searchQuery,
       if (selectedProjectScope != null)
         'projectScopeFlag': selectedProjectScope!.index.toString(),
-
-      // Add other parameters if available
+      if (_studentsNeededController.text.isNotEmpty)
+        'numberOfStudents': _studentsNeededController.text.trim(),
+      if (_proposalsController.text.isNotEmpty)
+        'proposalsLessThan': _proposalsController.text.trim(),
     };
 
     try {
