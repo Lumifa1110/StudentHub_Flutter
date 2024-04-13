@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/enums/project_scope.dart';
 import 'package:studenthub/utils/colors.dart';
 
 class RadioListProjectLength extends StatefulWidget {
-  final String? selectedLength;
-  final Function(String) onLengthSelected;
+  final ProjectScopeFlag? selectedLength;
+  final Function(ProjectScopeFlag?) onLengthSelected;
 
   const RadioListProjectLength({
     Key? key,
@@ -16,7 +17,7 @@ class RadioListProjectLength extends StatefulWidget {
 }
 
 class _RadioListProjectLengthState extends State<RadioListProjectLength> {
-  String? _selectedLength;
+  ProjectScopeFlag? _selectedLength;
 
   @override
   void initState() {
@@ -29,15 +30,15 @@ class _RadioListProjectLengthState extends State<RadioListProjectLength> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        buildRadioItem('less than one', 'Less than 1 month'),
-        buildRadioItem('one to three', '1 to 3 months'),
-        buildRadioItem('three to six', '3 to 6 months'),
-        buildRadioItem('more than six', 'More than 6 months'),
+        buildRadioItem(ProjectScopeFlag.lessThanOneMonth, 'Less than 1 month'),
+        buildRadioItem(ProjectScopeFlag.oneToThreeMonth, '1 to 3 months'),
+        buildRadioItem(ProjectScopeFlag.threeToSixMonth, '3 to 6 months'),
+        buildRadioItem(ProjectScopeFlag.moreThanSixMOnth, 'More than 6 months'),
       ],
     );
   }
 
-  Widget buildRadioItem(String value, String label) {
+  Widget buildRadioItem(ProjectScopeFlag value, String label) {
     return InkWell(
       onTap: () {
         setState(() {
@@ -47,14 +48,14 @@ class _RadioListProjectLengthState extends State<RadioListProjectLength> {
       },
       child: Row(
         children: [
-          Radio(
+          Radio<ProjectScopeFlag>(
             value: value,
             groupValue: _selectedLength,
-            onChanged: (newValue) {
+            onChanged: (ProjectScopeFlag? newValue) {
               setState(() {
-                _selectedLength = newValue as String?;
+                _selectedLength = newValue;
               });
-              widget.onLengthSelected(newValue as String);
+              widget.onLengthSelected(newValue);
             },
           ),
           Text(

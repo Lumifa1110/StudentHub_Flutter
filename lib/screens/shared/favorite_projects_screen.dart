@@ -48,13 +48,13 @@ class _FavoriteProjectsScreenState extends State<FavoriteProjectsScreen> {
                         return CustomProjectItem(
                           project: project,
                           onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => ProjectDetailScreen(
-                            //         itemId: project.projectId),
-                            //   ),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProjectDetailScreen(
+                                    itemId: project.projectId),
+                              ),
+                            );
                           },
                           isFavorite: widget.favoriteList.contains(project),
                           onFavoriteToggle: (isFavorite) {

@@ -108,11 +108,14 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     color: blackTextColor,
                   ),
                   Container(
+                    height: 356,
                     padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text(
-                      selectedProject!.description!,
-                      style: const TextStyle(
-                        fontSize: AppFonts.h3FontSize,
+                    child: SingleChildScrollView(
+                      child: Text(
+                        selectedProject!.description!,
+                        style: const TextStyle(
+                          fontSize: AppFonts.h3FontSize,
+                        ),
                       ),
                     ),
                   ),

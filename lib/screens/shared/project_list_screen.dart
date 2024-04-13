@@ -9,9 +9,6 @@ import 'package:studenthub/components/bottomsheet_customsearchbar.dart';
 import 'package:studenthub/config/config.dart';
 import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/screens/index.dart';
-import 'package:studenthub/screens/shared/favorite_projects_screen.dart';
-import 'package:studenthub/screens/shared/project_detail_screen.dart';
-import 'package:studenthub/screens/shared/search_list_screen.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -24,11 +21,11 @@ class ProjectListScreen extends StatefulWidget {
 }
 
 class _ProjectListScreenState extends State<ProjectListScreen> {
+  late SharedPreferences _prefs;
   String searchQuery = '';
   List<Project> allProject = [];
   List<Project> myFavoriteProjects = [];
   List<String> errorMessages = [];
-  late SharedPreferences _prefs;
   bool isStudent = false;
 
   Future<void> _loadScreen() async {
@@ -166,11 +163,12 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   void handleSearchSubmitted(String query) {
     setState(() {
       searchQuery = query;
+      print(query);
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => SearchListScreen(
-            seachQuery: searchQuery,
+            searchQuery: searchQuery,
           ),
         ),
       );
