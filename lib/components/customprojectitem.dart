@@ -111,8 +111,8 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                       maxLines: 3,
                       widget.project.description!,
                       overflow: TextOverflow.ellipsis,
-                      style:
-                          const TextStyle(fontSize: 15, color: blackTextColor),
+                      style: const TextStyle(
+                          fontSize: AppFonts.h3FontSize, color: blackTextColor),
                     ),
                   ),
                   Flexible(

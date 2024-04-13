@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
@@ -169,7 +168,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   void handleSearchSubmitted(String query) {
     setState(() {
       searchQuery = query;
-      print(query);
+      // print(query);
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -183,7 +182,6 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadScreen();
   }
@@ -228,8 +226,8 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                           ),
                           child: Center(
                             child: IconButton(
-                              onPressed: () {
-                                Navigator.push(
+                              onPressed: () async {
+                                final result = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
@@ -239,6 +237,12 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                                     ),
                                   ),
                                 );
+                                if (result != null) {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  _loadScreen();
+                                }
                               },
                               icon: const FaIcon(
                                 FontAwesomeIcons.solidHeart,
