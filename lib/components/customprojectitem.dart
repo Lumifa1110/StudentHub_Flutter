@@ -24,22 +24,18 @@ class CustomProjectItem extends StatefulWidget {
 }
 
 class _CustomProjectItemState extends State<CustomProjectItem> {
-  late bool isFavorite; // Declare isFavorite as instance variable
+  late bool isFavorite;
 
   String checkProjectScope(int? scope) {
     switch (scope) {
       case 0:
         return 'less than 1 month';
-        break;
       case 1:
         return '1 To 3 months';
-        break;
       case 2:
         return '3 To 6 months';
-        break;
       case 3:
         return 'more than 6 months';
-        break;
       default:
         return 'Unknown';
     }
@@ -115,8 +111,8 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                       maxLines: 3,
                       widget.project.description!,
                       overflow: TextOverflow.ellipsis,
-                      style:
-                          const TextStyle(fontSize: 15, color: blackTextColor),
+                      style: const TextStyle(
+                          fontSize: AppFonts.h3FontSize, color: blackTextColor),
                     ),
                   ),
                   Flexible(
@@ -138,8 +134,8 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
               onPressed: () {
                 setState(() {
                   isFavorite = !isFavorite;
+                  widget.onFavoriteToggle(isFavorite);
                 });
-                widget.onFavoriteToggle(isFavorite);
               },
               icon: Icon(
                 isFavorite ? Icons.favorite : Icons.favorite_border,

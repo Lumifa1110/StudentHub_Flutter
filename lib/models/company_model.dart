@@ -1,5 +1,5 @@
 class Project {
-  final int? projectId;
+  final int projectId;
   final String createdAt;
   final String? updatedAt;
   final String? deletedAt;
@@ -12,23 +12,23 @@ class Project {
   final int? countProposals;
   final bool? isFavorite;
 
-  Project(
-      {required this.projectId,
-      required this.createdAt,
-      required this.updatedAt,
-      required this.deletedAt,
-      required this.companyId,
-      required this.projectScopeFlag,
-      required this.title,
-      required this.description,
-      required this.numberOfStudents,
-      required this.typeFlag,
-      required this.countProposals,
-      required this.isFavorite});
-
+  Project({
+    required this.projectId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.deletedAt,
+    required this.companyId,
+    required this.projectScopeFlag,
+    required this.title,
+    required this.description,
+    required this.numberOfStudents,
+    required this.typeFlag,
+    required this.countProposals,
+    required this.isFavorite,
+  });
   factory Project.fromJson(Map<String, dynamic> json) {
     return Project(
-      projectId: json['projectId'],
+      projectId: json['projectId'] ?? json['id'],
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
       deletedAt: json['deletedAt'],

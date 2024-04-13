@@ -23,19 +23,25 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
 
   Future<void> _loadScreen() async {
     _prefs = await SharedPreferences.getInstance();
-    final profile = _prefs.getString('studentprofile');
-    print('Student Profile: $profile');
-    if (profile == 'null') {
-      Navigator.pushReplacementNamed(context, '/student');
+    final role = _prefs.getInt('current_role');
+    if (role == 0) {
+      final profile = _prefs.getString('studentprofile');
+      if (profile == 'null') {
+        Navigator.pushReplacementNamed(context, '/student');
+      }
+    } else {
+      Navigator.pushReplacementNamed(context, '/company/dashboard');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AuthAppBar(
+      appBar: AuthAppBar(
         canBack: false,
-        isFromDashBoard: true,
+        onRoleChanged: (result) {
+          _loadScreen();
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),

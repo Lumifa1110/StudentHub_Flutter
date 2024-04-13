@@ -117,14 +117,14 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
 
   Future<void> _loadScreen() async {
     _prefs = await SharedPreferences.getInstance();
-    final profile = _prefs.getString('companyprofile');
     final role = _prefs.getInt('current_role');
-    if (profile == null) {
-      Navigator.pushReplacementNamed(context, '/company/profile');
-    } else {
-      if (role == 0) {
-        Navigator.pushReplacementNamed(context, '/student/dashboard');
+    if (role == 1) {
+      final profile = _prefs.getString('companyprofile');
+      if (profile == 'null') {
+        Navigator.pushReplacementNamed(context, '/company');
       }
+    } else {
+      Navigator.pushReplacementNamed(context, '/student/dashboard');
     }
   }
 
@@ -283,9 +283,11 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AuthAppBar(
+      appBar: AuthAppBar(
         canBack: false,
-        isFromDashBoard: true,
+        onRoleChanged: (result) {
+          _loadScreen();
+        },
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())

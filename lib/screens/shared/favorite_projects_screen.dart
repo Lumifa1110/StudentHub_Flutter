@@ -6,9 +6,9 @@ import 'package:studenthub/components/customprojectitem.dart';
 import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/screens/shared/project_detail_screen.dart';
 
-class FavoriteProjectsScreen extends StatelessWidget {
+class FavoriteProjectsScreen extends StatefulWidget {
   final List<Project> favoriteList;
-  final Function(Project) onRemoveProject;
+  final Function(Project, bool) onRemoveProject;
 
   const FavoriteProjectsScreen({
     super.key,
@@ -16,17 +16,19 @@ class FavoriteProjectsScreen extends StatelessWidget {
     required this.onRemoveProject,
   });
 
-  void removeFromFavorites(Project project) {
-    print(project.projectId);
+  @override
+  State<FavoriteProjectsScreen> createState() => _FavoriteProjectsScreenState();
+}
 
-    favoriteList.remove(project);
-  }
-
+class _FavoriteProjectsScreenState extends State<FavoriteProjectsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AuthAppBar(canBack: true),
-      body: favoriteList.isEmpty
+      appBar: const AuthAppBar(
+        canBack: true,
+        title: 'My Favorites',
+      ),
+      body: widget.favoriteList.isEmpty
           ? const Center(
               child: Text(
                 "You don't have any favorites.",
@@ -40,23 +42,23 @@ class FavoriteProjectsScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                     child: ListView.builder(
-                      itemCount: favoriteList.length,
+                      itemCount: widget.favoriteList.length,
                       itemBuilder: (context, index) {
-                        final project = favoriteList[index];
+                        final project = widget.favoriteList[index];
                         return CustomProjectItem(
                           project: project,
                           onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => ProjectDetailScreen(
-                            //         itemId: project.projectId),
-                            //   ),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProjectDetailScreen(
+                                    itemId: project.projectId),
+                              ),
+                            );
                           },
-                          isFavorite: favoriteList.contains(project),
+                          isFavorite: widget.favoriteList.contains(project),
                           onFavoriteToggle: (isFavorite) {
-                            onRemoveProject(project);
+                            widget.onRemoveProject(project, isFavorite);
                           },
                         );
                       },

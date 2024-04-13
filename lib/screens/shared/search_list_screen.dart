@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/components/customprojectitem.dart';
 import 'package:studenthub/components/bottomsheet_customsearchbar.dart';
 import 'package:studenthub/components/radiolist_projectlength.dart';
 import 'package:studenthub/components/textfield_label_v2.dart';
+import 'package:studenthub/config/config.dart';
+import 'package:studenthub/enums/project_scope.dart';
 import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/screens/shared/project_detail_screen.dart';
 import 'package:studenthub/utils/colors.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class SearchListScreen extends StatefulWidget {
-  final String seachQuery;
+  final String searchQuery;
 
   const SearchListScreen({
     super.key,
-    required this.seachQuery,
+    required this.searchQuery,
   });
 
   @override
@@ -22,37 +27,117 @@ class SearchListScreen extends StatefulWidget {
 }
 
 class _SearchListScreenState extends State<SearchListScreen> {
-  String searchQuery = '';
+  late SharedPreferences _prefs;
+  String _searchQuery = '';
   List<Project> myFavoriteProjects = [];
   List<Project> filteredProjects = [];
-  String? selectedProjectLength = 'less than one';
+  ProjectScopeFlag? selectedProjectScope;
+  // final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _studentsNeededController =
+      TextEditingController();
+  final TextEditingController _proposalsController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    // Initialize filteredProjects with all projects initially
-    filteredProjects = [];
+  Future<void> _patchFavoriteProject(int projectId, int disableFlag) async {
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+    final studentprofile = _prefs.getString('studentprofile');
+    final studentId = jsonDecode(studentprofile!)['id'];
+
+    try {
+      final response = await http.patch(
+        Uri.parse('$uriBase/api/favoriteProject/$studentId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type':
+              'application/json', // Specify the content type as JSON
+        },
+        body: jsonEncode({
+          'projectId': projectId,
+          'disableFlag': disableFlag,
+        }),
+      );
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        print('Favorite projects updated successfully');
+      } else {
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 
-  void updateFavoriteStatus(Project project, bool isFavorite) {
+  void clearFilter() {
     setState(() {
-      if (isFavorite) {
-        myFavoriteProjects.add(project);
-      } else {
-        myFavoriteProjects.remove(project);
-      }
+      _studentsNeededController.clear();
+      _proposalsController.clear();
+      selectedProjectScope = null;
+      _loadFilteredProject();
+      Navigator.pop(context);
     });
+  }
+
+  Future<void> _loadFilteredProject() async {
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+
+    Map<String, dynamic> queryParams = {
+      if (_searchQuery.isNotEmpty) 'title': widget.searchQuery,
+      if (selectedProjectScope != null)
+        'projectScopeFlag': selectedProjectScope!.index.toString(),
+      if (_studentsNeededController.text.isNotEmpty)
+        'numberOfStudents': _studentsNeededController.text.trim(),
+      if (_proposalsController.text.isNotEmpty)
+        'proposalsLessThan': _proposalsController.text.trim(),
+    };
+
+    try {
+      final uri = Uri.https('api.studenthub.dev', '/api/project', queryParams);
+      final response = await http.get(
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      print('Status Code: ${response.statusCode}');
+      print('Body: ${response.body}');
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = jsonDecode(response.body)['result'];
+        setState(() {
+          filteredProjects =
+              responseData.map((json) => Project.fromJson(json)).toList();
+        });
+      } else {
+        // Handle error
+        print('Error: ${response.statusCode}');
+      }
+      print(filteredProjects);
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  void updateFavoriteProject(Project project, bool isFavorite) {
+    if (isFavorite) {
+      _patchFavoriteProject(project.projectId, 0);
+      setState(() {
+        myFavoriteProjects.add(project);
+      });
+    } else {
+      _patchFavoriteProject(project.projectId, 1);
+      setState(() {
+        myFavoriteProjects.remove(project);
+      });
+    }
   }
 
   void filterProjects(String query) {
     print(query);
     setState(() {
-      searchQuery = query.toLowerCase();
+      _searchQuery = query.toLowerCase();
 
-      if (searchQuery.isNotEmpty) {
+      if (_searchQuery.isNotEmpty) {
         filteredProjects = myFavoriteProjects.where((project) {
-          return project.title.toLowerCase().contains(searchQuery) ||
-              project.description!.toLowerCase().contains(searchQuery);
+          return project.title.toLowerCase().contains(_searchQuery) ||
+              project.description!.toLowerCase().contains(_searchQuery);
         }).toList();
       } else {
         // If searchQuery is empty, display all projects
@@ -62,10 +147,13 @@ class _SearchListScreenState extends State<SearchListScreen> {
     });
   }
 
-  // final TextEditingController _searchController = TextEditingController();
-  final TextEditingController _studentsNeededController =
-      TextEditingController();
-  final TextEditingController _proposalsController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    _searchQuery = widget.searchQuery;
+    // Initialize filteredProjects with all projects initially
+    _loadFilteredProject();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,9 +174,9 @@ class _SearchListScreenState extends State<SearchListScreen> {
               children: [
                 CustomSearchBar(
                   onChanged: (query) => setState(
-                    () => searchQuery = query.toLowerCase(),
+                    () => _searchQuery = query.toLowerCase(),
                   ),
-                  onSubmitted: (query) => filterProjects(query),
+                  onSubmitted: (query) => _loadFilteredProject(),
                 ),
                 Container(
                   width: 45,
@@ -191,10 +279,10 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                           color: blackTextColor),
                                     ),
                                     RadioListProjectLength(
-                                      selectedLength: selectedProjectLength,
+                                      selectedLength: selectedProjectScope,
                                       onLengthSelected: (value) {
                                         setState(() {
-                                          selectedProjectLength = value;
+                                          selectedProjectScope = value;
                                         });
                                       },
                                     ),
@@ -222,7 +310,9 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                             ],
                                           ),
                                           child: TextButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              clearFilter();
+                                            },
                                             style: ButtonStyle(
                                               shape: MaterialStateProperty.all<
                                                   OutlinedBorder>(
@@ -257,7 +347,10 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                             ],
                                           ),
                                           child: TextButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              _loadFilteredProject();
+                                              Navigator.pop(context);
+                                            },
                                             style: ButtonStyle(
                                               shape: MaterialStateProperty.all<
                                                   OutlinedBorder>(
@@ -303,21 +396,21 @@ class _SearchListScreenState extends State<SearchListScreen> {
               child: ListView.builder(
                 itemCount: filteredProjects.length,
                 itemBuilder: (context, index) {
-                  final project = myFavoriteProjects[index];
+                  final project = filteredProjects[index];
                   return CustomProjectItem(
                     project: project,
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) =>
-                      //         ProjectDetailScreen(itemId: project.projectId),
-                      //   ),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ProjectDetailScreen(itemId: project.projectId),
+                        ),
+                      );
                     },
                     isFavorite: myFavoriteProjects.contains(project),
                     onFavoriteToggle: (isFavorite) {
-                      updateFavoriteStatus(project, isFavorite);
+                      updateFavoriteProject(project, isFavorite);
                     },
                   );
                 },
