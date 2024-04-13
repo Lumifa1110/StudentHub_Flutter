@@ -89,14 +89,12 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         Uri.parse('$uriBase/api/favoriteProject/$studentId'),
         headers: {'Authorization': 'Bearer $token'},
       );
-      print('res favorite: ${response.statusCode}');
+      // print('res favorite: ${response.statusCode}');
       if (response.statusCode == 200) {
         final List<dynamic> responseData = jsonDecode(response.body)['result'];
 
         setState(() {
-          // Clear existing favorite projects
           myFavoriteProjects.clear();
-          // Parse each item in the response and extract the project object
           for (var item in responseData) {
             final project = Project.fromJson(item['project']);
             myFavoriteProjects.add(project);
