@@ -25,6 +25,11 @@ class _SwitchScreenState extends State<SwitchScreen> {
   List<String> _roles = [];
   int? _currentRole;
   String? _accountFullname;
+  // Define a list of profile actions
+  final List<String> profileActions = ["My Profile", "Change Password"];
+
+  // Define a variable to track the selected action
+  String? selectedProfileAction;
 
   @override
   void initState() {
@@ -218,6 +223,24 @@ class _SwitchScreenState extends State<SwitchScreen> {
                       ),
                       title: Text(
                         'Profile',
+                        style: TextStyle(
+                          fontSize: AppFonts.h3FontSize,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/user/changepassword');
+                    },
+                    child: const ListTile(
+                      leading: Icon(
+                        Icons.lock,
+                        size: 36,
+                      ),
+                      title: Text(
+                        'Change Password',
                         style: TextStyle(
                           fontSize: AppFonts.h3FontSize,
                           fontWeight: FontWeight.w400,

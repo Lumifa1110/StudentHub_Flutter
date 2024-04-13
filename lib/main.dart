@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:studenthub/enums/user_role.dart';
+import 'package:studenthub/screens/authentication/changepassword_screen.dart';
 import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/theme/theme.dart';
 import 'package:studenthub/theme/theme_controller.dart';
@@ -85,6 +86,9 @@ class _StudentHubState extends State<StudentHub> {
           case '/signin':
             return MaterialPageRoute(
                 builder: (context) => const SigninScreen());
+          case '/user/changepassword':
+            return MaterialPageRoute(
+                builder: (context) => const ChangePasswordScreen());
           case '/signup':
             return MaterialPageRoute(
                 builder: (context) => const SignupTypeScreen());
