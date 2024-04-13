@@ -27,6 +27,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   List<Project> myFavoriteProjects = [];
   List<String> errorMessages = [];
   bool isStudent = false;
+  bool isLoading = true;
 
   Future<void> _loadScreen() async {
     allProject.clear;
@@ -34,12 +35,13 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     _prefs = await SharedPreferences.getInstance();
     final role = _prefs.getInt('current_role');
     final studentprofile = _prefs.getString('studentprofile');
+    _loadProjects();
     if (role == 0) {
       if (studentprofile == 'null') {
         Navigator.pushReplacementNamed(context, '/student');
       }
-      _loadFavoriteProjects();
       setState(() {
+        _loadFavoriteProjects();
         isStudent = true;
       });
     } else {
@@ -70,6 +72,10 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
       }
     } catch (e) {
       print('Error: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -180,7 +186,6 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     // TODO: implement initState
     super.initState();
     _loadScreen();
-    _loadProjects();
   }
 
   @override
@@ -189,88 +194,95 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
       appBar: AuthAppBar(
         canBack: false,
         onRoleChanged: (result) {
+          setState(() {
+            isLoading = true;
+          });
           _loadScreen();
         },
       ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
               children: [
-                CustomSearchBar(
-                  onChanged: (query) => setState(
-                    () => searchQuery = query.toLowerCase(),
-                  ),
-                  onSubmitted: handleSearchSubmitted,
+                const SizedBox(
+                  height: 20,
                 ),
-                if (isStudent)
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: blackTextColor,
-                    ),
-                    child: Center(
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FavoriteProjectsScreen(
-                                favoriteList: myFavoriteProjects,
-                                onRemoveProject: updateFavoriteProject,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      CustomSearchBar(
+                        onChanged: (query) => setState(
+                          () => searchQuery = query.toLowerCase(),
+                        ),
+                        onSubmitted: handleSearchSubmitted,
+                      ),
+                      if (isStudent)
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: blackTextColor,
+                          ),
+                          child: Center(
+                            child: IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        FavoriteProjectsScreen(
+                                      favoriteList: myFavoriteProjects,
+                                      onRemoveProject: updateFavoriteProject,
+                                    ),
+                                  ),
+                                );
+                              },
+                              icon: const FaIcon(
+                                FontAwesomeIcons.solidHeart,
+                                color: whiteTextColor,
                               ),
                             ),
-                          );
-                        },
-                        icon: const FaIcon(
-                          FontAwesomeIcons.solidHeart,
-                          color: whiteTextColor,
+                          ),
                         ),
-                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    child: ListView.builder(
+                      itemCount: allProject.length,
+                      itemBuilder: (context, index) {
+                        final project = allProject[index];
+                        return CustomProjectItem(
+                          project: project,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProjectDetailScreen(
+                                    itemId: project.projectId),
+                              ),
+                            );
+                          },
+                          isFavorite: isFavoriteProject(project),
+                          onFavoriteToggle: (isFavorite) {
+                            updateFavoriteProject(project, isFavorite);
+                          },
+                        );
+                      },
                     ),
                   ),
+                ),
               ],
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: ListView.builder(
-                itemCount: allProject.length,
-                itemBuilder: (context, index) {
-                  final project = allProject[index];
-                  return CustomProjectItem(
-                    project: project,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ProjectDetailScreen(itemId: project.projectId),
-                        ),
-                      );
-                    },
-                    isFavorite: isFavoriteProject(project),
-                    onFavoriteToggle: (isFavorite) {
-                      updateFavoriteProject(project, isFavorite);
-                    },
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
       bottomNavigationBar: const CustomBottomNavBar(
         initialIndex: 0,
       ),
