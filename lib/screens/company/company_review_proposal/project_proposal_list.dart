@@ -251,9 +251,9 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                               size: 12
                             ),
                           ),
-                          const Text(
-                            'Hired - 2',
-                            style: TextStyle(
+                           Text(
+                            'Hired - ${listItemsHired.length}',
+                            style: const TextStyle(
                               color: AppFonts.primaryColor,
                               fontSize: AppFonts.h3FontSize,
                               fontWeight: FontWeight.w400
