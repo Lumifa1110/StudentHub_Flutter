@@ -32,8 +32,8 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   bool isStudent = false;
 
   Future<void> _loadScreen() async {
-    _loadProjects();
-
+    allProject.clear;
+    myFavoriteProjects.clear();
     _prefs = await SharedPreferences.getInstance();
     final role = _prefs.getInt('current_role');
     final studentprofile = _prefs.getString('studentprofile');
@@ -43,16 +43,13 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
       }
       _loadFavoriteProjects();
       setState(() {
-        isStudent = role == 0;
+        isStudent = true;
+      });
+    } else {
+      setState(() {
+        isStudent = false;
       });
     }
-  }
-
-  bool isFavoriteProject(Project project) {
-    return myFavoriteProjects
-        .where(
-            (favoriteProject) => favoriteProject.projectId == project.projectId)
-        .isNotEmpty;
   }
 
   Future<void> _loadProjects() async {
@@ -145,6 +142,13 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     }
   }
 
+  bool isFavoriteProject(Project project) {
+    return myFavoriteProjects
+        .where(
+            (favoriteProject) => favoriteProject.projectId == project.projectId)
+        .isNotEmpty;
+  }
+
   void updateFavoriteProject(Project project, bool isFavorite) {
     if (isFavorite) {
       _patchFavoriteProject(project.projectId, 0);
@@ -178,6 +182,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     // TODO: implement initState
     super.initState();
     _loadScreen();
+    _loadProjects();
   }
 
   @override
