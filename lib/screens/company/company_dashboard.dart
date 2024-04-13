@@ -40,13 +40,34 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
 
 // edit a project
   void editAProject(BuildContext context, int? projectId) {
-    print(projectId);
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => EditProjectScreen(projectId: projectId),
       ),
     );
+  }
+
+  // Start working project
+  Future<void> workingProject(Project project) async{
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+    final Map<String, dynamic> data = {
+      'numberOfStudents': project.numberOfStudents,
+      'typeFlag' : 0,
+    };
+    final response = await http.patch(
+      Uri.parse('$uriBase/api/project/${project.projectId}'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+    if (response.statusCode == 200) {
+      Navigator.pushReplacementNamed(context, '/company/dashboard');
+    } else
+      print(response.body);
   }
 
   @override
@@ -81,6 +102,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
         headers: {'Authorization': 'Bearer $token'},
       );
       final responseDecode = jsonDecode(responseJson.body)["result"];
+
       listProjectGet.clear();
       for (int i = 0; i < responseDecode.length; i++) {
         final projectScore = convertProjectScoreFlagToTime(
@@ -107,6 +129,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
       }
     } catch (e) {
       if (mounted) {
+        print(e);
         // Check again if the widget is still mounted before calling setState
         setState(() {
           isLoading = false;
@@ -131,7 +154,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
               : Padding(
                   padding: const EdgeInsets.all(20),
                   child: DefaultTabController(
-                    length: 2,
+                    length: 3,
                     child: Column(
                       children: [
                         Row(
@@ -175,6 +198,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                 text: 'All project',
                               ),
                               Tab(
+                                text: 'Working',
+                              ),
+                              Tab(
                                 text: 'Archived',
                               )
                             ],
@@ -199,6 +225,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                         project: project,
                                         removeAProject: removeAProject,
                                         editAProject: editAProject,
+                                        workingProject: workingProject,
                                       ),
                                       if (index < listProjectGet.length - 1)
                                         const Divider(
@@ -211,6 +238,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                   );
                                 },
                               ),
+                              const Center(child: Text('Working content')),
                               const Center(child: Text('Archived content')),
                             ],
                           ),
@@ -231,13 +259,15 @@ class OptionProjectCompany extends StatefulWidget {
   final Project project;
   final Future<void> Function(int idProject) removeAProject;
   final Function(BuildContext context, int projectId) editAProject;
+  final Future<void> Function(Project project) workingProject;
 
   const OptionProjectCompany(
       {super.key,
       required this.onTap,
       required this.project,
       required this.removeAProject,
-      required this.editAProject});
+      required this.editAProject,
+      required this.workingProject});
 
   int f_dayCreatedAgo(String createdAt) {
     DateTime timeParse = DateTime.parse(createdAt);
@@ -249,11 +279,10 @@ class OptionProjectCompany extends StatefulWidget {
 
   @override
   State<OptionProjectCompany> createState() => OptionProjectCompanyState();
+
 }
 
 class OptionProjectCompanyState extends State<OptionProjectCompany> {
-  late SharedPreferences _prefs;
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -279,12 +308,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Text('Students are looking for'),
-                const Padding(
-                  padding: EdgeInsets.only(left: 20),
-                  child: Text(
-                      '• Clear expectation about your project or deliverables'),
-                ),
+                Text('${widget.project.description}'),
                 const SizedBox(
                   height: 20,
                 ),
@@ -314,7 +338,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                 context: context,
                 builder: (BuildContext context) {
                   return SizedBox(
-                    height: 350,
+                    height: 400,
                     child: Center(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -368,6 +392,20 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                               widget.removeAProject(widget.project.projectId!);
                             },
                             child: const Text('Remove posting'),
+                          ),
+                          const Divider(
+                            thickness: 2,
+                            indent: 10,
+                            endIndent: 10,
+                            color: Colors.black,
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Implement your action
+                              widget.workingProject(widget.project);
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Start working this project'),
                           ),
                         ],
                       ),

@@ -32,7 +32,6 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
   late TextEditingController _quantityStudent;
   late TextEditingController _descriptionPrject;
   late int _isChecked;
-  late int _typeFlag;
 
   Future<void> patchProject() async {
     final Map<String, dynamic> data = {
@@ -40,14 +39,8 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
       'title': _titleProject.text,
       'description': _descriptionPrject.text,
       'numberOfStudents': int.parse(_quantityStudent.text),
-      'typeFlag': _typeFlag,
     };
 
-    // print(_typeFlag);
-    // print(_titleProject.text);
-    // print(_descriptionPrject.text);
-    // print(_isChecked);
-    // print(_t);
 
     final response = await http.patch(
       Uri.parse('$uriBase/api/project/${widget.projectId}'),
@@ -73,7 +66,6 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
       );
       final responseDecode = jsonDecode(response.body)['result'];
 
-      _typeFlag = responseDecode['typeFlag'];
       _isChecked = responseDecode['projectScopeFlag'];
       _titleProject = TextEditingController(text: responseDecode['title']);
       _quantityStudent =
@@ -177,46 +169,6 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                           });
                         },
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Text(
-                      'Status of project:',
-                      style: TextStyle(
-                        fontSize: AppFonts.h3FontSize,
-                        fontWeight: FontWeight.w500,
-                        color: blackTextColor,
-                      ),
-                    ),
-                    ListTile(
-                      title: const Text('0: working',
-                          style: TextStyle(fontSize: 14)),
-                      leading: Radio(
-                        value: 0, // Set value to 6
-                        groupValue: _typeFlag,
-                        onChanged: (value) {
-                          setState(() {
-                            _typeFlag = value as int;
-                          });
-                        },
-                      ),
-                    ),
-                    ListTile(
-                      title: const Text('1: Archieved',
-                          style: TextStyle(fontSize: 14)),
-                      leading: Radio(
-                        value: 1, // Set value to 6
-                        groupValue: _typeFlag,
-                        onChanged: (value) {
-                          setState(() {
-                            _typeFlag = value as int;
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
                     ),
                     TextFieldWithLabel2(
                         label: "How many student do you want for this project",

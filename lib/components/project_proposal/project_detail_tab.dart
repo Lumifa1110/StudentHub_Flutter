@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
@@ -75,21 +77,25 @@ class ProjectDetailTab extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Project scope',
-                          style: TextStyle(
-                            color: AppColor.primary,
-                            fontSize: AppFonts.h3FontSize,
-                            fontWeight: FontWeight.w500
-                          )
+                        Expanded(
+                          child: Text(
+                            'Project scope',
+                            style: TextStyle(
+                              color: AppColor.primary,
+                              fontSize: AppFonts.h3FontSize,
+                              fontWeight: FontWeight.w500
+                            )
+                          ),
                         ),
-                        Text(
-                          '3 to 6 months',
-                          style: TextStyle(
-                            color: AppFonts.primaryColor,
-                            fontSize: AppFonts.h3FontSize,
-                            fontWeight: FontWeight.w400
-                          )
+                        Expanded(
+                          child: Text(
+                            '3 to 6 months',
+                            style: TextStyle(
+                              color: AppFonts.primaryColor,
+                              fontSize: AppFonts.h3FontSize,
+                              fontWeight: FontWeight.w400
+                            )
+                          ),
                         ),
                       ]
                     ),
@@ -125,21 +131,25 @@ class ProjectDetailTab extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Student required:',
-                          style: TextStyle(
-                            color: AppColor.primary,
-                            fontSize: AppFonts.h3FontSize,
-                            fontWeight: FontWeight.w500
-                          )
+                        Expanded(
+                          child: Text(
+                            'Student required:',
+                            style: TextStyle(
+                              color: AppColor.primary,
+                              fontSize: AppFonts.h3FontSize,
+                              fontWeight: FontWeight.w500
+                            )
+                          ),
                         ),
-                        Text(
-                          '6 students',
-                          style: TextStyle(
-                            color: AppFonts.primaryColor,
-                            fontSize: AppFonts.h3FontSize,
-                            fontWeight: FontWeight.w400
-                          )
+                        Expanded(
+                          child: Text(
+                            '6 students',
+                            style: TextStyle(
+                              color: AppFonts.primaryColor,
+                              fontSize: AppFonts.h3FontSize,
+                              fontWeight: FontWeight.w400
+                            )
+                          ),
                         ),
                       ]
                     ),

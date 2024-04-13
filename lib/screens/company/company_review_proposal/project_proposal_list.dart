@@ -8,12 +8,12 @@ import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class ProjectProposalListScreen extends StatefulWidget {
-  const ProjectProposalListScreen({
+   ProjectProposalListScreen({
     super.key,
-    required this.project
+    // required this.project
   });
 
-  final ProjectModel project;
+  final ProjectModel project = ProjectModel('API');
 
   @override
   State<ProjectProposalListScreen> createState() => _ProjectProposalListScreenState();
@@ -25,7 +25,7 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
     return Scaffold(
       appBar: const AuthAppBar(canBack: true),
       body: DefaultTabController(
-        length: 4,
+        length: 3,
         child: Container(
           color: const Color(0xFFF8F8F8),
           child: Column(
