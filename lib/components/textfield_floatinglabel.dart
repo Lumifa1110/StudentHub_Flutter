@@ -5,12 +5,14 @@ class TextFieldFloatingLabel extends StatefulWidget {
   final String label;
   final TextEditingController controller;
   final bool isPassword;
+  final String? hint;
 
   const TextFieldFloatingLabel({
     Key? key,
     required this.label,
     required this.controller,
     this.isPassword = false,
+    this.hint,
   }) : super(key: key);
 
   @override
@@ -57,6 +59,7 @@ class _TextFieldFloatingLabelState extends State<TextFieldFloatingLabel> {
             labelStyle: const TextStyle(
               color: darkgrayColor,
             ),
+            hintText: widget.hint,
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 6, horizontal: 1),
             floatingLabelStyle: const TextStyle(
