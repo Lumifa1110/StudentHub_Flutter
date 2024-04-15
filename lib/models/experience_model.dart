@@ -3,8 +3,8 @@ import 'package:studenthub/models/index.dart';
 class Experience {
   final int id;
   final String title;
-  final DateTime startMonth;
-  final DateTime endMonth;
+  final String startMonth;
+  final String endMonth;
   final String description;
   final List<SkillSet> skillsets;
 
@@ -24,7 +24,7 @@ class Experience {
       'startMonth': startMonth,
       'endMonth': endMonth,
       'description': description,
-      'skillsets': skillsets
+      'skillets': skillsets.map((skillset) => skillset.id.toString()).toList()
     };
   }
 }

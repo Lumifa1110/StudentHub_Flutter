@@ -6,19 +6,30 @@ import 'package:studenthub/components/profile_input/custom_textarea.dart';
 import 'package:studenthub/components/profile_input/custom_textfield.dart';
 import 'package:studenthub/components/profile_input/experience_item.dart';
 import 'package:studenthub/components/profile_input/list_empty_box.dart';
+import 'package:studenthub/models/education_model.dart';
 import 'package:studenthub/models/experience_model.dart';
 import 'package:studenthub/models/index.dart';
+import 'package:studenthub/models/language_model.dart';
+import 'package:studenthub/services/index.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 import 'index.dart';
 
 class StudentProfileInputScreen2 extends StatefulWidget {
+  final String studentFullname;
+  final int studentTechstack;
   final List<SkillSet> studentSkillsets;
+  final List<Language> studentLanguages;
+  final List<Education> studentEducations;
 
   const StudentProfileInputScreen2({
-    super.key, 
-    required this.studentSkillsets
+    super.key,
+    required this.studentFullname,
+    required this.studentTechstack,
+    required this.studentSkillsets,
+    required this.studentLanguages,
+    required this.studentEducations
   });
 
   @override
@@ -26,33 +37,38 @@ class StudentProfileInputScreen2 extends StatefulWidget {
 }
 
 class _StudentProfileInputScreen2State extends State<StudentProfileInputScreen2> {
+  // TextField controller
   final TextEditingController experienceTitleController = TextEditingController();
   final TextEditingController experienceStartYearController = TextEditingController();
   final TextEditingController experienceEndYearController = TextEditingController();
   final TextEditingController experienceDescriptionController = TextEditingController();
-  final List<SkillSet> selectedSkillsets = [];
+  
+  // Experience
   final List<Experience> studentSelectedExperiences = [];
   late DateTime selectedStartDate = DateTime.now();
   late DateTime selectedEndDate = DateTime.now();
-  late bool isOpenExperienceInput;
-  late List<bool> isCheckedList;
 
-  final List<SkillSet> skillSets = const [
-    SkillSet(id: 0, name: 'C'),
-    SkillSet(id: 1, name: 'C++'),
-    SkillSet(id: 2, name: 'C#'),
-    SkillSet(id: 3, name: 'Python'),
-    SkillSet(id: 4, name: 'Java'),
-    SkillSet(id: 5, name: 'JavaScript'),
-    SkillSet(id: 6, name: 'Kotlin'),
-    SkillSet(id: 7, name: 'HTML/CSS'),
-  ];
+  // UI states
+  late bool isOpenExperienceInput;
+  
+  // Skillset states
+  late List<SkillSet> skillSets = [];
+  final List<SkillSet> selectedSkillsets = [];
+  late Map<int, bool> isCheckedList;
+
+  void fetchAllSkillset() async {
+    final Map<String, dynamic> response = await DefaultService.getAllSkillset();
+    setState(() {
+      skillSets = response['result'].map<SkillSet>((json) => SkillSet.fromJson(json)).toList();
+      isCheckedList = { for (var skillset in skillSets) skillset.id : false };
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    fetchAllSkillset();
     isOpenExperienceInput = false;
-    isCheckedList = List.generate(skillSets.length, (index) => false);
   }
 
   String formatDateTime(DateTime dateTime) {
@@ -111,15 +127,18 @@ class _StudentProfileInputScreen2State extends State<StudentProfileInputScreen2>
   }
 
   void handleAddExperience() {
+    List<SkillSet> selectedSkillsetsData = List<SkillSet>.from(selectedSkillsets);
+    String startMonthFormatted = DateFormat('MM-yyyy').format(selectedStartDate);
+    String endMonthFormatted = DateFormat('MM-yyyy').format(selectedEndDate);
     setState(() {
       studentSelectedExperiences.add(
         Experience(
           id: 0,
           title: experienceTitleController.text,
-          startMonth: selectedStartDate,
-          endMonth: selectedEndDate,
+          startMonth: startMonthFormatted,
+          endMonth: endMonthFormatted,
           description: experienceDescriptionController.text,
-          skillsets: selectedSkillsets
+          skillsets: selectedSkillsetsData
         )
       );
     });
@@ -367,10 +386,9 @@ class _StudentProfileInputScreen2State extends State<StudentProfileInputScreen2>
                     ),
                     child: ListView(
                       children: skillSets.map((skillset) {
-                        return ListTileSkillset(
-                          itemName: skillset.name,
-                          itemId: skillset.id,
-                          isChecked: isCheckedList[skillset.id],
+                        return SkillsetItem(
+                          skillset: skillset,
+                          isChecked: isCheckedList[skillset.id]!,
                           addSkillset: addSelectedSkills,
                           removeSkillset: removeSelectedSkills,
                         );
@@ -409,7 +427,14 @@ class _StudentProfileInputScreen2State extends State<StudentProfileInputScreen2>
                       onPressed: () => {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const StudentProfileInputScreen3())
+                          MaterialPageRoute(builder: (context) => StudentProfileInputScreen3(
+                            studentFullname: widget.studentFullname,
+                            studentTechstack: widget.studentTechstack,
+                            studentSkillsets: widget.studentSkillsets,
+                            studentLanguages: widget.studentLanguages,
+                            studentEducations: widget.studentEducations,
+                            studentExperiences: studentSelectedExperiences,
+                          ))
                         )
                       }
                     ),

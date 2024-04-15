@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/index.dart';
@@ -11,6 +10,7 @@ import 'package:studenthub/models/education_model.dart';
 import 'package:studenthub/models/index.dart';
 import 'package:studenthub/models/language_model.dart';
 import 'package:studenthub/models/techstack_model.dart';
+import 'package:studenthub/services/index.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 import 'index.dart';
@@ -24,42 +24,35 @@ class StudentProfileInputScreen1 extends StatefulWidget {
 }
 
 class _StudentProfileInputScreen1State extends State<StudentProfileInputScreen1> {
+  // TextField controllers
+  final fullnameController = TextEditingController();
   final techStackController = TextEditingController();
   final languageController = TextEditingController();
   final educationController = TextEditingController();
   final educationStartYearController = TextEditingController();
   final educationEndYearController = TextEditingController();
-  late int selectedTechStack;
-  late bool isOpenLanguageInput;
-  late List<bool> isCheckedList;
+
+  // Techstack states
+  late List<TechStack> techStacks = [];
+  late int selectedTechStack = 1;
+
+  // Skillset states
+  late List<SkillSet> skillSets = [];
+  final List<SkillSet> studentSelectedSkills = [];
+  late Map<int, bool> isCheckedList;
+
+  // Language states
+  final List<Language> studentSelectedLanguages = [];
   late String selectedLanguageLevel;
-  late bool isOpenEducationInput;
+  
+  // Education states
+  final List<Education> studentSelectedEducations = [];
   late DateTime selectedStartDate = DateTime.now();
   late DateTime selectedEndDate = DateTime.now();
 
-  final List<SkillSet> studentSelectedSkills = [];
-  final List<Language> studentSelectedLanguages = [];
-  final List<Education> studentSelectedEducations = [];
-
-  final List<TechStack> techStacks = const [
-    TechStack(id: 0, name: 'Front-end Developer'),
-    TechStack(id: 1, name: 'Back-end Developer'),
-    TechStack(id: 2, name: 'Tester'),
-    TechStack(id: 3, name: 'Software Architect'),
-    TechStack(id: 4, name: 'Software Design')
-  ];
-
-
-  final List<SkillSet> skillSets = const [
-    SkillSet(id: 0, name: 'C'),
-    SkillSet(id: 1, name: 'C++'),
-    SkillSet(id: 2, name: 'C#'),
-    SkillSet(id: 3, name: 'Python'),
-    SkillSet(id: 4, name: 'Java'),
-    SkillSet(id: 5, name: 'JavaScript'),
-    SkillSet(id: 6, name: 'Kotlin'),
-    SkillSet(id: 7, name: 'HTML/CSS'),
-  ];
+  // UI handling states
+  late bool isOpenLanguageInput;
+  late bool isOpenEducationInput;
 
   final List<String> languageLevels = const [
     'Expert',
@@ -68,11 +61,26 @@ class _StudentProfileInputScreen1State extends State<StudentProfileInputScreen1>
     'Low',
   ];
 
+  void fetchAllTechstack() async {
+    final Map<String, dynamic> response = await DefaultService.getAllTechstack();
+    setState(() {
+      techStacks = response['result'].map<TechStack>((json) => TechStack.fromJson(json)).toList();
+    });
+  }
+
+  void fetchAllSkillset() async {
+    final Map<String, dynamic> response = await DefaultService.getAllSkillset();
+    setState(() {
+      skillSets = response['result'].map<SkillSet>((json) => SkillSet.fromJson(json)).toList();
+      isCheckedList = { for (var skillset in skillSets) skillset.id : false };
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    isCheckedList = List.generate(skillSets.length, (index) => false);
-    selectedTechStack = 0;
+    fetchAllTechstack();
+    fetchAllSkillset();
     isOpenLanguageInput = false;
     selectedLanguageLevel = 'Medium';
     isOpenEducationInput = false;
@@ -126,9 +134,9 @@ class _StudentProfileInputScreen1State extends State<StudentProfileInputScreen1>
         studentSelectedEducations.add(
           Education(
             id: 0,
-            educationName: educationController.text,
-            startYear: int.parse(educationStartYearController.text),
-            endYear: int.parse(educationEndYearController.text)
+            schoolName: educationController.text,
+            startYear: selectedStartDate,
+            endYear: selectedEndDate
           )
         );
       });
@@ -215,6 +223,18 @@ class _StudentProfileInputScreen1State extends State<StudentProfileInputScreen1>
                       )),
                 ),
               ]),
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.only(top: 20, bottom: 12),
+                alignment: Alignment.topLeft,
+                child: const Text(
+                  'Full name',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                )
+              ),
+              CustomTextfield(controller: fullnameController, hintText: 'Full name...'),
               // Techstack selection
               Container(
                 width: double.infinity,
@@ -316,10 +336,9 @@ class _StudentProfileInputScreen1State extends State<StudentProfileInputScreen1>
                 ),
                 child: ListView(
                   children: skillSets.map((skillset) {
-                    return ListTileSkillset(
-                      itemName: skillset.name,
-                      itemId: skillset.id,
-                      isChecked: isCheckedList[skillset.id],
+                    return SkillsetItem(
+                      skillset: skillset,
+                      isChecked: isCheckedList[skillset.id]!,
                       addSkillset: addSelectedSkills,
                       removeSkillset: removeSelectedSkills,
                     );
@@ -686,7 +705,13 @@ class _StudentProfileInputScreen1State extends State<StudentProfileInputScreen1>
                       onPressed: () => {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => StudentProfileInputScreen2(studentSkillsets: studentSelectedSkills))
+                          MaterialPageRoute(builder: (context) => StudentProfileInputScreen2(
+                            studentFullname: fullnameController.text,
+                            studentTechstack: selectedTechStack,
+                            studentSkillsets: studentSelectedSkills,
+                            studentLanguages: studentSelectedLanguages,
+                            studentEducations: studentSelectedEducations,
+                          ))
                         )
                       }
                     ),

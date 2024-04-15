@@ -69,7 +69,7 @@ class _StudentHubState extends State<StudentHub> {
                 builder: (context) => const CompanyWelcomeScreen());
           case '/company/dashboard':
             return MaterialPageRoute(
-                builder: (context) => CompanyDashboardScreen());
+                builder: (context) => const CompanyDashboardScreen());
           case '/student':
             return MaterialPageRoute(
                 builder: (context) => const StudentProfileInputScreen1());

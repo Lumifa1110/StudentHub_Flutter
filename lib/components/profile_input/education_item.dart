@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:studenthub/models/education_model.dart';
 import 'package:studenthub/utils/font.dart';
 
@@ -11,6 +12,10 @@ class EducationItem extends StatelessWidget {
     required this.education,
     required this.handleDelete
   });
+
+  String formatDateTime(DateTime dateTime) {
+    return DateFormat('yyyy').format(dateTime);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +45,7 @@ class EducationItem extends StatelessWidget {
               children: [
                 Text(
                   textAlign: TextAlign.left,
-                  education.educationName,
+                  education.schoolName,
                   style: const TextStyle(
                     color: AppFonts.primaryColor,
                     fontSize: AppFonts.h3FontSize,
@@ -51,8 +56,8 @@ class EducationItem extends StatelessWidget {
                 Text(
                   textAlign: TextAlign.left,
                   education.endYear != null
-                    ? '${education.startYear} - ${education.endYear}'
-                    : education.startYear.toString(),
+                    ? '${formatDateTime(education.startYear)} - ${formatDateTime(education.endYear!)}'
+                    : formatDateTime(education.endYear!),
                   style: const TextStyle(
                     color: AppFonts.secondaryColor,
                     fontSize: AppFonts.h4FontSize,

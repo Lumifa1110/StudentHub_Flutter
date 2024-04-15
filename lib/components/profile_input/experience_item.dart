@@ -57,7 +57,7 @@ class ExperienceItem extends StatelessWidget {
               Expanded(
                 child: Text(
                   textAlign: TextAlign.left,
-                  '${formatDateTime(experience.startMonth)} - ${formatDateTime(experience.endMonth)}',
+                  '${experience.startMonth} - ${experience.endMonth}',
                   style: const TextStyle(
                     color: AppFonts.secondaryColor,
                     fontSize: AppFonts.h4FontSize,

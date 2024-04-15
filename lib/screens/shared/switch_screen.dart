@@ -7,6 +7,7 @@ import 'package:studenthub/components/card_switchaccount.dart';
 import 'package:studenthub/components/textfield/search_bar.dart';
 import 'package:studenthub/config/config.dart';
 import 'package:studenthub/preferences/index.dart';
+import 'package:studenthub/screens/student/profile_creation/student_profile_input_screen_1.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
@@ -210,7 +211,9 @@ class _SwitchScreenState extends State<SwitchScreen> {
               child: Column(
                 children: [
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const StudentProfileInputScreen1()));
+                    },
                     child: const ListTile(
                       leading: Icon(
                         Icons.person_2_outlined,

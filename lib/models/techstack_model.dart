@@ -1,16 +1,25 @@
 class TechStack {
   final int id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? deletedAt;
   final String name;
 
-  const TechStack({
+  TechStack({
     required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
     required this.name,
   });
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-    };
+  factory TechStack.fromJson(Map<String, dynamic> json) {
+    return TechStack(
+      id: json['id'],
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
+      deletedAt: json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null,
+      name: json['name'],
+    );
   }
 }

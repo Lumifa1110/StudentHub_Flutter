@@ -1,22 +1,28 @@
 class Education {
   final int id;
-  final String educationName;
-  final int startYear;
-  final int? endYear;
+  final String schoolName;
+  final DateTime startYear;
+  final DateTime? endYear;
+  final DateTime? updatedAt;
+  final DateTime? deletedAt;
 
-  const Education({
+  Education({
     required this.id,
-    required this.educationName,
+    required this.schoolName,
     required this.startYear,
-    this.endYear
+    this.endYear,
+    this.updatedAt,
+    this.deletedAt,
   });
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'educationName': educationName,
-      'startYear': startYear,
-      'endYear': endYear
-    };
+  factory Education.fromJson(Map<String, dynamic> json) {
+    return Education(
+      id: json['id'],
+      schoolName: json['schoolName'],
+      startYear: DateTime.parse(json['startYear']),
+      endYear: json['endYear'] != null ? DateTime.parse(json['endYear']) : null,
+      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      deletedAt: json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null
+    );
   }
 }
