@@ -81,8 +81,10 @@ class _SearchListScreenState extends State<SearchListScreen> {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
 
+    _searchQuery = widget.searchQuery;
+
     Map<String, dynamic> queryParams = {
-      if (_searchQuery.isNotEmpty) 'title': widget.searchQuery,
+      if (_searchQuery.isNotEmpty) 'title': _searchQuery,
       if (selectedProjectScope != null)
         'projectScopeFlag': selectedProjectScope!.index.toString(),
       if (_studentsNeededController.text.isNotEmpty)
