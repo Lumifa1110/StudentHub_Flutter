@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/models/index.dart';
 
-class ListTileSkillset extends StatefulWidget {
-  final String itemName;
-  final int itemId;
+class SkillsetItem extends StatefulWidget {
+  final SkillSet skillset;
   final bool isChecked;
   final Function(int) addSkillset;
   final Function(int) removeSkillset;
-
-  const ListTileSkillset({
-    Key? key,
-    required this.itemName,
-    required this.itemId,
+  
+  const SkillsetItem({
+    super.key,
+    required this.skillset,
     required this.isChecked,
     required this.addSkillset,
     required this.removeSkillset,
-  }) : super(key: key);
+  });
 
   @override
-  _ListTileSkillsetState createState() => _ListTileSkillsetState();
+  SkillsetItemState createState() => SkillsetItemState();
 }
 
-class _ListTileSkillsetState extends State<ListTileSkillset> {
+class SkillsetItemState extends State<SkillsetItem> {
   late bool isSelected;
 
   @override
@@ -37,17 +36,15 @@ class _ListTileSkillsetState extends State<ListTileSkillset> {
         setState(() {
           isSelected = !isSelected;
           if (isSelected) {
-            widget
-                .addSkillset(widget.itemId); // Pass itemId instead of itemName
+            widget.addSkillset(widget.skillset.id);
           } else {
-            widget.removeSkillset(
-                widget.itemId); // Pass itemId instead of itemName
+            widget.removeSkillset(widget.skillset.id);
           }
         });
       },
       child: ListTile(
         title: Text(
-          widget.itemName,
+          widget.skillset.name,
           style: TextStyle(
             color: widget.isChecked ? Colors.green : Colors.black45,
             fontWeight: FontWeight.w500,

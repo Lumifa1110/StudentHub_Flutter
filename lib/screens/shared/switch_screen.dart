@@ -8,6 +8,7 @@ import 'package:studenthub/components/textfield/search_bar.dart';
 import 'package:studenthub/config/config.dart';
 import 'package:studenthub/preferences/index.dart';
 import 'package:studenthub/screens/shared/project_list_screen.dart';
+import 'package:studenthub/screens/student/profile_creation/student_profile_input_screen_1.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
@@ -26,6 +27,11 @@ class _SwitchScreenState extends State<SwitchScreen> {
   List<String> _roles = [];
   int? _currentRole;
   String? _accountFullname;
+  // Define a list of profile actions
+  final List<String> profileActions = ["My Profile", "Change Password"];
+
+  // Define a variable to track the selected action
+  String? selectedProfileAction;
 
   @override
   void initState() {
@@ -212,7 +218,9 @@ class _SwitchScreenState extends State<SwitchScreen> {
               child: Column(
                 children: [
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const StudentProfileInputScreen1()));
+                    },
                     child: const ListTile(
                       leading: Icon(
                         Icons.person_2_outlined,
@@ -220,6 +228,24 @@ class _SwitchScreenState extends State<SwitchScreen> {
                       ),
                       title: Text(
                         'Profile',
+                        style: TextStyle(
+                          fontSize: AppFonts.h3FontSize,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/user/changepassword');
+                    },
+                    child: const ListTile(
+                      leading: Icon(
+                        Icons.lock,
+                        size: 36,
+                      ),
+                      title: Text(
+                        'Change Password',
                         style: TextStyle(
                           fontSize: AppFonts.h3FontSize,
                           fontWeight: FontWeight.w400,
