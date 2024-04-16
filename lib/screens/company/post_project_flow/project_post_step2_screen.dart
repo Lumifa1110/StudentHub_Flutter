@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/authappbar.dart';
+import 'package:studenthub/utils/font.dart';
 import '../../../components/appbar_ps1.dart';
 import 'project_post_step3_screen.dart';
 
@@ -30,6 +31,12 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _quantityStudent.dispose();
     super.dispose();
@@ -37,134 +44,170 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       appBar: const AuthAppBar(canBack: true),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const SizedBox(
-                height: 30,
-              ),
-              const Text(
-                '2/4 \t\t Next, estimate the scope of your job',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text('Consider the size of your project and the timeline'),
-              const SizedBox(
-                height: 30,
-              ),
-              const Text('How long will your project take?'),
-              const SizedBox(
-                height: 20,
-              ),
-              ListTile(
-                title: const Text('Less Than 1 Month',
-                    style: TextStyle(fontSize: 14)),
-                leading: Radio(
-                  value: 0, // Set value to 3
-                  groupValue: _isChecked,
-                  onChanged: (value) {
-                    setState(() {
-                      _isChecked = value as int;
-                    });
-                  },
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const SizedBox(
+                  height: 20,
                 ),
-              ),
-              ListTile(
-                title:
-                    const Text('1 to 3 months', style: TextStyle(fontSize: 14)),
-                leading: Radio(
-                  value: 1, // Set value to 6
-                  groupValue: _isChecked,
-                  onChanged: (value) {
-                    setState(() {
-                      _isChecked = value as int;
-                    });
-                  },
+                const Text(
+                  '2/4 \t\t Next, estimate the scope of your job',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: AppFonts.h2FontSize),
                 ),
-              ),
-              ListTile(
-                title:
-                    const Text('3 to 6 months', style: TextStyle(fontSize: 14)),
-                leading: Radio(
-                  value: 2, // Set value to 6
-                  groupValue: _isChecked,
-                  onChanged: (value) {
-                    setState(() {
-                      _isChecked = value as int;
-                    });
-                  },
+                const SizedBox(
+                  height: 10,
                 ),
-              ),
-              ListTile(
-                title: const Text('More than 6 months',
-                    style: TextStyle(fontSize: 14)),
-                leading: Radio(
-                  value: 3, // Set value to 6
-                  groupValue: _isChecked,
-                  onChanged: (value) {
-                    setState(() {
-                      _isChecked = value as int;
-                    });
-                  },
+                const Text(
+                  'Consider the size of your project and the timeline',
+                  style: TextStyle(fontSize: AppFonts.h3FontSize),
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const Text('How many students do you want for this project?'),
-              const SizedBox(
-                height: 20,
-              ),
-              TextField(
-                controller: _quantityStudent,
-                onChanged: validateTextfield,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'number of students',
-                  hintStyle: TextStyle(fontSize: 15),
-                  isDense: true,
-                  contentPadding: EdgeInsets.all(5),
-                  errorText: _erro ? 'Please enter number of students' : null,
+                const SizedBox(
+                  height: 30,
                 ),
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (!_erro) {
-                      print(_isChecked.runtimeType);
-                      widget.box.putIfAbsent('projectScore', () => _isChecked);
-                      widget.box.putIfAbsent('quantityStudent',
-                          () => int.parse(_quantityStudent.text));
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ProjectPostStep3Page(
-                                  box: widget.box,
-                                )),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                      shape: const RoundedRectangleBorder()),
-                  child: const Text('Next: Description'),
+                const Text(
+                  'How long will your project take?',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: AppFonts.h3FontSize),
                 ),
-              )
-            ],
+                const SizedBox(
+                  height: 20,
+                ),
+                ListTile(
+                  title: const Text('Less Than 1 Month',
+                      style: TextStyle(fontSize: 14)),
+                  leading: Radio(
+                    value: 0, // Set value to 3
+                    groupValue: _isChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        _isChecked = value as int;
+                      });
+                    },
+                  ),
+                ),
+                ListTile(
+                  title: const Text('1 to 3 months',
+                      style: TextStyle(fontSize: 14)),
+                  leading: Radio(
+                    value: 1, // Set value to 6
+                    groupValue: _isChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        _isChecked = value as int;
+                      });
+                    },
+                  ),
+                ),
+                ListTile(
+                  title: const Text('3 to 6 months',
+                      style: TextStyle(fontSize: 14)),
+                  leading: Radio(
+                    value: 2, // Set value to 6
+                    groupValue: _isChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        _isChecked = value as int;
+                      });
+                    },
+                  ),
+                ),
+                ListTile(
+                  title: const Text('More than 6 months',
+                      style: TextStyle(fontSize: 14)),
+                  leading: Radio(
+                    value: 3, // Set value to 6
+                    groupValue: _isChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        _isChecked = value as int;
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Text(
+                  'How many students do you want for this project?',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: AppFonts.h3FontSize),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextField(
+                  controller: _quantityStudent,
+                  onChanged: validateTextfield,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'number of students',
+                    hintStyle: TextStyle(fontSize: 15),
+                    isDense: true,
+                    contentPadding: EdgeInsets.all(5),
+                    errorText: _erro ? 'Please enter number of students' : null,
+                  ),
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_quantityStudent.text.isEmpty) {
+                        validateTextfield(_quantityStudent.text.trim());
+                      } else {
+                        if (!_erro) {
+                          // Check if the quantity text is not empty
+                          if (_quantityStudent.text.isNotEmpty) {
+                            try {
+                              int quantity = int.parse(_quantityStudent.text);
+                              widget.box.putIfAbsent(
+                                  'quantityStudent', () => quantity);
+                            } catch (e) {
+                              // Handle the case where parsing fails
+                              print('Failed to parse quantity: $e');
+                              setState(() {
+                                _erro = true;
+                              });
+                              return; // Return to prevent navigation if parsing fails
+                            }
+                          }
+
+                          widget.box
+                              .putIfAbsent('projectScore', () => _isChecked);
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProjectPostStep3Page(
+                                box: widget.box,
+                              ),
+                            ),
+                          );
+                        }
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                        shape: const RoundedRectangleBorder()),
+                    child: const Text('Next: Description'),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
-    ));
+    );
   }
 }

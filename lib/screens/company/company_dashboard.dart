@@ -93,9 +93,6 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const SizedBox(
-                              width: 5,
-                            ),
                             const Text(
                               'Your projects',
                               style: TextStyle(fontWeight: FontWeight.bold),
@@ -129,7 +126,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                               border: Border.all(width: 1),
                             ),
                             indicatorSize: TabBarIndicatorSize.tab,
-                            tabs: <Widget>[
+                            tabs: const [
                               Tab(
                                 text: 'All project',
                               ),
@@ -189,6 +186,14 @@ class OptionProjectCompany extends StatefulWidget {
       {Key? key, required this.onTap, required this.project})
       : super(key: key);
 
+  int f_dayCreatedAgo(String createdAt){
+    DateTime timeParse = DateTime.parse(createdAt);
+    DateTime now = DateTime.now();
+    Duration difference = now.difference(timeParse);
+
+    return difference.inDays;
+  }
+
   @override
   State<OptionProjectCompany> createState() => OptionProjectCompanyState();
 }
@@ -213,7 +218,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                   style: const TextStyle(color: Colors.green),
                 ),
                 Text(
-                  'Created ${widget.project.createdAt}',
+                  'Created ${widget.f_dayCreatedAgo(widget.project.createdAt)} days ago',
                   style: const TextStyle(color: Colors.grey),
                 ),
                 const SizedBox(
