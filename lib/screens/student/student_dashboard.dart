@@ -29,8 +29,6 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
       if (profile == 'null') {
         Navigator.pushReplacementNamed(context, '/student');
       }
-    } else {
-      Navigator.pushReplacementNamed(context, '/company/dashboard');
     }
   }
 

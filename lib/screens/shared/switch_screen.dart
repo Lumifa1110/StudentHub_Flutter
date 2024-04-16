@@ -7,6 +7,7 @@ import 'package:studenthub/components/card_switchaccount.dart';
 import 'package:studenthub/components/textfield/search_bar.dart';
 import 'package:studenthub/config/config.dart';
 import 'package:studenthub/preferences/index.dart';
+import 'package:studenthub/screens/company/profile_creation/company_profile_edit_screen.dart';
 import 'package:studenthub/screens/shared/project_list_screen.dart';
 import 'package:studenthub/screens/student/profile_creation/student_profile_input_screen_1.dart';
 import 'package:studenthub/utils/colors.dart';
@@ -85,7 +86,10 @@ class _SwitchScreenState extends State<SwitchScreen> {
           MaterialPageRoute(
               builder: (context) => const StudentProfileInputScreen1()));
     } else {
-      Navigator.pushNamed(context, '/company');
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const CompanyProfileEditScreen()));
     }
   }
 

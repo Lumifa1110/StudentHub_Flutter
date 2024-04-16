@@ -11,16 +11,17 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:studenthub/utils/font.dart';
 
-class CompanyProfileInputScreen extends StatefulWidget {
-  const CompanyProfileInputScreen({Key? key}) : super(key: key);
+class CompanyProfileEditScreen extends StatefulWidget {
+  const CompanyProfileEditScreen({Key? key}) : super(key: key);
 
   @override
-  State<CompanyProfileInputScreen> createState() =>
-      _CompanyProfileInputScreenState();
+  State<CompanyProfileEditScreen> createState() =>
+      _CompanyProfileEditScreenState();
 }
 
-class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
+class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
   // TextField controller
+  late SharedPreferences _prefs;
   final companyNameController = TextEditingController();
   final companyWebsiteController = TextEditingController();
   final companyDescriptionController = TextEditingController();
@@ -36,6 +37,8 @@ class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
   Future<void> postCompanyProfile() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
+    final companyprofile = _prefs.getString('companyprofile');
+    final companyId = jsonDecode(companyprofile!)['id'];
     print(token);
     final companyProfile = CompanyProfile(
       title: companyNameController.text,
@@ -44,9 +47,9 @@ class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
       description: companyDescriptionController.text,
     );
 
-    final response = await http.post(
+    final response = await http.put(
       Uri.parse(
-          '${uriBase}/api/profile/company'), // Replace with your API endpoint
+          '$uriBase/api/profile/company/$companyId'), // Replace with your API endpoint
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -58,12 +61,53 @@ class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
 
     if (response.statusCode == 201 || response.statusCode == 200) {
       // Handle successful response
+      final updatedCompanyProfile = jsonDecode(response.body)['result'];
+      await prefs.setString(
+          'companyprofile', jsonEncode(updatedCompanyProfile));
       print('Company profile posted successfully');
-      Navigator.pushReplacementNamed(context, '/company/welcome');
     } else {
       // Handle error response
       print('Failed to post company profile');
     }
+  }
+
+  Future<void> _loadScreen() async {
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+    final companyprofile = _prefs.getString('companyprofile');
+    final companyId = jsonDecode(companyprofile!)['id'];
+
+    try {
+      final response = await http.get(
+        Uri.parse('$uriBase/api/profile/company/$companyId'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      print(response.statusCode);
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        final companyData = jsonDecode(response.body)['result'];
+        print(companyData);
+        setState(() {
+          companyNameController.text = companyData['companyName'] ?? '';
+          companyWebsiteController.text = companyData['website'] ?? '';
+          companyDescriptionController.text = companyData['description'] ?? '';
+          companySizeState = CompanySize.values[companyData['size'] ?? 0];
+        });
+      } else {
+        print('Failed to fetch company profile');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadScreen();
   }
 
   @override
