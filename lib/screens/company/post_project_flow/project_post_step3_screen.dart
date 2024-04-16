@@ -98,7 +98,7 @@ class ProjectPostStep3PageState extends State<ProjectPostStep3Page> {
                   onPressed: () {
                     if (!_erro) {
                       String description = _describe.text.isEmpty
-                          ? 'Description of the project'
+                          ? 'Students are looking for\n\t\t-Clear expectation about your project or deliverables\n\t\t-The skills required for your project\n\t\t-Detail about your project'
                           : _describe.text;
                       widget.box.putIfAbsent('description', () => description);
                       Navigator.push(

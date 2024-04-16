@@ -5,3 +5,5 @@ class ProjectModel {
     this.name
   );
 }
+
+ProjectModel mockProjectModel = ProjectModel('API aaaa');

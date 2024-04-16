@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/utils/font.dart';
-import '../../../components/appbar_ps1.dart';
 import 'package:studenthub/models/company_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:studenthub/business/company_business.dart';
@@ -25,9 +24,9 @@ class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
   Future<void> postProject(BuildContext context) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    // final idCompany = _prefs.
+    final idCompany = jsonDecode(_prefs.getString('companyprofile')!)['id'];
     ProjectPost modelDataProject = ProjectPost(
-        '1',
+        '$idCompany',
         widget.box['projectScore'],
         widget.box['title'],
         widget.box['quantityStudent'],
@@ -81,11 +80,14 @@ class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
                           fontSize: AppFonts.h2FontSize),
                     ),
                     const SizedBox(
-                      height: 30,
+                      height: 20,
                     ),
                     Text(
-                      'Title of the job: ${widget.box['title']}',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      '${widget.box['title']}',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: AppFonts.h1FontSize,
+                          overflow: TextOverflow.ellipsis),
                     ),
                     const SizedBox(
                       height: 10,
@@ -184,12 +186,7 @@ class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
                 alignment: Alignment.bottomRight,
                 child: ElevatedButton(
                   onPressed: () async{
-                    // postProject(context);
-
-                    _prefs = await SharedPreferences.getInstance();
-                    final idCompany = _prefs.getString('companyprofile');
-                    // jsonDecode(idCompany);
-                    print(idCompany);
+                    postProject(context);
 
                   },
                   style: ElevatedButton.styleFrom(

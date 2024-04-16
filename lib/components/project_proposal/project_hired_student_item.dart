@@ -3,14 +3,12 @@ import 'package:studenthub/components/user/user_avatar.dart';
 import 'package:studenthub/models/student_model.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
-
+import 'package:studenthub/models/company_model.dart';
 class ProjectHiredStudentItem extends StatelessWidget {
-  final StudentModel student;
-  
-  const ProjectHiredStudentItem({
-    super.key,
-    required this.student
-  });
+  final ItemsProposal itemsProposal;
+
+  const ProjectHiredStudentItem({super.key, required this.itemsProposal});
+
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +26,7 @@ class ProjectHiredStudentItem extends StatelessWidget {
           Row(
             children: [
               // Student Avatar
-              const Expanded(
+              Expanded(
                 flex: 1,
                 child: UserAvatar(icon: Icons.person)
               ),
@@ -43,7 +41,7 @@ class ProjectHiredStudentItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        student.name,
+                        itemsProposal.student.fullname,
                         style: const TextStyle(
                           color: AppFonts.primaryColor,
                           fontSize: AppFonts.h2FontSize,
@@ -51,7 +49,7 @@ class ProjectHiredStudentItem extends StatelessWidget {
                         )
                       ),
                       Text(
-                        student.educationalLevel,
+                        'Excellent',
                         style: const TextStyle(
                           color: AppFonts.secondaryColor,
                           fontSize: AppFonts.h3FontSize,
@@ -72,7 +70,7 @@ class ProjectHiredStudentItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  student.techstack,
+                  itemsProposal.student.techStack.name!,
                   style: const TextStyle(
                     color: AppColor.primary,
                     fontSize: AppFonts.h3FontSize,

@@ -4,14 +4,13 @@ import 'package:studenthub/components/user/user_avatar.dart';
 import 'package:studenthub/models/student_model.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
+import 'package:studenthub/models/company_model.dart';
 
 class ProjectProposalItem extends StatefulWidget {
-  final StudentModel student;
-  
-  const ProjectProposalItem({
-    super.key,
-    required this.student
-  });
+  final ItemsProposal itemsProposal;
+
+  const ProjectProposalItem({super.key, required this.itemsProposal});
+
 
   @override
   State<ProjectProposalItem> createState() => _ProjectProposalItemState();
@@ -23,7 +22,7 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
   @override
   void initState() {
     super.initState();
-    sentHireOffer = false;
+    sentHireOffer = widget.itemsProposal.statusFlag == 2 ?true : widget.itemsProposal.statusFlag == 3 ? true: false;
   }
 
   void sendHireOffer() {
@@ -63,15 +62,15 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.student.name,
+                        widget.itemsProposal.student.fullname,
                         style: const TextStyle(
                           color: AppFonts.primaryColor,
                           fontSize: AppFonts.h2FontSize,
                           fontWeight: FontWeight.w500
                         )
                       ),
-                      Text(
-                        widget.student.educationalLevel,
+                      const Text(
+                        'Excellent',
                         style: const TextStyle(
                           color: AppFonts.secondaryColor,
                           fontSize: AppFonts.h3FontSize,
@@ -92,7 +91,7 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  widget.student.techstack,
+                  widget.itemsProposal.student.techStack.name!,
                   style: const TextStyle(
                     color: AppColor.primary,
                     fontSize: AppFonts.h3FontSize,
@@ -122,8 +121,8 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                     border: Border.all(color: Colors.black12)
                   ),
                   margin: const EdgeInsets.only(bottom: 6),
-                  child: const Text(
-                    'I have gone through your project and it seem like a good project. I will commit for your project.',
+                  child: Text(
+                    widget.itemsProposal.coverLetter,
                     style: TextStyle(
                       color: AppFonts.secondaryColor,
                       fontSize: AppFonts.h3FontSize

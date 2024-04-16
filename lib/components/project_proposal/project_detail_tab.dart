@@ -1,11 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
+import 'package:studenthub/models/company_model.dart';
+import 'package:studenthub/business/company_business.dart';
 
 class ProjectDetailTab extends StatelessWidget {
-  const ProjectDetailTab({
-    super.key,
-  });
+  final Project project;
+
+  const ProjectDetailTab({super.key, required this.project});
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +42,7 @@ class ProjectDetailTab extends StatelessWidget {
                     border: Border.all(color: Colors.black12)
                   ),
                   margin: const EdgeInsets.only(bottom: 10),
-                  child: const Text(
-                    'Students are looking for\n\t- Clear expectation about your project or deliverables\n\t- The skills required for your project\n\t- Detail about your project',
+                  child:  Text(project.description!,
                     style: TextStyle(
                       color: AppFonts.secondaryColor,
                       fontSize: AppFonts.h3FontSize
@@ -71,25 +75,29 @@ class ProjectDetailTab extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.only(left: 20),
                     height: 40,
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Project scope',
-                          style: TextStyle(
-                            color: AppColor.primary,
-                            fontSize: AppFonts.h3FontSize,
-                            fontWeight: FontWeight.w500
-                          )
+                        Expanded(
+                          child: Text(
+                            'Project scope',
+                            style: TextStyle(
+                              color: AppColor.primary,
+                              fontSize: AppFonts.h3FontSize,
+                              fontWeight: FontWeight.w500
+                            )
+                          ),
                         ),
-                        Text(
-                          '3 to 6 months',
-                          style: TextStyle(
-                            color: AppFonts.primaryColor,
-                            fontSize: AppFonts.h3FontSize,
-                            fontWeight: FontWeight.w400
-                          )
+                        Expanded(
+                          child: Text(
+                              convertProjectScoreFlagToTime(project.projectScopeFlag!),
+                            style: TextStyle(
+                              color: AppFonts.primaryColor,
+                              fontSize: AppFonts.h3FontSize,
+                              fontWeight: FontWeight.w400
+                            )
+                          ),
                         ),
                       ]
                     ),
@@ -121,25 +129,29 @@ class ProjectDetailTab extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.only(left: 20),
                     height: 40,
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Student required:',
-                          style: TextStyle(
-                            color: AppColor.primary,
-                            fontSize: AppFonts.h3FontSize,
-                            fontWeight: FontWeight.w500
-                          )
+                        Expanded(
+                          child: Text(
+                            'Student required:',
+                            style: TextStyle(
+                              color: AppColor.primary,
+                              fontSize: AppFonts.h3FontSize,
+                              fontWeight: FontWeight.w500
+                            )
+                          ),
                         ),
-                        Text(
-                          '6 students',
-                          style: TextStyle(
-                            color: AppFonts.primaryColor,
-                            fontSize: AppFonts.h3FontSize,
-                            fontWeight: FontWeight.w400
-                          )
+                        Expanded(
+                          child: Text(
+                            '${project.numberOfStudents} students',
+                            style: TextStyle(
+                              color: AppFonts.primaryColor,
+                              fontSize: AppFonts.h3FontSize,
+                              fontWeight: FontWeight.w400
+                            )
+                          ),
                         ),
                       ]
                     ),

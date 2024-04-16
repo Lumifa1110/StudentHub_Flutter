@@ -10,22 +10,24 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final bool isShowIcon;
   final bool? isFromDashBoard;
+  final Function(bool)? onRoleChanged;
 
   const AuthAppBar({
-    super.key,
+    Key? key,
     required this.canBack,
     this.title,
     this.isShowIcon = true,
     this.isFromDashBoard = false,
-  });
+    this.onRoleChanged,
+  }) : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
-    void _navigateWithAnimation(String routeName, Widget widgetname) {
-      Navigator.of(context).push(
+    void _navigateWithAnimation(String routeName, Widget widgetname) async {
+      final result = await Navigator.of(context).push(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) => widgetname,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -42,6 +44,11 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
           },
         ),
       );
+      print('Back Result $result');
+
+      if (result != null && onRoleChanged != null) {
+        onRoleChanged!(result);
+      }
     }
 
     Future<void> handlePressIcon() async {
@@ -72,7 +79,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
                 borderRadius: BorderRadius.zero,
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () => Navigator.of(context).pop(),
+                  onTap: () => Navigator.of(context).pop(true),
                   child: const Center(
                     child: Icon(
                       Icons.chevron_left,
@@ -85,7 +92,6 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
             )
           : null,
       elevation: 5.0,
-      // automaticallyImplyLeading: canBack,
       automaticallyImplyLeading: canBack,
       title: title != null
           ? Text(
