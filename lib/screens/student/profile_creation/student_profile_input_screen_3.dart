@@ -127,7 +127,9 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
           ]
         }).toList()
       });
-      print('add experience success');
+      final Map<String, dynamic> userInfo = await AuthService.getUserInfo();
+      final newStudentProfile = userInfo['result']['student'];
+      await prefs.setString('studentprofile', jsonEncode(newStudentProfile));
     }
 
 
