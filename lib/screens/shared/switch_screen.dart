@@ -22,6 +22,7 @@ class SwitchScreen extends StatefulWidget {
 }
 
 class _SwitchScreenState extends State<SwitchScreen> {
+  late SharedPreferences _prefs;
   bool isSearchActive = false;
   final TextEditingController searchController = TextEditingController();
   List<String> _roles = [];
@@ -44,8 +45,8 @@ class _SwitchScreenState extends State<SwitchScreen> {
   }
 
   Future<void> _loadRoles() async {
-    final prefs = await SharedPreferences.getInstance();
-    final rolesList = prefs.getStringList('roles');
+    _prefs = await SharedPreferences.getInstance();
+    final rolesList = _prefs.getStringList('roles');
 
     if (rolesList != null) {
       // Remove duplicates
@@ -57,9 +58,9 @@ class _SwitchScreenState extends State<SwitchScreen> {
   }
 
   Future<void> _loadCurrentData() async {
-    final prefs = await SharedPreferences.getInstance();
-    final currRole = prefs.getInt('current_role');
-    final accName = prefs.getString('username');
+    _prefs = await SharedPreferences.getInstance();
+    final currRole = _prefs.getInt('current_role');
+    final accName = _prefs.getString('username');
     if (currRole != null) {
       setState(() {
         _currentRole = currRole;
@@ -76,9 +77,21 @@ class _SwitchScreenState extends State<SwitchScreen> {
     });
   }
 
+  void _navigateToProfile() {
+    final currole = _prefs.getInt('current_role');
+    if (currole == 0) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const StudentProfileInputScreen1()));
+    } else {
+      Navigator.pushNamed(context, '/company');
+    }
+  }
+
   void _handleRoleSelection(String role) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('current_role', int.parse(role));
+    _prefs = await SharedPreferences.getInstance();
+    await _prefs.setInt('current_role', int.parse(role));
 
     // Update the current role in the app state
     setState(() {
@@ -89,8 +102,8 @@ class _SwitchScreenState extends State<SwitchScreen> {
 
   Future<void> handleLogout() async {
     // Lấy token từ SharedPreferences
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
     print(token);
 
     if (token != null) {
@@ -105,7 +118,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
         if (response.statusCode == 201) {
           // await prefs.remove('token');
           // await prefs.remove('currole');
-          await prefs.clear();
+          await _prefs.clear();
           Navigator.pushReplacementNamed(context, '/signin');
         } else {
           // Xử lý lỗi nếu cần
@@ -219,7 +232,12 @@ class _SwitchScreenState extends State<SwitchScreen> {
                 children: [
                   InkWell(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const StudentProfileInputScreen1()));
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) =>
+                      //             const StudentProfileInputScreen1()));
+                      _navigateToProfile();
                     },
                     child: const ListTile(
                       leading: Icon(
