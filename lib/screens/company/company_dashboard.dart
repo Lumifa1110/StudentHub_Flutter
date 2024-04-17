@@ -135,8 +135,8 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
   Future<void> _loadProject() async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    final company_profile = _prefs.getString('company_profile');
-    final companyId = jsonDecode(company_profile!)['id'];
+    final companyProfile = _prefs.getString('company_profile');
+    final companyId = jsonDecode(companyProfile!)['id'];
 
     try {
       final responseJson = await http.get(
