@@ -25,7 +25,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
     _prefs = await SharedPreferences.getInstance();
     final role = _prefs.getInt('current_role');
     if (role == 0) {
-      final profile = _prefs.getString('studentprofile');
+      final profile = _prefs.getString('student_profile');
       if (profile == 'null') {
         Navigator.pushReplacementNamed(context, '/student');
       }

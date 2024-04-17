@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/textfield_floatinglabel.dart';
-import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/models/user_model.dart';
-import 'package:studenthub/screens/authentication/signuptype_screen.dart';
 import 'package:studenthub/screens/index.dart';
+import 'package:studenthub/services/index.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
-import 'package:studenthub/config/config.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -20,68 +17,58 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   List<String> errorMessages = [];
 
-  late SharedPreferences _prefs;
+  late SharedPreferences prefs;
 
   @override
   void initState() {
     super.initState();
-    _loadToken();
+    loadToken();
   }
 
-  Future<void> _loadToken() async {
-    _prefs = await SharedPreferences.getInstance();
-    final token = _prefs.getString('token');
+
+
+  Future<void> loadToken() async {
+    prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
     if (token != null) {
-      Navigator.pushReplacementNamed(context, '/home');
+      if (mounted) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      }
     }
   }
 
   Future<void> handleSignin() async {
     final prefs = await SharedPreferences.getInstance();
     final User user = User(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
     );
+
+    // SAVE LOCAL: email + password
     final userJson = user.toJson();
     await prefs.setString('user', jsonEncode(userJson));
-    // print(user.toJson());
 
-    try {
-      final response = await http.post(
-        Uri.parse('${uriBase}/api/auth/sign-in'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(user.toJson()),
-      );
-      print('Res: ${response.body}');
-      print(response.statusCode);
+    // API: sign-in
+    final Map<String, dynamic> signInResponse = await AuthService.signIn({
+      "email": emailController.text.trim(),
+      "password": passwordController.text.trim()
+    });
 
-      if (response.statusCode == 201) {
-        final result = jsonDecode(response.body)["result"];
-        final token = result['token'];
-        print('Token: $token');
-        await prefs.setString('token', token);
-        await fetchUserData();
-        Navigator.pushReplacementNamed(context, '/home');
-      } else {
-        print('Error this: ${response.statusCode}');
-        final errorDetails = jsonDecode(response.body)['errorDetails'];
-        setState(() {
-          if (errorDetails is List<dynamic>) {
-            errorMessages = errorDetails.cast<String>();
-          } else if (errorDetails is String) {
-            errorMessages = [errorDetails];
-          }
-        });
-      }
-    } catch (e) {
-      print('Error: $e');
+    // SAVE LOCAL: token
+    final token = signInResponse['result']['token'];
+    await prefs.setString('token', token);
+
+    // FETCH: user data
+    await fetchUserData();
+
+    // NAVIGATE TO: home screen
+    if (mounted) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
     }
   }
 
@@ -90,47 +77,22 @@ class _SigninScreenState extends State<SigninScreen> {
     final token = prefs.getString('token');
 
     if (token != null) {
-      try {
-        final response = await http.get(
-          Uri.parse('${uriBase}/api/auth/me'),
-          headers: {'Authorization': 'Bearer $token'},
-        );
-        print('Fetch User Data: ${response.body}');
-        if (response.statusCode == 200) {
-          final userData = jsonDecode(response.body)['result'];
-          print('User Data:  $userData');
+      // API: get user data
+      final Map<String, dynamic> response = await AuthService.getUserInfo();
+      final userData = response['result'];
 
-          // Save user id
-          await prefs.setInt('userid', userData['id']);
-          print('User ID: ${userData['id']}');
+      // SAVE LOCAL: user id + fullname + roles
+      await prefs.setInt('userid', userData['id']);
+      await prefs.setString('username', userData['fullname']);
+      List<dynamic> roles = userData['roles'];
+      List<String> rolesStringList = roles.map((role) => role.toString()).toList();
+      await prefs.setStringList('roles', rolesStringList);
 
-          // Save user full name
-          await prefs.setString('username', userData['fullname']);
-          print('User FullName: ${userData['fullname']}');
-
-          // Save roles
-          List<dynamic> roles = userData['roles'];
-          List<String> rolesStringList =
-              roles.map((role) => role.toString()).toList();
-          await prefs.setStringList('roles', rolesStringList);
-          print('User assigned roles: ${userData['roles']}');
-
-          // Save student profile
-          await prefs.setString(
-              'studentprofile', jsonEncode(userData['student']));
-          print('User role Student: ${jsonEncode(userData['student'])}');
-
-          // Save company profile
-          await prefs.setString(
-              'companyprofile', jsonEncode(userData['company']));
-          print('User role Company: ${jsonEncode(userData['company'])}');
-        } else {
-          // Handle error
-        }
-      } catch (e) {
-        // Handle network errors
-      }
-    } else {
+      // SAVE LOCAL: user profiles
+      await prefs.setString('student_profile', jsonEncode(userData['student']));
+      await prefs.setString('company_profile', jsonEncode(userData['company']));
+    } 
+    else {
       // Handle case where token is not available
     }
   }
@@ -168,7 +130,7 @@ class _SigninScreenState extends State<SigninScreen> {
             ),
             // TextField for Username or email
             TextFieldFloatingLabel(
-                label: 'Email', controller: _emailController),
+                label: 'Email', controller: emailController),
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -203,7 +165,7 @@ class _SigninScreenState extends State<SigninScreen> {
             // TextField for Password
             TextFieldFloatingLabel(
               label: 'Password',
-              controller: _passwordController,
+              controller: passwordController,
               isPassword: true,
             ),
             Column(

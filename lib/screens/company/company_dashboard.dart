@@ -119,7 +119,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
     _prefs = await SharedPreferences.getInstance();
     final role = _prefs.getInt('current_role');
     if (role == 1) {
-      final profile = _prefs.getString('companyprofile');
+      final profile = _prefs.getString('company_profile');
       if (profile == 'null') {
         Navigator.pushReplacementNamed(context, '/company');
       }
@@ -133,7 +133,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
 
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    final companyId = jsonDecode(_prefs.getString('companyprofile')!)['id'];
+    final companyId = jsonDecode(_prefs.getString('company_profile')!)['id'];
 
     try {
       final responseJson = await http.get(
@@ -184,7 +184,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
 
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    final companyId = jsonDecode(_prefs.getString('companyprofile')!)['id'];
+    final companyId = jsonDecode(_prefs.getString('company_profile')!)['id'];
 
     try {
       final responseJson = await http.get(
@@ -236,7 +236,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
 
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    final companyId = jsonDecode(_prefs.getString('companyprofile')!)['id'];
+    final companyId = jsonDecode(_prefs.getString('company_profile')!)['id'];
 
     try {
       final responseJson = await http.get(

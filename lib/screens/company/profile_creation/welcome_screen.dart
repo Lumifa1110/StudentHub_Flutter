@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/button_simple.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:studenthub/screens/index.dart';
 
 class CompanyWelcomeScreen extends StatelessWidget {
   const CompanyWelcomeScreen({super.key});
@@ -60,7 +61,7 @@ class CompanyWelcomeScreen extends StatelessWidget {
               ButtonSimple(
                 label: 'Get started!', 
                 onPressed: () => {
-                  Navigator.pushNamed(context, '/company/dashboard')
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const CompanyDashboardScreen()))
                 }
               )
             ]

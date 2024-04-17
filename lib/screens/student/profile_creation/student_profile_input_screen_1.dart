@@ -19,8 +19,7 @@ class StudentProfileInputScreen1 extends StatefulWidget {
   const StudentProfileInputScreen1({super.key});
 
   @override
-  State<StudentProfileInputScreen1> createState() =>
-      _StudentProfileInputScreen1State();
+  State<StudentProfileInputScreen1> createState() => _StudentProfileInputScreen1State();
 }
 
 class _StudentProfileInputScreen1State extends State<StudentProfileInputScreen1> {

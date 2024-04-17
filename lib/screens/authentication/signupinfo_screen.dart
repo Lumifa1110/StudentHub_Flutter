@@ -1,15 +1,11 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/textfield_floatinglabel.dart';
 import 'package:studenthub/enums/user_role.dart';
-import 'package:studenthub/models/index.dart';
 import 'package:studenthub/screens/index.dart';
+import 'package:studenthub/services/index.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
-import 'package:studenthub/config/config.dart';
 
 class SignupInfoScreen extends StatefulWidget {
   final UserRole selectedType;
@@ -24,9 +20,9 @@ class SignupInfoScreen extends StatefulWidget {
 }
 
 class _SignupInfoScreenState extends State<SignupInfoScreen> {
-  final TextEditingController _fullnameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController fullnameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   bool? _isAgree = false;
   List<String> errorMessages = [];
@@ -40,46 +36,17 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
       return; // Stop further execution
     }
 
-    final CreateUser createUser = CreateUser(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-      fullname: _fullnameController.text.trim(),
-      role: widget.selectedType.index,
-    );
-    final createUserJson = createUser.toJson();
+    // API: sign-up
+    await AuthService.signUp({
+      "email": emailController.text.trim(),
+      "password": passwordController.text.trim(),
+      "fullname": fullnameController.text.trim(),
+      "role": widget.selectedType.index
+    });
 
-    try {
-      final response = await http.post(
-        Uri.parse('${uriBase}/api/auth/sign-up'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(createUserJson),
-      );
-
-      print(response.body);
-      if (response.statusCode == 201) {
-        print('success');
-        Navigator.pop(context);
-        Navigator.pushReplacementNamed(context, '/signin');
-      } else {
-        print('Error: ${response.statusCode}');
-        final errorBody = jsonDecode(response.body);
-        final errorDetails = errorBody['errorDetails'];
-        if (errorDetails is List<dynamic>) {
-          setState(() {
-            errorMessages.clear();
-            errorMessages.addAll(errorDetails.cast<String>());
-          });
-        } else if (errorDetails is String) {
-          setState(() {
-            errorMessages.clear();
-            errorMessages.add(errorDetails);
-          });
-        }
-      }
-    } catch (e) {
-      print('Error: $e');
+    // NAVIGATE TO: sign-in screen
+    if (mounted) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const StudentProfileInputScreen1()));
     }
   }
 
@@ -119,7 +86,7 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
                 height: 20,
               ),
               TextFieldFloatingLabel(
-                  label: 'Fullname', controller: _fullnameController),
+                  label: 'Fullname', controller: fullnameController),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -149,7 +116,7 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
                 ],
               ),
               TextFieldFloatingLabel(
-                  label: 'Work email address', controller: _emailController),
+                  label: 'Work email address', controller: emailController),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -179,7 +146,7 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
               ),
               TextFieldFloatingLabel(
                 label: 'Password',
-                controller: _passwordController,
+                controller: passwordController,
                 isPassword: true,
               ),
               Column(

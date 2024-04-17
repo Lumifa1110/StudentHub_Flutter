@@ -1,6 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
 import 'dart:convert';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -49,7 +48,6 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
 
   String formatDateTime(DateTime dateTime) {
     final result = DateFormat('mm-yyyy').format(dateTime);
-    print(result);
     return result;
   }
 
@@ -88,51 +86,60 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
 
   Future<void> handleSubmitProfile(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
-    final studentProfile = prefs.getString('studentprofile');
+    final studentProfile = prefs.getString('student_profile');
 
+    // IF student profile is empty -> create student profile
     if (studentProfile == 'null') {
-      final Map<String, dynamic> studentProfile = await StudentService.addStudentProfile({
+      final Map<String, dynamic> studentProfileResponse = await StudentService.addStudentProfile({
         "techStackId": widget.studentTechstack.toString(),
         "skillSets": widget.studentSkillsets.map((skillset) => skillset.id).toList()
       });
-      await prefs.setString('studentprofile', jsonEncode(studentProfile));
-    }
-    else {
-      final studentId = jsonDecode(studentProfile!)['id'].toString();
-      await StudentService.updateStudentProfile(studentId, {
-        "techStackId": widget.studentTechstack.toString(),
-        "skillSets": widget.studentSkillsets.map((skillset) => skillset.id).toList()
-      });
-      await StudentService.addStudentLanguage(studentId, {
-        "languages": widget.studentLanguages.map((language) => {
-          "languageName": language.languageName,
-          "level": language.level
-        }).toList()
-      });
-      await StudentService.addStudentEducation(studentId, {
-        "education": widget.studentEducations.map((education) => {
-          "schoolName": education.schoolName,
-          "startYear": education.startYear.year,
-          "endYear": education.endYear!.year
-        }).toList()
-      });
-      await StudentService.addStudentExperience(studentId, {
-        "experience": widget.studentExperiences.map((experience) => {
-          "title": experience.title,
-          "startMonth": experience.startMonth,
-          "endMonth": experience.endMonth,
-          "description": experience.description,
-          "skillSets": [
-            "1", "2"
-          ]
-        }).toList()
-      });
-      final Map<String, dynamic> userInfo = await AuthService.getUserInfo();
-      final newStudentProfile = userInfo['result']['student'];
-      await prefs.setString('studentprofile', jsonEncode(newStudentProfile));
+      await prefs.setString('student_profile', jsonEncode(studentProfileResponse));
     }
 
+    // GET: student profile id
+    final studentId = jsonDecode(studentProfile!)['id'].toString();
 
+    // API: update student profile
+    await StudentService.updateStudentProfile(studentId, {
+      "techStackId": widget.studentTechstack.toString(),
+      "skillSets": widget.studentSkillsets.map((skillset) => skillset.id).toList()
+    });
+    await StudentService.addStudentLanguage(studentId, {
+      "languages": widget.studentLanguages.map((language) => {
+        "languageName": language.languageName,
+        "level": language.level
+      }).toList()
+    });
+    await StudentService.addStudentEducation(studentId, {
+      "education": widget.studentEducations.map((education) => {
+        "schoolName": education.schoolName,
+        "startYear": education.startYear.year,
+        "endYear": education.endYear!.year
+      }).toList()
+    });
+    await StudentService.addStudentExperience(studentId, {
+      "experience": widget.studentExperiences.map((experience) => {
+        "title": experience.title,
+        "startMonth": experience.startMonth,
+        "endMonth": experience.endMonth,
+        "description": experience.description,
+        "skillSets": [
+          "1", "2"
+        ]
+      }).toList()
+    });
+    await StudentService.addStudentResume(studentId, {
+      "resume": resumeFile.name
+    });
+    await StudentService.addStudentTranscript(studentId, {
+      "transcript": transcriptFile.name
+    });
+
+    // SAVE LOCAL: student profile
+    final Map<String, dynamic> userInfo = await AuthService.getUserInfo();
+    final newStudentProfile = userInfo['result']['student'];
+    await prefs.setString('student_profile', jsonEncode(newStudentProfile));
   }
 
   @override
@@ -300,7 +307,7 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
                   alignment: Alignment.bottomRight,
                   margin: const EdgeInsets.only(top: 20),
                   child: ButtonSimple(
-                    label: 'Next',
+                    label: 'Continue',
                     onPressed: () => {
                       handleSubmitProfile(context),
                       Navigator.push(context, MaterialPageRoute(builder: (context) => const StudentDashboardScreen()))

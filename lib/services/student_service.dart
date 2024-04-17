@@ -51,4 +51,24 @@ class StudentService {
       rethrow;
     }
   }
+
+  static Future<Map<String, dynamic>> addStudentResume(String id, dynamic body) async {
+    try {
+      final response = await ApiService.putRequest('/api/profile/student/$id/resume', body);
+      return response;
+    } catch (e) {
+      print('Error add student resume: $e');
+      rethrow;
+    }
+  }
+
+  static Future<Map<String, dynamic>> addStudentTranscript(String id, dynamic body) async {
+    try {
+      final response = await ApiService.putRequest('/api/profile/student/$id/transcript', body);
+      return response;
+    } catch (e) {
+      print('Error add student transcript: $e');
+      rethrow;
+    }
+  }
 }

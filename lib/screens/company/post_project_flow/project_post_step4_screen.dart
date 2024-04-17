@@ -24,7 +24,7 @@ class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
   Future<void> postProject(BuildContext context) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    final idCompany = jsonDecode(_prefs.getString('companyprofile')!)['id'];
+    final idCompany = jsonDecode(_prefs.getString('company_profile')!)['id'];
     ProjectPost modelDataProject = ProjectPost(
         '$idCompany',
         widget.box['projectScore'],

@@ -5,7 +5,7 @@ import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/components/customprojectitem.dart';
 import 'package:studenthub/components/bottomsheet_customsearchbar.dart';
 import 'package:studenthub/components/radiolist_projectlength.dart';
-import 'package:studenthub/components/textfield_label_v2.dart';
+import 'package:studenthub/components/textfield/textfield_label_v2.dart';
 import 'package:studenthub/config/config.dart';
 import 'package:studenthub/enums/project_scope.dart';
 import 'package:studenthub/models/company_model.dart';
@@ -40,8 +40,8 @@ class _SearchListScreenState extends State<SearchListScreen> {
   Future<void> _patchFavoriteProject(int projectId, int disableFlag) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    final studentprofile = _prefs.getString('studentprofile');
-    final studentId = jsonDecode(studentprofile!)['id'];
+    final student_profile = _prefs.getString('student_profile');
+    final studentId = jsonDecode(student_profile!)['id'];
 
     try {
       final response = await http.patch(

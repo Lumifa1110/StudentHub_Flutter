@@ -1,18 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:studenthub/components/button_simple.dart';
-import 'package:studenthub/components/textfield_label_v2.dart';
-import 'package:studenthub/config/config.dart';
+import 'package:studenthub/components/textfield/textfield_label_v2.dart';
 import 'package:studenthub/enums/company_size.dart';
-import 'package:studenthub/models/company_profile_model.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:studenthub/screens/index.dart';
+import 'package:studenthub/services/index.dart';
 import 'package:studenthub/utils/font.dart';
 
 class CompanyProfileInputScreen extends StatefulWidget {
-  const CompanyProfileInputScreen({Key? key}) : super(key: key);
+  const CompanyProfileInputScreen({super.key});
 
   @override
   State<CompanyProfileInputScreen> createState() =>
@@ -22,47 +21,23 @@ class CompanyProfileInputScreen extends StatefulWidget {
 class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
   // TextField controller
   final companyNameController = TextEditingController();
+  final companySizeController = TextEditingController();
   final companyWebsiteController = TextEditingController();
   final companyDescriptionController = TextEditingController();
 
-  CompanySize companySizeState = CompanySize.justme;
-
-  void handleCompanySizeChange(CompanySize? value) {
-    setState(() {
-      companySizeState = value!;
-    });
-  }
-
   Future<void> postCompanyProfile() async {
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-    print(token);
-    final companyProfile = CompanyProfile(
-      title: companyNameController.text,
-      size: companySizeState.index,
-      website: companyWebsiteController.text,
-      description: companyDescriptionController.text,
-    );
+    final companyProfile = prefs.getString('company_profile');
 
-    final response = await http.post(
-      Uri.parse(
-          '${uriBase}/api/profile/company'), // Replace with your API endpoint
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode(companyProfile.toJson()),
-    );
-
-    print(response.body);
-
-    if (response.statusCode == 201 || response.statusCode == 200) {
-      // Handle successful response
-      print('Company profile posted successfully');
-      Navigator.pushReplacementNamed(context, '/company/welcome');
-    } else {
-      // Handle error response
-      print('Failed to post company profile');
+    // API: create company profile
+    if (companyProfile == 'null') {
+      final Map<String, dynamic> companyProfileResponse = await CompanyService.addCompanyProfile({
+        "companyName": companyNameController.text,
+        "size": int.parse(companySizeController.text),
+        "website": companyWebsiteController.text,
+        "description": companyDescriptionController.text
+      });
+      await prefs.setString('company_profile', jsonEncode(companyProfileResponse));
     }
   }
 
@@ -107,62 +82,14 @@ class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
                   ),
                 ),
               ]),
-              // RADIO BUTTON: Select company size
-              Row(children: [
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    alignment: Alignment.topLeft,
-                    child: const Text(
-                      'How many people are there in your company?',
-                      style: TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.normal),
-                    ),
-                  ),
-                ),
-              ]),
-              Column(
-                children: [
-                  CompanySizeTile(
-                    title: 'It\'s just me',
-                    value: CompanySize.justme,
-                    companySizeState: companySizeState,
-                    onChanged: handleCompanySizeChange,
-                  ),
-                  CompanySizeTile(
-                    title: '2 to 9 people',
-                    value: CompanySize.small,
-                    companySizeState: companySizeState,
-                    onChanged: handleCompanySizeChange,
-                  ),
-                  CompanySizeTile(
-                    title: '10 to 99 people',
-                    value: CompanySize.medium,
-                    companySizeState: companySizeState,
-                    onChanged: handleCompanySizeChange,
-                  ),
-                  CompanySizeTile(
-                    title: '100 to 1000 people',
-                    value: CompanySize.large,
-                    companySizeState: companySizeState,
-                    onChanged: handleCompanySizeChange,
-                  ),
-                  CompanySizeTile(
-                    title: 'Over 1000 people',
-                    value: CompanySize.verylarge,
-                    companySizeState: companySizeState,
-                    onChanged: handleCompanySizeChange,
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
               // TextFields
               TextFieldWithLabel2(
                 label: 'Company name',
                 controller: companyNameController,
+              ),
+              TextFieldWithLabel2(
+                label: 'Company size',
+                controller: companySizeController,
               ),
               TextFieldWithLabel2(
                 label: 'Website',
@@ -178,7 +105,10 @@ class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
                 margin: const EdgeInsets.only(top: 20),
                 child: ButtonSimple(
                   label: 'Continue',
-                  onPressed: () => postCompanyProfile(),
+                  onPressed: () => {
+                    postCompanyProfile(),
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const CompanyWelcomeScreen()))
+                  },
                 ),
               )
             ],

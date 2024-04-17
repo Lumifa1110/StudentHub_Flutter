@@ -5,14 +5,14 @@ import 'package:studenthub/utils/font.dart';
 class TextFieldWithLabel2 extends StatelessWidget {
   final String label;
   final TextEditingController controller;
-  // final String oldText;
+  final TextInputType? inputType;
   final String? hint;
 
   const TextFieldWithLabel2({
     super.key,
     required this.label,
     required this.controller,
-    // required this.oldText,
+    this.inputType,
     this.hint,
   });
 
@@ -44,6 +44,7 @@ class TextFieldWithLabel2 extends StatelessWidget {
             child: TextField(
               controller: controller,
               textAlign: TextAlign.start,
+              keyboardType: inputType,
               style: const TextStyle(
                 fontSize: 16,
               ),

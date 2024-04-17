@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/button_simple.dart';
-import 'package:studenthub/components/textfield_label_v2.dart';
+import 'package:studenthub/components/textfield/textfield_label_v2.dart';
 import 'package:studenthub/config/config.dart';
 import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/utils/colors.dart';

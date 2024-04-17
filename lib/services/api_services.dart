@@ -21,7 +21,11 @@ class ApiService {
 
   static Future<Map<String, dynamic>> getRequest(String endpoint) async {
     final Map<String, String> headers = await getHeaders();
-    final response = await http.get(Uri.parse(baseUrl + endpoint), headers: headers);
+    final response = await http.get(
+      Uri.parse(baseUrl + endpoint), 
+      headers: headers
+    );
+    
     if (response.statusCode == 201 || response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {

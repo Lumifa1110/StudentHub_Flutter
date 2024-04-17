@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:studenthub/components/button_simple.dart';
-import 'package:studenthub/components/textfield_label_v2.dart';
+import 'package:studenthub/components/textfield/textfield_label_v2.dart';
 import 'package:studenthub/config/config.dart';
 import 'package:studenthub/enums/company_size.dart';
 import 'package:studenthub/models/company_profile_model.dart';
@@ -37,8 +37,8 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
   Future<void> postCompanyProfile() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    final companyprofile = _prefs.getString('companyprofile');
-    final companyId = jsonDecode(companyprofile!)['id'];
+    final company_profile = _prefs.getString('company_profile');
+    final companyId = jsonDecode(company_profile!)['id'];
     print(token);
     final companyProfile = CompanyProfile(
       title: companyNameController.text,
@@ -63,7 +63,7 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
       // Handle successful response
       final updatedCompanyProfile = jsonDecode(response.body)['result'];
       await prefs.setString(
-          'companyprofile', jsonEncode(updatedCompanyProfile));
+          'company_profile', jsonEncode(updatedCompanyProfile));
       print('Company profile posted successfully');
     } else {
       // Handle error response
@@ -74,8 +74,8 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
   Future<void> _loadScreen() async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    final companyprofile = _prefs.getString('companyprofile');
-    final companyId = jsonDecode(companyprofile!)['id'];
+    final company_profile = _prefs.getString('company_profile');
+    final companyId = jsonDecode(company_profile!)['id'];
 
     try {
       final response = await http.get(

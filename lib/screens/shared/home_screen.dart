@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:studenthub/components/authappbar.dart';
-import 'package:studenthub/config/config.dart';
 import 'package:studenthub/enums/user_role.dart';
-import 'package:studenthub/preferences/user_preferences.dart';
-import 'package:studenthub/screens/authentication/signin_screen.dart';
-
+import 'package:studenthub/screens/index.dart';
+import 'package:studenthub/services/index.dart';
 import 'package:studenthub/utils/colors.dart';
-import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,77 +13,47 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late SharedPreferences _prefs;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _loadToken();
-  // }
-
-  // Future<void> _loadToken() async {
-  //   _prefs = await SharedPreferences.getInstance();
-  //   final token = _prefs.getString('token');
-  //   if (token != null) {
-  //     Navigator.pushReplacementNamed(context, '/profile');
-  //   }
-  // }
+  late SharedPreferences prefs;
 
   Future<void> handleCompany() async {
-    _prefs = await SharedPreferences.getInstance();
-    await _prefs.setInt('current_role', UserRole.company.index);
-    final profile = _prefs.getString('companyprofile');
-    print(profile.runtimeType);
-    print('Company: $profile');
-    if (profile == 'null') {
-      Navigator.pushNamed(context, '/company');
-    } else {
-      Navigator.pushReplacementNamed(context, '/company/dashboard');
+    prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('current_role', UserRole.company.index);
+    final profile = prefs.getString('company_profile');
+    if (mounted) {
+      if (profile == 'null') {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const CompanyProfileInputScreen()));
+      } else {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const CompanyDashboardScreen()));
+      }
     }
   }
 
   Future<void> handleStudent() async {
-    _prefs = await SharedPreferences.getInstance();
-    await _prefs.setInt('current_role', UserRole.company.index);
-    final profile = _prefs.getString('studentprofile');
-    print(profile.runtimeType);
-    print('Student: $profile');
-    if (profile == 'null') {
-      Navigator.pushNamed(context, '/student');
-    } else {
-      Navigator.pushReplacementNamed(context, '/student/dashboard');
+    prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('current_role', UserRole.student.index);
+    final profile = prefs.getString('student_profile');
+    if (mounted) {
+      if (profile == 'null') {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const StudentProfileInputScreen1()));
+      } else {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const StudentDashboardScreen()));
+      }
     }
   }
 
   Future<void> handleLogout() async {
-    // Lấy token từ SharedPreferences
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-    print(token);
+    
+    // API: log out
+    await AuthService.logOut();
 
-    if (token != null) {
-      try {
-        final response = await http.post(
-          Uri.parse('${uriBase}/api/auth/logout'),
-          headers: {
-            'Authorization': 'Bearer $token',
-          },
-        );
-        print('Code: ${response.statusCode}');
+    // DELETE LOCAL: token + current role
+    await prefs.remove('token');
+    await prefs.remove('current_role');
 
-        if (response.statusCode == 201) {
-          await prefs.remove('token');
-          await prefs.remove('current_role');
-          Navigator.pushReplacementNamed(context, '/signin');
-        } else {
-          // Xử lý lỗi nếu cần
-          print('Logout failed: ${response.body}');
-        }
-      } catch (e) {
-        print('Error: $e');
-      }
-    } else {
-      print('Token not found');
+    // NAVIGATE TO: sign in screen
+    if (mounted) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const SigninScreen()));
     }
   }
 

@@ -8,7 +8,6 @@ import 'package:studenthub/components/textfield/search_bar.dart';
 import 'package:studenthub/config/config.dart';
 import 'package:studenthub/preferences/index.dart';
 import 'package:studenthub/screens/company/profile_creation/company_profile_edit_screen.dart';
-import 'package:studenthub/screens/shared/project_list_screen.dart';
 import 'package:studenthub/screens/student/profile_creation/student_profile_input_screen_1.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';

@@ -33,10 +33,10 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     myFavoriteProjects.clear();
     _prefs = await SharedPreferences.getInstance();
     final role = _prefs.getInt('current_role');
-    final studentprofile = _prefs.getString('studentprofile');
+    final student_profile = _prefs.getString('student_profile');
     _loadProjects();
     if (role == 0) {
-      if (studentprofile == 'null') {
+      if (student_profile == 'null') {
         Navigator.pushReplacementNamed(context, '/student');
       }
       setState(() {
@@ -81,8 +81,8 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   Future<void> _loadFavoriteProjects() async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    final studentprofile = _prefs.getString('studentprofile');
-    final studentId = jsonDecode(studentprofile!)['id'];
+    final student_profile = _prefs.getString('student_profile');
+    final studentId = jsonDecode(student_profile!)['id'];
 
     try {
       final response = await http.get(
@@ -113,8 +113,8 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   Future<void> _patchFavoriteProject(int projectId, int disableFlag) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    final studentprofile = _prefs.getString('studentprofile');
-    final studentId = jsonDecode(studentprofile!)['id'];
+    final student_profile = _prefs.getString('student_profile');
+    final studentId = jsonDecode(student_profile!)['id'];
 
     try {
       final response = await http.patch(
