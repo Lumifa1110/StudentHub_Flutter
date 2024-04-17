@@ -21,14 +21,28 @@ class ProjectDetailScreen extends StatefulWidget {
 class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   late SharedPreferences _prefs;
   Project? selectedProject;
+  bool isStudent = true;
 
   @override
   void initState() {
     super.initState();
+    _loadScreen();
     fetchProjectDetails(widget.itemId);
   }
 
-  Future<void> _loadScreen() async {}
+  Future<void> _loadScreen() async {
+    _prefs = await SharedPreferences.getInstance();
+    final role = _prefs.getInt('current_role');
+    if (role == 1) {
+      setState(() {
+        isStudent = false;
+      });
+    } else {
+      setState(() {
+        isStudent = true;
+      });
+    }
+  }
 
   Future<void> fetchProjectDetails(int? projectId) async {
     _prefs = await SharedPreferences.getInstance();
@@ -180,37 +194,44 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        width: 180,
-                        height: 40,
-                        padding: const EdgeInsets.all(0),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: blackTextColor, width: 2.0),
-                          color: whiteTextColor,
-                          boxShadow: const [
-                            BoxShadow(
-                              color: blackTextColor,
-                              offset: Offset(2, 3),
-                            ),
-                          ],
-                        ),
-                        child: TextButton(
-                          onPressed: () {},
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all<OutlinedBorder>(
-                              const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.zero),
-                            ),
-                          ),
-                          child: const Text(
-                            'Apply now',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: blackTextColor,
-                            ),
-                          ),
-                        ),
-                      ),
+                      isStudent
+                          ? Container(
+                              width: 180,
+                              height: 40,
+                              padding: const EdgeInsets.all(0),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: blackTextColor, width: 2.0),
+                                color: whiteTextColor,
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: blackTextColor,
+                                    offset: Offset(2, 3),
+                                  ),
+                                ],
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                      context, '/student/proposal/submit');
+                                },
+                                style: ButtonStyle(
+                                  shape:
+                                      MaterialStateProperty.all<OutlinedBorder>(
+                                    const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.zero),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Apply now',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: blackTextColor,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(),
                       Container(
                         width: 180,
                         height: 40,

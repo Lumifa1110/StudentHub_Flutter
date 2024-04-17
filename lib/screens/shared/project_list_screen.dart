@@ -274,6 +274,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                               ),
                             );
                           },
+                          canFavorite: isStudent,
                           isFavorite: isFavoriteProject(project),
                           onFavoriteToggle: (isFavorite) {
                             updateFavoriteProject(project, isFavorite);

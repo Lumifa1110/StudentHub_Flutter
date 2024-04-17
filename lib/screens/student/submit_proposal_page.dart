@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/authappbar.dart';
+import 'package:studenthub/utils/colors.dart';
+import 'package:studenthub/utils/font.dart';
 
 class SubmitProposalScreen extends StatelessWidget {
   const SubmitProposalScreen({super.key});
@@ -7,7 +9,7 @@ class SubmitProposalScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AuthAppBar(canBack: false),
+      appBar: const AuthAppBar(canBack: true),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
@@ -17,10 +19,15 @@ class SubmitProposalScreen extends StatelessWidget {
               const SizedBox(height: 20),
               const Text(
                 'Cover letter',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: AppFonts.h2FontSize),
               ),
               const SizedBox(height: 10),
-              const Text('Describe why do you fit to this project'),
+              const Text(
+                'Describe why do you fit to this project',
+                style: TextStyle(
+                    fontSize: AppFonts.h3FontSize, color: blackTextColor),
+              ),
               const SizedBox(height: 10),
               const TextField(
                 maxLines: 10,
@@ -38,17 +45,32 @@ class SubmitProposalScreen extends StatelessWidget {
                     child: ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                            shape: const RoundedRectangleBorder()),
-                        child: const Text("Cancel")),
+                          shape: const RoundedRectangleBorder(),
+                          backgroundColor: mainColor,
+                        ),
+                        child: const Text(
+                          "Cancel",
+                          style: TextStyle(
+                              fontSize: AppFonts.h3FontSize,
+                              color: whiteTextColor),
+                        )),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     flex: 1,
                     child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                            shape: const RoundedRectangleBorder()),
-                        child: const Text("Submit proposal")),
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        shape: const RoundedRectangleBorder(),
+                        backgroundColor: mainColor,
+                      ),
+                      child: const Text(
+                        "Submit proposal",
+                        style: TextStyle(
+                            fontSize: AppFonts.h3FontSize,
+                            color: whiteTextColor),
+                      ),
+                    ),
                   ),
                 ],
               ),

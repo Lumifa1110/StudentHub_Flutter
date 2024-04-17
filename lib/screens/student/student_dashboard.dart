@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/utils/colors.dart';
+import 'package:studenthub/utils/font.dart';
 
 import '../../utils/mock_data.dart';
 
@@ -100,15 +101,17 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                         Expanded(
                             flex: 1,
                             child: Container(
+                              padding: const EdgeInsets.all(10.0),
                               decoration: BoxDecoration(border: Border.all()),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   const Text(
                                     'Active proposal(0)',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: AppFonts.h3FontSize),
                                   ),
                                   Expanded(
                                     child: ListView.builder(
@@ -132,34 +135,33 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                         Expanded(
                             flex: 6,
                             child: Container(
+                              padding: const EdgeInsets.all(10.0),
                               decoration: BoxDecoration(border: Border.all()),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Submitted proposal(${mockProposal.length})',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Submitted proposal(${mockProposal.length})',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: AppFonts.h3FontSize),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Expanded(
+                                    child: ListView.builder(
+                                      itemCount: mockProposal
+                                          .length, // Number of items in your list
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        final proposal = mockProposal[index];
+                                        return OptionItemAllProjectScreen(
+                                            onTap: () {}, proposal: proposal);
+                                      },
                                     ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Expanded(
-                                      child: ListView.builder(
-                                        itemCount: mockProposal
-                                            .length, // Number of items in your list
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          final proposal = mockProposal[index];
-                                          return OptionItemAllProjectScreen(
-                                              onTap: () {}, proposal: proposal);
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             )),
                         const SizedBox(
