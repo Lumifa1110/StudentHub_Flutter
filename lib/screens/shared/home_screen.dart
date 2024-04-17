@@ -36,27 +36,30 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> handleCompany() async {
     _prefs = await SharedPreferences.getInstance();
     await _prefs.setInt('current_role', UserRole.company.index);
-    final profile = _prefs.getString('companyprofile');
-    print(profile.runtimeType);
-    print('Company: $profile');
-    if (profile == 'null') {
-      Navigator.pushNamed(context, '/company');
-    } else {
-      Navigator.pushReplacementNamed(context, '/company/dashboard');
-    }
+    // final profile = _prefs.getString('companyprofile');
+    // print(profile.runtimeType);
+    // print('Company: $profile');
+    // if (profile == 'null') {
+    //   Navigator.pushNamed(context, '/company');
+    // } else {
+    //   Navigator.pushReplacementNamed(context, '/company/dashboard');
+    // }
+    Navigator.pushReplacementNamed(context, '/company/dashboard');
   }
 
   Future<void> handleStudent() async {
     _prefs = await SharedPreferences.getInstance();
-    await _prefs.setInt('current_role', UserRole.company.index);
-    final profile = _prefs.getString('studentprofile');
-    print(profile.runtimeType);
-    print('Student: $profile');
-    if (profile == 'null') {
-      Navigator.pushNamed(context, '/student');
-    } else {
-      Navigator.pushReplacementNamed(context, '/student/dashboard');
-    }
+    await _prefs.setInt('current_role', UserRole.student.index);
+    // final profile = _prefs.getString('studentprofile');
+    // print(profile.runtimeType);
+    // print('Student: $profile');
+    // if (profile == 'null') {
+    //   Navigator.pushNamed(context, '/student');
+    // } else {
+    //   Navigator.pushReplacementNamed(context, '/student/dashboard');
+    // }
+
+    Navigator.pushReplacementNamed(context, '/student/dashboard');
   }
 
   Future<void> handleLogout() async {

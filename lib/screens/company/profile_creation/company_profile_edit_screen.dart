@@ -64,6 +64,21 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
       final updatedCompanyProfile = jsonDecode(response.body)['result'];
       await prefs.setString(
           'companyprofile', jsonEncode(updatedCompanyProfile));
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('Success'),
+          content: const Text('Your company profile updated successfully.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Đóng dialog
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
       print('Company profile posted successfully');
     } else {
       // Handle error response

@@ -28,6 +28,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     fetchProjectDetails(widget.itemId);
   }
 
+  Future<void> _loadScreen() async {}
+
   Future<void> fetchProjectDetails(int? projectId) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');

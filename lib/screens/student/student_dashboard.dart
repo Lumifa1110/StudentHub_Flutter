@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
+import 'package:studenthub/utils/colors.dart';
 
 import '../../utils/mock_data.dart';
 
@@ -24,11 +25,14 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
   Future<void> _loadScreen() async {
     _prefs = await SharedPreferences.getInstance();
     final role = _prefs.getInt('current_role');
+    print(role);
     if (role == 0) {
       final profile = _prefs.getString('studentprofile');
       if (profile == 'null') {
         Navigator.pushReplacementNamed(context, '/student');
       }
+    } else {
+      Navigator.pushReplacementNamed(context, '/company/dashboard');
     }
   }
 
@@ -98,7 +102,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                             child: Container(
                               decoration: BoxDecoration(border: Border.all()),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   const Text(

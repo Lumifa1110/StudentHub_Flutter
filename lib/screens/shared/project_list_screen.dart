@@ -33,6 +33,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     myFavoriteProjects.clear();
     _prefs = await SharedPreferences.getInstance();
     final role = _prefs.getInt('current_role');
+    print(role);
     final studentprofile = _prefs.getString('studentprofile');
     _loadProjects();
     if (role == 0) {
@@ -69,12 +70,11 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         // Handle error
         print('Error: ${response.statusCode}');
       }
-    } catch (e) {
-      print('Error: $e');
-    } finally {
       setState(() {
         isLoading = false;
       });
+    } catch (e) {
+      print('Error: $e');
     }
   }
 

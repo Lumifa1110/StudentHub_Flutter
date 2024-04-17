@@ -46,7 +46,7 @@ class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
 
     final response = await http.post(
       Uri.parse(
-          '${uriBase}/api/profile/company'), // Replace with your API endpoint
+          '$uriBase/api/profile/company'), // Replace with your API endpoint
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
