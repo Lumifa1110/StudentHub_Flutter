@@ -69,12 +69,11 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         // Handle error
         print('Error: ${response.statusCode}');
       }
-    } catch (e) {
-      print('Error: $e');
-    } finally {
       setState(() {
         isLoading = false;
       });
+    } catch (e) {
+      print('Error: $e');
     }
   }
 
@@ -274,6 +273,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                               ),
                             );
                           },
+                          canFavorite: isStudent,
                           isFavorite: isFavoriteProject(project),
                           onFavoriteToggle: (isFavorite) {
                             updateFavoriteProject(project, isFavorite);

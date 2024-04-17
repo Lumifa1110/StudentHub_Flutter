@@ -37,8 +37,8 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-      return Container(
-        decoration: BoxDecoration(
+    return Container(
+      decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.2), // Shadow color
@@ -53,9 +53,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
         iconSize: 24,
         selectedFontSize: AppFonts.h3FontSize,
         selectedItemColor: AppColor.primary,
-        selectedLabelStyle: const TextStyle(
-          fontWeight: FontWeight.w500
-        ),
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
         unselectedFontSize: AppFonts.h3FontSize,
         unselectedItemColor: AppFonts.secondaryColor,
         currentIndex: _selectedIndex,
@@ -74,10 +72,17 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
             case 1:
               {
                 if (_userRole == UserRole.company) {
-                  _navigateWithAnimation('/dashboard', const CompanyDashboardScreen(), widget.initialIndex, newIndex);
-                }
-                else if (_userRole == UserRole.student) {
-                  _navigateWithAnimation('/dashboard', const StudentDashboardScreen(), widget.initialIndex, newIndex);
+                  _navigateWithAnimation(
+                      '/company/dashboard',
+                      const CompanyDashboardScreen(),
+                      widget.initialIndex,
+                      newIndex);
+                } else if (_userRole == UserRole.student) {
+                  _navigateWithAnimation(
+                      '/student/dashboard',
+                      const StudentDashboardScreen(),
+                      widget.initialIndex,
+                      newIndex);
                 }
                 break;
               }
@@ -89,8 +94,8 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
               }
             case 3:
               {
-                _navigateWithAnimation('/notification', const NotificationScreen(),
-                    widget.initialIndex, newIndex);
+                _navigateWithAnimation('/notification',
+                    const NotificationScreen(), widget.initialIndex, newIndex);
                 break;
               }
             // Add cases for additional pages if needed

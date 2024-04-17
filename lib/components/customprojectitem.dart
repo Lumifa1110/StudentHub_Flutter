@@ -10,6 +10,7 @@ class CustomProjectItem extends StatefulWidget {
   final VoidCallback onTap;
   final bool isFavorite; // New parameter
   final Function(bool) onFavoriteToggle;
+  final bool canFavorite;
 
   const CustomProjectItem({
     Key? key,
@@ -17,6 +18,7 @@ class CustomProjectItem extends StatefulWidget {
     required this.onTap,
     required this.isFavorite,
     required this.onFavoriteToggle,
+    this.canFavorite = true,
   }) : super(key: key);
 
   @override
@@ -130,19 +132,21 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
           Positioned(
             top: 20,
             right: 0,
-            child: IconButton(
-              onPressed: () {
-                setState(() {
-                  isFavorite = !isFavorite;
-                  widget.onFavoriteToggle(isFavorite);
-                });
-              },
-              icon: Icon(
-                isFavorite ? Icons.favorite : Icons.favorite_border,
-                size: 30,
-              ),
-              color: mainColor,
-            ),
+            child: widget.canFavorite
+                ? IconButton(
+                    onPressed: () {
+                      setState(() {
+                        isFavorite = !isFavorite;
+                        widget.onFavoriteToggle(isFavorite);
+                      });
+                    },
+                    icon: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      size: 30,
+                    ),
+                    color: mainColor,
+                  )
+                : Container(),
           ),
         ],
       ),

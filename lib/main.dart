@@ -80,6 +80,9 @@ class _StudentHubState extends State<StudentHub> {
           case '/student/dashboard':
             return MaterialPageRoute(
                 builder: (context) => const StudentDashboardScreen());
+          case '/student/proposal/submit':
+            return MaterialPageRoute(
+                builder: (context) => const SubmitProposalScreen());
           case '/chatter':
             return MaterialPageRoute(
                 builder: (context) => const MessageListScreen());
