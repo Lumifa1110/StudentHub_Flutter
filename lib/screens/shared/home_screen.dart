@@ -18,32 +18,46 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> handleCompany() async {
     prefs = await SharedPreferences.getInstance();
     await prefs.setInt('current_role', UserRole.company.index);
-    final profile = prefs.getString('company_profile');
+    // final profile = prefs.getString('company_profile');
     if (mounted) {
-      if (profile == 'null') {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const CompanyProfileInputScreen()));
-      } else {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const CompanyDashboardScreen()));
-      }
+      // if (profile == 'null') {
+      //   Navigator.push(context, MaterialPageRoute(builder: (context) => const CompanyProfileInputScreen()));
+      // } else {
+      //   Navigator.push(context, MaterialPageRoute(builder: (context) => const CompanyDashboardScreen()));
+      // }
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const CompanyDashboardScreen()));
     }
   }
 
   Future<void> handleStudent() async {
     prefs = await SharedPreferences.getInstance();
     await prefs.setInt('current_role', UserRole.student.index);
-    final profile = prefs.getString('student_profile');
+    // final profile = prefs.getString('student_profile');
     if (mounted) {
-      if (profile == 'null') {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const StudentProfileInputScreen1()));
-      } else {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const StudentDashboardScreen()));
-      }
+      // if (profile == 'null') {
+      //   Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //           builder: (context) => const StudentProfileInputScreen1()));
+      // } else {
+      //   Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //           builder: (context) => const StudentDashboardScreen()));
+      // }
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const StudentDashboardScreen()));
     }
   }
 
   Future<void> handleLogout() async {
     final prefs = await SharedPreferences.getInstance();
-    
+
     // API: log out
     await AuthService.logOut();
 
@@ -53,7 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // NAVIGATE TO: sign in screen
     if (mounted) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const SigninScreen()));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const SigninScreen()));
     }
   }
 

@@ -30,14 +30,13 @@ class _SigninScreenState extends State<SigninScreen> {
     loadToken();
   }
 
-
-
   Future<void> loadToken() async {
     prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     if (token != null) {
       if (mounted) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
       }
     }
   }
@@ -68,7 +67,8 @@ class _SigninScreenState extends State<SigninScreen> {
 
     // NAVIGATE TO: home screen
     if (mounted) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const HomeScreen()));
     }
   }
 
@@ -79,20 +79,23 @@ class _SigninScreenState extends State<SigninScreen> {
     if (token != null) {
       // API: get user data
       final Map<String, dynamic> response = await AuthService.getUserInfo();
+      print(response);
       final userData = response['result'];
 
       // SAVE LOCAL: user id + fullname + roles
       await prefs.setInt('userid', userData['id']);
       await prefs.setString('username', userData['fullname']);
       List<dynamic> roles = userData['roles'];
-      List<String> rolesStringList = roles.map((role) => role.toString()).toList();
+      List<String> rolesStringList =
+          roles.map((role) => role.toString()).toList();
       await prefs.setStringList('roles', rolesStringList);
 
       // SAVE LOCAL: user profiles
       await prefs.setString('student_profile', jsonEncode(userData['student']));
+      print(jsonEncode(userData['student']));
       await prefs.setString('company_profile', jsonEncode(userData['company']));
-    } 
-    else {
+      print(jsonEncode(userData['company']));
+    } else {
       // Handle case where token is not available
     }
   }
@@ -129,8 +132,7 @@ class _SigninScreenState extends State<SigninScreen> {
               height: 20,
             ),
             // TextField for Username or email
-            TextFieldFloatingLabel(
-                label: 'Email', controller: emailController),
+            TextFieldFloatingLabel(label: 'Email', controller: emailController),
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.start,

@@ -133,11 +133,10 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
   }
 
   Future<void> _loadProject() async {
-    if (!mounted) return; // Check if the widget is still mounted
-
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    final companyId = jsonDecode(_prefs.getString('company_profile')!)['id'];
+    final company_profile = _prefs.getString('company_profile');
+    final companyId = jsonDecode(company_profile!)['id'];
 
     try {
       final responseJson = await http.get(
