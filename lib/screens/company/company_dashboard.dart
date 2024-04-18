@@ -144,8 +144,6 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
         headers: {'Authorization': 'Bearer $token'},
       );
       final responseDecode = jsonDecode(responseJson.body)["result"];
-      print('project response: ');
-      print(jsonDecode(responseJson.body).toString());
 
       if (responseDecode != null) {
         listAllProject.clear();
@@ -200,6 +198,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
       );
       final responseDecode = jsonDecode(responseJson.body)["result"];
       listProjectWorking.clear();
+      
       if (responseDecode == null) {
         return;
       }
