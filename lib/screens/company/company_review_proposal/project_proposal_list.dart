@@ -36,15 +36,16 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
     super.initState();
     _loadProposals().then((value) => _loadHired());
   }
+
   Future<List<ItemsProposal>> processData(Map<String, dynamic> responseDecode) async{
     List<ItemsProposal>listItemsProposal = [];
     if (responseDecode['total'] ==0) {
       return listItemsProposal;
     }
     for(int i = 0; i < responseDecode['items'].length; i++){
-      TechStack techStack =  TechStack(id: responseDecode['items'][0]['student']['techStack']['id'], name: responseDecode['items'][0]['student']['techStack']['name']);
-      Student student =  Student(id: responseDecode['items'][0]['student']['id'], fullname: responseDecode['items'][0]['student']['user']['fullname'], techStack: techStack);
-      ItemsProposal itemsProposal = ItemsProposal(id: responseDecode['items'][0]['id'], coverLetter: responseDecode['items'][0]['coverLetter'], statusFlag: responseDecode['items'][0]['statusFlag'], disableFlag: responseDecode['items'][0]['disableFlag'], student: student);
+      TechStack techStack =  TechStack(id: responseDecode['items'][i]['student']['techStack']['id'], name: responseDecode['items'][i]['student']['techStack']['name']);
+      Student student =  Student(id: responseDecode['items'][i]['student']['id'], fullname: responseDecode['items'][i]['student']['user']['fullname'], techStack: techStack);
+      ItemsProposal itemsProposal = ItemsProposal(id: responseDecode['items'][i]['id'], coverLetter: responseDecode['items'][i]['coverLetter'], statusFlag: responseDecode['items'][i]['statusFlag'], disableFlag: responseDecode['items'][i]['disableFlag'], student: student);
       listItemsProposal.add(itemsProposal);
     }
     return listItemsProposal;
@@ -62,8 +63,7 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
       List<ItemsProposal>listItemsProposal = await processData(responseDecode) as List<ItemsProposal>;
 
       _proposal = Proposal(total: responseDecode['total'] , items: listItemsProposal);
-      // print(responseDecode['items'][0]['disableFlag'].runtimeType);
-      // print(responseDecode['items'][0]);
+
       if (mounted) {
         // Check again if the widget is still mounted before calling setState
         setState(() {
@@ -88,7 +88,7 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
     final token = _prefs.getString('token');
     try {
       final responseJson = await http.get(
-        Uri.parse('$uriBase/api/proposal/getByProjectId/${widget.project.projectId}?limit=100&statusFlag=2'),
+        Uri.parse('$uriBase/api/proposal/getByProjectId/${widget.project.projectId}?limit=100&statusFlag=3'),
         headers: {'Authorization': 'Bearer $token'},
       );
       final responseDecode = jsonDecode(responseJson.body)["result"];

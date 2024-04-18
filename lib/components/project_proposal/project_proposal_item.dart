@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/project_proposal/dialog_send_hire.dart';
 import 'package:studenthub/components/user/user_avatar.dart';
 import 'package:studenthub/models/student_model.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 import 'package:studenthub/models/company_model.dart';
+import 'package:http/http.dart' as http;
+import 'package:studenthub/config/config.dart';
 
 class ProjectProposalItem extends StatefulWidget {
   final ItemsProposal itemsProposal;
@@ -18,17 +23,42 @@ class ProjectProposalItem extends StatefulWidget {
 
 class _ProjectProposalItemState extends State<ProjectProposalItem> {
   late bool sentHireOffer;
+  late SharedPreferences _prefs;
+  late String? _token;
 
+  Future<void> _declare_Prefs() async{
+    _prefs = await SharedPreferences.getInstance();
+  }
   @override
   void initState() {
     super.initState();
+    _declare_Prefs()
+        .then((_) => _token = _prefs.getString('token'));
     sentHireOffer = widget.itemsProposal.statusFlag == 2 ?true : widget.itemsProposal.statusFlag == 3 ? true: false;
   }
 
-  void sendHireOffer() {
-    setState(() {
-      sentHireOffer = true;
-    });
+  Future<void> sendHireOffer() async {
+    final Map<String, dynamic> data = {
+      'statusFlag': 2,
+      'disableFlag': 0,
+    };
+    try{
+      final response = await http.patch(
+        Uri.parse('$uriBase/api/proposal/${widget.itemsProposal.id}'),
+        headers: {
+          'Authorization': 'Bearer $_token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(data),
+      );
+      if(response.statusCode == 200 || response.statusCode == 201){
+        setState(() {
+          sentHireOffer = true;
+        });
+      }
+    }catch(e){
+      print(e);
+    }
   }
 
   @override
