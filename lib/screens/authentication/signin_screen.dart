@@ -79,7 +79,6 @@ class _SigninScreenState extends State<SigninScreen> {
     if (token != null) {
       // API: get user data
       final Map<String, dynamic> response = await AuthService.getUserInfo();
-      print(response);
       final userData = response['result'];
 
       // SAVE LOCAL: user id + fullname + roles

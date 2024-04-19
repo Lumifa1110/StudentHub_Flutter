@@ -31,8 +31,8 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     final response = await http.delete(
-      Uri.parse(
-          '$uriBase/api/project/$projectId'), // Replace $projectId with the actual ID
+      Uri.parse('$uriBase/api/project/$projectId'),
+      // Replace $projectId with the actual ID
       headers: {'Authorization': 'Bearer $token'},
     );
     setState(() {
@@ -477,6 +477,7 @@ class OptionProjectCompany extends StatefulWidget {
   final Future<void> Function(Project project) workingProject;
   final Future<void> Function(Project project) archivedProject;
   final int currentTab;
+
   const OptionProjectCompany({
     super.key,
     required this.onTap,

@@ -9,6 +9,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:studenthub/utils/font.dart';
 
+import '../student/submit_proposal_page.dart';
+
 class ProjectDetailScreen extends StatefulWidget {
   final int? itemId;
 
@@ -212,8 +214,14 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                               ),
                               child: TextButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, '/student/proposal/submit');
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SubmitProposalScreen(
+                                        idProject: selectedProject?.projectId,
+                                      ),
+                                    ),
+                                  );
                                 },
                                 style: ButtonStyle(
                                   shape:
