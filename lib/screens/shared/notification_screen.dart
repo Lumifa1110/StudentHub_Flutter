@@ -19,8 +19,7 @@ class NotificationScreen extends StatelessWidget {
             ),
             // Design for notification card 1 (predict type: personal)
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: const Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -48,8 +47,7 @@ class NotificationScreen extends StatelessWidget {
                         ),
                         Text(
                           '6/6/2024',
-                          style:
-                              TextStyle(fontSize: 16, color: lightgrayColor),
+                          style: TextStyle(fontSize: 16, color: lightgrayColor),
                         ),
                       ],
                     ),
@@ -66,8 +64,7 @@ class NotificationScreen extends StatelessWidget {
             ),
             // Design for notification card 2 (predict type: system, invited)
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -95,8 +92,7 @@ class NotificationScreen extends StatelessWidget {
                         ),
                         const Text(
                           '6/6/2024',
-                          style:
-                              TextStyle(fontSize: 16, color: lightgrayColor),
+                          style: TextStyle(fontSize: 16, color: lightgrayColor),
                         ),
                         const SizedBox(
                           height: 5,
@@ -119,8 +115,7 @@ class NotificationScreen extends StatelessWidget {
                           child: TextButton(
                             onPressed: () {},
                             style: ButtonStyle(
-                              shape:
-                                  MaterialStateProperty.all<OutlinedBorder>(
+                              shape: MaterialStateProperty.all<OutlinedBorder>(
                                 const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.zero),
                               ),
@@ -149,8 +144,7 @@ class NotificationScreen extends StatelessWidget {
             ),
             // Design for notification card 3 (predict type: system, offer)
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -179,8 +173,7 @@ class NotificationScreen extends StatelessWidget {
                         ),
                         const Text(
                           '6/6/2024',
-                          style:
-                              TextStyle(fontSize: 16, color: lightgrayColor),
+                          style: TextStyle(fontSize: 16, color: lightgrayColor),
                         ),
                         const SizedBox(
                           height: 5,
@@ -201,10 +194,11 @@ class NotificationScreen extends StatelessWidget {
                             ],
                           ),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/offer/view');
+                            },
                             style: ButtonStyle(
-                              shape:
-                                  MaterialStateProperty.all<OutlinedBorder>(
+                              shape: MaterialStateProperty.all<OutlinedBorder>(
                                 const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.zero),
                               ),
@@ -240,8 +234,7 @@ class NotificationScreen extends StatelessWidget {
             ),
             // Design for notification card 4 (predict type: personal-message)
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: const Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -266,8 +259,7 @@ class NotificationScreen extends StatelessWidget {
                         ),
                         Text(
                           'How are you today ?',
-                          style:
-                              TextStyle(fontSize: 16, color: blackTextColor),
+                          style: TextStyle(fontSize: 16, color: blackTextColor),
                           overflow: TextOverflow.clip,
                         ),
                         SizedBox(
@@ -275,8 +267,7 @@ class NotificationScreen extends StatelessWidget {
                         ),
                         Text(
                           '6/6/2024',
-                          style:
-                              TextStyle(fontSize: 16, color: lightgrayColor),
+                          style: TextStyle(fontSize: 16, color: lightgrayColor),
                         ),
                       ],
                     ),
