@@ -5,7 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/project_proposal/index.dart';
-import 'package:studenthub/data/test/data_student.dart';
 import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
@@ -34,7 +33,8 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
   @override
   void initState(){
     super.initState();
-    _loadProposals().then((value) => _loadHired());
+    _loadProposals()
+        .then((_) => _loadHired());
   }
 
   Future<List<ItemsProposal>> processData(Map<String, dynamic> responseDecode) async{
@@ -43,10 +43,12 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
       return listItemsProposal;
     }
     for(int i = 0; i < responseDecode['items'].length; i++){
-      TechStack techStack =  TechStack(id: responseDecode['items'][i]['student']['techStack']['id'], name: responseDecode['items'][i]['student']['techStack']['name']);
-      Student student =  Student(id: responseDecode['items'][i]['student']['id'], fullname: responseDecode['items'][i]['student']['user']['fullname'], techStack: techStack);
-      ItemsProposal itemsProposal = ItemsProposal(id: responseDecode['items'][i]['id'], coverLetter: responseDecode['items'][i]['coverLetter'], statusFlag: responseDecode['items'][i]['statusFlag'], disableFlag: responseDecode['items'][i]['disableFlag'], student: student);
-      listItemsProposal.add(itemsProposal);
+      if(responseDecode['items'][i]['statusFlag'] != 3){
+        TechStack techStack =  TechStack(id: responseDecode['items'][i]['student']['techStack']['id'], name: responseDecode['items'][i]['student']['techStack']['name']);
+        Student student =  Student(id: responseDecode['items'][i]['student']['id'], fullname: responseDecode['items'][i]['student']['user']['fullname'], techStack: techStack);
+        ItemsProposal itemsProposal = ItemsProposal(id: responseDecode['items'][i]['id'], coverLetter: responseDecode['items'][i]['coverLetter'], statusFlag: responseDecode['items'][i]['statusFlag'], disableFlag: responseDecode['items'][i]['disableFlag'], student: student);
+        listItemsProposal.add(itemsProposal);
+      }
     }
     return listItemsProposal;
   }
@@ -60,7 +62,7 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
       );
       final responseDecode = jsonDecode(responseJson.body)["result"];
 
-      List<ItemsProposal>listItemsProposal = await processData(responseDecode) as List<ItemsProposal>;
+      List<ItemsProposal>listItemsProposal = await processData(responseDecode);
 
       _proposal = Proposal(total: responseDecode['total'] , items: listItemsProposal);
 
@@ -202,7 +204,7 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                             ),
                           ),
                           Text(
-                            'Proposals - ${_proposal.total}',
+                            'Proposals - ${_proposal.items.length}',
                             style: const TextStyle(
                               color: AppFonts.primaryColor,
                               fontSize: AppFonts.h3FontSize,
@@ -285,7 +287,7 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                           child: ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: _proposal.total,
+                            itemCount: _proposal.items.length,
                             itemBuilder: (BuildContext context, int index) {
                               return ProjectProposalItem(itemsProposal: _proposal.items[index]);
                             }
