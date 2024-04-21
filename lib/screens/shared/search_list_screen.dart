@@ -36,12 +36,41 @@ class _SearchListScreenState extends State<SearchListScreen> {
   final TextEditingController _studentsNeededController =
       TextEditingController();
   final TextEditingController _proposalsController = TextEditingController();
+  late http.Client _httpClient;
+  bool isLoading = true;
+
+  @override
+  void dispose() {
+    // _isMounted = false;
+    _httpClient.close();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    if (!isLoading) {
+      // If the loading has already completed, do not setState
+      _loadFilteredProject();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _searchQuery = widget.searchQuery;
+    _httpClient = http.Client();
+    // Initialize filteredProjects with all projects initially
+    _loadFilteredProject();
+  }
 
   Future<void> _patchFavoriteProject(int projectId, int disableFlag) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    final student_profile = _prefs.getString('student_profile');
-    final studentId = jsonDecode(student_profile!)['id'];
+    final studentProfile = _prefs.getString('student_profile');
+    final studentId = jsonDecode(studentProfile!)['id'];
 
     try {
       final response = await http.patch(
@@ -81,8 +110,6 @@ class _SearchListScreenState extends State<SearchListScreen> {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
 
-    _searchQuery = widget.searchQuery;
-
     Map<String, dynamic> queryParams = {
       if (_searchQuery.isNotEmpty) 'title': _searchQuery,
       if (selectedProjectScope != null)
@@ -95,23 +122,56 @@ class _SearchListScreenState extends State<SearchListScreen> {
 
     try {
       final uri = Uri.https('api.studenthub.dev', '/api/project', queryParams);
-      final response = await http.get(
+      final response = await _httpClient.get(
         uri,
         headers: {'Authorization': 'Bearer $token'},
       );
       print('Status Code: ${response.statusCode}');
-      print('Body: ${response.body}');
+      if (mounted) {
+        if (response.statusCode == 200) {
+          final List<dynamic> responseData =
+              jsonDecode(response.body)['result'];
+          print(responseData.length);
+
+          setState(() {
+            filteredProjects =
+                responseData.map((json) => Project.fromJson(json)).toList();
+            isLoading = false;
+          });
+        } else {
+          // Handle error
+          print('Error: ${response.statusCode}');
+        }
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> _loadFavoriteProjects(
+      String token, String studentProfile) async {
+    try {
+      final studentId = jsonDecode(studentProfile)['id'];
+      final response = await _httpClient.get(
+        Uri.parse('$uriBase/api/favoriteProject/$studentId'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
       if (response.statusCode == 200) {
         final List<dynamic> responseData = jsonDecode(response.body)['result'];
-        setState(() {
-          filteredProjects =
-              responseData.map((json) => Project.fromJson(json)).toList();
-        });
+        if (mounted) {
+          setState(() {
+            myFavoriteProjects.clear();
+            for (var item in responseData) {
+              final project = Project.fromJson(item['project']);
+              myFavoriteProjects.add(project);
+            }
+          });
+        }
       } else {
         // Handle error
-        print('Error: ${response.statusCode}');
+        print('Error load: ${response.statusCode}');
+        print('Error load: ${response.body}');
       }
-      print(filteredProjects);
     } catch (e) {
       print('Error: $e');
     }
@@ -131,31 +191,22 @@ class _SearchListScreenState extends State<SearchListScreen> {
     }
   }
 
-  void filterProjects(String query) {
-    print(query);
-    setState(() {
-      _searchQuery = query.toLowerCase();
+  // void filterProjects(String query) {
+  //   setState(() {
+  //     _searchQuery = query.toLowerCase();
 
-      if (_searchQuery.isNotEmpty) {
-        filteredProjects = myFavoriteProjects.where((project) {
-          return project.title.toLowerCase().contains(_searchQuery) ||
-              project.description!.toLowerCase().contains(_searchQuery);
-        }).toList();
-      } else {
-        // If searchQuery is empty, display all projects
-        filteredProjects = List.from(filteredProjects);
-      }
-      Navigator.pop(context);
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _searchQuery = widget.searchQuery;
-    // Initialize filteredProjects with all projects initially
-    _loadFilteredProject();
-  }
+  //     if (_searchQuery.isNotEmpty) {
+  //       filteredProjects = myFavoriteProjects.where((project) {
+  //         return project.title.toLowerCase().contains(_searchQuery) ||
+  //             project.description!.toLowerCase().contains(_searchQuery);
+  //       }).toList();
+  //     } else {
+  //       // If searchQuery is empty, display all projects
+  //       filteredProjects = List.from(filteredProjects);
+  //     }
+  //     Navigator.pop(context);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -350,6 +401,9 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                           ),
                                           child: TextButton(
                                             onPressed: () {
+                                              setState(() {
+                                                isLoading = true;
+                                              });
                                               _loadFilteredProject();
                                               Navigator.pop(context);
                                             },
@@ -395,28 +449,30 @@ class _SearchListScreenState extends State<SearchListScreen> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: ListView.builder(
-                itemCount: filteredProjects.length,
-                itemBuilder: (context, index) {
-                  final project = filteredProjects[index];
-                  return CustomProjectItem(
-                    project: project,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ProjectDetailScreen(itemId: project.projectId),
-                        ),
-                      );
-                    },
-                    isFavorite: myFavoriteProjects.contains(project),
-                    onFavoriteToggle: (isFavorite) {
-                      updateFavoriteProject(project, isFavorite);
-                    },
-                  );
-                },
-              ),
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                      itemCount: filteredProjects.length,
+                      itemBuilder: (context, index) {
+                        final project = filteredProjects[index];
+                        return CustomProjectItem(
+                          project: project,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProjectDetailScreen(
+                                    itemId: project.projectId),
+                              ),
+                            );
+                          },
+                          isFavorite: myFavoriteProjects.contains(project),
+                          onFavoriteToggle: (isFavorite) {
+                            updateFavoriteProject(project, isFavorite);
+                          },
+                        );
+                      },
+                    ),
             ),
           ),
         ],

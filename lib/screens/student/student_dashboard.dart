@@ -34,12 +34,13 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
     super.initState();
     _loadScreen()
         .then((_) => _loadTabAllProject())
-        .then((_) => setState(() {
-              isLoading = false;
-            }))
         .then((_) => _loadWorkingTab())
         .then((_) => _loadArchivedTab())
-        .then((_) => print(_responseArchivedTab.length));
+        .then(
+          (_) => setState(() {
+            isLoading = false;
+          }),
+        );
   }
 
   //Loading data of All Project Tab.
@@ -219,20 +220,25 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                                 int index) {
                                               // itemBuilder builds each item in the list
                                               return Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   OptionItemAllProjectScreen(
                                                     onTap: () {},
                                                     response:
-                                                        _responseArchivedTab[index],
+                                                        _responseArchivedTab[
+                                                            index],
                                                   ),
-                                                  index == _responseSubmitProposal.length - 1
+                                                  index ==
+                                                          _responseSubmitProposal
+                                                                  .length -
+                                                              1
                                                       ? const SizedBox()
                                                       : const Divider(
-                                                    height: 60,
-                                                    endIndent: 10,
-                                                    thickness: 2,
-                                                  ),
+                                                          height: 60,
+                                                          endIndent: 10,
+                                                          thickness: 2,
+                                                        ),
                                                 ],
                                               );
                                             },
@@ -270,11 +276,12 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                           child: Padding(
                                             padding: const EdgeInsets.all(10.0),
                                             child: ListView.builder(
-                                              itemCount:
-                                                  _responseSubmitProposal.length,
+                                              itemCount: _responseSubmitProposal
+                                                  .length,
                                               // Number of items in your list
-                                              itemBuilder: (BuildContext context,
-                                                  int index) {
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
                                                 return Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
@@ -284,7 +291,10 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                                         response:
                                                             _responseSubmitProposal[
                                                                 index]),
-                                                    index == _responseSubmitProposal.length - 1
+                                                    index ==
+                                                            _responseSubmitProposal
+                                                                    .length -
+                                                                1
                                                         ? const SizedBox()
                                                         : const Divider(
                                                             height: 60,
@@ -320,16 +330,16 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     OptionItemWorkingAndArchiedScreen(
-                                        onTap: () {},
-                                        response: _responseWorkingTab[index],),
-
+                                      onTap: () {},
+                                      response: _responseWorkingTab[index],
+                                    ),
                                     index == _responseWorkingTab.length - 1
                                         ? const SizedBox()
                                         : const Divider(
-                                      height: 60,
-                                      endIndent: 10,
-                                      thickness: 2,
-                                    ),
+                                            height: 60,
+                                            endIndent: 10,
+                                            thickness: 2,
+                                          ),
                                   ],
                                 );
                               }),
@@ -352,15 +362,15 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                   children: [
                                     OptionItemWorkingAndArchiedScreen(
                                       onTap: () {},
-                                      response: _responseArchivedTab[index],),
-
+                                      response: _responseArchivedTab[index],
+                                    ),
                                     index == _responseArchivedTab.length - 1
                                         ? const SizedBox()
                                         : const Divider(
-                                      height: 60,
-                                      endIndent: 10,
-                                      thickness: 2,
-                                    ),
+                                            height: 60,
+                                            endIndent: 10,
+                                            thickness: 2,
+                                          ),
                                   ],
                                 );
                               }),
@@ -427,15 +437,16 @@ class OptionItemWorkingAndArchiedScreen extends StatefulWidget {
   final VoidCallback onTap;
   final dynamic response;
 
-  const OptionItemWorkingAndArchiedScreen({super.key, required this.onTap, this.response});
-
+  const OptionItemWorkingAndArchiedScreen(
+      {super.key, required this.onTap, this.response});
 
   @override
   State<OptionItemWorkingAndArchiedScreen> createState() =>
       _OptionItemWorkingScreenState();
 }
 
-class _OptionItemWorkingScreenState extends State<OptionItemWorkingAndArchiedScreen> {
+class _OptionItemWorkingScreenState
+    extends State<OptionItemWorkingAndArchiedScreen> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
