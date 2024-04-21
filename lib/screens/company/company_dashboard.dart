@@ -145,25 +145,28 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
       );
       final responseDecode = jsonDecode(responseJson.body)["result"];
 
-      listAllProject.clear();
-      for (int i = 0; i < responseDecode.length; i++) {
-        final projectScore = convertProjectScoreFlagToTime(
-            responseDecode[i]['projectScopeFlag']);
-        listAllProject.add(Project(
-            projectId: responseDecode[i]['id'],
-            createdAt: responseDecode[i]['createdAt'],
-            updatedAt: responseDecode[i]['updatedAt'],
-            deletedAt: responseDecode[i]['deletedAt'],
-            companyId: responseDecode[i]['companyId'],
-            companyName: responseDecode[i]['companyName'],
-            projectScopeFlag: responseDecode[i]['projectScopeFlag'],
-            title: responseDecode[i]['title'],
-            description: responseDecode[i]['description'],
-            numberOfStudents: responseDecode[i]['numberOfStudents'],
-            typeFlag: responseDecode[i]['typeFlag'],
-            countProposals: responseDecode[i]['countProposals'],
-            isFavorite: responseDecode[i]['isFavorite']));
+      if (responseDecode != null) {
+        listAllProject.clear();
+        for (int i = 0; i < responseDecode.length; i++) {
+          final projectScore = convertProjectScoreFlagToTime(
+              responseDecode[i]['projectScopeFlag']);
+          listAllProject.add(Project(
+              projectId: responseDecode[i]['id'],
+              createdAt: responseDecode[i]['createdAt'],
+              updatedAt: responseDecode[i]['updatedAt'],
+              deletedAt: responseDecode[i]['deletedAt'],
+              companyId: responseDecode[i]['companyId'],
+              companyName: responseDecode[i]['companyName'],
+              projectScopeFlag: responseDecode[i]['projectScopeFlag'],
+              title: responseDecode[i]['title'],
+              description: responseDecode[i]['description'],
+              numberOfStudents: responseDecode[i]['numberOfStudents'],
+              typeFlag: responseDecode[i]['typeFlag'],
+              countProposals: responseDecode[i]['countProposals'],
+              isFavorite: responseDecode[i]['isFavorite']));
+        }
       }
+
       if (mounted) {
         // Check again if the widget is still mounted before calling setState
         setState(() {
