@@ -52,7 +52,8 @@ class _FavoriteProjectsScreenState extends State<FavoriteProjectsScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ProjectDetailScreen(
-                                    itemId: project.projectId),
+                                  project: project,
+                                ),
                               ),
                             );
                           },

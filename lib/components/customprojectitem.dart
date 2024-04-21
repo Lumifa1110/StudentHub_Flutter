@@ -101,6 +101,16 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                   ),
                   Flexible(
                     child: Text(
+                      widget.project.companyName ?? 'Unknown',
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: AppFonts.h2FontSize,
+                          fontWeight: FontWeight.w500,
+                          color: AppColor.tertiary),
+                    ),
+                  ),
+                  Flexible(
+                    child: Text(
                       'Time: ${checkProjectScope(widget.project.projectScopeFlag)}, ${widget.project.numberOfStudents} students needed',
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(

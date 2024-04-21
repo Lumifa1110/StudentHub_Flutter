@@ -4,6 +4,7 @@ class Project {
   final String? updatedAt;
   final String? deletedAt;
   final String? companyId;
+  final String? companyName;
   final int? projectScopeFlag;
   final String title;
   final String? description;
@@ -18,6 +19,7 @@ class Project {
     required this.updatedAt,
     required this.deletedAt,
     required this.companyId,
+    required this.companyName,
     required this.projectScopeFlag,
     required this.title,
     required this.description,
@@ -33,6 +35,7 @@ class Project {
       updatedAt: json['updatedAt'],
       deletedAt: json['deletedAt'],
       companyId: json['companyId'],
+      companyName: json['companyName'],
       projectScopeFlag: json['projectScopeFlag'],
       title: json['title'],
       description: json['description'],
@@ -72,32 +75,37 @@ class ProjectPost {
     };
   }
 }
-class TechStack{
+
+class TechStack {
   final int? id;
   final String? name;
 
   TechStack({required this.id, required this.name});
 }
-class Student{
+
+class Student {
   final int id;
   final String fullname;
   final TechStack techStack;
 
   Student({required this.id, required this.fullname, required this.techStack});
-
-
 }
 
-class ItemsProposal{
+class ItemsProposal {
   final int id;
   final String coverLetter;
   final int statusFlag;
   final int disableFlag;
   final Student student;
 
-
-  ItemsProposal({required this.id, required this.coverLetter, required this.statusFlag, required this.disableFlag, required this.student});
+  ItemsProposal(
+      {required this.id,
+      required this.coverLetter,
+      required this.statusFlag,
+      required this.disableFlag,
+      required this.student});
 }
+
 class Proposal {
   final int total;
   final List<ItemsProposal> items;

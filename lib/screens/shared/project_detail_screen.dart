@@ -12,9 +12,12 @@ import 'package:studenthub/utils/font.dart';
 import '../student/submit_proposal_page.dart';
 
 class ProjectDetailScreen extends StatefulWidget {
-  final int? itemId;
+  final Project? project;
 
-  const ProjectDetailScreen({Key? key, this.itemId}) : super(key: key);
+  const ProjectDetailScreen({
+    Key? key,
+    this.project,
+  }) : super(key: key);
 
   @override
   State<ProjectDetailScreen> createState() => _ProjectDetailScreenState();
@@ -29,7 +32,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   void initState() {
     super.initState();
     _loadScreen();
-    fetchProjectDetails(widget.itemId);
+    // fetchProjectDetails(widget.itemId);
+    selectedProject = widget.project;
   }
 
   Future<void> _loadScreen() async {
@@ -87,7 +91,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     return Scaffold(
       appBar: const AuthAppBar(
         canBack: true,
-        title: 'Saved Project',
+        title: 'Detail Project',
       ),
       body: selectedProject != null
           ? Padding(
@@ -217,7 +221,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => SubmitProposalScreen(
+                                      builder: (context) =>
+                                          SubmitProposalScreen(
                                         idProject: selectedProject?.projectId,
                                       ),
                                     ),
@@ -240,37 +245,41 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                               ),
                             )
                           : Container(),
-                      Container(
-                        width: 180,
-                        height: 40,
-                        padding: const EdgeInsets.all(0),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: blackTextColor, width: 2.0),
-                          color: whiteTextColor,
-                          boxShadow: const [
-                            BoxShadow(
-                              color: blackTextColor,
-                              offset: Offset(2, 3),
-                            ),
-                          ],
-                        ),
-                        child: TextButton(
-                          onPressed: () {},
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all<OutlinedBorder>(
-                              const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.zero),
-                            ),
-                          ),
-                          child: const Text(
-                            'Saved',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: blackTextColor,
-                            ),
-                          ),
-                        ),
-                      ),
+                      isStudent
+                          ? Container(
+                              width: 180,
+                              height: 40,
+                              padding: const EdgeInsets.all(0),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: blackTextColor, width: 2.0),
+                                color: whiteTextColor,
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: blackTextColor,
+                                    offset: Offset(2, 3),
+                                  ),
+                                ],
+                              ),
+                              child: TextButton(
+                                onPressed: () {},
+                                style: ButtonStyle(
+                                  shape:
+                                      MaterialStateProperty.all<OutlinedBorder>(
+                                    const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.zero),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Saved',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: blackTextColor,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(),
                     ],
                   ),
                   const SizedBox(

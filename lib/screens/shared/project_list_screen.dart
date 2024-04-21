@@ -90,7 +90,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         Uri.parse('$uriBase/api/project'),
         headers: {'Authorization': 'Bearer $token'},
       );
-      print(response.statusCode);
+      print(response.body);
       if (response.statusCode == 200) {
         final List<dynamic> responseData = jsonDecode(response.body)['result'];
         if (mounted) {
@@ -121,9 +121,13 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         if (mounted) {
           setState(() {
             myFavoriteProjects.clear();
-            for (var item in responseData) {
-              final project = Project.fromJson(item['project']);
-              myFavoriteProjects.add(project);
+            for (var project in allProject) {
+              final isFavorite = responseData.any((item) =>
+                  Project.fromJson(item['project']).projectId ==
+                  project.projectId);
+              if (isFavorite) {
+                myFavoriteProjects.add(project);
+              }
             }
           });
         }
@@ -190,19 +194,24 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     }
   }
 
-  void handleSearchSubmitted(String query) {
-    setState(() {
-      searchQuery = query;
-      // print(query);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SearchListScreen(
-            searchQuery: searchQuery,
-          ),
+  void handleSearchSubmitted(String query) async {
+    searchQuery = query;
+    // print(query);
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SearchListScreen(
+          searchQuery: searchQuery,
         ),
-      );
-    });
+      ),
+    );
+    print(result);
+    if (result != null && result is bool && result) {
+      setState(() {
+        isLoading = true;
+      });
+      _loadScreen();
+    }
   }
 
   @override
@@ -289,7 +298,8 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ProjectDetailScreen(
-                                    itemId: project.projectId),
+                                  project: project,
+                                ),
                               ),
                             );
                           },
