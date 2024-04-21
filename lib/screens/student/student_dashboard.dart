@@ -28,6 +28,13 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
   late List<dynamic> _responseActiveProposal;
   late List<dynamic> _responseWorkingTab = [];
   late List<dynamic> _responseArchivedTab = [];
+  late http.Client _client = http.Client();
+
+  @override
+  void dispose() {
+    _client.close();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -36,24 +43,29 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
         .then((_) => _loadTabAllProject())
         .then((_) => _loadWorkingTab())
         .then((_) => _loadArchivedTab())
-        .then(
-          (_) => setState(() {
-            isLoading = false;
-          }),
-        );
+        .then((_) {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    });
   }
 
   //Loading data of All Project Tab.
   Future<void> _loadTabAllProject() async {
     //Loading Active proposal
     try {
-      final response = await http.get(
+      final response = await _client.get(
         Uri.parse(
             '$uriBase/api/proposal/project/$_currentIdStudent?statusFlag=1'),
         headers: {'Authorization': 'Bearer $_token'},
       );
+
       if (response.statusCode == 200 || response.statusCode == 201) {
-        _responseActiveProposal = jsonDecode(response.body)['result'];
+        if (jsonDecode(response.body)['result'] != null) {
+          _responseActiveProposal = jsonDecode(response.body)['result'];
+        }
       } else {
         throw ('Status response of _loadActiveProposal() is ${response.statusCode}');
       }
@@ -63,12 +75,14 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
 
     //Loading submitted proposal
     try {
-      final response = await http.get(
+      final response = await _client.get(
         Uri.parse('$uriBase/api/proposal/project/$_currentIdStudent'),
         headers: {'Authorization': 'Bearer $_token'},
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
-        _responseSubmitProposal = jsonDecode(response.body)['result'];
+        if (jsonDecode(response.body)['result'] != null) {
+          _responseSubmitProposal = jsonDecode(response.body)['result'];
+        }
       } else {
         throw ('Status response of _loadSubmitProposal() is ${response.statusCode}');
       }
@@ -80,7 +94,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
   //Loading data of working Tab
   Future<void> _loadWorkingTab() async {
     try {
-      final response = await http.get(
+      final response = await _client.get(
         Uri.parse('$uriBase/api/proposal/project/$_currentIdStudent'),
         headers: {'Authorization': 'Bearer $_token'},
       );
@@ -100,7 +114,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
   //Loading data of archived Tab
   Future<void> _loadArchivedTab() async {
     try {
-      final response = await http.get(
+      final response = await _client.get(
         Uri.parse('$uriBase/api/proposal/project/$_currentIdStudent'),
         headers: {'Authorization': 'Bearer $_token'},
       );

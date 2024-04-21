@@ -90,7 +90,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         Uri.parse('$uriBase/api/project'),
         headers: {'Authorization': 'Bearer $token'},
       );
-      print(response.body);
+
       if (response.statusCode == 200) {
         final List<dynamic> responseData = jsonDecode(response.body)['result'];
         if (mounted) {
