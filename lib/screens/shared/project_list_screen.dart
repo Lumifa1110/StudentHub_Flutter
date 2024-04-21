@@ -144,8 +144,8 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   Future<void> _patchFavoriteProject(int projectId, int disableFlag) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    final student_profile = _prefs.getString('student_profile');
-    final studentId = jsonDecode(student_profile!)['id'];
+    final studentProfile = _prefs.getString('student_profile');
+    final studentId = jsonDecode(studentProfile!)['id'];
 
     try {
       final response = await _httpClient.patch(

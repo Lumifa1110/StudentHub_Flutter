@@ -97,10 +97,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
           ? Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 10),
@@ -114,13 +114,24 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    margin: const EdgeInsets.only(top: 10),
                     child: Text(
                       selectedProject!.title,
                       style: const TextStyle(
+                        fontSize: AppFonts.h1FontSize,
+                        fontWeight: FontWeight.w900,
+                        color: AppColor.tertiary,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      selectedProject!.companyName!,
+                      style: TextStyle(
                         fontSize: AppFonts.h1_2FontSize,
                         fontWeight: FontWeight.w900,
-                        color: blackTextColor,
+                        color: blackTextColor.withOpacity(0.5),
                       ),
                     ),
                   ),
@@ -130,7 +141,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     color: blackTextColor,
                   ),
                   Container(
-                    height: 356,
+                    height: 339,
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: SingleChildScrollView(
                       child: Text(
