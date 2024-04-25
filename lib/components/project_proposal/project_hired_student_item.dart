@@ -6,7 +6,7 @@ import 'package:studenthub/utils/font.dart';
 import 'package:studenthub/models/company_model.dart';
 
 class ProjectHiredStudentItem extends StatelessWidget {
-  final ItemsProposal itemsProposal;
+  final dynamic itemsProposal;
 
   const ProjectHiredStudentItem({super.key, required this.itemsProposal});
 
@@ -37,7 +37,7 @@ class ProjectHiredStudentItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(itemsProposal.student.fullname,
+                          Text(itemsProposal['student']['user']['fullname'],
                               style: const TextStyle(
                                   color: AppFonts.primaryColor,
                                   fontSize: AppFonts.h2FontSize,
@@ -57,7 +57,7 @@ class ProjectHiredStudentItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(itemsProposal.student.techStack.name!,
+                  Text(itemsProposal['student']['techStack']['name']!,
                       style: const TextStyle(
                           color: AppColor.primary,
                           fontSize: AppFonts.h3FontSize,

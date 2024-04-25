@@ -13,7 +13,7 @@ import 'package:studenthub/config/config.dart';
 import 'package:http/http.dart' as http;
 
 class ProjectProposalListScreen extends StatefulWidget {
-  final Project project;
+  final dynamic project;
   const ProjectProposalListScreen({super.key, required this.project});
 
   @override
@@ -23,44 +23,22 @@ class ProjectProposalListScreen extends StatefulWidget {
 
 class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
   late SharedPreferences _prefs;
-  late final Proposal _proposal;
+  late dynamic _proposal;
   bool isLoading = true;
   String errorMessage = '';
-  List<ItemsProposal> listItemsHired = [];
+  late dynamic _listItemsHired;
 
   @override
   void initState() {
     super.initState();
-    _loadProposals().then((value) => _loadHired());
-    _loadProposals().then((_) => _loadHired());
+    _loadProposals()
+        .then((_) => _loadHired())
+        .then((_) => setState(() {
+          isLoading = false;
+        }));
   }
 
-  Future<List<ItemsProposal>> processData(
-      Map<String, dynamic> responseDecode) async {
-    List<ItemsProposal> listItemsProposal = [];
-    if (responseDecode['total'] == 0) {
-      return listItemsProposal;
-    }
-    for (int i = 0; i < responseDecode['items'].length; i++) {
-      if (responseDecode['items'][i]['statusFlag'] != 3) {
-        TechStack techStack = TechStack(
-            id: responseDecode['items'][i]['student']['techStack']['id'],
-            name: responseDecode['items'][i]['student']['techStack']['name']);
-        Student student = Student(
-            id: responseDecode['items'][i]['student']['id'],
-            fullname: responseDecode['items'][i]['student']['user']['fullname'],
-            techStack: techStack);
-        ItemsProposal itemsProposal = ItemsProposal(
-            id: responseDecode['items'][i]['id'],
-            coverLetter: responseDecode['items'][i]['coverLetter'],
-            statusFlag: responseDecode['items'][i]['statusFlag'],
-            disableFlag: responseDecode['items'][i]['disableFlag'],
-            student: student);
-        listItemsProposal.add(itemsProposal);
-      }
-    }
-    return listItemsProposal;
-  }
+
 
   Future<void> _loadProposals() async {
     _prefs = await SharedPreferences.getInstance();
@@ -68,22 +46,15 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
     try {
       final responseJson = await http.get(
         Uri.parse(
-            '$uriBase/api/proposal/getByProjectId/${widget.project.projectId}'),
+            '$uriBase/api/proposal/getByProjectId/${widget.project['id']}'),
         headers: {'Authorization': 'Bearer $token'},
       );
+
       final responseDecode = jsonDecode(responseJson.body)["result"];
-
-      List<ItemsProposal> listItemsProposal = await processData(responseDecode);
-
-      _proposal =
-          Proposal(total: responseDecode['total'], items: listItemsProposal);
-
-      if (mounted) {
-        // Check again if the widget is still mounted before calling setState
-        setState(() {
-          isLoading = false;
-        });
+      if(responseDecode != null){
+        _proposal = responseDecode;
       }
+
     } catch (e) {
       if (mounted) {
         print(e);
@@ -103,35 +74,15 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
     try {
       final responseJson = await http.get(
         Uri.parse(
-            '$uriBase/api/proposal/getByProjectId/${widget.project.projectId}?limit=100&statusFlag=3'),
+            '$uriBase/api/proposal/getByProjectId/${widget.project['id']}?limit=100&statusFlag=3'),
         headers: {'Authorization': 'Bearer $token'},
       );
       final responseDecode = jsonDecode(responseJson.body)["result"];
-      for (int i = 0; i < responseDecode['total']; i++) {
-        TechStack techStack = TechStack(
-            id: responseDecode['items'][0]['student']['techStack']['id'],
-            name: responseDecode['items'][0]['student']['techStack']['name']);
-        Student student = Student(
-            id: responseDecode['items'][0]['student']['id'],
-            fullname: responseDecode['items'][0]['student']['user']['fullname'],
-            techStack: techStack);
-        ItemsProposal itemsProposal = ItemsProposal(
-            id: responseDecode['items'][0]['id'],
-            coverLetter: responseDecode['items'][0]['coverLetter'],
-            statusFlag: responseDecode['items'][0]['statusFlag'],
-            disableFlag: responseDecode['items'][0]['disableFlag'],
-            student: student);
-        listItemsHired.add(itemsProposal);
+
+      if(responseDecode != null){
+        _listItemsHired = responseDecode;
       }
 
-      // print(responseDecode['items'][0]['disableFlag'].runtimeType);
-      // print(responseDecode['items'][0]);
-      if (mounted) {
-        // Check again if the widget is still mounted before calling setState
-        setState(() {
-          isLoading = false;
-        });
-      }
     } catch (e) {
       if (mounted) {
         print(e);
@@ -176,7 +127,7 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 // Project Name
-                                Text(widget.project.title,
+                                Text(widget.project['title'],
                                     style: const TextStyle(
                                         color: AppFonts.primaryColor,
                                         fontSize: AppFonts.h1FontSize,
@@ -212,7 +163,7 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                                           size: 12),
                                     ),
                                     Text(
-                                        'Proposals - ${_proposal.items.length}',
+                                        'Proposals - ${_proposal['items'].length}',
                                         style: const TextStyle(
                                             color: AppFonts.primaryColor,
                                             fontSize: AppFonts.h3FontSize,
@@ -249,7 +200,7 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                                       child: const FaIcon(FontAwesomeIcons.user,
                                           size: 12),
                                     ),
-                                    Text('Hired - ${listItemsHired.length}',
+                                    Text('Hired - ${_listItemsHired['items'].length}',
                                         style: const TextStyle(
                                             color: AppFonts.primaryColor,
                                             fontSize: AppFonts.h3FontSize,
@@ -276,12 +227,12 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                                       physics:
                                           const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
-                                      itemCount: _proposal.items.length,
+                                      itemCount: _proposal['items'].length,
                                       itemBuilder:
                                           (BuildContext context, int index) {
                                         return ProjectProposalItem(
                                             itemsProposal:
-                                                _proposal.items[index]);
+                                                _proposal['items'][index]);
                                       }),
                                 ),
                                 ProjectDetailTab(
@@ -292,12 +243,12 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                                       physics:
                                           const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
-                                      itemCount: listItemsHired.length,
+                                      itemCount: _listItemsHired['items'].length,
                                       itemBuilder:
                                           (BuildContext context, int index) {
                                         return ProjectHiredStudentItem(
                                             itemsProposal:
-                                                listItemsHired[index]);
+                                            _listItemsHired['items'][index]);
                                       }),
                                 ),
                               ]),

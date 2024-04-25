@@ -13,7 +13,7 @@ import 'package:http/http.dart' as http;
 import 'package:studenthub/config/config.dart';
 
 class ProjectProposalItem extends StatefulWidget {
-  final ItemsProposal itemsProposal;
+  final dynamic itemsProposal;
 
   const ProjectProposalItem({super.key, required this.itemsProposal});
 
@@ -34,9 +34,9 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
   void initState() {
     super.initState();
     _declare_Prefs().then((_) => _token = _prefs.getString('token'));
-    sentHireOffer = widget.itemsProposal.statusFlag == 2
+    sentHireOffer = widget.itemsProposal['statusFlag'] == 2
         ? true
-        : widget.itemsProposal.statusFlag == 3
+        : widget.itemsProposal['statusFlag'] == 3
             ? true
             : false;
   }
@@ -48,7 +48,7 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
     };
     try {
       final response = await http.patch(
-        Uri.parse('$uriBase/api/proposal/${widget.itemsProposal.id}'),
+        Uri.parse('$uriBase/api/proposal/${widget.itemsProposal['id']}'),
         headers: {
           'Authorization': 'Bearer $_token',
           'Content-Type': 'application/json',
@@ -99,7 +99,7 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(widget.itemsProposal.student.fullname,
+                            Text(widget.itemsProposal['student']['user']['fullname'],
                                 style: const TextStyle(
                                     color: AppFonts.primaryColor,
                                     fontSize: AppFonts.h2FontSize,
@@ -119,7 +119,7 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(widget.itemsProposal.student.techStack.name!,
+                    Text(widget.itemsProposal['student']['techStack']['name']!,
                         style: const TextStyle(
                             color: AppColor.primary,
                             fontSize: AppFonts.h3FontSize,
@@ -144,7 +144,7 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                             border: Border.all(color: Colors.black12)),
                         margin: const EdgeInsets.only(bottom: 6),
                         child: Text(
-                          widget.itemsProposal.coverLetter,
+                          widget.itemsProposal['coverLetter'],
                           style: TextStyle(
                               color: AppFonts.secondaryColor,
                               fontSize: AppFonts.h3FontSize),

@@ -59,7 +59,7 @@ class _StudentHubState extends State<StudentHub> {
       darkTheme: darkTheme,
       // themeMode: _themeController.themeMode,
       home: ViewCandidateSceen(),
-      // initialRoute: '/signin',
+      initialRoute: '/signin',
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
         switch (settings.name) {
