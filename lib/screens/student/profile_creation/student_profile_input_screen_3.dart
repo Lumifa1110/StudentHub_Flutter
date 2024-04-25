@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, avoid_print
 import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +16,7 @@ import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/services/index.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
+import 'package:http/http.dart' as http;
 
 class StudentProfileInputScreen3 extends StatefulWidget {
   final String studentFullname;
@@ -40,6 +41,7 @@ class StudentProfileInputScreen3 extends StatefulWidget {
 }
 
 class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3> {
+  final String baseUrl = 'https://api.studenthub.dev';
   late PlatformFile resumeFile;
   late PlatformFile transcriptFile;
 
@@ -75,6 +77,62 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
       }
     // ignore: empty_catches
     } catch (e) {}
+  }
+
+  Future<void> handleUploadResume() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final studentProfile = prefs.getString('student_profile');
+    final studentId = jsonDecode(studentProfile!)['id'];
+    // Declare request
+    var request = http.MultipartRequest(
+      'PUT',
+      Uri.parse('$baseUrl/api/profile/student/$studentId/resume'),
+    );
+    // Add header to the request
+    request.headers['Authorization'] = 'Bearer $token';
+    // Add the file to the request
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'file',
+        resumeFile.path!,
+      ),
+    );
+    // Check the response and handle accordingly
+    var response = await request.send();
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print('File uploaded successfully');
+    } else {
+      print('Error uploading resume file: ${response.statusCode}');
+    }
+  }
+
+  Future<void> handleUploadTranscript() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final studentProfile = prefs.getString('student_profile');
+    final studentId = jsonDecode(studentProfile!)['id'];
+    // Declare request
+    var request = http.MultipartRequest(
+      'PUT',
+      Uri.parse('$baseUrl/api/profile/student/$studentId/transcript'),
+    );
+    // Add header to the request
+    request.headers['Authorization'] = 'Bearer $token';
+    // Add the file to the request
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'file',
+        transcriptFile.path!,
+      ),
+    );
+    // Check the response and handle accordingly
+    var response = await request.send();
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print('File uploaded successfully');
+    } else {
+      print('Error uploading transcript file: ${response.statusCode}');
+    }
   }
 
   Future<void> handlePostProfile(BuildContext context) async {
@@ -129,13 +187,8 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
         ]
       }).toList()
     });
-    await StudentService.addStudentResume(studentId, {
-      "resume": resumeFile.name
-    });
-    await StudentService.addStudentTranscript(studentId, {
-      "transcript": transcriptFile.name
-    });
-
+    await handleUploadResume();
+    await handleUploadTranscript();
     // SAVE LOCAL: student profile
     final Map<String, dynamic> userInfo = await AuthService.getUserInfo();
     final newStudentProfile = userInfo['result']['student'];
