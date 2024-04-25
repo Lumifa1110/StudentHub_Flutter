@@ -1,3 +1,5 @@
+import 'package:studenthub/models/techstack_model.dart';
+
 class Project {
   final int projectId;
   final String createdAt;
@@ -74,13 +76,6 @@ class ProjectPost {
       'typeFlag': typeFlag,
     };
   }
-}
-
-class TechStack {
-  final int? id;
-  final String? name;
-
-  TechStack({required this.id, required this.name});
 }
 
 class Student {

@@ -1,11 +1,9 @@
+import 'techstack_model.dart';
+
 class StudentModel {
   late String name;
   late String educationalLevel;
-  late String techstack;
+  late TechStack techstack;
 
-  StudentModel(
-    this.name,
-    this.educationalLevel,
-    this.techstack
-  );
+  StudentModel(this.name, this.educationalLevel, this.techstack);
 }

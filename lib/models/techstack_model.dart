@@ -1,14 +1,14 @@
 class TechStack {
   final int id;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
   final DateTime? deletedAt;
   final String name;
 
   TechStack({
     required this.id,
-    required this.createdAt,
-    required this.updatedAt,
+    this.createdAt,
+    this.updatedAt,
     this.deletedAt,
     required this.name,
   });
@@ -16,9 +16,12 @@ class TechStack {
   factory TechStack.fromJson(Map<String, dynamic> json) {
     return TechStack(
       id: json['id'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-      deletedAt: json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null,
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt:
+          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      deletedAt:
+          json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null,
       name: json['name'],
     );
   }

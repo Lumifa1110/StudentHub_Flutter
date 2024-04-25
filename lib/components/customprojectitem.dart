@@ -78,7 +78,7 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
             child: InkWell(
               onTap: widget.onTap,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Flexible(

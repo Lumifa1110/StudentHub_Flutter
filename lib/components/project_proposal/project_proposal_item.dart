@@ -79,8 +79,7 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => const ViewCandidateSceen()),
+              MaterialPageRoute(builder: (context) => ViewCandidateSceen()),
             );
           },
           child: Column(

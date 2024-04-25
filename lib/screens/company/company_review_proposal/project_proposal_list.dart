@@ -6,6 +6,7 @@ import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/project_proposal/index.dart';
 import 'package:studenthub/data/test/data_student.dart';
 import 'package:studenthub/models/company_model.dart';
+import 'package:studenthub/models/techstack_model.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 import 'package:studenthub/config/config.dart';

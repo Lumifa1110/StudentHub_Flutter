@@ -70,7 +70,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
       },
       body: jsonEncode(data),
     );
-    if (response.statusCode == 200) {
+    if (response.statusCode >= 200 || response.statusCode < 300) {
       setState(() {
         isLoading = true;
         _loadScreen()

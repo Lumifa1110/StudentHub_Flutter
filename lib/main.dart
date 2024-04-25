@@ -3,15 +3,19 @@ import 'package:flutter/services.dart';
 import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/screens/authentication/changepassword_screen.dart';
 import 'package:studenthub/screens/index.dart';
+import 'package:studenthub/screens/student/view_candidate_sceen.dart';
 import 'package:studenthub/screens/student/view_offer_screen.dart';
 import 'package:studenthub/theme/theme.dart';
 import 'package:studenthub/theme/theme_controller.dart';
 import 'package:studenthub/utils/colors.dart';
 
 void main() {
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: AppColor.primary,
-      systemNavigationBarColor: AppColor.primary));
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.blue,
+      systemNavigationBarColor: AppColor.primary,
+    ),
+  );
   runApp(const StudentHub());
 }
 
@@ -54,7 +58,8 @@ class _StudentHubState extends State<StudentHub> {
       theme: lightTheme,
       darkTheme: darkTheme,
       // themeMode: _themeController.themeMode,
-      initialRoute: '/signin',
+      home: ViewCandidateSceen(),
+      // initialRoute: '/signin',
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
         switch (settings.name) {
