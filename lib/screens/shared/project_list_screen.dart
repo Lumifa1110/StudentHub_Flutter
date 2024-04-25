@@ -19,7 +19,10 @@ class ProjectListScreen extends StatefulWidget {
   State<ProjectListScreen> createState() => _ProjectListScreenState();
 }
 
-class _ProjectListScreenState extends State<ProjectListScreen> {
+class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   late SharedPreferences _prefs;
   String searchQuery = '';
   List<Project> allProject = [];
@@ -185,6 +188,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AuthAppBar(
         canBack: false,
@@ -285,9 +289,6 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                 ),
               ],
             ),
-      bottomNavigationBar: const CustomBottomNavBar(
-        initialIndex: 0,
-      ),
     );
   }
 }

@@ -130,10 +130,10 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
       }).toList()
     });
     await StudentService.addStudentResume(studentId, {
-      "resume": resumeFile.name
+      "resume": resumeFile
     });
     await StudentService.addStudentTranscript(studentId, {
-      "transcript": transcriptFile.name
+      "transcript": transcriptFile
     });
 
     // SAVE LOCAL: student profile

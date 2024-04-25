@@ -11,13 +11,16 @@ import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/config/config.dart';
 
 class CompanyDashboardScreen extends StatefulWidget {
-  const CompanyDashboardScreen({Key? key}) : super(key: key);
+  const CompanyDashboardScreen({super.key});
 
   @override
   State<CompanyDashboardScreen> createState() => CompanyDashboardScreenState();
 }
 
-class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
+class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   late List<Project> listAllProject = [];
   late List<Project> listProjectWorking = [];
   late List<Project> listProjectArchived = [];
@@ -289,6 +292,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AuthAppBar(
         canBack: false,
@@ -467,9 +471,6 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                     ),
                   ),
                 ),
-      bottomNavigationBar: const CustomBottomNavBar(
-        initialIndex: 1,
-      ),
     );
   }
 }
