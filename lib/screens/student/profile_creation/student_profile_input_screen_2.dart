@@ -32,21 +32,15 @@ class StudentProfileInputScreen2 extends StatefulWidget {
       required this.studentEducations});
 
   @override
-  State<StudentProfileInputScreen2> createState() =>
-      _StudentProfileInputScreen2State();
+  State<StudentProfileInputScreen2> createState() => _StudentProfileInputScreen2State();
 }
 
-class _StudentProfileInputScreen2State
-    extends State<StudentProfileInputScreen2> {
+class _StudentProfileInputScreen2State extends State<StudentProfileInputScreen2> {
   // TextField controller
-  final TextEditingController experienceTitleController =
-      TextEditingController();
-  final TextEditingController experienceStartYearController =
-      TextEditingController();
-  final TextEditingController experienceEndYearController =
-      TextEditingController();
-  final TextEditingController experienceDescriptionController =
-      TextEditingController();
+  final TextEditingController experienceTitleController = TextEditingController();
+  final TextEditingController experienceStartYearController = TextEditingController();
+  final TextEditingController experienceEndYearController = TextEditingController();
+  final TextEditingController experienceDescriptionController = TextEditingController();
 
   // Experience
   final List<Experience> studentSelectedExperiences = [];
@@ -64,9 +58,7 @@ class _StudentProfileInputScreen2State
   void fetchAllSkillset() async {
     final Map<String, dynamic> response = await DefaultService.getAllSkillset();
     setState(() {
-      skillSets = response['result']
-          .map<SkillSet>((json) => SkillSet.fromJson(json))
-          .toList();
+      skillSets = response['result'].map<SkillSet>((json) => SkillSet.fromJson(json)).toList();
       isCheckedList = {for (var skillset in skillSets) skillset.id: false};
     });
   }
@@ -134,10 +126,8 @@ class _StudentProfileInputScreen2State
   }
 
   void handleAddExperience() {
-    List<SkillSet> selectedSkillsetsData =
-        List<SkillSet>.from(selectedSkillsets);
-    String startMonthFormatted =
-        DateFormat('MM-yyyy').format(selectedStartDate);
+    List<SkillSet> selectedSkillsetsData = List<SkillSet>.from(selectedSkillsets);
+    String startMonthFormatted = DateFormat('MM-yyyy').format(selectedStartDate);
     String endMonthFormatted = DateFormat('MM-yyyy').format(selectedEndDate);
     setState(() {
       studentSelectedExperiences.add(Experience(
@@ -168,8 +158,7 @@ class _StudentProfileInputScreen2State
                         alignment: Alignment.topCenter,
                         child: const Text(
                           'Experiences',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         )),
                   ),
                 ]),
@@ -183,8 +172,7 @@ class _StudentProfileInputScreen2State
                         child: const Text(
                           'Tell us about yourself and you will be your way connect with real-world projects',
                           textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.normal),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                         )),
                   ),
                 ]),
@@ -204,8 +192,7 @@ class _StudentProfileInputScreen2State
                             flex: 7,
                             child: Text(
                               'Experiences',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                           ),
                           // Add education button
@@ -226,17 +213,14 @@ class _StudentProfileInputScreen2State
                                           alignment: Alignment.center,
                                           width: 80,
                                           height: 40,
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8),
+                                          padding: const EdgeInsets.symmetric(horizontal: 8),
                                           decoration: BoxDecoration(
                                               color: AppColor.primary,
-                                              borderRadius:
-                                                  BorderRadius.circular(6)),
+                                              borderRadius: BorderRadius.circular(6)),
                                           child: const Text('Save',
                                               style: TextStyle(
                                                   color: Colors.white,
-                                                  fontWeight:
-                                                      FontWeight.w500))),
+                                                  fontWeight: FontWeight.w500))),
                                     )
                                   : const SizedBox.shrink(),
                             ]),
@@ -244,49 +228,39 @@ class _StudentProfileInputScreen2State
                           // Add button - Close button
                           Expanded(
                             flex: 3,
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        isOpenExperienceInput =
-                                            !isOpenExperienceInput;
-                                      });
-                                    },
-                                    child: Container(
-                                        alignment: Alignment.center,
-                                        width: 80,
-                                        height: 40,
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8),
-                                        decoration: BoxDecoration(
-                                            color: isOpenExperienceInput
-                                                ? Colors.black38
-                                                : AppColor.primary,
-                                            borderRadius:
-                                                BorderRadius.circular(6)),
-                                        child: !isOpenExperienceInput
-                                            ? const Row(
-                                                children: [
-                                                  Icon(Icons.add,
-                                                      size: 20,
-                                                      color: Colors.white),
-                                                  SizedBox(width: 10),
-                                                  Text('Add',
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.w500))
-                                                ],
-                                              )
-                                            : const Text('Close',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.w500))),
-                                  ),
-                                ]),
+                            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    isOpenExperienceInput = !isOpenExperienceInput;
+                                  });
+                                },
+                                child: Container(
+                                    alignment: Alignment.center,
+                                    width: 80,
+                                    height: 40,
+                                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                                    decoration: BoxDecoration(
+                                        color: isOpenExperienceInput
+                                            ? Colors.black38
+                                            : AppColor.primary,
+                                        borderRadius: BorderRadius.circular(6)),
+                                    child: !isOpenExperienceInput
+                                        ? const Row(
+                                            children: [
+                                              Icon(Icons.add, size: 20, color: Colors.white),
+                                              SizedBox(width: 10),
+                                              Text('Add',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight: FontWeight.w500))
+                                            ],
+                                          )
+                                        : const Text('Close',
+                                            style: TextStyle(
+                                                color: Colors.white, fontWeight: FontWeight.w500))),
+                              ),
+                            ]),
                           )
                         ],
                       ),
@@ -298,8 +272,7 @@ class _StudentProfileInputScreen2State
                     ? Column(children: [
                         // Input experience title
                         CustomTextfield(
-                            controller: experienceTitleController,
-                            hintText: 'Title...'),
+                            controller: experienceTitleController, hintText: 'Title...'),
                         const SizedBox(height: 10),
                         // Input experience startYear and endYear
                         Row(children: [
@@ -309,8 +282,7 @@ class _StudentProfileInputScreen2State
                                 onTap: () => {selectStartDate(context)},
                                 child: AbsorbPointer(
                                     child: CustomTextfield(
-                                        controller:
-                                            experienceStartYearController,
+                                        controller: experienceStartYearController,
                                         hintText: 'start month'))),
                           ),
                           const SizedBox(width: 20),
@@ -334,15 +306,13 @@ class _StudentProfileInputScreen2State
                         Column(children: [
                           Container(
                               width: double.infinity,
-                              margin:
-                                  const EdgeInsets.only(top: 20, bottom: 12),
+                              margin: const EdgeInsets.only(top: 20, bottom: 12),
                               alignment: Alignment.topLeft,
                               child: const Text(
                                 'Experience skillset',
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
-                                    fontSize: AppFonts.h3FontSize,
-                                    fontWeight: FontWeight.bold),
+                                    fontSize: AppFonts.h3FontSize, fontWeight: FontWeight.bold),
                               )),
                           Row(
                             children: [
@@ -350,23 +320,18 @@ class _StudentProfileInputScreen2State
                                 child: Container(
                                   padding: const EdgeInsets.all(6),
                                   decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Colors.grey, width: 1)),
+                                      border: Border.all(color: Colors.grey, width: 1)),
                                   child: Wrap(
-                                    spacing:
-                                        8.0, // Adjust the spacing between items
-                                    runSpacing:
-                                        8.0, // Adjust the spacing between lines
+                                    spacing: 8.0, // Adjust the spacing between items
+                                    runSpacing: 8.0, // Adjust the spacing between lines
                                     children: selectedSkillsets.isEmpty
                                         ? [
                                             const SizedBox(
-                                              height:
-                                                  100, // Set your desired height here
+                                              height: 100, // Set your desired height here
                                               child: Center(
                                                 child: Text(
                                                   'No skillsets selected',
-                                                  style: TextStyle(
-                                                      color: Colors.grey),
+                                                  style: TextStyle(color: Colors.grey),
                                                 ),
                                               ),
                                             ),
@@ -416,8 +381,7 @@ class _StudentProfileInputScreen2State
                     shrinkWrap: true,
                     itemCount: studentSelectedExperiences.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return ExperienceItem(
-                          experience: studentSelectedExperiences[index]);
+                      return ExperienceItem(experience: studentSelectedExperiences[index]);
                     }),
                 // Continue button
                 const SizedBox(height: 60),
@@ -427,25 +391,16 @@ class _StudentProfileInputScreen2State
                       label: 'Next',
                       onPressed: () => {
                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                              StudentProfileInputScreen3(
-                                studentFullname:
-                                  widget.studentFullname,
-                                studentTechstack:
-                                  widget.studentTechstack,
-                                studentSkillsets:
-                                  widget.studentSkillsets,
-                                studentLanguages:
-                                  widget.studentLanguages,
-                                studentEducations:
-                                  widget.studentEducations,
-                                studentExperiences:
-                                  studentSelectedExperiences,
-                              )
-                          )
-                        )
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => StudentProfileInputScreen3(
+                                      studentFullname: widget.studentFullname,
+                                      studentTechstack: widget.studentTechstack,
+                                      studentSkillsets: widget.studentSkillsets,
+                                      studentLanguages: widget.studentLanguages,
+                                      studentEducations: widget.studentEducations,
+                                      studentExperiences: studentSelectedExperiences,
+                                    )))
                       },
                       isButtonEnabled: true,
                     ),

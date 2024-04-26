@@ -1,17 +1,25 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/index.dart';
+import 'package:studenthub/config/config.dart';
 import 'package:studenthub/models/education_model.dart';
 import 'package:studenthub/models/index.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
-class ViewCandidateSceen extends StatefulWidget {
-  final dynamic candidate;
+import 'package:http/http.dart' as http;
 
-  const ViewCandidateSceen({super.key, this.candidate});
+class ViewCandidateSceen extends StatefulWidget {
+  final int? candidateId;
+
+  const ViewCandidateSceen({super.key, this.candidateId});
 
   @override
   _ViewCandidateSceenState createState() => _ViewCandidateSceenState();
@@ -57,14 +65,32 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
 
   late Map<int, bool> isCheckedList;
 
+  Future<void> _downloadFile() async {
+    final prefs = await SharedPreferences.getInstance();
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    final token = prefs.getString('token');
+    final studentProfile = prefs.getString('student_profile');
+    final studentId = jsonDecode(studentProfile!)['id'];
+    try {
+      var response = await http.get(
+        Uri.parse('$uriBase/api/profile/student/$studentId/resume'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   String getInitials(String name) {
     List<String> nameParts = name.split(' ');
     if (nameParts.length == 1) {
       return nameParts[0].substring(0, 1).toUpperCase();
     } else {
       String firstInitial = nameParts[0].substring(0, 1).toUpperCase();
-      String lastInitial =
-          nameParts[nameParts.length - 1].substring(0, 1).toUpperCase();
+      String lastInitial = nameParts[nameParts.length - 1].substring(0, 1).toUpperCase();
       return '$firstInitial$lastInitial';
     }
   }
@@ -157,8 +183,7 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                     borderRadius: BorderRadius.circular(9),
                     color: mainColor,
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: studentSelectedEducations.isEmpty
@@ -215,8 +240,7 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                                       child: Text(
                                         'No skill is selected',
                                         style: TextStyle(
-                                            color: blackTextColor,
-                                            fontSize: AppFonts.h3FontSize),
+                                            color: blackTextColor, fontSize: AppFonts.h3FontSize),
                                       ),
                                     ),
                                   ),
@@ -251,20 +275,15 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                       child: ElevatedButton.icon(
                         onPressed: () {},
                         icon: Icon(
-                          _linkResume == ""
-                              ? Icons.download
-                              : Icons.file_download_off,
+                          _linkResume == "" ? Icons.download : Icons.file_download_off,
                           color: whiteTextColor,
                         ),
                         label: const Text(
                           'Resume',
-                          style: TextStyle(
-                              color: whiteTextColor,
-                              fontSize: AppFonts.h3FontSize),
+                          style: TextStyle(color: whiteTextColor, fontSize: AppFonts.h3FontSize),
                         ),
                         style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(mainColor),
+                          backgroundColor: MaterialStateProperty.all<Color>(mainColor),
                           // Kích thước của nút
                         ),
                       ),
@@ -276,20 +295,15 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                       child: ElevatedButton.icon(
                         onPressed: () {},
                         icon: Icon(
-                          _linkTranscript == ""
-                              ? Icons.download
-                              : Icons.file_download_off,
+                          _linkTranscript == "" ? Icons.download : Icons.file_download_off,
                           color: whiteTextColor,
                         ),
                         label: const Text(
                           'Transcript',
-                          style: TextStyle(
-                              color: whiteTextColor,
-                              fontSize: AppFonts.h3FontSize),
+                          style: TextStyle(color: whiteTextColor, fontSize: AppFonts.h3FontSize),
                         ),
                         style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(mainColor),
+                          backgroundColor: MaterialStateProperty.all<Color>(mainColor),
                           // Kích thước của nút
                         ),
                       ),

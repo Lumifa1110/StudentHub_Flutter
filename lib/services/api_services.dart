@@ -21,11 +21,9 @@ class ApiService {
 
   static Future<Map<String, dynamic>> getRequest(String endpoint) async {
     final Map<String, String> headers = await getHeaders();
-    final response = await http.get(
-      Uri.parse(baseUrl + endpoint), 
-      headers: headers
-    );
-    
+    final response =
+        await http.get(Uri.parse(baseUrl + endpoint), headers: headers);
+
     if (response.statusCode == 201 || response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -33,7 +31,8 @@ class ApiService {
     }
   }
 
-  static Future<Map<String, dynamic>> postRequest(String endpoint, dynamic body) async {
+  static Future<Map<String, dynamic>> postRequest(
+      String endpoint, dynamic body) async {
     final Map<String, String> headers = await getHeaders();
     final response = await http.post(
       Uri.parse(baseUrl + endpoint),
@@ -47,8 +46,9 @@ class ApiService {
       throw Exception('Failed to post data');
     }
   }
-  
-  static Future<Map<String, dynamic>> putRequest(String endpoint, dynamic body) async {
+
+  static Future<Map<String, dynamic>> putRequest(
+      String endpoint, dynamic body) async {
     final Map<String, String> headers = await getHeaders();
     final response = await http.put(
       Uri.parse(baseUrl + endpoint),
@@ -63,7 +63,8 @@ class ApiService {
     }
   }
 
-  static Future<Map<String, dynamic>> patchRequest(String endpoint, dynamic body) async {
+  static Future<Map<String, dynamic>> patchRequest(
+      String endpoint, dynamic body) async {
     final Map<String, String> headers = await getHeaders();
     final response = await http.patch(
       Uri.parse(baseUrl + endpoint),
@@ -78,7 +79,8 @@ class ApiService {
     }
   }
 
-  static Future<Map<String, dynamic>> deleteRequest(String endpoint, dynamic body) async {
+  static Future<Map<String, dynamic>> deleteRequest(
+      String endpoint, dynamic body) async {
     final Map<String, String> headers = await getHeaders();
     final response = await http.delete(
       Uri.parse(baseUrl + endpoint),

@@ -1,6 +1,5 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print
-import 'dart:convert';
-import 'package:file_picker/file_picker.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +16,8 @@ import 'package:studenthub/services/index.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:file_picker/file_picker.dart';
 
 class StudentProfileInputScreen3 extends StatefulWidget {
   final String studentFullname;
@@ -172,28 +173,29 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
       "skillSets": widget.studentSkillsets.map((skillset) => skillset.id).toList()
     });
     await StudentService.addStudentLanguage(studentId, {
-      "languages": widget.studentLanguages.map((language) => {
-        "languageName": language.languageName,
-        "level": language.level
-      }).toList()
+      "languages": widget.studentLanguages
+          .map((language) => {"languageName": language.languageName, "level": language.level})
+          .toList()
     });
     await StudentService.addStudentEducation(studentId, {
-      "education": widget.studentEducations.map((education) => {
-        "schoolName": education.schoolName,
-        "startYear": education.startYear.year,
-        "endYear": education.endYear!.year
-      }).toList()
+      "education": widget.studentEducations
+          .map((education) => {
+                "schoolName": education.schoolName,
+                "startYear": education.startYear.year,
+                "endYear": education.endYear!.year
+              })
+          .toList()
     });
     await StudentService.addStudentExperience(studentId, {
-      "experience": widget.studentExperiences.map((experience) => {
-        "title": experience.title,
-        "startMonth": experience.startMonth,
-        "endMonth": experience.endMonth,
-        "description": experience.description,
-        "skillSets": [
-          "1", "2"
-        ]
-      }).toList()
+      "experience": widget.studentExperiences
+          .map((experience) => {
+                "title": experience.title,
+                "startMonth": experience.startMonth,
+                "endMonth": experience.endMonth,
+                "description": experience.description,
+                "skillSets": ["1", "2"]
+              })
+          .toList()
     });
     await handleUploadResume();
     await handleUploadTranscript();
@@ -221,8 +223,7 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
                         alignment: Alignment.topCenter,
                         child: const Text(
                           'CV & Transcript',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         )),
                   ),
                 ]),
@@ -230,44 +231,39 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
                 Row(children: [
                   Expanded(
                     child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      alignment: Alignment.topCenter,
-                      child: const Text(
-                        'Tell us about yourself and you will be your way connect with real-world projects',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.normal),
-                      )
-                    ),
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        alignment: Alignment.topCenter,
+                        child: const Text(
+                          'Tell us about yourself and you will be your way connect with real-world projects',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                        )),
                   ),
                 ]),
                 // Resume/CV
-                Column(children: [
-                  Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.only(top: 20),
-                    alignment: Alignment.topLeft,
-                    child: const Text(
-                      'Resume/CV (*)',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
-                    )
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => {
-                            openResumeFilePicker(context)
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(top: 20),
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey, width: 1)),
-                            child: const Wrap(
+                Column(
+                  children: [
+                    Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.only(top: 20),
+                        alignment: Alignment.topLeft,
+                        child: const Text(
+                          'Resume/CV (*)',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        )),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => {openResumeFilePicker(context)},
+                            child: Container(
+                              margin: const EdgeInsets.only(top: 20),
+                              padding: const EdgeInsets.all(6),
+                              decoration:
+                                  BoxDecoration(border: Border.all(color: Colors.grey, width: 1)),
+                              child: const Wrap(
                                 spacing: 8.0,
                                 runSpacing: 8.0,
                                 children: [
@@ -277,31 +273,32 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          FaIcon(
-                                            FontAwesomeIcons.upload,
-                                            size: 30,
-                                            color: AppColor.primary
-                                          ),
+                                          FaIcon(FontAwesomeIcons.upload,
+                                              size: 30, color: AppColor.primary),
                                           SizedBox(height: 10),
                                           Text(
                                             'Upload resume here',
-                                            style: TextStyle(color: AppFonts.primaryColor, fontWeight: FontWeight.w400),
+                                            style: TextStyle(
+                                                color: AppFonts.primaryColor,
+                                                fontWeight: FontWeight.w400),
                                           ),
-                                        ]
-                                      )
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ]),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  )
-                ]),
+                      ],
+                    )
+                  ],
+                ),
                 // Show picked resume file
-                resumeFilePicked ?
-                PickedFileItem(filename: resumeFile.name)
-                : const SizedBox.shrink(),
+                resumeFilePicked
+                    ? PickedFileItem(filename: resumeFile.name)
+                    : const SizedBox.shrink(),
                 const SizedBox(height: 20),
                 // Transcript
                 Column(children: [
@@ -312,47 +309,40 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
                     child: const Text(
                       'Transcript (*)',
                       textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
-                    )
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
                   ),
                   Row(
                     children: [
                       Expanded(
                         child: GestureDetector(
-                          onTap: () => {
-                            openTranscriptFilePicker(context)
-                          },
+                          onTap: () => {openTranscriptFilePicker(context)},
                           child: Container(
                             margin: const EdgeInsets.only(top: 20),
                             padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey, width: 1)),
-                            child: const Wrap(
-                                spacing: 8.0,
-                                runSpacing: 8.0,
-                                children: [
-                                  SizedBox(
-                                    height: 100,
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          FaIcon(
-                                            FontAwesomeIcons.upload,
-                                            size: 30,
-                                            color: AppColor.primary
-                                          ),
-                                          SizedBox(height: 10),
-                                          Text(
-                                            'Upload transcript here',
-                                            style: TextStyle(color: AppFonts.primaryColor, fontWeight: FontWeight.w400),
-                                          ),
-                                        ]
-                                      )
-                                    ),
+                            decoration:
+                                BoxDecoration(border: Border.all(color: Colors.grey, width: 1)),
+                            child: const Wrap(spacing: 8.0, runSpacing: 8.0, children: [
+                              SizedBox(
+                                height: 100,
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      FaIcon(FontAwesomeIcons.upload,
+                                          size: 30, color: AppColor.primary),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        'Upload transcript here',
+                                        style: TextStyle(
+                                            color: AppFonts.primaryColor,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ],
                                   ),
-                                ]),
+                                ),
+                              ),
+                            ]),
                           ),
                         ),
                       ),
@@ -360,9 +350,9 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
                   )
                 ]),
                 // Show picked transcript file
-                transcriptFilePicked ?
-                PickedFileItem(filename: transcriptFile.name)
-                : const SizedBox.shrink(),
+                transcriptFilePicked
+                    ? PickedFileItem(filename: transcriptFile.name)
+                    : const SizedBox.shrink(),
                 // Continue button
                 Container(
                   alignment: Alignment.bottomRight,
@@ -371,7 +361,8 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
                     label: 'Continue',
                     onPressed: () => {
                       handleSubmitProfile(context),
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const StudentDashboardScreen()))
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => const StudentDashboardScreen()))
                     },
                     isButtonEnabled: resumeFilePicked && transcriptFilePicked,
                   ),
