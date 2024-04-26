@@ -17,6 +17,7 @@ import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 
 class ViewCandidateSceen extends StatefulWidget {
   final int? candidateId;
@@ -29,8 +30,9 @@ class ViewCandidateSceen extends StatefulWidget {
 
 class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
   bool isLoading = true;
+  bool isResumeLoading = true;
+  bool isTranscriptLoading = true;
   late String candidateName = 'Luu Minh Phat';
-  late String candidateTechStack = 'Fullstack Developer';
   dynamic proposalCandidate;
   final List<SkillSet> studentSelectedSkills = [
     SkillSet(id: 1, name: 'C'),
@@ -38,38 +40,50 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
     SkillSet(id: 3, name: 'C#'),
     SkillSet(id: 3, name: 'JavaScript'),
   ];
-  final List<Education> studentSelectedEducations = [
-    Education(
-      id: 1,
-      schoolName: 'University A',
-      startYear: DateTime(2018),
-      endYear: DateTime(2022),
-      updatedAt: DateTime(2023, 5, 15),
-      deletedAt: null,
-    ),
-    Education(
-      id: 2,
-      schoolName: 'College B',
-      startYear: DateTime(2015),
-      endYear: null,
-      updatedAt: DateTime(2023, 6, 20),
-      deletedAt: null,
-    ),
-    Education(
-      id: 3,
-      schoolName: 'High School C',
-      startYear: DateTime(2010),
-      endYear: DateTime(2015),
-      updatedAt: DateTime(2023, 7, 10),
-      deletedAt: DateTime(2023, 12, 31),
-    ),
-  ];
+  final List<Education> studentSelectedEducations = [];
   String? _linkResume;
   String? _linkTranscript;
 
   late Map<int, bool> isCheckedList;
 
-  Future<void> _downloadFile(String fileUrl) async {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchCandidateProposal().then((value) => {
+          _fetchResumeLink(),
+          _fetchTranscriptLink(),
+        });
+  }
+
+  String getFileExtension(String url) {
+    return path.extension(Uri.parse(url).path);
+  }
+
+  Future<void> _downloadFile(bool isResume) async {
+    String fileUrl = "";
+    String fileExtention = "";
+    String fileName = "";
+    String fileDefault = "";
+
+    if (isResume) {
+      fileUrl = _linkResume!;
+      fileName = 'resume';
+      fileExtention = getFileExtension(proposalCandidate['student']['resume']);
+      setState(() {
+        isResumeLoading = true;
+      });
+    } else {
+      fileUrl = _linkTranscript!;
+      fileName = 'transcript';
+      fileExtention = getFileExtension(proposalCandidate['student']['transcript']);
+      setState(() {
+        isTranscriptLoading = true;
+      });
+    }
+    fileDefault = fileName + fileExtention;
+    print(fileDefault);
+
     final request = await HttpClient().getUrl(Uri.parse(fileUrl));
     final response = await request.close();
     final bytes = await consolidateHttpClientResponseBytes(response);
@@ -77,11 +91,16 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
     // Get the directory where the file will be saved
     final directory = (await getDownloadsDirectory());
     print('Direc: $directory');
-    const filePath = '/storage/emulated/0/Download/resume.pdf';
+    final filePath = '/storage/emulated/0/Download/$fileDefault';
 
     // Write the file to disk
     final File file = File(filePath);
     await file.writeAsBytes(bytes);
+
+    setState(() {
+      isResumeLoading = false;
+      isTranscriptLoading = false;
+    });
 
     // Show a message or perform any action after the file is downloaded
     print('File downloaded to: $filePath');
@@ -101,12 +120,16 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
       );
       print(response.body);
       proposalCandidate = jsonDecode(response.body)["result"];
+
+      final List<dynamic> educationsJson = proposalCandidate['student']['educations'];
+      studentSelectedEducations.clear();
+      studentSelectedEducations.addAll(educationsJson.map((edu) => Education.fromJson(edu)));
+
       if (proposalCandidate != null) {
         setState(() {
           isLoading = false;
         });
       }
-      print(proposalCandidate);
     } catch (e) {
       print('Error: $e');
     }
@@ -126,10 +149,40 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         var jsonResponse = jsonDecode(response.body);
+
+        _linkResume = jsonResponse['result'];
+
         setState(() {
-          _linkResume = jsonResponse['result'];
+          isResumeLoading = false;
         });
-        print(_linkResume);
+      } else {
+        print('Request failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> _fetchTranscriptLink() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    try {
+      final response = await http.get(
+        Uri.parse('$uriBase/api/profile/student/${proposalCandidate["studentId"]}/transcript'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var jsonResponse = jsonDecode(response.body);
+
+        _linkTranscript = jsonResponse['result'];
+
+        setState(() {
+          isTranscriptLoading = false;
+        });
       } else {
         print('Request failed with status: ${response.statusCode}');
       }
@@ -151,13 +204,6 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
 
   void removeSelectedSkills(int id) {
     setState(() {});
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _fetchCandidateProposal().then((value) => _fetchResumeLink());
   }
 
   @override
@@ -216,7 +262,7 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                                           color: whiteTextColor),
                                     ),
                                     Text(
-                                      proposalCandidate['techStack']?['name'],
+                                      '${proposalCandidate['student']['techStack']!['name']}',
                                       style: TextStyle(
                                         fontSize: AppFonts.h1_2FontSize,
                                         fontWeight: FontWeight.w500,
@@ -260,17 +306,19 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                                         color: whiteTextColor),
                                   ),
                                 ]
-                              : studentSelectedEducations.map((edu) {
-                                  return Text(
-                                    '${edu.startYear.year} - ${edu.endYear != null ? edu.endYear!.year : 'On going'}: \t ${edu.schoolName}',
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontSize: AppFonts.h3FontSize,
-                                        fontWeight: FontWeight.w500,
-                                        color: whiteTextColor),
-                                  );
-                                }).toList(),
+                              : studentSelectedEducations.map(
+                                  (edu) {
+                                    return Text(
+                                      '${edu.startYear.year} - ${edu.endYear != null ? edu.endYear!.year : 'On going'}: \t ${edu.schoolName}',
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                          fontSize: AppFonts.h3FontSize,
+                                          fontWeight: FontWeight.w500,
+                                          color: whiteTextColor),
+                                    );
+                                  },
+                                ).toList(),
                         ),
                       ),
                       const SizedBox(
@@ -337,12 +385,23 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                         children: [
                           Expanded(
                             child: ElevatedButton.icon(
-                              onPressed:
-                                  _linkResume != null ? () => _downloadFile(_linkResume!) : null,
-                              icon: Icon(
-                                _linkResume != null ? Icons.download : Icons.file_download_off,
-                                color: whiteTextColor,
-                              ),
+                              onPressed: _linkResume != null && !isResumeLoading
+                                  ? () => _downloadFile(true)
+                                  : null,
+                              icon: isResumeLoading
+                                  ? const SizedBox(
+                                      height: 30,
+                                      width: 30,
+                                      child: CircularProgressIndicator(
+                                        color: whiteTextColor,
+                                      ),
+                                    )
+                                  : Icon(
+                                      _linkResume != null
+                                          ? Icons.download
+                                          : Icons.file_download_off,
+                                      color: whiteTextColor,
+                                    ),
                               label: const Text(
                                 'Resume',
                                 style:
@@ -358,11 +417,23 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                           ),
                           Expanded(
                             child: ElevatedButton.icon(
-                              onPressed: () {},
-                              icon: Icon(
-                                _linkTranscript == "" ? Icons.download : Icons.file_download_off,
-                                color: whiteTextColor,
-                              ),
+                              onPressed: _linkTranscript != null && !isTranscriptLoading
+                                  ? () => _downloadFile(false)
+                                  : null,
+                              icon: isTranscriptLoading
+                                  ? const SizedBox(
+                                      height: 30,
+                                      width: 30,
+                                      child: CircularProgressIndicator(
+                                        color: whiteTextColor,
+                                      ),
+                                    )
+                                  : Icon(
+                                      _linkTranscript != null
+                                          ? Icons.download
+                                          : Icons.file_download_off,
+                                      color: whiteTextColor,
+                                    ),
                               label: const Text(
                                 'Transcript',
                                 style:

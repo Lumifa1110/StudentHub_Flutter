@@ -58,7 +58,6 @@ class _StudentHubState extends State<StudentHub> {
       theme: lightTheme,
       darkTheme: darkTheme,
       // themeMode: _themeController.themeMode,
-      home: ViewCandidateSceen(),
       initialRoute: '/signin',
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
@@ -66,61 +65,45 @@ class _StudentHubState extends State<StudentHub> {
           case '/home':
             return MaterialPageRoute(builder: (context) => const HomeScreen());
           case '/company':
-            return MaterialPageRoute(
-                builder: (context) => const CompanyProfileInputScreen());
+            return MaterialPageRoute(builder: (context) => const CompanyProfileInputScreen());
           case '/company/profile':
-            return MaterialPageRoute(
-                builder: (context) => const CompanyProfileInputScreen());
+            return MaterialPageRoute(builder: (context) => const CompanyProfileInputScreen());
           case '/company/welcome':
-            return MaterialPageRoute(
-                builder: (context) => const CompanyWelcomeScreen());
+            return MaterialPageRoute(builder: (context) => const CompanyWelcomeScreen());
           case '/company/dashboard':
-            return MaterialPageRoute(
-                builder: (context) => const CompanyDashboardScreen());
+            return MaterialPageRoute(builder: (context) => const CompanyDashboardScreen());
           case '/student':
-            return MaterialPageRoute(
-                builder: (context) => const StudentProfileInputScreen1());
+            return MaterialPageRoute(builder: (context) => const StudentProfileInputScreen1());
           case '/student/profileinput1':
-            return MaterialPageRoute(
-                builder: (context) => const StudentProfileInputScreen1());
+            return MaterialPageRoute(builder: (context) => const StudentProfileInputScreen1());
           case '/student/dashboard':
-            return MaterialPageRoute(
-                builder: (context) => const StudentDashboardScreen());
+            return MaterialPageRoute(builder: (context) => const StudentDashboardScreen());
           case '/chatter':
-            return MaterialPageRoute(
-                builder: (context) => const MessageListScreen());
+            return MaterialPageRoute(builder: (context) => const MessageListScreen());
           case '/offer/view':
-            return MaterialPageRoute(
-                builder: (context) => const ViewOfferScreen());
+            return MaterialPageRoute(builder: (context) => const ViewOfferScreen());
           case '/signin':
-            return MaterialPageRoute(
-                builder: (context) => const SigninScreen());
+            return MaterialPageRoute(builder: (context) => const SigninScreen());
           case '/user/changepassword':
-            return MaterialPageRoute(
-                builder: (context) => const ChangePasswordScreen());
+            return MaterialPageRoute(builder: (context) => const ChangePasswordScreen());
           case '/signup':
-            return MaterialPageRoute(
-                builder: (context) => const SignupTypeScreen());
+            return MaterialPageRoute(builder: (context) => const SignupTypeScreen());
           case '/signup/company':
             return MaterialPageRoute(
-              builder: (context) =>
-                  const SignupInfoScreen(selectedType: UserRole.company),
+              builder: (context) => const SignupInfoScreen(selectedType: UserRole.company),
             );
           case '/signup/student':
             return MaterialPageRoute(
-              builder: (context) =>
-                  const SignupInfoScreen(selectedType: UserRole.student),
+              builder: (context) => const SignupInfoScreen(selectedType: UserRole.student),
             );
           case '/profile':
             return MaterialPageRoute(
               builder: (context) => const SwitchScreen(),
             );
           case '/list':
-            return MaterialPageRoute(
-                builder: (context) => const ProjectListScreen());
+            return MaterialPageRoute(builder: (context) => const ProjectListScreen());
           case '/company/project/step1':
-            return MaterialPageRoute(
-                builder: (context) => ProjectPostStep1Page());
+            return MaterialPageRoute(builder: (context) => ProjectPostStep1Page());
           default:
             return null;
         }
