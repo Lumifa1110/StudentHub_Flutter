@@ -3,19 +3,21 @@ import 'package:flutter/material.dart';
 class ButtonSimple extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
+  final bool isButtonEnabled;
 
   const ButtonSimple({
     super.key,
     required this.label,
-    required this.onPressed
+    required this.onPressed,
+    required this.isButtonEnabled
   });
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onPressed,
+      onPressed: isButtonEnabled ? onPressed : null,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blue,
+        backgroundColor: isButtonEnabled ? Colors.blue : Colors.black26,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
@@ -23,8 +25,8 @@ class ButtonSimple extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: const TextStyle(
-          color: Colors.white,
+        style: TextStyle(
+          color: isButtonEnabled ? Colors.white : Colors.black,
           fontSize: 16,
           fontWeight: FontWeight.bold
         )

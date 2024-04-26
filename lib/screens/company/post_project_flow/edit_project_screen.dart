@@ -205,10 +205,12 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ButtonSimple(
-                            label: 'Save',
-                            onPressed: () {
-                              patchProject();
-                            }),
+                          label: 'Save',
+                          onPressed: () {
+                            patchProject();
+                          },
+                          isButtonEnabled: true
+                        ),
                       ],
                     ),
                   ],

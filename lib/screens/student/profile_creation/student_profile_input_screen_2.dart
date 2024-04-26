@@ -424,27 +424,31 @@ class _StudentProfileInputScreen2State
                 Row(children: [
                   Expanded(
                     child: ButtonSimple(
-                        label: 'Next',
-                        onPressed: () => {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          StudentProfileInputScreen3(
-                                            studentFullname:
-                                                widget.studentFullname,
-                                            studentTechstack:
-                                                widget.studentTechstack,
-                                            studentSkillsets:
-                                                widget.studentSkillsets,
-                                            studentLanguages:
-                                                widget.studentLanguages,
-                                            studentEducations:
-                                                widget.studentEducations,
-                                            studentExperiences:
-                                                studentSelectedExperiences,
-                                          )))
-                            }),
+                      label: 'Next',
+                      onPressed: () => {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                              StudentProfileInputScreen3(
+                                studentFullname:
+                                  widget.studentFullname,
+                                studentTechstack:
+                                  widget.studentTechstack,
+                                studentSkillsets:
+                                  widget.studentSkillsets,
+                                studentLanguages:
+                                  widget.studentLanguages,
+                                studentEducations:
+                                  widget.studentEducations,
+                                studentExperiences:
+                                  studentSelectedExperiences,
+                              )
+                          )
+                        )
+                      },
+                      isButtonEnabled: true,
+                    ),
                   ),
                 ])
               ],

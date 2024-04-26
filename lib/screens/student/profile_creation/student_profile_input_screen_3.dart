@@ -55,28 +55,36 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
 
   Future<void> openResumeFilePicker(BuildContext context) async {
     try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg', 'docx'],
+      );
       if (result != null) {
         resumeFile = result.files.first;
         setState(() {
           resumeFilePicked = true;
         });
       }
-    // ignore: empty_catches
-    } catch (e) {}
+    } catch (e) {
+      print('Error picking resume file: $e');
+    }
   }
 
   Future<void> openTranscriptFilePicker(BuildContext context) async {
     try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg', 'docx'],
+      );
       if (result != null) {
         transcriptFile = result.files.first;
         setState(() {
           transcriptFilePicked = true;
         });
       }
-    // ignore: empty_catches
-    } catch (e) {}
+    } catch (e) {
+      print('Error picking transcript file: $e');
+    }
   }
 
   Future<void> handleUploadResume() async {
@@ -364,7 +372,8 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
                     onPressed: () => {
                       handleSubmitProfile(context),
                       Navigator.push(context, MaterialPageRoute(builder: (context) => const StudentDashboardScreen()))
-                    }
+                    },
+                    isButtonEnabled: resumeFilePicked && transcriptFilePicked,
                   ),
                 )
               ],

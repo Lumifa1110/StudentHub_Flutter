@@ -712,7 +712,8 @@ class _StudentProfileInputScreen1State extends State<StudentProfileInputScreen1>
                             studentEducations: studentSelectedEducations,
                           ))
                         )
-                      }
+                      },
+                      isButtonEnabled: true,
                     ),
                   ),
                 ]

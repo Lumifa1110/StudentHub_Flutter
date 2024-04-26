@@ -109,6 +109,7 @@ class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
                     postCompanyProfile(),
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const CompanyWelcomeScreen()))
                   },
+                  isButtonEnabled: true,
                 ),
               )
             ],
