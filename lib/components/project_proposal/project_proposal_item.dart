@@ -79,7 +79,11 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ViewCandidateSceen()),
+              MaterialPageRoute(
+                builder: (context) => ViewCandidateSceen(
+                  candidateId: widget.itemsProposal['id'],
+                ),
+              ),
             );
           },
           child: Column(
@@ -92,8 +96,7 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                 Expanded(
                     flex: 8,
                     child: Container(
-                      padding:
-                          const EdgeInsets.only(left: 20, top: 10, bottom: 10),
+                      padding: const EdgeInsets.only(left: 20, top: 10, bottom: 10),
                       height: 70,
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -136,8 +139,7 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
               Row(children: [
                 Expanded(
                     child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 6),
+                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(4),
@@ -146,8 +148,7 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                         child: Text(
                           widget.itemsProposal['coverLetter'],
                           style: TextStyle(
-                              color: AppFonts.secondaryColor,
-                              fontSize: AppFonts.h3FontSize),
+                              color: AppFonts.secondaryColor, fontSize: AppFonts.h3FontSize),
                         )))
               ]),
               // Buttons
@@ -160,11 +161,9 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                       child: Container(
                           alignment: Alignment.center,
                           margin: const EdgeInsets.only(right: 12),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 6, horizontal: 6),
+                          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
                           decoration: BoxDecoration(
-                              color: AppColor.primary,
-                              borderRadius: BorderRadius.circular(6)),
+                              color: AppColor.primary, borderRadius: BorderRadius.circular(6)),
                           child: const Text('Message',
                               style: TextStyle(
                                   color: Colors.white,
@@ -178,21 +177,17 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return DialogSendHire(
-                                  sendHireOffer: sendHireOffer);
+                              return DialogSendHire(sendHireOffer: sendHireOffer);
                             },
                           );
                         },
                         child: Container(
                             alignment: Alignment.center,
                             margin: const EdgeInsets.only(left: 12),
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 6, horizontal: 6),
+                            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
                             decoration: BoxDecoration(
-                                color: AppColor.tertiary,
-                                borderRadius: BorderRadius.circular(6)),
-                            child: Text(
-                                sentHireOffer ? 'Sent hired offer' : 'Hire',
+                                color: AppColor.tertiary, borderRadius: BorderRadius.circular(6)),
+                            child: Text(sentHireOffer ? 'Sent hired offer' : 'Hire',
                                 style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: AppFonts.h3FontSize,
