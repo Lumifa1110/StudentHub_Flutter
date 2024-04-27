@@ -60,7 +60,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
     final token = _prefs.getString('token');
     final Map<String, dynamic> data = {
       'numberOfStudents': project['numberOfStudents'],
-      'typeFlag': 0,
+      'typeFlag': 1,
     };
     final response = await http.patch(
       Uri.parse('$uriBase/api/project/${project['id']}'),
@@ -88,7 +88,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
     final token = _prefs.getString('token');
     final Map<String, dynamic> data = {
       'numberOfStudents': project['numberOfStudents'],
-      'typeFlag': 1,
+      'typeFlag': 2,
     };
     final response = await http.patch(
       Uri.parse('$uriBase/api/project/${project['id']}'),
@@ -98,6 +98,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
       },
       body: jsonEncode(data),
     );
+    print(response.statusCode);
     if (response.statusCode == 200) {
       setState(() {
         isLoading = true;
@@ -175,7 +176,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
 
     try {
       final responseJson = await http.get(
-        Uri.parse('${uriBase}/api/project/company/$companyId/?typeFlag=0'),
+        Uri.parse('${uriBase}/api/project/company/$companyId/?typeFlag=1'),
         headers: {'Authorization': 'Bearer $token'},
       );
 
@@ -213,7 +214,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
 
     try {
       final responseJson = await http.get(
-        Uri.parse('${uriBase}/api/project/company/$companyId/?typeFlag=1'),
+        Uri.parse('${uriBase}/api/project/company/$companyId/?typeFlag=2'),
         headers: {'Authorization': 'Bearer $token'},
       );
       final responseDecode = jsonDecode(responseJson.body)["result"];
@@ -362,7 +363,15 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                       ),
                                       OptionProjectCompany(
                                         onTap: () {
-                                          print(project.projectId);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProjectProposalListScreen(
+                                                    project: project,
+                                                  ),
+                                            ),
+                                          );
                                         },
                                         project: project,
                                         removeAProject: removeAProject,
@@ -393,7 +402,15 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                       ),
                                       OptionProjectCompany(
                                         onTap: () {
-                                          print(project.projectId);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProjectProposalListScreen(
+                                                    project: project,
+                                                  ),
+                                            ),
+                                          );
                                         },
                                         project: project,
                                         removeAProject: removeAProject,

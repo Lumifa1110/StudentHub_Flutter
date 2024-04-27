@@ -33,7 +33,8 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
   @override
   void initState() {
     super.initState();
-    _declare_Prefs().then((_) => _token = _prefs.getString('token'));
+    _declare_Prefs()
+        .then((_) => _token = _prefs.getString('token'));
     sentHireOffer = widget.itemsProposal['statusFlag'] == 2
         ? true
         : widget.itemsProposal['statusFlag'] == 3
@@ -158,17 +159,22 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                   children: [
                     Expanded(
                       flex: 1,
-                      child: Container(
-                          alignment: Alignment.center,
-                          margin: const EdgeInsets.only(right: 12),
-                          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
-                          decoration: BoxDecoration(
-                              color: AppColor.primary, borderRadius: BorderRadius.circular(6)),
-                          child: const Text('Message',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: AppFonts.h3FontSize,
-                                  fontWeight: FontWeight.w500))),
+                      child: GestureDetector(
+                        onTap: (){
+                          print('ok');
+                        },
+                        child: Container(
+                            alignment: Alignment.center,
+                            margin: const EdgeInsets.only(right: 12),
+                            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+                            decoration: BoxDecoration(
+                                color: AppColor.primary, borderRadius: BorderRadius.circular(6)),
+                            child: const Text('Message',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: AppFonts.h3FontSize,
+                                    fontWeight: FontWeight.w500))),
+                      ),
                     ),
                     Expanded(
                       flex: 1,

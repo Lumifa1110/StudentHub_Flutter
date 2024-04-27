@@ -41,8 +41,6 @@ class _SubmitProposalScreenState extends State<SubmitProposalScreen> {
       'projectId': widget.idProject,
       'studentId': _idStudent,
       'coverLetter': _coverLetter.text,
-      'statusFlag': 0,
-      'disableFlag': 0,
     };
     try {
       final response = await http.post(

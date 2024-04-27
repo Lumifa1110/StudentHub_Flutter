@@ -76,7 +76,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
     //Loading submitted proposal
     try {
       final response = await _client.get(
-        Uri.parse('$uriBase/api/proposal/project/$_currentIdStudent'),
+        Uri.parse('$uriBase/api/proposal/project/$_currentIdStudent?statusFlag=0'),
         headers: {'Authorization': 'Bearer $_token'},
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -205,7 +205,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                 height: 20,
                               ),
                               Expanded(
-                                  flex: _responseActiveProposal.isEmpty ? 1 : 6,
+                                  flex: _responseActiveProposal.isEmpty ? 6 : 1,
                                   child: Container(
                                     padding: const EdgeInsets.all(10.0),
                                     decoration: BoxDecoration(
@@ -216,8 +216,6 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           'Active proposal(${_responseArchivedTab.length})',
@@ -234,25 +232,19 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                                 int index) {
                                               // itemBuilder builds each item in the list
                                               return Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   OptionItemAllProjectScreen(
                                                     onTap: () {},
                                                     response:
-                                                        _responseArchivedTab[
-                                                            index],
+                                                        _responseArchivedTab[index],
                                                   ),
-                                                  index ==
-                                                          _responseSubmitProposal
-                                                                  .length -
-                                                              1
-                                                      ? const SizedBox()
-                                                      : const Divider(
-                                                          height: 60,
-                                                          endIndent: 10,
-                                                          thickness: 2,
-                                                        ),
+                                                  if( index != _responseArchivedTab.length - 1)
+                                                       const Divider(
+                                                        height: 60,
+                                                        endIndent: 10,
+                                                        thickness: 2,
+                                                      )
                                                 ],
                                               );
                                             },
