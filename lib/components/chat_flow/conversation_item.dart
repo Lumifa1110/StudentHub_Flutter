@@ -21,7 +21,7 @@ String formatTimeAgo(DateTime time) {
 }
 
 class ConversationItem extends StatelessWidget {
-  final MessageModel message;
+  final Message message;
   final int messageCount;
 
   const ConversationItem({
@@ -34,7 +34,7 @@ class ConversationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MessageDetailScreen(chatter: message.sender)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MessageDetailScreen(receiver: message.sender, messages: const [])));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 6),
@@ -70,7 +70,7 @@ class ConversationItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      message.sender,
+                      message.sender.fullname,
                       style: const TextStyle(
                         color: AppFonts.primaryColor,
                         fontSize: AppFonts.h3FontSize,
@@ -123,7 +123,7 @@ class ConversationItem extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      formatTimeAgo(message.time),
+                      formatTimeAgo(message.createdAt),
                       style: const TextStyle(
                         color: AppFonts.secondaryColor,
                         fontSize: AppFonts.h4FontSize,

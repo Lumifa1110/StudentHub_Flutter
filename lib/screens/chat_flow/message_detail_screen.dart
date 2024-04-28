@@ -1,19 +1,27 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+// ignore: library_prefixes
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart';
 import 'package:studenthub/components/bottomsheet_schedule.dart';
 import 'package:studenthub/components/chat_flow/message_item.dart';
-import 'package:studenthub/data/test/data_message.dart';
-import 'package:studenthub/models/message_model.dart';
+import 'package:studenthub/models/index.dart';
+import 'package:studenthub/services/index.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class MessageDetailScreen extends StatefulWidget {
-  final String chatter;
+  final Chatter receiver;
+  final List<Message> messages;
 
   const MessageDetailScreen({ 
     super.key, 
-    required this.chatter
+    required this.receiver,
+    required this.messages
   });
 
   @override
@@ -21,31 +29,98 @@ class MessageDetailScreen extends StatefulWidget {
 }
 
 class _MessageDetailScreenState extends State<MessageDetailScreen> {
+  late IO.Socket socket;
   // Controller
   final TextEditingController messageInputController = TextEditingController();
   // State
-  late List<MessageModel> _messages;
+  late List<Message> _messages;
 
   @override
   void initState() {
     super.initState();
-    _messages = filteredAndSortedMessages(dataMessage);
+    socketInitialize();
+    socketConnect();
+    _messages = filteredAndSortedMessages(widget.messages);
   }
 
-  List<MessageModel> filteredAndSortedMessages(List<MessageModel> messages) {
-    List<MessageModel> filteredMessages = messages.where((message) => message.sender == widget.chatter || message.receiver == widget.chatter).toList();
-    filteredMessages.sort((a, b) => a.time.compareTo(b.time));
+  @override
+  void dispose() {
+    socketDisconnect();
+    super.dispose();
+  }
+
+  Future<int> loadUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('userid');
+    return userId!;
+  }
+
+  void socketInitialize() {
+    socket = IO.io(
+      'https://api.studenthub.dev',
+      OptionBuilder()
+        .setTransports(['websocket']) 
+        .disableAutoConnect() 
+        .build()
+    );
+    //Add authorization to header
+    final token = ApiService.getAuthToken();
+    socket.io.options?['extraHeaders'] = {
+      'Authorization': 'Bearer $token',
+    };
+    //Add query param to url
+    final userId = loadUserId();
+    socket.io.options?['query'] = {
+      'user_id': userId
+    };
+  }
+
+  void socketConnect() {
+    socket.connect();
+    socket.onConnect((data) {
+      print('Socket connected.');
+    });
+    socket.on('RECEIVE_MESSAGE', (data) {
+      print('RECEIVE_MESSAGE: $data');
+    });
+  }
+
+  void socketDisconnect() {
+    socket.disconnect();
+    socket.onDisconnect((data) {
+      print('Socket disconnected.');
+    });
+  }
+
+  List<Message> filteredAndSortedMessages(List<Message> messages) {
+    List<Message> filteredMessages = messages;
+    filteredMessages.sort((a, b) => a.createdAt.compareTo(b.createdAt));
     return filteredMessages;
   }
 
-  void handleSubmitMessage() {
+  Future<void> handleSubmitMessage() async {
     String content = messageInputController.text;
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('userid');
+    final fullname = prefs.getString('username');
     if (content.isNotEmpty) {
-      MessageModel newMessage = MessageModel('Vu', widget.chatter, content, DateTime.now());
+      Message newMessage = Message(
+        content: content,
+        sender: Chatter(id: userId!, fullname: fullname!),
+        receiver: widget.receiver,
+        createdAt: DateTime.now()
+      );
       setState(() {
         _messages.add(newMessage);
       });
     }
+    socket.emit("SEND_MESSAGE", {
+      "content": content,
+      "projectId": 1,
+      "senderId":  userId,
+      "receiverId": widget.receiver.id,
+      "messageFlag": 0 // default 0 for message, 1 for interview
+  });
     // Clear TextField after creating the new message
     messageInputController.clear();
   }
@@ -57,12 +132,12 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
       final message = _messages[i];
       final isMyMessage = message.sender == 'Vu';
       // Check if this is the first message or the time has changed since the last message
-      if (lastMessageTime == null || message.time.day != lastMessageTime.day) {
-        messageWidgets.add(buildTimestamp(message.time));
+      if (lastMessageTime == null || message.createdAt.day != lastMessageTime.day) {
+        messageWidgets.add(buildTimestamp(message.createdAt));
       }
       // Add the message item
       messageWidgets.add(MessageItem(message: message, isMyMessage: isMyMessage));
-      lastMessageTime = message.time;
+      lastMessageTime = message.createdAt;
     }
     return messageWidgets;
   }
@@ -106,7 +181,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.chatter,
+          widget.receiver.fullname,
           style: const TextStyle(
             color: Colors.white
           )

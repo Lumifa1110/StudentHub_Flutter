@@ -5,10 +5,10 @@ import 'package:socket_io_client/socket_io_client.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/chat_flow/conversation_item.dart';
 import 'package:studenthub/components/textfield/search_bar.dart';
-import 'package:studenthub/data/test/data_message.dart';
-import 'package:studenthub/models/message_model.dart';
+
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:studenthub/models/index.dart';
 import 'package:studenthub/services/index.dart';
 
 class MessageListScreen extends StatefulWidget {
@@ -25,15 +25,33 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
   bool get wantKeepAlive => true;
 
   late IO.Socket socket;
-  late List<MessageModel> conversationList;
+  late int userId;
+  late List<Message> messages;
+  late List<Message> conversationList;
   late List<int> messageCounts;
   final TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    print('initState');
-    // Initialize socket
+    socketInitialize();
+    socketConnect();
+    // Filter and sort the messages to get the conversation list
+    messages = [];
+    conversationList = [];
+    messageCounts = [];
+    fetchMessages();
+    filterConversationList();
+    getMessageCounts();
+  }
+
+  @override
+  void dispose() {
+    socketDisconnect();
+    super.dispose();
+  }
+
+void socketInitialize() {
     socket = IO.io(
       'https://api.studenthub.dev',
       OptionBuilder()
@@ -51,87 +69,89 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
     socket.io.options?['query'] = {
       'user_id': userId
     };
-    // Socket connect
+  }
+
+  void socketConnect() {
     socket.connect();
-    // Filter and sort the messages to get the conversation list
-    conversationList = filterConversationList();
-    // Get the message counts for each conversation
-    messageCounts = getMessageCounts();
-  }
-
-  @override
-  void dispose() {
-    socket.disconnect();
-    super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    print('didChangeDependencies');
-    // Socket event listeners should be added here instead of initState
-    // Listen to socket connection events
     socket.onConnect((data) {
-      print('Socket Connected');
+      print('Socket connected.');
     });
-    // Listen to socket disconnection events
-    socket.onDisconnect((data) {
-      print('Socket Disconnected');
-    });
-    // Listen for incoming messages
     socket.on('RECEIVE_MESSAGE', (data) {
       print('RECEIVE_MESSAGE: $data');
     });
   }
 
-  Future<String> loadUserId() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userId = prefs.getInt('userid').toString();
-    return userId;
+  void socketDisconnect() {
+    socket.disconnect();
+    socket.onDisconnect((data) {
+      print('Socket disconnected.');
+    });
   }
 
-  List<MessageModel> filterConversationList() {
-    // Create a map to store the latest message for each conversation involving 'Vu'
-    final Map<String, MessageModel> conversationsMap = {};
+  Future<int> loadUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('userid');
+    return userId!;
+  }
+
+  void fetchMessages() async {
+    final Map<String, dynamic> response = await MessageService.getAllMessage();
+    setState(() {
+      messages = response['result'].map<Message>((json) => Message.fromJson(json)).toList();
+    });
+  }
+
+  Future<void> filterConversationList() async {
+    final userId = await loadUserId();
+
+    // Create a map to store the latest message for each conversation involving user
+    final Map<String, Message> conversationsMap = {};
 
     // Iterate through each message
-    for (final message in dataMessage) {
+    for (final message in messages) {
       final sender = message.sender;
       final receiver = message.receiver;
 
-      // Check if the message involves 'Vu'
-      if (sender == 'Vu' || receiver == 'Vu') {
-        final otherPerson = sender == 'Vu' ? receiver : sender;
+      // Check if the message involves user
+      if (sender.id == userId || receiver.id == userId) {
+        final otherPerson = sender.id == userId ? receiver.fullname : sender.fullname;
         // Check if the conversation has been added to the map
         if (!conversationsMap.containsKey(otherPerson) ||
-            message.time.isAfter(conversationsMap[otherPerson]!.time)) {
+            message.createdAt.isAfter(conversationsMap[otherPerson]!.createdAt)) {
           conversationsMap[otherPerson] = message;
         }
       }
     }
 
     // Convert the map to a list and sort by time (latest message at the top)
-    List<MessageModel> sortedConversationList = conversationsMap.values.toList();
-    sortedConversationList.sort((a, b) => b.time.compareTo(a.time));
+    List<Message> sortedConversationList = conversationsMap.values.toList();
+    sortedConversationList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
-    return sortedConversationList;
+    setState(() {
+      conversationList = sortedConversationList;
+    });
   }
 
-  List<int> getMessageCounts() {
+  Future<void> getMessageCounts() async {
+    final userId = await loadUserId();
     // Create a list to store the message counts for each conversation
     List<int> counts = [];
+
     // Iterate through the conversation list and get the message count for each conversation
     for (final conversation in conversationList) {
       int count = 0;
-      for (final message in dataMessage) {
-        if (message.sender == 'Vu' && message.receiver == conversation.sender ||
-            message.sender == conversation.sender && message.receiver == 'Vu') {
+
+      for (final message in messages) {
+        if (message.sender.id == userId && message.receiver.id == conversation.sender.id 
+          || message.sender == conversation.sender && message.receiver.id == userId) {
           count++;
         }
       }
       counts.add(count);
     }
-    return counts;
+    setState(() {
+      messageCounts = counts;
+    });
   }
 
   @override
