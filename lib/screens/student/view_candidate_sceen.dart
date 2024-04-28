@@ -9,9 +9,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/index.dart';
+import 'package:studenthub/components/profile_input/language_item.dart';
 import 'package:studenthub/config/config.dart';
 import 'package:studenthub/models/education_model.dart';
 import 'package:studenthub/models/index.dart';
+import 'package:studenthub/models/language_model.dart';
 import 'package:studenthub/services/api_services.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
@@ -20,9 +22,10 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 
 class ViewCandidateSceen extends StatefulWidget {
-  final int candidateId;
+  final int? candidateId;
+  final dynamic candidateData;
 
-  const ViewCandidateSceen({super.key, required this.candidateId});
+  const ViewCandidateSceen({super.key, this.candidateId, this.candidateData});
 
   @override
   _ViewCandidateSceenState createState() => _ViewCandidateSceenState();
@@ -41,6 +44,10 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
     SkillSet(id: 3, name: 'JavaScript'),
   ];
   final List<Education> studentSelectedEducations = [];
+  final List<Language> studentLanguages = [
+    Language(id: 697, languageName: "English", level: "High"),
+    Language(id: 698, languageName: "Japanese", level: "Low"),
+  ];
   String? _linkResume;
   String? _linkTranscript;
 
@@ -50,8 +57,8 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _fetchCandidateProposal().
-    then((value) => {
+    // print('Data: ${widget.candidateData}');
+    _fetchCandidateProposal().then((value) => {
           _fetchResumeLink(),
           _fetchTranscriptLink(),
         });
@@ -123,9 +130,11 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
       proposalCandidate = jsonDecode(response.body)["result"];
 
       final List<dynamic> educationsJson = proposalCandidate['student']['educations'];
+      print(educationsJson);
       studentSelectedEducations.clear();
       studentSelectedEducations.addAll(educationsJson.map((edu) => Education.fromJson(edu)));
 
+      candidateName = widget.candidateData['student']['user']['fullname'];
 
       if (proposalCandidate != null) {
         setState(() {
@@ -211,7 +220,7 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: whiteTextColor,
+      backgroundColor: bgColor,
       appBar: const AuthAppBar(
         canBack: true,
         isShowIcon: false,
@@ -282,7 +291,7 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                         height: 10,
                       ),
                       const Text(
-                        'Education',
+                        'Educations',
                         style: TextStyle(
                             fontSize: AppFonts.h1_2FontSize,
                             fontWeight: FontWeight.bold,
@@ -315,7 +324,7 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(
-                                          fontSize: AppFonts.h3FontSize,
+                                          fontSize: AppFonts.h2FontSize,
                                           fontWeight: FontWeight.w500,
                                           color: whiteTextColor),
                                     );
@@ -327,7 +336,46 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                         height: 10,
                       ),
                       const Text(
-                        'SkillSet',
+                        'Languages',
+                        style: TextStyle(
+                            fontSize: AppFonts.h1_2FontSize,
+                            fontWeight: FontWeight.bold,
+                            color: mainColor),
+                      ),
+                      Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(9),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: studentLanguages.isEmpty
+                                ? [
+                                    const Text(
+                                      'No education is provided',
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                          fontSize: AppFonts.h3FontSize,
+                                          fontWeight: FontWeight.w500,
+                                          color: whiteTextColor),
+                                    ),
+                                  ]
+                                : studentLanguages.map(
+                                    (lan) {
+                                      return LanguageItem(
+                                        language: lan,
+                                        handleDelete: () {},
+                                        hideDelete: true,
+                                      );
+                                    },
+                                  ).toList(),
+                          )),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text(
+                        'Skills',
                         style: TextStyle(
                             fontSize: AppFonts.h1_2FontSize,
                             fontWeight: FontWeight.bold,
@@ -341,6 +389,7 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                               decoration: BoxDecoration(
                                 border: Border.all(color: mainColor, width: 1),
                                 borderRadius: BorderRadius.circular(9),
+                                color: whiteTextColor,
                               ),
                               child: Wrap(
                                 spacing: 8.0, // Adjust the spacing between items
@@ -368,6 +417,39 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                                         );
                                       }).toList(),
                               ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const Text(
+                        'Cover Letter',
+                        style: TextStyle(
+                            fontSize: AppFonts.h1_2FontSize,
+                            fontWeight: FontWeight.bold,
+                            color: mainColor),
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: 250,
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: mainColor, width: 1),
+                                borderRadius: BorderRadius.circular(9),
+                                color: whiteTextColor,
+                              ),
+                              child: SingleChildScrollView(
+                                  child: Text(
+                                '${widget.candidateData['coverLetter']}',
+                                style: const TextStyle(
+                                  fontSize: AppFonts.h2FontSize,
+                                  color: blackTextColor,
+                                ),
+                              )),
                             ),
                           ),
                         ],
