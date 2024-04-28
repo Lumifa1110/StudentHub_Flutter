@@ -66,6 +66,30 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
     }
   }
 
+
+  Future<void> messageCandidate() async {
+    final Map<String, dynamic> data = {
+      'statusFlag': 1,
+      'disableFlag': 0,
+    };
+    try {
+      final response = await http.patch(
+        Uri.parse('$uriBase/api/proposal/${widget.itemsProposal['id']}'),
+        headers: {
+          'Authorization': 'Bearer $_token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(data),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        setState(() {
+
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -161,7 +185,7 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                       flex: 1,
                       child: GestureDetector(
                         onTap: (){
-                          print('ok');
+                          messageCandidate();
                         },
                         child: Container(
                             alignment: Alignment.center,

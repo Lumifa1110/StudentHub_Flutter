@@ -16,6 +16,7 @@ class Education {
   });
 
   factory Education.fromJson(Map<String, dynamic> json) {
+    print(json['id'].runtimeType);
     return Education(
       id: json['id'],
       schoolName: json['schoolName'],

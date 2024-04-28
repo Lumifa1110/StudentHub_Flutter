@@ -20,9 +20,9 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 
 class ViewCandidateSceen extends StatefulWidget {
-  final int? candidateId;
+  final int candidateId;
 
-  const ViewCandidateSceen({super.key, this.candidateId});
+  const ViewCandidateSceen({super.key, required this.candidateId});
 
   @override
   _ViewCandidateSceenState createState() => _ViewCandidateSceenState();
@@ -50,7 +50,8 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _fetchCandidateProposal().then((value) => {
+    _fetchCandidateProposal().
+    then((value) => {
           _fetchResumeLink(),
           _fetchTranscriptLink(),
         });
@@ -118,12 +119,13 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
           'Content-Type': 'application/json',
         },
       );
-      print(response.body);
+      // print(response.body);
       proposalCandidate = jsonDecode(response.body)["result"];
 
       final List<dynamic> educationsJson = proposalCandidate['student']['educations'];
       studentSelectedEducations.clear();
       studentSelectedEducations.addAll(educationsJson.map((edu) => Education.fromJson(edu)));
+
 
       if (proposalCandidate != null) {
         setState(() {
@@ -131,7 +133,7 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
         });
       }
     } catch (e) {
-      print('Error: $e');
+      print('Error1: $e');
     }
   }
 
@@ -159,7 +161,7 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
         print('Request failed with status: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e');
+      print('Error2: $e');
     }
   }
 
@@ -187,7 +189,7 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
         print('Request failed with status: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e');
+      print('Error3: $e');
     }
   }
 

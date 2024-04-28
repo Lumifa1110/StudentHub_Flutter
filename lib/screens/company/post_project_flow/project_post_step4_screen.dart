@@ -30,8 +30,7 @@ class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
         widget.box['projectScore'],
         widget.box['title'],
         widget.box['quantityStudent'],
-        widget.box['description'],
-        1);
+        widget.box['description']);
     final modelDataProjectJson = modelDataProject.toJson();
     try {
       final response = await http.post(
@@ -55,7 +54,6 @@ class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print(widget.box);
   }
 
   @override

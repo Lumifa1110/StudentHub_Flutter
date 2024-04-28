@@ -222,26 +222,30 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                                 const EdgeInsets.symmetric(horizontal: 10.0),
                             child: ClipRect(
                               child: TabBarView(children: [
-                                SingleChildScrollView(
+                                _proposal['items'].length == 0
+                                    ? Center(child: Text('These aren\'t Proposals yet'),)
+                                    : SingleChildScrollView(
                                   child: ListView.builder(
                                       physics:
-                                          const NeverScrollableScrollPhysics(),
+                                      const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemCount: _proposal['items'].length,
                                       itemBuilder:
                                           (BuildContext context, int index) {
                                         return ProjectProposalItem(
                                             itemsProposal:
-                                                _proposal['items'][index]);
+                                            _proposal['items'][index]);
                                       }),
                                 ),
                                 ProjectDetailTab(
                                   project: widget.project,
                                 ),
-                                SingleChildScrollView(
+                                _listItemsHired['items'].length == 0
+                                    ? Center(child: Text('These aren\'t Hirings yet'),)
+                                    : SingleChildScrollView(
                                   child: ListView.builder(
                                       physics:
-                                          const NeverScrollableScrollPhysics(),
+                                      const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemCount: _listItemsHired['items'].length,
                                       itemBuilder:

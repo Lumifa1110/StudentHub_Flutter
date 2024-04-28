@@ -7,6 +7,7 @@ import 'package:studenthub/business/company_business.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/models/company_model.dart';
+import 'package:studenthub/screens/company/alertdialog/alertdialog.dart';
 import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/config/config.dart';
 
@@ -27,7 +28,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
   String errorMessage = '';
 
   // reomove a project id
-  Future<void> removeAProject(int projectId) async {
+  Future<void> removeAProject(dynamic projectId) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     final response = await http.delete(
@@ -42,16 +43,6 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
           .then((_) => _loadWorking())
           .then((_) => _loadArchived());
     });
-  }
-
-// edit a project
-  void editAProject(BuildContext context, int? projectId) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EditProjectScreen(projectId: projectId),
-      ),
-    );
   }
 
   // Start working project
@@ -141,7 +132,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
 
     try {
       final responseJson = await http.get(
-        Uri.parse('$uriBase/api/project/company/$companyId'),
+        Uri.parse('$uriBase/api/project/company/$companyId/?typeFlag=0'),
         headers: {'Authorization': 'Bearer $token'},
       );
       final responseDecode = jsonDecode(responseJson.body)["result"];
@@ -336,7 +327,6 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                         },
                                         project: project,
                                         removeAProject: removeAProject,
-                                        editAProject: editAProject,
                                         workingProject: workingProject,
                                         archivedProject: archivedProject,
                                         currentTab: 0,
@@ -375,7 +365,6 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                         },
                                         project: project,
                                         removeAProject: removeAProject,
-                                        editAProject: editAProject,
                                         workingProject: workingProject,
                                         archivedProject: archivedProject,
                                         currentTab: 1,
@@ -414,7 +403,6 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                         },
                                         project: project,
                                         removeAProject: removeAProject,
-                                        editAProject: editAProject,
                                         workingProject: workingProject,
                                         archivedProject: archivedProject,
                                         currentTab: 2,
@@ -448,8 +436,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
 class OptionProjectCompany extends StatefulWidget {
   final VoidCallback onTap;
   final dynamic project;
-  final Future<void> Function(int idProject) removeAProject;
-  final Function(BuildContext context, int projectId) editAProject;
+  final Future<void> Function(dynamic idProject) removeAProject;
   final Future<void> Function(dynamic project) workingProject;
   final Future<void> Function(dynamic project) archivedProject;
   final int currentTab;
@@ -459,7 +446,6 @@ class OptionProjectCompany extends StatefulWidget {
     required this.onTap,
     required this.project,
     required this.removeAProject,
-    required this.editAProject,
     required this.workingProject,
     required this.archivedProject,
     required this.currentTab,
@@ -579,16 +565,29 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                           ElevatedButton(
                             onPressed: () {
                               // Implement your action
-                              widget.editAProject(
-                                  context, widget.project['id']!);
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditProjectScreen(projectId: widget.project['id']),
+                                ),
+                              );
                             },
                             child: const Text('Edit posting'),
                           ),
                           ElevatedButton(
-                            onPressed: () {
-                              // print(widget.project.projectId.runtimeType);
+                            onPressed: () async {
+
+                              // Show the AlertDialog
+                              await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // return an AlertDialog
+                                  return Dialog_(titleAcceptButton: 'Yes',question: 'Do you want to remove the project?',
+                                                project: widget.project['id'],f_function: widget.removeAProject,);
+                                },
+                              );
                               Navigator.pop(context);
-                              widget.removeAProject(widget.project['id']!);
                             },
                             child: const Text('Remove posting'),
                           ),
@@ -607,19 +606,32 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                     widget.currentTab == 1
                                         ? const SizedBox()
                                         : ElevatedButton(
-                                            onPressed: () {
+                                            onPressed: () async {
                                               // Implement your action
-                                              widget.workingProject(
-                                                  widget.project);
+                                              await showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                // return an AlertDialog
+                                                return Dialog_(titleAcceptButton: 'Yes',question: 'Do you want to start working the project?',
+                                                  project: widget.project,f_function: widget.workingProject,);
+                                              },
+                                              );
                                               Navigator.pop(context);
                                             },
                                             child: const Text(
                                                 'Start working this project'),
                                           ),
                                     ElevatedButton(
-                                      onPressed: () {
+                                      onPressed: () async {
                                         // Implement your action
-                                        widget.archivedProject(widget.project);
+                                        await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          // return an AlertDialog
+                                          return Dialog_(titleAcceptButton: 'Yes',question: 'Do you want to close the project?',
+                                            project: widget.project['id'],f_function: widget.archivedProject,);
+                                        },
+                                        );
                                         Navigator.pop(context);
                                       },
                                       child: const Text('Closed a project'),
