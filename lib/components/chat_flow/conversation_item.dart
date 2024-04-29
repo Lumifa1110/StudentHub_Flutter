@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/user/user_avatar.dart';
 import 'package:studenthub/models/index.dart';
 import 'package:studenthub/screens/chat_flow/message_detail_screen.dart';
+import 'package:studenthub/services/index.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
@@ -41,13 +42,14 @@ class _ConversationItemState extends State<ConversationItem> {
   @override
   void initState() {
     super.initState();
+    userId = 0;
     loadUserId();
   }
 
   Future<void> loadUserId() async {
-    final prefs = await SharedPreferences.getInstance();
+    final response = await AuthService.getUserInfo();
     setState(() {
-      userId = prefs.getInt('userid')!;
+      userId = response['result']['id'];
     });
   }
 
