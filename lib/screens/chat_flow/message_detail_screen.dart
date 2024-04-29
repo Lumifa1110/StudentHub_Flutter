@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -28,7 +30,10 @@ class MessageDetailScreen extends StatefulWidget {
   State<MessageDetailScreen> createState() => _MessageDetailScreenState();
 }
 
-class _MessageDetailScreenState extends State<MessageDetailScreen> {
+class _MessageDetailScreenState extends State<MessageDetailScreen> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+  
   late IO.Socket socket;
   late int userId;
   // Controller
@@ -63,7 +68,8 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
     socket = IO.io(
       'https://api.studenthub.dev',
       OptionBuilder()
-        .setTransports(['websocket']) 
+        .setTransports(['websocket'])
+        .enableForceNewConnection()
         .disableAutoConnect() 
         .build()
     );
@@ -86,7 +92,15 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
     });
 
     socket.on('RECEIVE_MESSAGE', (data) {
-      print('RECEIVE_MESSAGE: $data');
+      setState(() {
+        Message newMessage = Message(
+          content: data['content'],
+          sender: Chatter(id: data['senderId'], fullname: ''),
+          receiver: Chatter(id: data['receiverId'], fullname: ''),
+          createdAt: DateTime.now()
+        );
+        messages.add(newMessage);
+      });
     });
 
     socket.onConnectError((data) => print('$data'));
@@ -119,17 +133,17 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt('userid');
     final fullname = prefs.getString('username');
-    if (content.isNotEmpty) {
-      Message newMessage = Message(
-        content: content,
-        sender: Chatter(id: userId!, fullname: fullname!),
-        receiver: widget.chatter,
-        createdAt: DateTime.now()
-      );
-      setState(() {
-        messages.add(newMessage);
-      });
-    }
+    // if (content.isNotEmpty) {
+    //   Message newMessage = Message(
+    //     content: content,
+    //     sender: Chatter(id: userId!, fullname: fullname!),
+    //     receiver: widget.chatter,
+    //     createdAt: DateTime.now()
+    //   );
+    //   setState(() {
+    //     messages.add(newMessage);
+    //   });
+    // }
     socket.emit("SEND_MESSAGE", {
       "content": content,
       "projectId": widget.projectId,
@@ -194,6 +208,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(

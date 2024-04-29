@@ -57,7 +57,8 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
     socket = IO.io(
       'https://api.studenthub.dev',
       OptionBuilder()
-        .setTransports(['websocket']) 
+        .setTransports(['websocket'])
+        .enableForceNewConnection()
         .disableAutoConnect() 
         .build()
     );
@@ -89,7 +90,7 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
   }
 
   void socketDisconnect() {
-    //socket.disconnect();
+    socket.disconnect();
     socket.onDisconnect((data) {
       print('Socket disconnected.');
     });
