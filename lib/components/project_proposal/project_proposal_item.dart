@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/project_proposal/dialog_send_hire.dart';
 import 'package:studenthub/components/user/user_avatar.dart';
+import 'package:studenthub/models/index.dart';
 import 'package:studenthub/models/student_model.dart';
+import 'package:studenthub/screens/chat_flow/index.dart';
 import 'package:studenthub/screens/student/view_candidate_sceen.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
@@ -34,6 +36,7 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
   void initState() {
     super.initState();
     _declare_Prefs().then((_) => _token = _prefs.getString('token'));
+    print('Proposal data: ${widget.itemsProposal['student']['userId']}');
     sentHireOffer = widget.itemsProposal['statusFlag'] == 2
         ? true
         : widget.itemsProposal['statusFlag'] == 3
@@ -65,27 +68,39 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
     }
   }
 
-  Future<void> messageCandidate() async {
-    final Map<String, dynamic> data = {
-      'statusFlag': 1,
-      'disableFlag': 0,
-    };
-    try {
-      final response = await http.patch(
-        Uri.parse('$uriBase/api/proposal/${widget.itemsProposal['id']}'),
-        headers: {
-          'Authorization': 'Bearer $_token',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(data),
-      );
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        setState(() {});
-      }
-    } catch (e) {
-      print(e);
-    }
+  void messageCandidate() {
+    Navigator.push(
+      context, 
+      MaterialPageRoute(
+        builder: (context) => MessageDetailScreen(
+          projectId: widget.itemsProposal['projectId'], 
+          chatter: Chatter(id: widget.itemsProposal['student']['userId'], fullname: widget.itemsProposal['student']['user']['fullname'])
+        )
+      )
+    );
   }
+
+  // Future<void> messageCandidate() async {
+  //   final Map<String, dynamic> data = {
+  //     'statusFlag': 1,
+  //     'disableFlag': 0,
+  //   };
+  //   try {
+  //     final response = await http.patch(
+  //       Uri.parse('$uriBase/api/proposal/${widget.itemsProposal['id']}'),
+  //       headers: {
+  //         'Authorization': 'Bearer $_token',
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: jsonEncode(data),
+  //     );
+  //     if (response.statusCode == 200 || response.statusCode == 201) {
+  //       setState(() {});
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

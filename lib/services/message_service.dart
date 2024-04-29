@@ -11,4 +11,14 @@ class MessageService {
       rethrow;
     }
   }
+
+  static Future<Map<String, dynamic>> getMessageByProjectIdAndUserId(int projectId, int userId) async {
+    try {
+      final response = await ApiService.getRequest('/api/message/$projectId/user/$userId');
+      return response;
+    } catch (e) {
+      print('Error get message by projectId and userId: $e');
+      rethrow;
+    }
+  }
 }

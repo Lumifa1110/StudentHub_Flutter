@@ -34,7 +34,7 @@ class ConversationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MessageDetailScreen(receiver: message.sender, messages: const [])));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MessageDetailScreen(projectId: 0, chatter: message.sender)));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 6),

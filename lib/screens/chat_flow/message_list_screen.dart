@@ -53,7 +53,7 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
     super.dispose();
   }
 
-void socketConnect() async {
+  void socketConnect() async {
     socket = IO.io(
       'https://api.studenthub.dev',
       OptionBuilder()
@@ -170,21 +170,6 @@ void socketConnect() async {
           child: Column(
             children: [
               CustomSearchBar(controller: searchController, placeholder: 'Search'),
-              ButtonSimple(
-                label: 'Send message',
-                onPressed: () {
-                  print('message sent');
-                  print('userId: $userId');
-                  socket.emit("SEND_MESSAGE", {
-                    "content": 'Hi',
-                    "projectId": 578,
-                    "senderId":  userId,
-                    "receiverId": 318,
-                    "messageFlag": 0
-                  });
-                },
-                isButtonEnabled: true,
-              ),
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
