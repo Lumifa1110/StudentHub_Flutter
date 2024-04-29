@@ -114,7 +114,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
   Future<void> _loadArchivedTab() async {
     try {
       final response = await _client.get(
-        Uri.parse('$uriBase/api/proposal/project/$_currentIdStudent'),
+        Uri.parse('$uriBase/api/proposal/project/$_currentIdStudent?statusFlag=3&typeFlag=2'),
         headers: {'Authorization': 'Bearer $_token'},
       );
 
@@ -203,7 +203,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                 height: 20,
                               ),
                               Expanded(
-                                  flex: _responseActiveProposal.isEmpty ? 6 : 1,
+                                  flex: _responseActiveProposal.isEmpty ? 1 : 6,
                                   child: Container(
                                     padding: const EdgeInsets.all(10.0),
                                     decoration: BoxDecoration(
@@ -213,33 +213,36 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Active proposal(${_responseArchivedTab.length})',
+                                          'Active proposal (${_responseActiveProposal.length})',
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: AppFonts.h3FontSize),
                                         ),
                                         Expanded(
-                                          child: ListView.builder(
-                                            itemCount: _responseArchivedTab.length,
-                                            // Number of items in your list
-                                            itemBuilder: (BuildContext context, int index) {
-                                              // itemBuilder builds each item in the list
-                                              return Column(
-                                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                children: [
-                                                  OptionItemAllProjectScreen(
-                                                    onTap: () {},
-                                                    response: _responseArchivedTab[index],
-                                                  ),
-                                                  if (index != _responseArchivedTab.length - 1)
-                                                    const Divider(
-                                                      height: 60,
-                                                      endIndent: 10,
-                                                      thickness: 2,
-                                                    )
-                                                ],
-                                              );
-                                            },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: ListView.builder(
+                                              itemCount: _responseActiveProposal.length,
+                                              // Number of items in your list
+                                              itemBuilder: (BuildContext context, int index) {
+                                                // itemBuilder builds each item in the list
+                                                return Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                  children: [
+                                                    OptionItemAllProjectScreen(
+                                                      onTap: () {},
+                                                      response: _responseActiveProposal[index],
+                                                    ),
+                                                    if (index != _responseActiveProposal.length - 1)
+                                                      const Divider(
+                                                        height: 60,
+                                                        endIndent: 10,
+                                                        thickness: 2,
+                                                      )
+                                                  ],
+                                                );
+                                              },
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -259,7 +262,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Submitted proposal(${_responseSubmitProposal.length})',
+                                          'Submitted proposal (${_responseSubmitProposal.length})',
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: AppFonts.h3FontSize),
@@ -395,20 +398,31 @@ class _OptionItemAllProjectScreenState extends State<OptionItemAllProjectScreen>
         children: <Widget>[
           Text(
             widget.response['project']['title'],
-            style: const TextStyle(color: Colors.green),
+            style: const TextStyle(color: AppColor.tertiary, fontSize: AppFonts.h3FontSize),
             overflow: TextOverflow.ellipsis,
           ),
           Text(
             'Submitted ${f_timeSinceCreated(widget.response['createdAt'])}',
-            style: const TextStyle(color: Colors.grey),
+            style: const TextStyle(color: lightergrayColor, fontSize: AppFonts.h4FontSize),
           ),
           const SizedBox(
             height: 10,
           ),
-          const Text('Students are looking for'),
+          const Text(
+            'Description',
+            style: TextStyle(fontWeight: FontWeight.w500),
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 20),
-            child: Text('${widget.response['project']['description']}'),
+            child: Text(
+              '${widget.response['project']['description']}',
+              style: const TextStyle(
+                fontSize: AppFonts.h4FontSize,
+                color: blackTextColor,
+              ),
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),
