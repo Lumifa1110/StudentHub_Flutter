@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import '../../models/index.dart';
+import 'package:studenthub/models/message_model.dart';
 
 class MessageItem extends StatelessWidget {
-  final MessageModel message;
+  final Message message;
   final bool isMyMessage;
 
   const MessageItem(
@@ -15,7 +14,7 @@ class MessageItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       color: Colors.transparent,
       child: Text(
-        DateFormat.Hm().format(message.time),
+        DateFormat.Hm().format(message.createdAt),
         style: const TextStyle(color: Colors.grey),
       ),
     );

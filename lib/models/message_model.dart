@@ -1,13 +1,24 @@
-class MessageModel {
-  late String sender;
-  late String receiver;
-  late String content;
-  late DateTime time;
+import 'package:studenthub/models/index.dart';
 
-  MessageModel(
-    this.sender,
-    this.receiver,
-    this.content,
-    this.time
-  );
+class Message {
+  final String content;
+  final Chatter sender;
+  final Chatter receiver;
+  final DateTime createdAt;
+
+  Message({
+    required this.content,
+    required this.sender,
+    required this.receiver,
+    required this.createdAt
+  });
+
+  factory Message.fromJson(Map<String, dynamic> json) {
+    return Message(
+      content: json['content'],
+      sender: Chatter.fromJson(json['sender']),
+      receiver: Chatter.fromJson(json['receiver']),
+      createdAt: DateTime.parse(json['createdAt'])
+    );
+  }
 }

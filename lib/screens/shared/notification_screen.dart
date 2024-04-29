@@ -4,11 +4,20 @@ import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/utils/colors.dart';
 
-class NotificationScreen extends StatelessWidget {
+class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
 
   @override
+  State<NotificationScreen> createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends State<NotificationScreen> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+  
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: const AuthAppBar(canBack: false, title: 'Notification'),
       body: SingleChildScrollView(
