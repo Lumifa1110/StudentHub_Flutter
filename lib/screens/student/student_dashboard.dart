@@ -57,8 +57,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
     //Loading Active proposal
     try {
       final response = await _client.get(
-        Uri.parse(
-            '$uriBase/api/proposal/project/$_currentIdStudent?statusFlag=1'),
+        Uri.parse('$uriBase/api/proposal/project/$_currentIdStudent?statusFlag=1'),
         headers: {'Authorization': 'Bearer $_token'},
       );
 
@@ -165,8 +164,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
             children: [
               const Text(
                 'Your projects',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: AppFonts.h3FontSize),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: AppFonts.h3FontSize),
               ),
               const SizedBox(
                 height: 10,
@@ -209,13 +207,10 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                   child: Container(
                                     padding: const EdgeInsets.all(10.0),
                                     decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: blackTextColor),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
+                                        border: Border.all(color: blackTextColor),
+                                        borderRadius: BorderRadius.circular(10)),
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Active proposal(${_responseArchivedTab.length})',
@@ -225,26 +220,23 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                         ),
                                         Expanded(
                                           child: ListView.builder(
-                                            itemCount:
-                                                _responseArchivedTab.length,
+                                            itemCount: _responseArchivedTab.length,
                                             // Number of items in your list
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
+                                            itemBuilder: (BuildContext context, int index) {
                                               // itemBuilder builds each item in the list
                                               return Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.stretch,
                                                 children: [
                                                   OptionItemAllProjectScreen(
                                                     onTap: () {},
-                                                    response:
-                                                        _responseArchivedTab[index],
+                                                    response: _responseArchivedTab[index],
                                                   ),
-                                                  if( index != _responseArchivedTab.length - 1)
-                                                       const Divider(
-                                                        height: 60,
-                                                        endIndent: 10,
-                                                        thickness: 2,
-                                                      )
+                                                  if (index != _responseArchivedTab.length - 1)
+                                                    const Divider(
+                                                      height: 60,
+                                                      endIndent: 10,
+                                                      thickness: 2,
+                                                    )
                                                 ],
                                               );
                                             },
@@ -261,13 +253,10 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                   child: Container(
                                     padding: const EdgeInsets.all(10.0),
                                     decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: blackTextColor),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
+                                        border: Border.all(color: blackTextColor),
+                                        borderRadius: BorderRadius.circular(10)),
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Submitted proposal(${_responseSubmitProposal.length})',
@@ -282,25 +271,16 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                           child: Padding(
                                             padding: const EdgeInsets.all(10.0),
                                             child: ListView.builder(
-                                              itemCount: _responseSubmitProposal
-                                                  .length,
+                                              itemCount: _responseSubmitProposal.length,
                                               // Number of items in your list
-                                              itemBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
+                                              itemBuilder: (BuildContext context, int index) {
                                                 return Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.stretch,
                                                   children: [
                                                     OptionItemAllProjectScreen(
                                                         onTap: () {},
-                                                        response:
-                                                            _responseSubmitProposal[
-                                                                index]),
-                                                    index ==
-                                                            _responseSubmitProposal
-                                                                    .length -
-                                                                1
+                                                        response: _responseSubmitProposal[index]),
+                                                    index == _responseSubmitProposal.length - 1
                                                         ? const SizedBox()
                                                         : const Divider(
                                                             height: 60,
@@ -333,7 +313,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                               itemCount: _responseWorkingTab.length,
                               itemBuilder: (context, index) {
                                 return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
                                     OptionItemWorkingAndArchiedScreen(
                                       onTap: () {},
@@ -364,7 +344,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                               itemCount: _responseArchivedTab.length,
                               itemBuilder: (context, index) {
                                 return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
                                     OptionItemWorkingAndArchiedScreen(
                                       onTap: () {},
@@ -399,16 +379,13 @@ class OptionItemAllProjectScreen extends StatefulWidget {
   final VoidCallback onTap;
   final dynamic response;
 
-  const OptionItemAllProjectScreen(
-      {super.key, required this.onTap, this.response});
+  const OptionItemAllProjectScreen({super.key, required this.onTap, this.response});
 
   @override
-  State<OptionItemAllProjectScreen> createState() =>
-      _OptionItemAllProjectScreenState();
+  State<OptionItemAllProjectScreen> createState() => _OptionItemAllProjectScreenState();
 }
 
-class _OptionItemAllProjectScreenState
-    extends State<OptionItemAllProjectScreen> {
+class _OptionItemAllProjectScreenState extends State<OptionItemAllProjectScreen> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -443,16 +420,13 @@ class OptionItemWorkingAndArchiedScreen extends StatefulWidget {
   final VoidCallback onTap;
   final dynamic response;
 
-  const OptionItemWorkingAndArchiedScreen(
-      {super.key, required this.onTap, this.response});
+  const OptionItemWorkingAndArchiedScreen({super.key, required this.onTap, this.response});
 
   @override
-  State<OptionItemWorkingAndArchiedScreen> createState() =>
-      _OptionItemWorkingScreenState();
+  State<OptionItemWorkingAndArchiedScreen> createState() => _OptionItemWorkingScreenState();
 }
 
-class _OptionItemWorkingScreenState
-    extends State<OptionItemWorkingAndArchiedScreen> {
+class _OptionItemWorkingScreenState extends State<OptionItemWorkingAndArchiedScreen> {
   @override
   Widget build(BuildContext context) {
     return InkWell(

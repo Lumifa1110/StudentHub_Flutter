@@ -19,13 +19,14 @@ class CompanyDashboardScreen extends StatefulWidget {
   State<CompanyDashboardScreen> createState() => CompanyDashboardScreenState();
 }
 
-class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with AutomaticKeepAliveClientMixin {
+class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
-  late List<Project> _listAllProject = [];
-  late List<Project> _listProjectWorking = [];
-  late List<Project> _listProjectArchived = [];
+  late List<dynamic> _listAllProject = [];
+  late List<dynamic> _listProjectWorking = [];
+  late List<dynamic> _listProjectArchived = [];
 
   late SharedPreferences _prefs;
   bool isLoading = true;
@@ -271,11 +272,10 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.pushNamed(
-                                    context, '/company/project/step1');
+                                Navigator.pushNamed(context, '/company/project/step1');
                               },
-                              style: ElevatedButton.styleFrom(
-                                  shape: const RoundedRectangleBorder()),
+                              style:
+                                  ElevatedButton.styleFrom(shape: const RoundedRectangleBorder()),
                               child: const Text('Post a jobs'),
                             ),
                           ],
@@ -325,8 +325,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ProjectProposalListScreen(
+                                              builder: (context) => ProjectProposalListScreen(
                                                 project: project,
                                               ),
                                             ),
@@ -363,10 +362,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ProjectProposalListScreen(
-                                                    project: project,
-                                                  ),
+                                              builder: (context) => ProjectProposalListScreen(
+                                                project: project,
+                                              ),
                                             ),
                                           );
                                         },
@@ -401,10 +399,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ProjectProposalListScreen(
-                                                    project: project,
-                                                  ),
+                                              builder: (context) => ProjectProposalListScreen(
+                                                project: project,
+                                              ),
                                             ),
                                           );
                                         },
@@ -414,8 +411,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
                                         archivedProject: archivedProject,
                                         currentTab: 2,
                                       ),
-                                      if (index <
-                                          _listProjectArchived.length - 1)
+                                      if (index < _listProjectArchived.length - 1)
                                         const Divider(
                                           thickness: 2,
                                           indent: 10,
@@ -532,12 +528,18 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                     child: Center(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
                             onPressed: () {
                               // Implement your action
                               Navigator.pop(context);
                             },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0),
+                              ),
+                            ),
                             child: const Text('View Proposals'),
                           ),
                           ElevatedButton(
@@ -545,6 +547,11 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                               // Implement your action
                               Navigator.pop(context);
                             },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0),
+                              ),
+                            ),
                             child: const Text('View messages'),
                           ),
                           ElevatedButton(
@@ -552,6 +559,11 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                               // Implement your action
                               Navigator.pop(context);
                             },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0),
+                              ),
+                            ),
                             child: const Text('View hired'),
                           ),
                           const Divider(
@@ -565,6 +577,11 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                               // Implement your action
                               Navigator.pop(context);
                             },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0),
+                              ),
+                            ),
                             child: const Text('View job posting'),
                           ),
                           ElevatedButton(
@@ -574,33 +591,47 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => EditProjectScreen(projectId: widget.project['id']),
+                                  builder: (context) =>
+                                      EditProjectScreen(projectId: widget.project['id']),
                                 ),
                               );
                             },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0),
+                              ),
+                            ),
                             child: const Text('Edit posting'),
                           ),
                           ElevatedButton(
                             onPressed: () async {
-
                               // Show the AlertDialog
                               await showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   // return an AlertDialog
-                                  return Dialog_(titleAcceptButton: 'Yes',question: 'Do you want to remove the project?',
-                                                project: widget.project['id'],f_function: widget.removeAProject,);
+                                  return Dialog_(
+                                    titleAcceptButton: 'Yes',
+                                    question: 'Do you want to remove the project?',
+                                    project: widget.project['id'],
+                                    f_function: widget.removeAProject,
+                                  );
                                 },
                               );
+
                               Navigator.pop(context);
                             },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0),
+                              ),
+                            ),
                             child: const Text('Remove posting'),
                           ),
                           widget.currentTab == 2
                               ? const SizedBox()
                               : Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
                                     const Divider(
                                       thickness: 2,
@@ -614,31 +645,49 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                             onPressed: () async {
                                               // Implement your action
                                               await showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                // return an AlertDialog
-                                                return Dialog_(titleAcceptButton: 'Yes',question: 'Do you want to start working the project?',
-                                                  project: widget.project,f_function: widget.workingProject,);
-                                              },
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  // return an AlertDialog
+                                                  return Dialog_(
+                                                    titleAcceptButton: 'Yes',
+                                                    question:
+                                                        'Do you want to start working the project?',
+                                                    project: widget.project,
+                                                    f_function: widget.workingProject,
+                                                  );
+                                                },
                                               );
                                               Navigator.pop(context);
                                             },
-                                            child: const Text(
-                                                'Start working this project'),
+                                            style: ElevatedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(0),
+                                              ),
+                                            ),
+                                            child: const Text('Start working this project'),
                                           ),
                                     ElevatedButton(
                                       onPressed: () async {
                                         // Implement your action
                                         await showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          // return an AlertDialog
-                                          return Dialog_(titleAcceptButton: 'Yes',question: 'Do you want to close the project?',
-                                            project: widget.project,f_function: widget.archivedProject,);
-                                        },
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            // return an AlertDialog
+                                            return Dialog_(
+                                              titleAcceptButton: 'Yes',
+                                              question: 'Do you want to close the project?',
+                                              project: widget.project,
+                                              f_function: widget.archivedProject,
+                                            );
+                                          },
                                         );
                                         Navigator.pop(context);
                                       },
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(0),
+                                        ),
+                                      ),
                                       child: const Text('Closed a project'),
                                     ),
                                   ],

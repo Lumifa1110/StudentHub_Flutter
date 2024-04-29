@@ -181,7 +181,7 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                   children: [
                     Expanded(
                       flex: 1,
-                      child: GestureDetector(
+                      child: InkWell(
                         onTap: () {
                           messageCandidate();
                         },
