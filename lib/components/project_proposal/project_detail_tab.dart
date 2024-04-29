@@ -7,7 +7,7 @@ import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/business/company_business.dart';
 
 class ProjectDetailTab extends StatelessWidget {
-  final Project project;
+  final dynamic project;
 
   const ProjectDetailTab({super.key, required this.project});
 
@@ -42,7 +42,7 @@ class ProjectDetailTab extends StatelessWidget {
                     border: Border.all(color: Colors.black12)
                   ),
                   margin: const EdgeInsets.only(bottom: 10),
-                  child:  Text(project.description!,
+                  child:  Text(project['description']!,
                     style: TextStyle(
                       color: AppFonts.secondaryColor,
                       fontSize: AppFonts.h3FontSize
@@ -91,7 +91,7 @@ class ProjectDetailTab extends StatelessWidget {
                         ),
                         Expanded(
                           child: Text(
-                              convertProjectScoreFlagToTime(project.projectScopeFlag!),
+                              convertProjectScoreFlagToTime(project['projectScopeFlag']!),
                             style: TextStyle(
                               color: AppFonts.primaryColor,
                               fontSize: AppFonts.h3FontSize,
@@ -145,7 +145,7 @@ class ProjectDetailTab extends StatelessWidget {
                         ),
                         Expanded(
                           child: Text(
-                            '${project.numberOfStudents} students',
+                            '${project['numberOfStudents']} students',
                             style: TextStyle(
                               color: AppFonts.primaryColor,
                               fontSize: AppFonts.h3FontSize,

@@ -9,10 +9,15 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:studenthub/utils/font.dart';
 
-class ProjectDetailScreen extends StatefulWidget {
-  final int? itemId;
+import '../student/submit_proposal_page.dart';
 
-  const ProjectDetailScreen({Key? key, this.itemId}) : super(key: key);
+class ProjectDetailScreen extends StatefulWidget {
+  final Project? project;
+
+  const ProjectDetailScreen({
+    Key? key,
+    this.project,
+  }) : super(key: key);
 
   @override
   State<ProjectDetailScreen> createState() => _ProjectDetailScreenState();
@@ -27,7 +32,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   void initState() {
     super.initState();
     _loadScreen();
-    fetchProjectDetails(widget.itemId);
+    // fetchProjectDetails(widget.itemId);
+    selectedProject = widget.project;
   }
 
   Future<void> _loadScreen() async {
@@ -85,16 +91,16 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     return Scaffold(
       appBar: const AuthAppBar(
         canBack: true,
-        title: 'Saved Project',
+        title: 'Detail Project',
       ),
       body: selectedProject != null
           ? Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 10),
@@ -108,13 +114,24 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    margin: const EdgeInsets.only(top: 10),
                     child: Text(
                       selectedProject!.title,
                       style: const TextStyle(
+                        fontSize: AppFonts.h1FontSize,
+                        fontWeight: FontWeight.w900,
+                        color: AppColor.tertiary,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      selectedProject!.companyName!,
+                      style: TextStyle(
                         fontSize: AppFonts.h1_2FontSize,
                         fontWeight: FontWeight.w900,
-                        color: blackTextColor,
+                        color: blackTextColor.withOpacity(0.5),
                       ),
                     ),
                   ),
@@ -124,7 +141,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     color: blackTextColor,
                   ),
                   Container(
-                    height: 356,
+                    height: 339,
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: SingleChildScrollView(
                       child: Text(
@@ -212,8 +229,15 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                               ),
                               child: TextButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, '/student/proposal/submit');
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          SubmitProposalScreen(
+                                        idProject: selectedProject?.projectId,
+                                      ),
+                                    ),
+                                  );
                                 },
                                 style: ButtonStyle(
                                   shape:
@@ -232,37 +256,41 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                               ),
                             )
                           : Container(),
-                      Container(
-                        width: 180,
-                        height: 40,
-                        padding: const EdgeInsets.all(0),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: blackTextColor, width: 2.0),
-                          color: whiteTextColor,
-                          boxShadow: const [
-                            BoxShadow(
-                              color: blackTextColor,
-                              offset: Offset(2, 3),
-                            ),
-                          ],
-                        ),
-                        child: TextButton(
-                          onPressed: () {},
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all<OutlinedBorder>(
-                              const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.zero),
-                            ),
-                          ),
-                          child: const Text(
-                            'Saved',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: blackTextColor,
-                            ),
-                          ),
-                        ),
-                      ),
+                      isStudent
+                          ? Container(
+                              width: 180,
+                              height: 40,
+                              padding: const EdgeInsets.all(0),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: blackTextColor, width: 2.0),
+                                color: whiteTextColor,
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: blackTextColor,
+                                    offset: Offset(2, 3),
+                                  ),
+                                ],
+                              ),
+                              child: TextButton(
+                                onPressed: () {},
+                                style: ButtonStyle(
+                                  shape:
+                                      MaterialStateProperty.all<OutlinedBorder>(
+                                    const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.zero),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Saved',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: blackTextColor,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(),
                     ],
                   ),
                   const SizedBox(

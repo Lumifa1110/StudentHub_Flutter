@@ -7,6 +7,7 @@ import 'package:studenthub/business/company_business.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/models/company_model.dart';
+import 'package:studenthub/screens/company/alertdialog/alertdialog.dart';
 import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/config/config.dart';
 
@@ -30,12 +31,12 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
   String errorMessage = '';
 
   // reomove a project id
-  Future<void> removeAProject(int projectId) async {
+  Future<void> removeAProject(dynamic projectId) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     final response = await http.delete(
-      Uri.parse(
-          '$uriBase/api/project/$projectId'), // Replace $projectId with the actual ID
+      Uri.parse('$uriBase/api/project/$projectId'),
+      // Replace $projectId with the actual ID
       headers: {'Authorization': 'Bearer $token'},
     );
     setState(() {
@@ -47,33 +48,23 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
     });
   }
 
-// edit a project
-  void editAProject(BuildContext context, int? projectId) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EditProjectScreen(projectId: projectId),
-      ),
-    );
-  }
-
   // Start working project
-  Future<void> workingProject(Project project) async {
+  Future<void> workingProject(dynamic project) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     final Map<String, dynamic> data = {
-      'numberOfStudents': project.numberOfStudents,
-      'typeFlag': 0,
+      'numberOfStudents': project['numberOfStudents'],
+      'typeFlag': 1,
     };
     final response = await http.patch(
-      Uri.parse('$uriBase/api/project/${project.projectId}'),
+      Uri.parse('$uriBase/api/project/${project['id']}'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       },
       body: jsonEncode(data),
     );
-    if (response.statusCode == 200) {
+    if (response.statusCode >= 200 || response.statusCode < 300) {
       setState(() {
         isLoading = true;
         _loadScreen()
@@ -86,21 +77,22 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
   }
 
   //Close a project
-  Future<void> archivedProject(Project project) async {
+  Future<void> archivedProject(dynamic project) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     final Map<String, dynamic> data = {
-      'numberOfStudents': project.numberOfStudents,
-      'typeFlag': 1,
+      'numberOfStudents': project['numberOfStudents'],
+      'typeFlag': 2,
     };
     final response = await http.patch(
-      Uri.parse('$uriBase/api/project/${project.projectId}'),
+      Uri.parse('$uriBase/api/project/${project['id']}'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       },
       body: jsonEncode(data),
     );
+    print(response.statusCode);
     if (response.statusCode == 200) {
       setState(() {
         isLoading = true;
@@ -143,30 +135,12 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
 
     try {
       final responseJson = await http.get(
-        Uri.parse('$uriBase/api/project/company/$companyId'),
+        Uri.parse('$uriBase/api/project/company/$companyId/?typeFlag=0'),
         headers: {'Authorization': 'Bearer $token'},
       );
       final responseDecode = jsonDecode(responseJson.body)["result"];
-
       if (responseDecode != null) {
-        listAllProject.clear();
-        for (int i = 0; i < responseDecode.length; i++) {
-          final projectScore = convertProjectScoreFlagToTime(
-              responseDecode[i]['projectScopeFlag']);
-          listAllProject.add(Project(
-              projectId: responseDecode[i]['id'],
-              createdAt: responseDecode[i]['createdAt'],
-              updatedAt: responseDecode[i]['updatedAt'],
-              deletedAt: responseDecode[i]['deletedAt'],
-              companyId: responseDecode[i]['companyId'],
-              projectScopeFlag: responseDecode[i]['projectScopeFlag'],
-              title: responseDecode[i]['title'],
-              description: responseDecode[i]['description'],
-              numberOfStudents: responseDecode[i]['numberOfStudents'],
-              typeFlag: responseDecode[i]['typeFlag'],
-              countProposals: responseDecode[i]['countProposals'],
-              isFavorite: responseDecode[i]['isFavorite']));
-        }
+        _listAllProject = responseDecode;
       }
       if (mounted) {
         // Check again if the widget is still mounted before calling setState
@@ -196,30 +170,15 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
 
     try {
       final responseJson = await http.get(
-        Uri.parse('${uriBase}/api/project/company/$companyId/?typeFlag=0'),
+        Uri.parse('${uriBase}/api/project/company/$companyId/?typeFlag=1'),
         headers: {'Authorization': 'Bearer $token'},
       );
+
       final responseDecode = jsonDecode(responseJson.body)["result"];
-      listProjectWorking.clear();
-      
-      if (responseDecode == null) {
-        return;
+      if (responseDecode != null) {
+        _listProjectWorking = responseDecode;
       }
-      for (int i = 0; i < responseDecode.length; i++) {
-        listProjectWorking.add(Project(
-            projectId: responseDecode[i]['id'],
-            createdAt: responseDecode[i]['createdAt'],
-            updatedAt: responseDecode[i]['updatedAt'],
-            deletedAt: responseDecode[i]['deletedAt'],
-            companyId: responseDecode[i]['companyId'],
-            projectScopeFlag: responseDecode[i]['projectScopeFlag'],
-            title: responseDecode[i]['title'],
-            description: responseDecode[i]['description'],
-            numberOfStudents: responseDecode[i]['numberOfStudents'],
-            typeFlag: responseDecode[i]['typeFlag'],
-            countProposals: responseDecode[i]['countProposals'],
-            isFavorite: responseDecode[i]['isFavorite']));
-      }
+
       if (mounted) {
         // Check again if the widget is still mounted before calling setState
         setState(() {
@@ -248,29 +207,15 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
 
     try {
       final responseJson = await http.get(
-        Uri.parse('${uriBase}/api/project/company/$companyId/?typeFlag=1'),
+        Uri.parse('${uriBase}/api/project/company/$companyId/?typeFlag=2'),
         headers: {'Authorization': 'Bearer $token'},
       );
       final responseDecode = jsonDecode(responseJson.body)["result"];
 
       if (responseDecode != null) {
-        listProjectArchived.clear();
-        for (int i = 0; i < responseDecode.length; i++) {
-          listProjectArchived.add(Project(
-              projectId: responseDecode[i]['id'],
-              createdAt: responseDecode[i]['createdAt'],
-              updatedAt: responseDecode[i]['updatedAt'],
-              deletedAt: responseDecode[i]['deletedAt'],
-              companyId: responseDecode[i]['companyId'],
-              projectScopeFlag: responseDecode[i]['projectScopeFlag'],
-              title: responseDecode[i]['title'],
-              description: responseDecode[i]['description'],
-              numberOfStudents: responseDecode[i]['numberOfStudents'],
-              typeFlag: responseDecode[i]['typeFlag'],
-              countProposals: responseDecode[i]['countProposals'],
-              isFavorite: responseDecode[i]['isFavorite']));
-        }
+        _listProjectArchived = responseDecode;
       }
+
       if (mounted) {
         // Check again if the widget is still mounted before calling setState
         setState(() {
@@ -363,9 +308,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
                           child: TabBarView(
                             children: [
                               ListView.builder(
-                                itemCount: listAllProject.length,
+                                itemCount: _listAllProject.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  final project = listAllProject[index];
+                                  final project = _listAllProject[index];
                                   return Column(
                                     children: [
                                       const SizedBox(
@@ -385,12 +330,11 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
                                         },
                                         project: project,
                                         removeAProject: removeAProject,
-                                        editAProject: editAProject,
                                         workingProject: workingProject,
                                         archivedProject: archivedProject,
                                         currentTab: 0,
                                       ),
-                                      if (index < listAllProject.length - 1)
+                                      if (index < _listAllProject.length - 1)
                                         const Divider(
                                           thickness: 2,
                                           indent: 10,
@@ -402,9 +346,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
                                 },
                               ),
                               ListView.builder(
-                                itemCount: listProjectWorking.length,
+                                itemCount: _listProjectWorking.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  final project = listProjectWorking[index];
+                                  final project = _listProjectWorking[index];
                                   return Column(
                                     children: [
                                       const SizedBox(
@@ -412,16 +356,23 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
                                       ),
                                       OptionProjectCompany(
                                         onTap: () {
-                                          print(project.projectId);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProjectProposalListScreen(
+                                                    project: project,
+                                                  ),
+                                            ),
+                                          );
                                         },
                                         project: project,
                                         removeAProject: removeAProject,
-                                        editAProject: editAProject,
                                         workingProject: workingProject,
                                         archivedProject: archivedProject,
                                         currentTab: 1,
                                       ),
-                                      if (index < listProjectWorking.length - 1)
+                                      if (index < _listProjectWorking.length - 1)
                                         const Divider(
                                           thickness: 2,
                                           indent: 10,
@@ -433,9 +384,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
                                 },
                               ),
                               ListView.builder(
-                                itemCount: listProjectArchived.length,
+                                itemCount: _listProjectArchived.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  final project = listProjectArchived[index];
+                                  final project = _listProjectArchived[index];
                                   return Column(
                                     children: [
                                       const SizedBox(
@@ -443,17 +394,24 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
                                       ),
                                       OptionProjectCompany(
                                         onTap: () {
-                                          print(project.projectId);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProjectProposalListScreen(
+                                                    project: project,
+                                                  ),
+                                            ),
+                                          );
                                         },
                                         project: project,
                                         removeAProject: removeAProject,
-                                        editAProject: editAProject,
                                         workingProject: workingProject,
                                         archivedProject: archivedProject,
                                         currentTab: 2,
                                       ),
                                       if (index <
-                                          listProjectArchived.length - 1)
+                                          _listProjectArchived.length - 1)
                                         const Divider(
                                           thickness: 2,
                                           indent: 10,
@@ -478,18 +436,17 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
 
 class OptionProjectCompany extends StatefulWidget {
   final VoidCallback onTap;
-  final Project project;
-  final Future<void> Function(int idProject) removeAProject;
-  final Function(BuildContext context, int projectId) editAProject;
-  final Future<void> Function(Project project) workingProject;
-  final Future<void> Function(Project project) archivedProject;
+  final dynamic project;
+  final Future<void> Function(dynamic idProject) removeAProject;
+  final Future<void> Function(dynamic project) workingProject;
+  final Future<void> Function(dynamic project) archivedProject;
   final int currentTab;
+
   const OptionProjectCompany({
     super.key,
     required this.onTap,
     required this.project,
     required this.removeAProject,
-    required this.editAProject,
     required this.workingProject,
     required this.archivedProject,
     required this.currentTab,
@@ -523,34 +480,34 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                   height: 15,
                 ),
                 Text(
-                  widget.project.title,
+                  widget.project['title'],
                   style: const TextStyle(color: Colors.green),
                 ),
                 Text(
-                  'Created ${widget.f_dayCreatedAgo(widget.project.createdAt)} days ago',
+                  'Created ${widget.f_dayCreatedAgo(widget.project['createdAt'])} days ago',
                   style: const TextStyle(color: Colors.grey),
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                Text('${widget.project.description}'),
+                Text('${widget.project['description']}'),
                 const SizedBox(
                   height: 20,
                 ),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [Text('0'), Text('Proposals')],
+                      children: [Text('${widget.project['countProposals']}'), Text('Proposals')],
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [Text('0'), Text('Messages')],
+                      children: [Text('${widget.project['countMessages']}'), Text('Messages')],
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [Text('0'), Text('Hired')],
+                      children: [Text('${widget.project['countHired']}'), Text('Hired')],
                     ),
                   ],
                 ),
@@ -609,16 +566,29 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                           ElevatedButton(
                             onPressed: () {
                               // Implement your action
-                              widget.editAProject(
-                                  context, widget.project.projectId!);
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditProjectScreen(projectId: widget.project['id']),
+                                ),
+                              );
                             },
                             child: const Text('Edit posting'),
                           ),
                           ElevatedButton(
-                            onPressed: () {
-                              // print(widget.project.projectId.runtimeType);
+                            onPressed: () async {
+
+                              // Show the AlertDialog
+                              await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // return an AlertDialog
+                                  return Dialog_(titleAcceptButton: 'Yes',question: 'Do you want to remove the project?',
+                                                project: widget.project['id'],f_function: widget.removeAProject,);
+                                },
+                              );
                               Navigator.pop(context);
-                              widget.removeAProject(widget.project.projectId!);
                             },
                             child: const Text('Remove posting'),
                           ),
@@ -637,19 +607,32 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                     widget.currentTab == 1
                                         ? const SizedBox()
                                         : ElevatedButton(
-                                            onPressed: () {
+                                            onPressed: () async {
                                               // Implement your action
-                                              widget.workingProject(
-                                                  widget.project);
+                                              await showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                // return an AlertDialog
+                                                return Dialog_(titleAcceptButton: 'Yes',question: 'Do you want to start working the project?',
+                                                  project: widget.project,f_function: widget.workingProject,);
+                                              },
+                                              );
                                               Navigator.pop(context);
                                             },
                                             child: const Text(
                                                 'Start working this project'),
                                           ),
                                     ElevatedButton(
-                                      onPressed: () {
+                                      onPressed: () async {
                                         // Implement your action
-                                        widget.archivedProject(widget.project);
+                                        await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          // return an AlertDialog
+                                          return Dialog_(titleAcceptButton: 'Yes',question: 'Do you want to close the project?',
+                                            project: widget.project['id'],f_function: widget.archivedProject,);
+                                        },
+                                        );
                                         Navigator.pop(context);
                                       },
                                       child: const Text('Closed a project'),

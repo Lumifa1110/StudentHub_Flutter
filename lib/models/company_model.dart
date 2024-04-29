@@ -1,9 +1,12 @@
+import 'package:studenthub/models/techstack_model.dart';
+
 class Project {
   final int projectId;
   final String createdAt;
   final String? updatedAt;
   final String? deletedAt;
   final String? companyId;
+  final String? companyName;
   final int? projectScopeFlag;
   final String title;
   final String? description;
@@ -18,6 +21,7 @@ class Project {
     required this.updatedAt,
     required this.deletedAt,
     required this.companyId,
+    required this.companyName,
     required this.projectScopeFlag,
     required this.title,
     required this.description,
@@ -33,6 +37,7 @@ class Project {
       updatedAt: json['updatedAt'],
       deletedAt: json['deletedAt'],
       companyId: json['companyId'],
+      companyName: json['companyName'],
       projectScopeFlag: json['projectScopeFlag'],
       title: json['title'],
       description: json['description'],
@@ -50,7 +55,6 @@ class ProjectPost {
   late String title;
   late int numberOfStudents;
   late String description;
-  late int typeFlag;
 
   ProjectPost(
     this.companyId,
@@ -58,7 +62,6 @@ class ProjectPost {
     this.title,
     this.numberOfStudents,
     this.description,
-    this.typeFlag,
   );
 
   Map<String, dynamic> toJson() {
@@ -68,36 +71,33 @@ class ProjectPost {
       'title': title,
       'numberOfStudents': numberOfStudents,
       'description': description,
-      'typeFlag': typeFlag,
     };
   }
 }
-class TechStack{
-  final int? id;
-  final String? name;
 
-  TechStack({required this.id, required this.name});
-}
-class Student{
+class Student {
   final int id;
   final String fullname;
   final TechStack techStack;
 
   Student({required this.id, required this.fullname, required this.techStack});
-
-
 }
 
-class ItemsProposal{
+class ItemsProposal {
   final int id;
   final String coverLetter;
   final int statusFlag;
   final int disableFlag;
   final Student student;
 
-
-  ItemsProposal({required this.id, required this.coverLetter, required this.statusFlag, required this.disableFlag, required this.student});
+  ItemsProposal(
+      {required this.id,
+      required this.coverLetter,
+      required this.statusFlag,
+      required this.disableFlag,
+      required this.student});
 }
+
 class Proposal {
   final int total;
   final List<ItemsProposal> items;

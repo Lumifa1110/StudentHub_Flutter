@@ -26,7 +26,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    void _navigateWithAnimation(String routeName, Widget widgetname) async {
+    void navigateWithAnimation(String routeName, Widget widgetname) async {
       final result = await Navigator.of(context).push(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) => widgetname,
@@ -34,8 +34,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
             var begin = const Offset(1.0, 0.0);
             const end = Offset.zero;
             const curve = Curves.ease;
-            var tween =
-                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
             return SlideTransition(
               position: animation.drive(tween),
@@ -44,7 +43,6 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
           },
         ),
       );
-      print('Back Result $result');
 
       if (result != null && onRoleChanged != null) {
         onRoleChanged!(result);
@@ -57,13 +55,14 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
       print(token);
       if (token != null) {
         if (isFromDashBoard == true) {
-          _navigateWithAnimation(
-              '/profile',
-              const SwitchScreen(
-                isDashboard: true,
-              ));
+          navigateWithAnimation(
+            '/profile',
+            const SwitchScreen(
+              isDashboard: true,
+            ),
+          );
         } else {
-          _navigateWithAnimation('/profile', const SwitchScreen());
+          navigateWithAnimation('/profile', const SwitchScreen());
         }
       }
     }

@@ -21,6 +21,22 @@ class FavoriteProjectsScreen extends StatefulWidget {
 }
 
 class _FavoriteProjectsScreenState extends State<FavoriteProjectsScreen> {
+  late List<Project> _favoriteList;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _favoriteList = widget.favoriteList;
+  }
+
+  bool isFavoriteProject(Project project) {
+    return _favoriteList
+        .where(
+            (favoriteProject) => favoriteProject.projectId == project.projectId)
+        .isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,9 +58,9 @@ class _FavoriteProjectsScreenState extends State<FavoriteProjectsScreen> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                     child: ListView.builder(
-                      itemCount: widget.favoriteList.length,
+                      itemCount: _favoriteList.length,
                       itemBuilder: (context, index) {
-                        final project = widget.favoriteList[index];
+                        final project = _favoriteList[index];
                         return CustomProjectItem(
                           project: project,
                           onTap: () {
@@ -52,11 +68,12 @@ class _FavoriteProjectsScreenState extends State<FavoriteProjectsScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ProjectDetailScreen(
-                                    itemId: project.projectId),
+                                  project: project,
+                                ),
                               ),
                             );
                           },
-                          isFavorite: widget.favoriteList.contains(project),
+                          isFavorite: isFavoriteProject(project),
                           onFavoriteToggle: (isFavorite) {
                             widget.onRemoveProject(project, isFavorite);
                           },

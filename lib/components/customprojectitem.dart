@@ -78,7 +78,7 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
             child: InkWell(
               onTap: widget.onTap,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Flexible(
@@ -92,6 +92,16 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                   Flexible(
                     child: Text(
                       widget.project.title,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: AppFonts.h2FontSize,
+                          fontWeight: FontWeight.w500,
+                          color: AppColor.tertiary),
+                    ),
+                  ),
+                  Flexible(
+                    child: Text(
+                      widget.project.companyName ?? 'Unknown',
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           fontSize: AppFonts.h2FontSize,

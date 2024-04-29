@@ -35,8 +35,7 @@ class _SigninScreenState extends State<SigninScreen> {
     final token = prefs.getString('token');
     if (token != null) {
       if (mounted) {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
       }
     }
   }
@@ -53,10 +52,12 @@ class _SigninScreenState extends State<SigninScreen> {
     await prefs.setString('user', jsonEncode(userJson));
 
     // API: sign-in
-    final Map<String, dynamic> signInResponse = await AuthService.signIn({
-      "email": emailController.text.trim(),
-      "password": passwordController.text.trim()
-    });
+    final Map<String, dynamic> signInResponse = await AuthService.signIn(
+      {
+        "email": emailController.text.trim(),
+        "password": passwordController.text.trim(),
+      },
+    );
 
     // SAVE LOCAL: token
     final token = signInResponse['result']['token'];
@@ -67,8 +68,7 @@ class _SigninScreenState extends State<SigninScreen> {
 
     // NAVIGATE TO: home screen
     if (mounted) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
     }
   }
 
@@ -79,15 +79,13 @@ class _SigninScreenState extends State<SigninScreen> {
     if (token != null) {
       // API: get user data
       final Map<String, dynamic> response = await AuthService.getUserInfo();
-      print(response);
       final userData = response['result'];
 
       // SAVE LOCAL: user id + fullname + roles
       await prefs.setInt('userid', userData['id']);
       await prefs.setString('username', userData['fullname']);
       List<dynamic> roles = userData['roles'];
-      List<String> rolesStringList =
-          roles.map((role) => role.toString()).toList();
+      List<String> rolesStringList = roles.map((role) => role.toString()).toList();
       await prefs.setStringList('roles', rolesStringList);
 
       // SAVE LOCAL: user profiles
@@ -146,8 +144,7 @@ class _SigninScreenState extends State<SigninScreen> {
                           !error.toLowerCase().contains('inbox'))
                       .map((error) {
                     return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                       child: Text(
                         error,
                         style: const TextStyle(
@@ -174,15 +171,12 @@ class _SigninScreenState extends State<SigninScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                if (errorMessages
-                    .any((error) => error.toLowerCase().contains('password')))
+                if (errorMessages.any((error) => error.toLowerCase().contains('password')))
                   ...errorMessages
-                      .where(
-                          (error) => error.toLowerCase().contains('password'))
+                      .where((error) => error.toLowerCase().contains('password'))
                       .map((error) {
                     return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                       child: Text(
                         error,
                         style: const TextStyle(
@@ -204,16 +198,14 @@ class _SigninScreenState extends State<SigninScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 if (errorMessages.any((error) =>
-                    error.toLowerCase().contains('user') ||
-                    error.toLowerCase().contains('inbox')))
+                    error.toLowerCase().contains('user') || error.toLowerCase().contains('inbox')))
                   ...errorMessages
                       .where((error) =>
                           error.toLowerCase().contains('user') ||
                           error.toLowerCase().contains('inbox'))
                       .map((error) {
                     return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                       child: Text(
                         error,
                         style: const TextStyle(
@@ -234,12 +226,14 @@ class _SigninScreenState extends State<SigninScreen> {
               margin: const EdgeInsets.symmetric(horizontal: 20),
               padding: const EdgeInsets.symmetric(vertical: 1),
               decoration: BoxDecoration(
-                border: Border.all(color: blackTextColor, width: 2.0),
-                color: lightgrayColor,
+                border: Border.all(color: blackTextColor, width: 1.0),
+                borderRadius: BorderRadius.circular(6),
+                color: mainColor,
                 boxShadow: const [
                   BoxShadow(
                     color: blackTextColor,
-                    offset: Offset(3, 3), // Bottom shadow
+                    spreadRadius: 2.0,
+                    blurRadius: 0.6,
                   ),
                 ],
               ),
@@ -261,8 +255,8 @@ class _SigninScreenState extends State<SigninScreen> {
             const Text(
               '___Don\'t have a StudentHub account ?___',
               style: TextStyle(
-                fontSize: 18,
-                color: darkgrayColor,
+                fontSize: AppFonts.h2FontSize,
+                color: blackTextColor,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -273,12 +267,14 @@ class _SigninScreenState extends State<SigninScreen> {
               width: MediaQuery.of(context).size.width * 0.6,
               padding: const EdgeInsets.symmetric(vertical: 1),
               decoration: BoxDecoration(
-                border: Border.all(color: blackTextColor, width: 2.0),
-                color: lightgrayColor,
-                boxShadow: const [
+                border: Border.all(color: blackTextColor, width: 1.0),
+                borderRadius: BorderRadius.circular(6),
+                color: mainColor,
+                boxShadow: [
                   BoxShadow(
-                    color: blackTextColor,
-                    offset: Offset(2, 2), // Bottom shadow
+                    color: blackTextColor.withOpacity(0.6),
+                    spreadRadius: 2.0,
+                    blurRadius: 0.6,
                   ),
                 ],
               ),

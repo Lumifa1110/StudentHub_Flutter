@@ -238,6 +238,7 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
                 child: ButtonSimple(
                   label: 'Continue',
                   onPressed: () => postCompanyProfile(),
+                  isButtonEnabled: true,
                 ),
               )
             ],

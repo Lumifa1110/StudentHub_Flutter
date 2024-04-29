@@ -30,78 +30,110 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
   List<String> errorMessages = [];
   bool isStudent = false;
   bool isLoading = true;
+  // bool _isMounted = false;
+  late http.Client _httpClient;
+
+  @override
+  void dispose() {
+    // _isMounted = false;
+    _httpClient.close();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _httpClient = http.Client();
+    // _isMounted = true;
+    _loadScreen();
+  }
 
   Future<void> _loadScreen() async {
-    allProject.clear;
-    myFavoriteProjects.clear();
-    _prefs = await SharedPreferences.getInstance();
-    final role = _prefs.getInt('current_role');
-    final student_profile = _prefs.getString('student_profile');
-    _loadProjects();
-    if (role == 0) {
-      if (student_profile == 'null') {
-        Navigator.pushReplacementNamed(context, '/student');
+    try {
+      _prefs = await SharedPreferences.getInstance();
+      final role = _prefs.getInt('current_role');
+      final student_profile = _prefs.getString('student_profile');
+      final token = _prefs.getString('token');
+
+      if (role == 0) {
+        if (student_profile == 'null') {
+          Navigator.pushReplacementNamed(context, '/student');
+          return; // Stop execution if navigating away
+        }
+        setState(() {
+          isStudent = true;
+        });
+      } else {
+        setState(() {
+          isStudent = false;
+        });
       }
-      setState(() {
-        _loadFavoriteProjects();
-        isStudent = true;
-      });
-    } else {
-      setState(() {
-        isStudent = false;
-      });
+
+      await _loadProjects(token!);
+
+      if (isStudent) {
+        await _loadFavoriteProjects(token, student_profile!);
+      }
+
+      if (mounted) {
+        // Check if the widget is still mounted before calling setState()
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('Error: $e');
+      // Handle error
     }
   }
 
-  Future<void> _loadProjects() async {
-    _prefs = await SharedPreferences.getInstance();
-    final token = _prefs.getString('token');
+  Future<void> _loadProjects(String token) async {
     try {
-      final response = await http.get(
+      final response = await _httpClient.get(
         Uri.parse('$uriBase/api/project'),
         headers: {'Authorization': 'Bearer $token'},
       );
-      print(response.statusCode);
+
       if (response.statusCode == 200) {
         final List<dynamic> responseData = jsonDecode(response.body)['result'];
-        setState(() {
-          allProject =
-              responseData.map((json) => Project.fromJson(json)).toList();
-        });
+        if (mounted) {
+          setState(() {
+            allProject =
+                responseData.map((json) => Project.fromJson(json)).toList();
+          });
+        }
       } else {
         // Handle error
         print('Error: ${response.statusCode}');
       }
-      setState(() {
-        isLoading = false;
-      });
     } catch (e) {
       print('Error: $e');
     }
   }
 
-  Future<void> _loadFavoriteProjects() async {
-    _prefs = await SharedPreferences.getInstance();
-    final token = _prefs.getString('token');
-    final student_profile = _prefs.getString('student_profile');
-    final studentId = jsonDecode(student_profile!)['id'];
-
+  Future<void> _loadFavoriteProjects(
+      String token, String studentProfile) async {
     try {
-      final response = await http.get(
+      final studentId = jsonDecode(studentProfile)['id'];
+      final response = await _httpClient.get(
         Uri.parse('$uriBase/api/favoriteProject/$studentId'),
         headers: {'Authorization': 'Bearer $token'},
       );
-      // print('res favorite: ${response.statusCode}');
       if (response.statusCode == 200) {
         final List<dynamic> responseData = jsonDecode(response.body)['result'];
-
-        setState(() {
-          myFavoriteProjects.clear();
-          for (var item in responseData) {
-            final project = Project.fromJson(item['project']);
-            myFavoriteProjects.add(project);
-          }
-        });
+        if (mounted) {
+          setState(() {
+            myFavoriteProjects.clear();
+            for (var project in allProject) {
+              final isFavorite = responseData.any((item) =>
+                  Project.fromJson(item['project']).projectId ==
+                  project.projectId);
+              if (isFavorite) {
+                myFavoriteProjects.add(project);
+              }
+            }
+          });
+        }
       } else {
         // Handle error
         print('Error load: ${response.statusCode}');
@@ -115,11 +147,11 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
   Future<void> _patchFavoriteProject(int projectId, int disableFlag) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    final student_profile = _prefs.getString('student_profile');
-    final studentId = jsonDecode(student_profile!)['id'];
+    final studentProfile = _prefs.getString('student_profile');
+    final studentId = jsonDecode(studentProfile!)['id'];
 
     try {
-      final response = await http.patch(
+      final response = await _httpClient.patch(
         Uri.parse('$uriBase/api/favoriteProject/$studentId'),
         headers: {
           'Authorization': 'Bearer $token',
@@ -165,25 +197,24 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
     }
   }
 
-  void handleSearchSubmitted(String query) {
-    setState(() {
-      searchQuery = query;
-      // print(query);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SearchListScreen(
-            searchQuery: searchQuery,
-          ),
+  void handleSearchSubmitted(String query) async {
+    searchQuery = query;
+    // print(query);
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SearchListScreen(
+          searchQuery: searchQuery,
         ),
-      );
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _loadScreen();
+      ),
+    );
+    print(result);
+    if (result != null && result is bool && result) {
+      setState(() {
+        isLoading = true;
+      });
+      _loadScreen();
+    }
   }
 
   @override
@@ -199,70 +230,68 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
           _loadScreen();
         },
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
+      body: Column(
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const SizedBox(
-                  height: 20,
+                CustomSearchBar(
+                  onChanged: (query) => setState(
+                    () => searchQuery = query.toLowerCase(),
+                  ),
+                  onSubmitted: handleSearchSubmitted,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      CustomSearchBar(
-                        onChanged: (query) => setState(
-                          () => searchQuery = query.toLowerCase(),
-                        ),
-                        onSubmitted: handleSearchSubmitted,
-                      ),
-                      if (isStudent)
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: blackTextColor,
-                          ),
-                          child: Center(
-                            child: IconButton(
-                              onPressed: () async {
-                                final result = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        FavoriteProjectsScreen(
-                                      favoriteList: myFavoriteProjects,
-                                      onRemoveProject: updateFavoriteProject,
-                                    ),
-                                  ),
-                                );
-                                if (result != null) {
-                                  setState(() {
-                                    isLoading = true;
-                                  });
-                                  _loadScreen();
-                                }
-                              },
-                              icon: const FaIcon(
-                                FontAwesomeIcons.solidHeart,
-                                color: whiteTextColor,
+                if (isStudent)
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: blackTextColor,
+                    ),
+                    child: Center(
+                      child: IconButton(
+                        onPressed: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FavoriteProjectsScreen(
+                                favoriteList: myFavoriteProjects,
+                                onRemoveProject: updateFavoriteProject,
                               ),
                             ),
-                          ),
+                          );
+                          if (result != null) {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            _loadScreen();
+                          }
+                        },
+                        icon: const FaIcon(
+                          FontAwesomeIcons.solidHeart,
+                          color: whiteTextColor,
                         ),
-                    ],
+                      ),
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 20),
-                    child: ListView.builder(
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView.builder(
                       itemCount: allProject.length,
                       itemBuilder: (context, index) {
                         final project = allProject[index];
@@ -273,7 +302,8 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ProjectDetailScreen(
-                                    itemId: project.projectId),
+                                  project: project,
+                                ),
                               ),
                             );
                           },
@@ -285,11 +315,13 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
                         );
                       },
                     ),
-                  ),
-                ),
-              ],
             ),
-            bottomNavigationBar: const CustomBottomNavBar(initialIndex: 0),
+          ),
+        ],
+      ),
+      bottomNavigationBar: const CustomBottomNavBar(
+        initialIndex: 0,
+      ),
     );
   }
 }

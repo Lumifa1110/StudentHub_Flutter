@@ -61,8 +61,9 @@ class CompanyWelcomeScreen extends StatelessWidget {
               ButtonSimple(
                 label: 'Get started!', 
                 onPressed: () => {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const MainScreen()))
-                }
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const CompanyDashboardScreen()))
+                },
+                isButtonEnabled: true,
               )
             ]
           )

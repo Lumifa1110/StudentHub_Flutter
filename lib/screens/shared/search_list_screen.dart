@@ -36,12 +36,155 @@ class _SearchListScreenState extends State<SearchListScreen> {
   final TextEditingController _studentsNeededController =
       TextEditingController();
   final TextEditingController _proposalsController = TextEditingController();
+  late http.Client _httpClient;
+  bool isStudent = false;
+  bool isLoading = true;
+
+  @override
+  void dispose() {
+    // _isMounted = false;
+    _httpClient.close();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _searchQuery = widget.searchQuery;
+    _httpClient = http.Client();
+    // Initialize filteredProjects with all projects initially
+    _loadScreen();
+  }
+
+  Future<void> _loadScreen() async {
+    try {
+      _prefs = await SharedPreferences.getInstance();
+      final role = _prefs.getInt('current_role');
+      final studentProfile = _prefs.getString('student_profile');
+      final token = _prefs.getString('token');
+
+      if (role == 0) {
+        if (studentProfile == 'null') {
+          Navigator.pushReplacementNamed(context, '/student');
+          return; // Stop execution if navigating away
+        }
+        setState(() {
+          isStudent = true;
+        });
+      } else {
+        setState(() {
+          isStudent = false;
+        });
+      }
+
+      await _loadFilteredProject(token!);
+
+      if (isStudent) {
+        await _loadFavoriteProjects(token, studentProfile!);
+      }
+
+      if (mounted) {
+        // Check if the widget is still mounted before calling setState()
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('Error: $e');
+      // Handle error
+    }
+  }
+
+  void clearFilter() {
+    setState(() {
+      _studentsNeededController.clear();
+      _proposalsController.clear();
+      selectedProjectScope = null;
+      _loadScreen();
+      Navigator.pop(context);
+    });
+  }
+
+  Future<void> _loadFilteredProject(String token) async {
+    // _prefs = await SharedPreferences.getInstance();
+    // final token = _prefs.getString('token');
+
+    Map<String, dynamic> queryParams = {
+      if (_searchQuery.isNotEmpty) 'title': _searchQuery,
+      if (selectedProjectScope != null)
+        'projectScopeFlag': selectedProjectScope!.index.toString(),
+      if (_studentsNeededController.text.isNotEmpty)
+        'numberOfStudents': _studentsNeededController.text.trim(),
+      if (_proposalsController.text.isNotEmpty)
+        'proposalsLessThan': _proposalsController.text.trim(),
+    };
+
+    try {
+      final uri = Uri.https('api.studenthub.dev', '/api/project', queryParams);
+      final response = await _httpClient.get(
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      print('Status Code: ${response.statusCode}');
+      if (mounted) {
+        if (response.statusCode == 200) {
+          final List<dynamic> responseData =
+              jsonDecode(response.body)['result'];
+          print(responseData.length);
+
+          setState(() {
+            filteredProjects =
+                responseData.map((json) => Project.fromJson(json)).toList();
+          });
+        } else {
+          // Handle error
+          print('Error: ${response.statusCode}');
+        }
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> _loadFavoriteProjects(
+      String token, String studentProfile) async {
+    try {
+      final studentId = jsonDecode(studentProfile)['id'];
+      final response = await _httpClient.get(
+        Uri.parse('$uriBase/api/favoriteProject/$studentId'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = jsonDecode(response.body)['result'];
+        if (mounted) {
+          setState(() {
+            myFavoriteProjects.clear();
+            for (var project in filteredProjects) {
+              final isFavorite = responseData.any((item) =>
+                  Project.fromJson(item['project']).projectId ==
+                  project.projectId);
+              if (isFavorite) {
+                myFavoriteProjects.add(project);
+              }
+            }
+          });
+        }
+      } else {
+        // Handle error
+        print('Error load: ${response.statusCode}');
+        print('Error load: ${response.body}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 
   Future<void> _patchFavoriteProject(int projectId, int disableFlag) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    final student_profile = _prefs.getString('student_profile');
-    final studentId = jsonDecode(student_profile!)['id'];
+    final studentProfile = _prefs.getString('student_profile');
+    final studentId = jsonDecode(studentProfile!)['id'];
 
     try {
       final response = await http.patch(
@@ -67,56 +210,6 @@ class _SearchListScreenState extends State<SearchListScreen> {
     }
   }
 
-  void clearFilter() {
-    setState(() {
-      _studentsNeededController.clear();
-      _proposalsController.clear();
-      selectedProjectScope = null;
-      _loadFilteredProject();
-      Navigator.pop(context);
-    });
-  }
-
-  Future<void> _loadFilteredProject() async {
-    _prefs = await SharedPreferences.getInstance();
-    final token = _prefs.getString('token');
-
-    _searchQuery = widget.searchQuery;
-
-    Map<String, dynamic> queryParams = {
-      if (_searchQuery.isNotEmpty) 'title': _searchQuery,
-      if (selectedProjectScope != null)
-        'projectScopeFlag': selectedProjectScope!.index.toString(),
-      if (_studentsNeededController.text.isNotEmpty)
-        'numberOfStudents': _studentsNeededController.text.trim(),
-      if (_proposalsController.text.isNotEmpty)
-        'proposalsLessThan': _proposalsController.text.trim(),
-    };
-
-    try {
-      final uri = Uri.https('api.studenthub.dev', '/api/project', queryParams);
-      final response = await http.get(
-        uri,
-        headers: {'Authorization': 'Bearer $token'},
-      );
-      print('Status Code: ${response.statusCode}');
-      print('Body: ${response.body}');
-      if (response.statusCode == 200) {
-        final List<dynamic> responseData = jsonDecode(response.body)['result'];
-        setState(() {
-          filteredProjects =
-              responseData.map((json) => Project.fromJson(json)).toList();
-        });
-      } else {
-        // Handle error
-        print('Error: ${response.statusCode}');
-      }
-      print(filteredProjects);
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
-
   void updateFavoriteProject(Project project, bool isFavorite) {
     if (isFavorite) {
       _patchFavoriteProject(project.projectId, 0);
@@ -131,38 +224,42 @@ class _SearchListScreenState extends State<SearchListScreen> {
     }
   }
 
-  void filterProjects(String query) {
-    print(query);
-    setState(() {
-      _searchQuery = query.toLowerCase();
-
-      if (_searchQuery.isNotEmpty) {
-        filteredProjects = myFavoriteProjects.where((project) {
-          return project.title.toLowerCase().contains(_searchQuery) ||
-              project.description!.toLowerCase().contains(_searchQuery);
-        }).toList();
-      } else {
-        // If searchQuery is empty, display all projects
-        filteredProjects = List.from(filteredProjects);
-      }
-      Navigator.pop(context);
-    });
+  bool isFavoriteProject(Project project) {
+    return myFavoriteProjects
+        .where(
+            (favoriteProject) => favoriteProject.projectId == project.projectId)
+        .isNotEmpty;
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _searchQuery = widget.searchQuery;
-    // Initialize filteredProjects with all projects initially
-    _loadFilteredProject();
-  }
+  // void filterProjects(String query) {
+  //   setState(() {
+  //     _searchQuery = query.toLowerCase();
+
+  //     if (_searchQuery.isNotEmpty) {
+  //       filteredProjects = myFavoriteProjects.where((project) {
+  //         return project.title.toLowerCase().contains(_searchQuery) ||
+  //             project.description!.toLowerCase().contains(_searchQuery);
+  //       }).toList();
+  //     } else {
+  //       // If searchQuery is empty, display all projects
+  //       filteredProjects = List.from(filteredProjects);
+  //     }
+  //     Navigator.pop(context);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AuthAppBar(
+      appBar: AuthAppBar(
         canBack: true,
         title: 'Project Search',
+        onRoleChanged: (result) {
+          setState(() {
+            isLoading = true;
+          });
+          _loadScreen();
+        },
       ),
       body: Column(
         children: [
@@ -178,7 +275,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
                   onChanged: (query) => setState(
                     () => _searchQuery = query.toLowerCase(),
                   ),
-                  onSubmitted: (query) => _loadFilteredProject(),
+                  onSubmitted: (query) => _loadScreen(),
                 ),
                 Container(
                   width: 45,
@@ -350,7 +447,10 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                           ),
                                           child: TextButton(
                                             onPressed: () {
-                                              _loadFilteredProject();
+                                              setState(() {
+                                                isLoading = true;
+                                              });
+                                              _loadScreen();
                                               Navigator.pop(context);
                                             },
                                             style: ButtonStyle(
@@ -395,28 +495,32 @@ class _SearchListScreenState extends State<SearchListScreen> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: ListView.builder(
-                itemCount: filteredProjects.length,
-                itemBuilder: (context, index) {
-                  final project = filteredProjects[index];
-                  return CustomProjectItem(
-                    project: project,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ProjectDetailScreen(itemId: project.projectId),
-                        ),
-                      );
-                    },
-                    isFavorite: myFavoriteProjects.contains(project),
-                    onFavoriteToggle: (isFavorite) {
-                      updateFavoriteProject(project, isFavorite);
-                    },
-                  );
-                },
-              ),
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                      itemCount: filteredProjects.length,
+                      itemBuilder: (context, index) {
+                        final project = filteredProjects[index];
+                        return CustomProjectItem(
+                          project: project,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProjectDetailScreen(
+                                  project: project,
+                                ),
+                              ),
+                            );
+                          },
+                          canFavorite: isStudent,
+                          isFavorite: isFavoriteProject(project),
+                          onFavoriteToggle: (isFavorite) {
+                            updateFavoriteProject(project, isFavorite);
+                          },
+                        );
+                      },
+                    ),
             ),
           ),
         ],
