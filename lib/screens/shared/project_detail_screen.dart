@@ -127,7 +127,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                   Container(
                     margin: const EdgeInsets.only(bottom: 10),
                     child: Text(
-                      selectedProject!.companyName!,
+                      'Company name',
                       style: TextStyle(
                         fontSize: AppFonts.h1_2FontSize,
                         fontWeight: FontWeight.w900,

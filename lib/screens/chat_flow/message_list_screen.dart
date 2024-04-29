@@ -182,7 +182,8 @@ void socketConnect() async {
                     "receiverId": 318,
                     "messageFlag": 0
                   });
-                }
+                },
+                isButtonEnabled: true,
               ),
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),

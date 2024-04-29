@@ -10,6 +10,7 @@ import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/screens/company/alertdialog/alertdialog.dart';
 import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/config/config.dart';
+import 'package:studenthub/services/project_service.dart';
 
 class CompanyDashboardScreen extends StatefulWidget {
   const CompanyDashboardScreen({super.key});
@@ -22,9 +23,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
   @override
   bool get wantKeepAlive => true;
 
-  late List<dynamic> _listAllProject = [];
-  late List<dynamic> _listProjectWorking = [];
-  late List<dynamic> _listProjectArchived = [];
+  late List<Project> _listAllProject = [];
+  late List<Project> _listProjectWorking = [];
+  late List<Project> _listProjectArchived = [];
 
   late SharedPreferences _prefs;
   bool isLoading = true;
@@ -139,7 +140,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
         Uri.parse('$uriBase/api/project/company/$companyId/?typeFlag=0'),
         headers: {'Authorization': 'Bearer $token'},
       );
+      final response = await ProjectService.getProjectByCompanyId(companyId);
       final responseDecode = jsonDecode(responseJson.body)["result"];
+      print('status code: ${responseJson.statusCode}');
       if (responseDecode != null) {
         _listAllProject = responseDecode;
       }
