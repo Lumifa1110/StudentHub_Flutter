@@ -22,9 +22,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
   @override
   bool get wantKeepAlive => true;
 
-  late List<Project> listAllProject = [];
-  late List<Project> listProjectWorking = [];
-  late List<Project> listProjectArchived = [];
+  late List<dynamic> _listAllProject = [];
+  late List<dynamic> _listProjectWorking = [];
+  late List<dynamic> _listProjectArchived = [];
 
   late SharedPreferences _prefs;
   bool isLoading = true;
@@ -81,6 +81,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     final Map<String, dynamic> data = {
+      'description': project['description'],
       'numberOfStudents': project['numberOfStudents'],
       'typeFlag': 2,
     };
@@ -630,7 +631,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                         builder: (BuildContext context) {
                                           // return an AlertDialog
                                           return Dialog_(titleAcceptButton: 'Yes',question: 'Do you want to close the project?',
-                                            project: widget.project['id'],f_function: widget.archivedProject,);
+                                            project: widget.project,f_function: widget.archivedProject,);
                                         },
                                         );
                                         Navigator.pop(context);
