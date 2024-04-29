@@ -471,6 +471,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen> with Aut
                     ),
                   ),
                 ),
+      bottomNavigationBar: const CustomBottomNavBar(initialIndex: 1),
     );
   }
 }

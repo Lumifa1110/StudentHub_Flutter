@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:studenthub/components/authappbar.dart';
+import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/utils/colors.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -302,6 +303,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
           ],
         ),
       ),
+      bottomNavigationBar: const CustomBottomNavBar(initialIndex: 3),
     );
   }
 }

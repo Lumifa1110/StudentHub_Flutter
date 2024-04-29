@@ -289,6 +289,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
                 ),
               ],
             ),
+            bottomNavigationBar: const CustomBottomNavBar(initialIndex: 0),
     );
   }
 }
