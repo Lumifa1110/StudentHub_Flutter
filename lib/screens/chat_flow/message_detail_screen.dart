@@ -1,7 +1,4 @@
 // ignore_for_file: avoid_print
-
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -37,6 +34,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> with Automati
   late IO.Socket socket;
   late int userId;
   // Controller
+  late ScrollController scrollController;
   final TextEditingController messageInputController = TextEditingController();
   // State
   late List<Message> messages;
@@ -44,6 +42,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> with Automati
   @override
   void initState() {
     super.initState();
+    scrollController = ScrollController();
     messages = [];
     loadUserId();
     socketConnect();
@@ -54,6 +53,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> with Automati
   @override
   void dispose() {
     socketDisconnect();
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -101,6 +101,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> with Automati
         );
         messages.add(newMessage);
       });
+      //scrollToBottom();
     });
 
     socket.onConnectError((data) => print('$data'));
@@ -132,18 +133,6 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> with Automati
     String content = messageInputController.text;
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt('userid');
-    final fullname = prefs.getString('username');
-    // if (content.isNotEmpty) {
-    //   Message newMessage = Message(
-    //     content: content,
-    //     sender: Chatter(id: userId!, fullname: fullname!),
-    //     receiver: widget.chatter,
-    //     createdAt: DateTime.now()
-    //   );
-    //   setState(() {
-    //     messages.add(newMessage);
-    //   });
-    // }
     socket.emit("SEND_MESSAGE", {
       "content": content,
       "projectId": widget.projectId,
@@ -153,6 +142,20 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> with Automati
   });
     // Clear TextField after creating the new message
     messageInputController.clear();
+    closeKeyboard();
+    scrollToBottom();
+  }
+
+  void closeKeyboard() {
+    FocusManager.instance.primaryFocus?.unfocus();
+  }
+
+  void scrollToBottom() {
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
   }
 
   List<Widget> buildMessages() {
@@ -226,13 +229,14 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> with Automati
           Expanded(
             flex: 7,
             child: SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: buildMessages()
-                )
+              controller: scrollController,
+              padding: const EdgeInsets.only(top: 20, bottom: 80, left: 20, right: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: buildMessages()
               )
+              // child: Container(
+              // )
             ),
           ),
           Expanded(

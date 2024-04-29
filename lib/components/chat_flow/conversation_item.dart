@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/user/user_avatar.dart';
 import 'package:studenthub/models/index.dart';
 import 'package:studenthub/screens/chat_flow/message_detail_screen.dart';
@@ -20,7 +21,7 @@ String formatTimeAgo(DateTime time) {
   }
 }
 
-class ConversationItem extends StatelessWidget {
+class ConversationItem extends StatefulWidget {
   final Message message;
   final int messageCount;
 
@@ -31,10 +32,33 @@ class ConversationItem extends StatelessWidget {
   });
 
   @override
+  State<ConversationItem> createState() => _ConversationItemState();
+}
+
+class _ConversationItemState extends State<ConversationItem> {
+  late int userId;
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserId();
+  }
+
+  Future<void> loadUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getInt('userid')!;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MessageDetailScreen(projectId: 0, chatter: message.sender)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MessageDetailScreen(
+          projectId: widget.message.project!.projectId, 
+          chatter: widget.message.sender.id == userId ? widget.message.receiver : widget.message.sender
+        )));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 6),
@@ -70,17 +94,17 @@ class ConversationItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      message.sender.fullname,
+                      widget.message.sender.id == userId ? widget.message.receiver.fullname : widget.message.sender.fullname,
                       style: const TextStyle(
                         color: AppFonts.primaryColor,
                         fontSize: AppFonts.h3FontSize,
-                        fontWeight: FontWeight.w600
+                        fontWeight: FontWeight.w500
                       )
                     ),
                     const SizedBox(height: 4),
                     Flexible(
                       child: Text(
-                        message.content,
+                        widget.message.content,
                         style: const TextStyle(
                           color: AppFonts.secondaryColor,
                           fontSize: AppFonts.h4FontSize,
@@ -96,23 +120,23 @@ class ConversationItem extends StatelessWidget {
             ),
             Expanded(
               flex: 1,
-              child: Container(
-                padding: const EdgeInsets.only(left: 0),
+              child: SizedBox(
                 height: 50,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Container(
-                      width: 16,
-                      height: 16,
+                      width: 20,
+                      height: 20,
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: AppColor.primary,
                       ),
                       child: Center(
                         child: Text(
-                          messageCount.toString(),
+                          widget.messageCount.toString(),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: AppFonts.h4FontSize,
@@ -123,7 +147,7 @@ class ConversationItem extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      formatTimeAgo(message.createdAt),
+                      formatTimeAgo(widget.message.createdAt),
                       style: const TextStyle(
                         color: AppFonts.secondaryColor,
                         fontSize: AppFonts.h4FontSize,

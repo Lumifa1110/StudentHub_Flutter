@@ -5,7 +5,6 @@ import 'package:socket_io_client/socket_io_client.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/chat_flow/conversation_item.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
-import 'package:studenthub/components/index.dart';
 import 'package:studenthub/components/textfield/search_bar.dart';
 
 // ignore: library_prefixes
@@ -43,8 +42,6 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
     conversationList = [];
     messageCounts = [];
     fetchMessages();
-    filterConversationList();
-    getMessageCounts();
   }
 
   @override
@@ -65,27 +62,21 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
 
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    print('Chat token: $token');
     socket.io.options?['extraHeaders'] = {
       'Authorization': 'Bearer $token',
     };
-
     socket.io.options?['query'] = {
       'project_id': 578
     };
 
     socket.connect();
-
     socket.onConnect((data) {
       print('Socket connected.');
     });
-
     socket.on('RECEIVE_MESSAGE', (data) {
       print('RECEIVE_MESSAGE: $data');
     });
-
     socket.onConnectError((data) => print('$data'));
-
     socket.onError((data) => print(data));
   }
 
@@ -108,6 +99,8 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
     setState(() {
       messages = response['result'].map<Message>((json) => Message.fromJson(json)).toList();
     });
+    filterConversationList();
+    getMessageCounts();
   }
 
   Future<void> filterConversationList() async {
@@ -148,7 +141,7 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
       int count = 0;
       for (final message in messages) {
         if (message.sender.id == userId && message.receiver.id == conversation.sender.id 
-          || message.sender == conversation.sender && message.receiver.id == userId) {
+          || message.sender.id == conversation.sender.id && message.receiver.id == userId) {
           count++;
         }
       }
