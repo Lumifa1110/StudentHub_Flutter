@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -6,11 +8,15 @@ import 'package:http/http.dart' as http;
 import 'package:studenthub/components/card_switchaccount.dart';
 import 'package:studenthub/components/textfield/search_bar.dart';
 import 'package:studenthub/config/config.dart';
+import 'package:studenthub/models/index.dart';
 import 'package:studenthub/preferences/index.dart';
 import 'package:studenthub/screens/company/profile_creation/company_profile_edit_screen.dart';
+import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/screens/student/profile_creation/student_profile_input_screen_1.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
+
+import '../../services/index.dart';
 
 class SwitchScreen extends StatefulWidget {
   final bool isDashboard;
@@ -26,8 +32,10 @@ class _SwitchScreenState extends State<SwitchScreen> {
   bool isSearchActive = false;
   final TextEditingController searchController = TextEditingController();
   List<String> _roles = [];
+  List<User> _signedInAccounts = [];
   int? _currentRole;
   String? _accountFullname;
+  String? _accountEmail;
   // Define a list of profile actions
   final List<String> profileActions = ["My Profile", "Change Password"];
 
@@ -37,6 +45,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
   @override
   void initState() {
     super.initState();
+    _loadSignedInAccounts();
     _loadRoles().then((_) {
       _loadCurrentData().then((_) {
         _check();
@@ -53,6 +62,20 @@ class _SwitchScreenState extends State<SwitchScreen> {
       final uniqueRoles = rolesList.toSet().toList();
       setState(() {
         _roles = uniqueRoles;
+      });
+    }
+  }
+
+  Future<void> _loadSignedInAccounts() async {
+    _prefs = await SharedPreferences.getInstance();
+    final List<String>? signedInAccountsJson = _prefs.getStringList('signed_in_accounts');
+    final String? user = _prefs.getString('user');
+    print(user);
+    _accountEmail = jsonDecode(user!)['email'];
+    if (signedInAccountsJson != null) {
+      setState(() {
+        _signedInAccounts =
+            signedInAccountsJson.map((json) => User.fromJson(jsonDecode(json))).toList();
       });
     }
   }
@@ -81,14 +104,10 @@ class _SwitchScreenState extends State<SwitchScreen> {
     final currole = _prefs.getInt('current_role');
     if (currole == 0) {
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const StudentProfileInputScreen1()));
+          context, MaterialPageRoute(builder: (context) => const StudentProfileInputScreen1()));
     } else {
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const CompanyProfileEditScreen()));
+          context, MaterialPageRoute(builder: (context) => const CompanyProfileEditScreen()));
     }
   }
 
@@ -101,6 +120,109 @@ class _SwitchScreenState extends State<SwitchScreen> {
       _currentRole = int.parse(role);
       print(UserPreferences.getUserRole());
     });
+  }
+
+  void _handleAccountSwitch(String email, String password) async {
+    final prefs = await SharedPreferences.getInstance();
+    final keys = _prefs.getKeys();
+    for (final key in keys) {
+      if (key != 'signed_in_accounts') {
+        await _prefs.remove(key);
+      }
+    }
+    final User user = User(
+      email: email,
+      password: password,
+    );
+
+    // SAVE LOCAL: email + password
+    final userJson = user.toJson();
+    await prefs.setString('user', jsonEncode(userJson));
+
+    // Retrieve existing signed-in accounts
+    final List<String>? signedInAccountsJson = prefs.getStringList('signed_in_accounts');
+    List<User> signedInAccounts = [];
+    if (signedInAccountsJson != null) {
+      signedInAccounts =
+          signedInAccountsJson.map((json) => User.fromJson(jsonDecode(json))).toList();
+    }
+    // Check if the signed-in user's email already exists in the list of signed-in accounts
+    bool accountExists = signedInAccounts.any((account) => account.email == user.email);
+    if (!accountExists) {
+      // Account have not existed
+      // Add new account
+      final userJson = user.toJson();
+      await prefs.setString('user', jsonEncode(userJson));
+      signedInAccounts.add(User(email: user.email, password: user.password));
+      await prefs.setStringList(
+        'signed_in_accounts',
+        signedInAccounts.map((account) => jsonEncode(account.toJson())).toList(),
+      );
+    } else {
+      // Account already exists
+      // Find the existing account
+      int existingAccountIndex = signedInAccounts.indexWhere(
+        (account) => account.email == user.email,
+      );
+      if (signedInAccounts[existingAccountIndex].password != user.password) {
+        // Create new updated acc and replace
+        User updatedUser = User(email: user.email, password: user.password);
+        signedInAccounts[existingAccountIndex] = updatedUser;
+        await prefs.setString('user', jsonEncode(updatedUser.toJson()));
+        await prefs.setStringList(
+          'signed_in_accounts',
+          signedInAccounts.map((account) => jsonEncode(account.toJson())).toList(),
+        );
+      }
+    }
+
+    final Map<String, dynamic> signInResponse = await AuthService.signIn(
+      {
+        "email": email,
+        "password": password,
+      },
+    );
+
+    final token = signInResponse['result']['token'];
+    await prefs.setString('token', token);
+
+    // FETCH: user data
+    await fetchUserData();
+
+    // NAVIGATE TO: home screen
+    if (mounted) {
+      while (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+    }
+  }
+
+  Future<void> fetchUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token != null) {
+      // API: get user data
+      final Map<String, dynamic> response = await AuthService.getUserInfo();
+      final userData = response['result'];
+
+      // SAVE LOCAL: user id + fullname + roles
+      await prefs.setInt('userid', userData['id']);
+      await prefs.setString('username', userData['fullname']);
+      List<dynamic> roles = userData['roles'];
+      List<String> rolesStringList = roles.map((role) => role.toString()).toList();
+      await prefs.setStringList('roles', rolesStringList);
+
+      // SAVE LOCAL: user profiles
+      await prefs.setString('student_profile', jsonEncode(userData['student']));
+      print(jsonEncode(userData['student']));
+      await prefs.setString('company_profile', jsonEncode(userData['company']));
+      print(jsonEncode(userData['company']));
+    } else {
+      // Handle case where token is not available
+    }
   }
 
   Future<void> handleLogout() async {
@@ -121,7 +243,12 @@ class _SwitchScreenState extends State<SwitchScreen> {
         if (response.statusCode == 201) {
           // await prefs.remove('token');
           // await prefs.remove('currole');
-          await _prefs.clear();
+          final keys = _prefs.getKeys();
+          for (final key in keys) {
+            if (key != 'signed_in_accounts') {
+              await _prefs.remove(key);
+            }
+          }
           Navigator.pushReplacementNamed(context, '/signin');
         } else {
           // Xử lý lỗi nếu cần
@@ -138,6 +265,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: bgColor,
       appBar: AppBar(
         elevation: 5.0,
         leadingWidth: 40,
@@ -153,11 +281,9 @@ class _SwitchScreenState extends State<SwitchScreen> {
                       if (widget.isDashboard) {
                         Navigator.of(context).pop();
                         if (_currentRole == 0) {
-                          Navigator.pushReplacementNamed(
-                              context, '/student/dashboard');
+                          Navigator.pushReplacementNamed(context, '/student/dashboard');
                         } else if (_currentRole == 1) {
-                          Navigator.pushReplacementNamed(
-                              context, '/company/dashboard');
+                          Navigator.pushReplacementNamed(context, '/company/dashboard');
                         }
                       } else {
                         Navigator.of(context).pop(true);
@@ -206,25 +332,43 @@ class _SwitchScreenState extends State<SwitchScreen> {
         child: Column(
           children: [
             isSearchActive
-                ? CustomSearchBar(
-                    controller: searchController, placeholder: 'Search...')
+                ? CustomSearchBar(controller: searchController, placeholder: 'Search...')
                 : const SizedBox(
                     height: 10,
                   ),
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  for (var role in _roles)
-                    CardSwitchAccount(
-                      accountAvt: Icons.person,
-                      accountFullname: _accountFullname ?? '',
-                      accountRole: role,
-                      isSelected: role == _currentRole.toString(),
-                      onTap: () => _handleRoleSelection(role),
+            _roles.isNotEmpty && _currentRole != null
+                ? SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        for (var role in _roles)
+                          CardSwitchAccount(
+                            accountAvt: Icons.person,
+                            accountFullname: _accountFullname ?? '',
+                            accountRole: role,
+                            isSelected: role == _currentRole.toString(),
+                            onTap: () => _handleRoleSelection(role),
+                          ),
+                      ],
                     ),
-                ],
-              ),
-            ),
+                  )
+                : const SizedBox(
+                    height: 50,
+                  ),
+            _signedInAccounts.isNotEmpty
+                ? Column(
+                    children: _signedInAccounts.map((account) {
+                      return CardSwitchAccount(
+                        accountAvt: Icons.person,
+                        accountFullname: account.email,
+                        accountRole: 'Role',
+                        isSelected: _accountEmail == account.email,
+                        onTap: () {
+                          _handleAccountSwitch(account.email, account.password);
+                        },
+                      );
+                    }).toList(),
+                  )
+                : SizedBox(),
             const Divider(
               color: blackTextColor,
               thickness: 3.0,
@@ -235,11 +379,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
                 children: [
                   InkWell(
                     onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) =>
-                      //             const StudentProfileInputScreen1()));
+                      if (_currentRole == null) return;
                       _navigateToProfile();
                     },
                     child: const ListTile(

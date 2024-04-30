@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/services/index.dart';
@@ -26,9 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
       //   Navigator.push(context, MaterialPageRoute(builder: (context) => const CompanyDashboardScreen()));
       // }
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const CompanyDashboardScreen()));
+          context, MaterialPageRoute(builder: (context) => const CompanyDashboardScreen()));
     }
   }
 
@@ -49,9 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
       //           builder: (context) => const StudentDashboardScreen()));
       // }
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const StudentDashboardScreen()));
+          context, MaterialPageRoute(builder: (context) => const StudentDashboardScreen()));
     }
   }
 
@@ -67,8 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // NAVIGATE TO: sign in screen
     if (mounted) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const SigninScreen()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const SigninScreen()));
     }
   }
 
@@ -76,39 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: bgColor,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: const Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Student',
-                style: TextStyle(
-                  color: whiteTextColor,
-                  fontSize: 26,
-                ),
-              ),
-              Text(
-                'Hub',
-                style: TextStyle(
-                  color: blackTextColor,
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            IconButton(
-              onPressed: handleLogout,
-              icon: const Icon(
-                Icons.logout,
-                size: 26,
-                color: whiteTextColor,
-              ),
-            ),
-          ],
-        ),
+        appBar: AuthAppBar(canBack: true),
         body: Center(
             child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -156,8 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.zero,
                       ),
                     ),
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(mainColor),
+                    backgroundColor: MaterialStateProperty.all<Color>(mainColor),
                   ),
                   child: const Text(
                     'Company',
@@ -195,8 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.zero,
                       ),
                     ),
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(mainColor),
+                    backgroundColor: MaterialStateProperty.all<Color>(mainColor),
                   ),
                   child: const Text(
                     'Student',
@@ -207,13 +169,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              // ElevatedButton(
-              //     onPressed: () {},
-              //     style: ElevatedButton.styleFrom(
-              //       shape: const RoundedRectangleBorder(),
-              //       fixedSize: const Size(150, 40),
-              //     ),
-              //     child: const Text("Student")),
               const SizedBox(
                 height: 40,
               ),

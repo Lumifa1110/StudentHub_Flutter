@@ -3,13 +3,8 @@ import 'package:studenthub/services/api_services.dart';
 
 class AuthService {
   static Future<Map<String, dynamic>> signIn(dynamic body) async {
-    try {
-      final response = await ApiService.postRequest('/api/auth/sign-in', body);
-      return response;
-    } catch (e) {
-      print('Error signing in: $e');
-      rethrow;
-    }
+    final response = await ApiService.postRequest('/api/auth/sign-in', body);
+    return response;
   }
 
   static Future<Map<String, dynamic>> signUp(dynamic body) async {

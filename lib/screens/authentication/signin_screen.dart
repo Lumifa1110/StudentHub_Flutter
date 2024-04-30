@@ -47,11 +47,6 @@ class _SigninScreenState extends State<SigninScreen> {
       password: passwordController.text.trim(),
     );
 
-    // SAVE LOCAL: email + password
-    final userJson = user.toJson();
-    await prefs.setString('user', jsonEncode(userJson));
-
-    // API: sign-in
     final Map<String, dynamic> signInResponse = await AuthService.signIn(
       {
         "email": emailController.text.trim(),
@@ -59,16 +54,47 @@ class _SigninScreenState extends State<SigninScreen> {
       },
     );
 
-    // SAVE LOCAL: token
-    final token = signInResponse['result']['token'];
-    await prefs.setString('token', token);
+    if (signInResponse['result'] == null) {
+      final errorDetails = signInResponse['errorDetails'];
+      setState(() {
+        if (errorDetails is List<dynamic>) {
+          errorMessages = errorDetails.cast<String>();
+        } else if (errorDetails is String) {
+          errorMessages = [errorDetails];
+        }
+      });
+    } else {
+      // SAVE LOCAL: email + password
+      final userJson = user.toJson();
+      await prefs.setString('user', jsonEncode(userJson));
 
-    // FETCH: user data
-    await fetchUserData();
+      // Retrieve existing signed-in accounts
+      final List<String>? signedInAccountsJson = prefs.getStringList('signed_in_accounts');
+      List<User> signedInAccounts = [];
+      if (signedInAccountsJson != null) {
+        signedInAccounts =
+            signedInAccountsJson.map((json) => User.fromJson(jsonDecode(json))).toList();
+      }
+      bool accountExists = signedInAccounts.any((account) => account.email == user.email);
+      if (!accountExists) {
+        final userJson = user.toJson();
+        await prefs.setString('user', jsonEncode(userJson));
 
-    // NAVIGATE TO: home screen
-    if (mounted) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+        signedInAccounts.add(User(email: user.email, password: user.password));
+        await prefs.setStringList('signed_in_accounts',
+            signedInAccounts.map((account) => jsonEncode(account.toJson())).toList());
+      }
+
+      final token = signInResponse['result']['token'];
+      await prefs.setString('token', token);
+
+      // FETCH: user data
+      await fetchUserData();
+
+      // NAVIGATE TO: home screen
+      if (mounted) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      }
     }
   }
 

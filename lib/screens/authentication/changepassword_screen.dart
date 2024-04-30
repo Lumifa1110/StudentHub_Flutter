@@ -47,8 +47,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(true); // Close dialog
-                Navigator.of(context).pop(true); // Pop ChangePasswordScreen
+                Navigator.of(context).pop(true);
+                Navigator.of(context).pop(true);
               },
               child: const Text('OK'),
             ),

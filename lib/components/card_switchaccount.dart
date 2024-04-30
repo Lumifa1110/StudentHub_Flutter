@@ -39,10 +39,13 @@ class CardSwitchAccount extends StatelessWidget {
               color: isSelected ? whiteTextColor : blackTextColor),
         ),
         subtitle: Text(
-          accountRole == '0' ? 'Student' : 'Company',
+          accountRole == '0'
+              ? 'Student'
+              : accountRole == '1'
+                  ? 'Company'
+                  : 'Account',
           style: TextStyle(
-              fontSize: AppFonts.h3FontSize,
-              color: isSelected ? whiteTextColor : blackTextColor),
+              fontSize: AppFonts.h3FontSize, color: isSelected ? whiteTextColor : blackTextColor),
         ),
       ),
     );
