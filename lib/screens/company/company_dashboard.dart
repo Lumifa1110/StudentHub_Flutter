@@ -249,6 +249,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
         onRoleChanged: (result) {
           _loadScreen();
         },
+        title: 'Dashboard',
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())

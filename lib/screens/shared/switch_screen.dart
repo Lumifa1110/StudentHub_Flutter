@@ -357,6 +357,34 @@ class _SwitchScreenState extends State<SwitchScreen> {
                 : const SizedBox(
                     height: 10,
                   ),
+            _signedInAccounts.isNotEmpty
+                ? Column(
+                    children: _signedInAccounts.map((account) {
+                      return CardSwitchAccount(
+                        accountAvt: Icons.person,
+                        accountFullname: account.email,
+                        accountRole: 'Role',
+                        isSelected: _accountEmail == account.email,
+                        onTap: () {
+                          _handleAccountSwitch(account.email, account.password);
+                        },
+                      );
+                    }).toList(),
+                  )
+                : const SizedBox(
+                    height: 20,
+                  ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Divider(
+              height: 1,
+              thickness: 1,
+              color: Colors.black,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
             _roles.isNotEmpty && _currentRole != null
                 ? SingleChildScrollView(
                     child: Column(
@@ -373,23 +401,8 @@ class _SwitchScreenState extends State<SwitchScreen> {
                     ),
                   )
                 : const SizedBox(
-                    height: 50,
+                    height: 20,
                   ),
-            _signedInAccounts.isNotEmpty
-                ? Column(
-                    children: _signedInAccounts.map((account) {
-                      return CardSwitchAccount(
-                        accountAvt: Icons.person,
-                        accountFullname: account.email,
-                        accountRole: 'Role',
-                        isSelected: _accountEmail == account.email,
-                        onTap: () {
-                          _handleAccountSwitch(account.email, account.password);
-                        },
-                      );
-                    }).toList(),
-                  )
-                : SizedBox(),
             const Divider(
               color: blackTextColor,
               thickness: 3.0,

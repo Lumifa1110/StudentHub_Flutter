@@ -22,12 +22,15 @@ class ProjectListScreen extends StatefulWidget {
 class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-
   late SharedPreferences _prefs;
   String searchQuery = '';
   List<Project> allProject = [];
   List<Project> myFavoriteProjects = [];
   List<String> errorMessages = [];
+  late ScrollController _scrollController;
+  late int _page;
+  late int _perPage;
+  bool _loadingMore = false;
   bool isStudent = false;
   bool isLoading = true;
   // bool _isMounted = false;
@@ -43,9 +46,51 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
   @override
   void initState() {
     super.initState();
+    _page = 2;
+    _perPage = 10;
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
     _httpClient = http.Client();
     // _isMounted = true;
     _loadScreen();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.offset >= _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange &&
+        !_loadingMore) {
+      // At the bottom of the list, load more projects
+      setState(() {
+        _loadingMore = true;
+      });
+      _loadNextPage();
+    }
+  }
+
+  Future<void> _loadNextPage() async {
+    try {
+      final token = _prefs.getString('token');
+      final response = await _httpClient.get(
+        Uri.parse('$uriBase/api/project?page=$_page&perPage=$_perPage'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = jsonDecode(response.body)['result'];
+        if (mounted) {
+          setState(() {
+            allProject.addAll(responseData.map((json) => Project.fromJson(json)).toList());
+            _page++; // Increment page number for next load
+            _loadingMore = false;
+          });
+        }
+      } else {
+        // Handle error
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 
   Future<void> _loadScreen() async {
@@ -98,8 +143,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
         final List<dynamic> responseData = jsonDecode(response.body)['result'];
         if (mounted) {
           setState(() {
-            allProject =
-                responseData.map((json) => Project.fromJson(json)).toList();
+            allProject = responseData.map((json) => Project.fromJson(json)).toList();
           });
         }
       } else {
@@ -111,8 +155,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
     }
   }
 
-  Future<void> _loadFavoriteProjects(
-      String token, String studentProfile) async {
+  Future<void> _loadFavoriteProjects(String token, String studentProfile) async {
     try {
       final studentId = jsonDecode(studentProfile)['id'];
       final response = await _httpClient.get(
@@ -125,9 +168,8 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
           setState(() {
             myFavoriteProjects.clear();
             for (var project in allProject) {
-              final isFavorite = responseData.any((item) =>
-                  Project.fromJson(item['project']).projectId ==
-                  project.projectId);
+              final isFavorite = responseData
+                  .any((item) => Project.fromJson(item['project']).projectId == project.projectId);
               if (isFavorite) {
                 myFavoriteProjects.add(project);
               }
@@ -155,8 +197,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
         Uri.parse('$uriBase/api/favoriteProject/$studentId'),
         headers: {
           'Authorization': 'Bearer $token',
-          'Content-Type':
-              'application/json', // Specify the content type as JSON
+          'Content-Type': 'application/json', // Specify the content type as JSON
         },
         body: jsonEncode({
           'projectId': projectId,
@@ -178,8 +219,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
 
   bool isFavoriteProject(Project project) {
     return myFavoriteProjects
-        .where(
-            (favoriteProject) => favoriteProject.projectId == project.projectId)
+        .where((favoriteProject) => favoriteProject.projectId == project.projectId)
         .isNotEmpty;
   }
 
@@ -292,27 +332,33 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
               child: isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : ListView.builder(
-                      itemCount: allProject.length,
+                      controller: _scrollController,
+                      itemCount: allProject.length + (_loadingMore ? 1 : 0),
                       itemBuilder: (context, index) {
-                        final project = allProject[index];
-                        return CustomProjectItem(
-                          project: project,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProjectDetailScreen(
-                                  project: project,
+                        if (index == allProject.length && _loadingMore) {
+                          // Loading indicator for pagination
+                          return Center(child: CircularProgressIndicator());
+                        } else {
+                          final project = allProject[index];
+                          return CustomProjectItem(
+                            project: project,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProjectDetailScreen(
+                                    project: project,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          canFavorite: isStudent,
-                          isFavorite: isFavoriteProject(project),
-                          onFavoriteToggle: (isFavorite) {
-                            updateFavoriteProject(project, isFavorite);
-                          },
-                        );
+                              );
+                            },
+                            canFavorite: isStudent,
+                            isFavorite: isFavoriteProject(project),
+                            onFavoriteToggle: (isFavorite) {
+                              updateFavoriteProject(project, isFavorite);
+                            },
+                          );
+                        }
                       },
                     ),
             ),

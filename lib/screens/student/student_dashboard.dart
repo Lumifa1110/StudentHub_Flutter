@@ -154,6 +154,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
         onRoleChanged: (result) {
           _loadScreen();
         },
+        title: 'Dashboard',
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),

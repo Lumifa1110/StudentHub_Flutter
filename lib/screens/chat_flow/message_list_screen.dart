@@ -13,9 +13,7 @@ import 'package:studenthub/models/index.dart';
 import 'package:studenthub/services/index.dart';
 
 class MessageListScreen extends StatefulWidget {
-  const MessageListScreen({ 
-    super.key
-  });
+  const MessageListScreen({super.key});
 
   @override
   State<MessageListScreen> createState() => _MessageListScreenState();
@@ -52,22 +50,19 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
 
   void socketConnect() async {
     socket = IO.io(
-      'https://api.studenthub.dev',
-      OptionBuilder()
-        .setTransports(['websocket'])
-        .enableForceNewConnection()
-        .disableAutoConnect() 
-        .build()
-    );
+        'https://api.studenthub.dev',
+        OptionBuilder()
+            .setTransports(['websocket'])
+            .enableForceNewConnection()
+            .disableAutoConnect()
+            .build());
 
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     socket.io.options?['extraHeaders'] = {
       'Authorization': 'Bearer $token',
     };
-    socket.io.options?['query'] = {
-      'project_id': 578
-    };
+    socket.io.options?['query'] = {'project_id': 578};
 
     socket.connect();
     socket.onConnect((data) {
@@ -140,8 +135,8 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
     for (final conversation in conversationList) {
       int count = 0;
       for (final message in messages) {
-        if (message.sender.id == userId && message.receiver.id == conversation.sender.id 
-          || message.sender.id == conversation.sender.id && message.receiver.id == userId) {
+        if (message.sender.id == userId && message.receiver.id == conversation.sender.id ||
+            message.sender.id == conversation.sender.id && message.receiver.id == userId) {
           count++;
         }
       }
@@ -157,30 +152,27 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
     super.build(context);
     return Scaffold(
       appBar: const AuthAppBar(canBack: false, title: 'Chat'),
-      backgroundColor: const Color(0xFFF8F8F8),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              CustomSearchBar(controller: searchController, placeholder: 'Search'),
-              ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: conversationList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final message = conversationList[index];
-                  final messageCount = messageCounts[index];
-                  return ConversationItem(
-                    message: message,
-                    messageCount: messageCount,
-                  );
-                }
-              ),
-            ],
-          )
-        )
-      ),
+          child: Container(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  CustomSearchBar(controller: searchController, placeholder: 'Search'),
+                  ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: conversationList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final message = conversationList[index];
+                        final messageCount = messageCounts[index];
+                        return ConversationItem(
+                          message: message,
+                          messageCount: messageCount,
+                        );
+                      }),
+                ],
+              ))),
       bottomNavigationBar: const CustomBottomNavBar(initialIndex: 2),
     );
   }
