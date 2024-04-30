@@ -91,7 +91,6 @@ class _SigninScreenState extends State<SigninScreen> {
       // FETCH: user data
       await fetchUserData();
 
-      // NAVIGATE TO: home screen
       if (mounted) {
         Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
       }

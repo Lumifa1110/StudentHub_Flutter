@@ -36,17 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
     await prefs.setInt('current_role', UserRole.student.index);
     // final profile = prefs.getString('student_profile');
     if (mounted) {
-      // if (profile == 'null') {
-      //   Navigator.push(
-      //       context,
-      //       MaterialPageRoute(
-      //           builder: (context) => const StudentProfileInputScreen1()));
-      // } else {
-      //   Navigator.push(
-      //       context,
-      //       MaterialPageRoute(
-      //           builder: (context) => const StudentDashboardScreen()));
-      // }
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const StudentDashboardScreen()));
     }
@@ -72,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: bgColor,
-        appBar: AuthAppBar(canBack: true),
+        appBar: AuthAppBar(canBack: false),
         body: Center(
             child: Padding(
           padding: const EdgeInsets.all(20.0),

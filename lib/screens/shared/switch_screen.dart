@@ -36,11 +36,11 @@ class _SwitchScreenState extends State<SwitchScreen> {
   int? _currentRole;
   String? _accountFullname;
   String? _accountEmail;
+  String? selectedProfileAction;
   // Define a list of profile actions
   final List<String> profileActions = ["My Profile", "Change Password"];
 
   // Define a variable to track the selected action
-  String? selectedProfileAction;
 
   @override
   void initState() {
@@ -70,7 +70,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
     _prefs = await SharedPreferences.getInstance();
     final List<String>? signedInAccountsJson = _prefs.getStringList('signed_in_accounts');
     final String? user = _prefs.getString('user');
-    print(user);
+
     _accountEmail = jsonDecode(user!)['email'];
     if (signedInAccountsJson != null) {
       setState(() {
@@ -124,57 +124,37 @@ class _SwitchScreenState extends State<SwitchScreen> {
 
   void _handleAccountSwitch(String email, String password) async {
     final prefs = await SharedPreferences.getInstance();
-    final keys = _prefs.getKeys();
-    for (final key in keys) {
-      if (key != 'signed_in_accounts') {
-        await _prefs.remove(key);
+    final existToken = _prefs.getString('token');
+    if (existToken != null) {
+      try {
+        final response = await http.post(
+          Uri.parse('$uriBase/api/auth/logout'),
+          headers: {
+            'Authorization': 'Bearer $existToken',
+          },
+        );
+
+        if (response.statusCode == 201) {
+          final keys = _prefs.getKeys();
+          for (final key in keys) {
+            if (key != 'signed_in_accounts') {
+              await _prefs.remove(key);
+            }
+          }
+        } else {
+          print('Logout failed: ${response.body}');
+        }
+      } catch (e) {
+        print('Error: $e');
       }
+    } else {
+      print('Token not found');
     }
+
     final User user = User(
       email: email,
       password: password,
     );
-
-    // SAVE LOCAL: email + password
-    final userJson = user.toJson();
-    await prefs.setString('user', jsonEncode(userJson));
-
-    // Retrieve existing signed-in accounts
-    final List<String>? signedInAccountsJson = prefs.getStringList('signed_in_accounts');
-    List<User> signedInAccounts = [];
-    if (signedInAccountsJson != null) {
-      signedInAccounts =
-          signedInAccountsJson.map((json) => User.fromJson(jsonDecode(json))).toList();
-    }
-    // Check if the signed-in user's email already exists in the list of signed-in accounts
-    bool accountExists = signedInAccounts.any((account) => account.email == user.email);
-    if (!accountExists) {
-      // Account have not existed
-      // Add new account
-      final userJson = user.toJson();
-      await prefs.setString('user', jsonEncode(userJson));
-      signedInAccounts.add(User(email: user.email, password: user.password));
-      await prefs.setStringList(
-        'signed_in_accounts',
-        signedInAccounts.map((account) => jsonEncode(account.toJson())).toList(),
-      );
-    } else {
-      // Account already exists
-      // Find the existing account
-      int existingAccountIndex = signedInAccounts.indexWhere(
-        (account) => account.email == user.email,
-      );
-      if (signedInAccounts[existingAccountIndex].password != user.password) {
-        // Create new updated acc and replace
-        User updatedUser = User(email: user.email, password: user.password);
-        signedInAccounts[existingAccountIndex] = updatedUser;
-        await prefs.setString('user', jsonEncode(updatedUser.toJson()));
-        await prefs.setStringList(
-          'signed_in_accounts',
-          signedInAccounts.map((account) => jsonEncode(account.toJson())).toList(),
-        );
-      }
-    }
 
     final Map<String, dynamic> signInResponse = await AuthService.signIn(
       {
@@ -183,19 +163,63 @@ class _SwitchScreenState extends State<SwitchScreen> {
       },
     );
 
-    final token = signInResponse['result']['token'];
-    await prefs.setString('token', token);
+    if (signInResponse['result'] == null) {
+    } else {
+      // SAVE LOCAL: email + password
+      final userJson = user.toJson();
+      await prefs.setString('user', jsonEncode(userJson));
 
-    // FETCH: user data
-    await fetchUserData();
-
-    // NAVIGATE TO: home screen
-    if (mounted) {
-      while (Navigator.canPop(context)) {
-        Navigator.pop(context);
+      // Retrieve existing signed-in accounts
+      final List<String>? signedInAccountsJson = prefs.getStringList('signed_in_accounts');
+      List<User> signedInAccounts = [];
+      if (signedInAccountsJson != null) {
+        signedInAccounts =
+            signedInAccountsJson.map((json) => User.fromJson(jsonDecode(json))).toList();
       }
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      // Check if the signed-in user's email already exists in the list of signed-in accounts
+      bool accountExists = signedInAccounts.any((account) => account.email == user.email);
+      if (!accountExists) {
+        // Account have not existed
+        // Add new account
+        final userJson = user.toJson();
+        await prefs.setString('user', jsonEncode(userJson));
+        signedInAccounts.add(User(email: user.email, password: user.password));
+        await prefs.setStringList(
+          'signed_in_accounts',
+          signedInAccounts.map((account) => jsonEncode(account.toJson())).toList(),
+        );
+      } else {
+        // Account already exists
+        // Find the existing account
+        int existingAccountIndex = signedInAccounts.indexWhere(
+          (account) => account.email == user.email,
+        );
+        if (signedInAccounts[existingAccountIndex].password != user.password) {
+          // Create new updated acc and replace
+          User updatedUser = User(email: user.email, password: user.password);
+          signedInAccounts[existingAccountIndex] = updatedUser;
+          await prefs.setString('user', jsonEncode(updatedUser.toJson()));
+          await prefs.setStringList(
+            'signed_in_accounts',
+            signedInAccounts.map((account) => jsonEncode(account.toJson())).toList(),
+          );
+        }
+      }
+
+      final token = signInResponse['result']['token'];
+      await prefs.setString('token', token);
+
+      // FETCH: user data
+      await fetchUserData();
+
+      // NAVIGATE TO: home screen
+      if (mounted) {
+        while (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      }
     }
   }
 
@@ -229,20 +253,17 @@ class _SwitchScreenState extends State<SwitchScreen> {
     // Lấy token từ SharedPreferences
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    print(token);
 
     if (token != null) {
       try {
         final response = await http.post(
-          Uri.parse('${uriBase}/api/auth/logout'),
+          Uri.parse('$uriBase/api/auth/logout'),
           headers: {
             'Authorization': 'Bearer $token',
           },
         );
 
         if (response.statusCode == 201) {
-          // await prefs.remove('token');
-          // await prefs.remove('currole');
           final keys = _prefs.getKeys();
           for (final key in keys) {
             if (key != 'signed_in_accounts') {
