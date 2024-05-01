@@ -49,10 +49,10 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
     _page = 2;
     _perPage = 10;
     _scrollController = ScrollController();
-    _scrollController.addListener(_scrollListener);
     _httpClient = http.Client();
     // _isMounted = true;
     _loadScreen();
+    _scrollController.addListener(_scrollListener);
   }
 
   void _scrollListener() {
@@ -63,33 +63,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
       setState(() {
         _loadingMore = true;
       });
-      _loadNextPage();
-    }
-  }
-
-  Future<void> _loadNextPage() async {
-    try {
-      final token = _prefs.getString('token');
-      final response = await _httpClient.get(
-        Uri.parse('$uriBase/api/project?page=$_page&perPage=$_perPage'),
-        headers: {'Authorization': 'Bearer $token'},
-      );
-
-      if (response.statusCode == 200) {
-        final List<dynamic> responseData = jsonDecode(response.body)['result'];
-        if (mounted) {
-          setState(() {
-            allProject.addAll(responseData.map((json) => Project.fromJson(json)).toList());
-            _page++; // Increment page number for next load
-            _loadingMore = false;
-          });
-        }
-      } else {
-        // Handle error
-        print('Error: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
+      _loadNext();
     }
   }
 
@@ -97,18 +71,24 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
     try {
       _prefs = await SharedPreferences.getInstance();
       final role = _prefs.getInt('current_role');
-      final student_profile = _prefs.getString('student_profile');
+      final studentProfile = _prefs.getString('student_profile');
+      final companyProfile = _prefs.getString('company_profile');
       final token = _prefs.getString('token');
 
+      // Check role and profile,
       if (role == 0) {
-        if (student_profile == 'null') {
+        if (studentProfile == 'null') {
           Navigator.pushReplacementNamed(context, '/student');
-          return; // Stop execution if navigating away
+          return;
         }
         setState(() {
           isStudent = true;
         });
       } else {
+        if (companyProfile == 'null') {
+          Navigator.pushReplacementNamed(context, '/company');
+          return;
+        }
         setState(() {
           isStudent = false;
         });
@@ -117,7 +97,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
       await _loadProjects(token!);
 
       if (isStudent) {
-        await _loadFavoriteProjects(token, student_profile!);
+        await _loadFavoriteProjects(token, studentProfile!);
       }
 
       if (mounted) {
@@ -144,6 +124,32 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
         if (mounted) {
           setState(() {
             allProject = responseData.map((json) => Project.fromJson(json)).toList();
+          });
+        }
+      } else {
+        // Handle error
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> _loadNext() async {
+    try {
+      final token = _prefs.getString('token');
+      final response = await _httpClient.get(
+        Uri.parse('$uriBase/api/project?page=$_page&perPage=$_perPage'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = jsonDecode(response.body)['result'];
+        if (mounted) {
+          setState(() {
+            allProject.addAll(responseData.map((json) => Project.fromJson(json)).toList());
+            _page++; // Increment page number for next load
+            _loadingMore = false;
           });
         }
       } else {

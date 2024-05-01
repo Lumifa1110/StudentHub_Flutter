@@ -50,12 +50,13 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
 
   void socketConnect() async {
     socket = IO.io(
-        'https://api.studenthub.dev',
-        OptionBuilder()
-            .setTransports(['websocket'])
-            .enableForceNewConnection()
-            .disableAutoConnect()
-            .build());
+      'https://api.studenthub.dev',
+      OptionBuilder()
+          .setTransports(['websocket'])
+          .enableForceNewConnection()
+          .disableAutoConnect()
+          .build(),
+    );
 
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
@@ -154,25 +155,28 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
       appBar: const AuthAppBar(canBack: false, title: 'Chat'),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-          child: Container(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  CustomSearchBar(controller: searchController, placeholder: 'Search'),
-                  ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: conversationList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final message = conversationList[index];
-                        final messageCount = messageCounts[index];
-                        return ConversationItem(
-                          message: message,
-                          messageCount: messageCount,
-                        );
-                      }),
-                ],
-              ))),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              CustomSearchBar(controller: searchController, placeholder: 'Search'),
+              ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: conversationList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final message = conversationList[index];
+                  final messageCount = messageCounts[index];
+                  return ConversationItem(
+                    message: message,
+                    messageCount: messageCount,
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
       bottomNavigationBar: const CustomBottomNavBar(initialIndex: 2),
     );
   }
