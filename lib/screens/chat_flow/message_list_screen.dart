@@ -53,12 +53,13 @@ class _MessageListScreenState extends State<MessageListScreen>
 
   void socketConnect() async {
     socket = IO.io(
-        'https://api.studenthub.dev',
-        OptionBuilder()
-            .setTransports(['websocket'])
-            .enableForceNewConnection()
-            .disableAutoConnect()
-            .build());
+      'https://api.studenthub.dev',
+      OptionBuilder()
+          .setTransports(['websocket'])
+          .enableForceNewConnection()
+          .disableAutoConnect()
+          .build(),
+    );
 
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');

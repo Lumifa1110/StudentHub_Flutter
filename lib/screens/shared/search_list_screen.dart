@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
@@ -33,10 +35,13 @@ class _SearchListScreenState extends State<SearchListScreen> {
   List<Project> filteredProjects = [];
   ProjectScopeFlag? selectedProjectScope;
   // final TextEditingController _searchController = TextEditingController();
-  final TextEditingController _studentsNeededController =
-      TextEditingController();
+  final TextEditingController _studentsNeededController = TextEditingController();
   final TextEditingController _proposalsController = TextEditingController();
   late http.Client _httpClient;
+  late ScrollController _scrollController;
+  late int _page;
+  late int _perPage;
+  bool _loadingMore = false;
   bool isStudent = false;
   bool isLoading = true;
 
@@ -50,15 +55,33 @@ class _SearchListScreenState extends State<SearchListScreen> {
   @override
   void initState() {
     super.initState();
-
-    _searchQuery = widget.searchQuery;
+    setState(() {
+      _searchQuery = widget.searchQuery;
+    });
+    _page = 1;
+    _perPage = 10;
+    _scrollController = ScrollController();
     _httpClient = http.Client();
     // Initialize filteredProjects with all projects initially
     _loadScreen();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  void _scrollListener() {
+    if (_scrollController.offset >= _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange &&
+        !_loadingMore) {
+      // At the bottom of the list, load more projects
+      setState(() {
+        _loadingMore = true;
+      });
+      _loadNext();
+    }
   }
 
   Future<void> _loadScreen() async {
     try {
+      _page = 1;
       _prefs = await SharedPreferences.getInstance();
       final role = _prefs.getInt('current_role');
       final studentProfile = _prefs.getString('student_profile');
@@ -101,23 +124,22 @@ class _SearchListScreenState extends State<SearchListScreen> {
       _studentsNeededController.clear();
       _proposalsController.clear();
       selectedProjectScope = null;
+      _searchQuery = '';
       _loadScreen();
       Navigator.pop(context);
     });
   }
 
   Future<void> _loadFilteredProject(String token) async {
-    // _prefs = await SharedPreferences.getInstance();
-    // final token = _prefs.getString('token');
-
     Map<String, dynamic> queryParams = {
       if (_searchQuery.isNotEmpty) 'title': _searchQuery,
-      if (selectedProjectScope != null)
-        'projectScopeFlag': selectedProjectScope!.index.toString(),
+      if (selectedProjectScope != null) 'projectScopeFlag': selectedProjectScope!.index.toString(),
       if (_studentsNeededController.text.isNotEmpty)
         'numberOfStudents': _studentsNeededController.text.trim(),
       if (_proposalsController.text.isNotEmpty)
         'proposalsLessThan': _proposalsController.text.trim(),
+      'page': _page.toString(),
+      'perPage': _perPage.toString(),
     };
 
     try {
@@ -126,19 +148,14 @@ class _SearchListScreenState extends State<SearchListScreen> {
         uri,
         headers: {'Authorization': 'Bearer $token'},
       );
-      print('Status Code: ${response.statusCode}');
+
       if (mounted) {
         if (response.statusCode == 200) {
-          final List<dynamic> responseData =
-              jsonDecode(response.body)['result'];
-          print(responseData.length);
-
+          final List<dynamic> responseData = jsonDecode(response.body)['result'];
           setState(() {
-            filteredProjects =
-                responseData.map((json) => Project.fromJson(json)).toList();
+            filteredProjects = responseData.map((json) => Project.fromJson(json)).toList();
           });
         } else {
-          // Handle error
           print('Error: ${response.statusCode}');
         }
       }
@@ -147,8 +164,19 @@ class _SearchListScreenState extends State<SearchListScreen> {
     }
   }
 
-  Future<void> _loadFavoriteProjects(
-      String token, String studentProfile) async {
+  Future<void> _loadNext() async {
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+    setState(() {
+      _page++;
+    });
+    await _loadFilteredProject(token!);
+    setState(() {
+      _loadingMore = false;
+    });
+  }
+
+  Future<void> _loadFavoriteProjects(String token, String studentProfile) async {
     try {
       final studentId = jsonDecode(studentProfile)['id'];
       final response = await _httpClient.get(
@@ -161,9 +189,8 @@ class _SearchListScreenState extends State<SearchListScreen> {
           setState(() {
             myFavoriteProjects.clear();
             for (var project in filteredProjects) {
-              final isFavorite = responseData.any((item) =>
-                  Project.fromJson(item['project']).projectId ==
-                  project.projectId);
+              final isFavorite = responseData
+                  .any((item) => Project.fromJson(item['project']).projectId == project.projectId);
               if (isFavorite) {
                 myFavoriteProjects.add(project);
               }
@@ -191,8 +218,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
         Uri.parse('$uriBase/api/favoriteProject/$studentId'),
         headers: {
           'Authorization': 'Bearer $token',
-          'Content-Type':
-              'application/json', // Specify the content type as JSON
+          'Content-Type': 'application/json', // Specify the content type as JSON
         },
         body: jsonEncode({
           'projectId': projectId,
@@ -226,27 +252,9 @@ class _SearchListScreenState extends State<SearchListScreen> {
 
   bool isFavoriteProject(Project project) {
     return myFavoriteProjects
-        .where(
-            (favoriteProject) => favoriteProject.projectId == project.projectId)
+        .where((favoriteProject) => favoriteProject.projectId == project.projectId)
         .isNotEmpty;
   }
-
-  // void filterProjects(String query) {
-  //   setState(() {
-  //     _searchQuery = query.toLowerCase();
-
-  //     if (_searchQuery.isNotEmpty) {
-  //       filteredProjects = myFavoriteProjects.where((project) {
-  //         return project.title.toLowerCase().contains(_searchQuery) ||
-  //             project.description!.toLowerCase().contains(_searchQuery);
-  //       }).toList();
-  //     } else {
-  //       // If searchQuery is empty, display all projects
-  //       filteredProjects = List.from(filteredProjects);
-  //     }
-  //     Navigator.pop(context);
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -275,7 +283,11 @@ class _SearchListScreenState extends State<SearchListScreen> {
                   onChanged: (query) => setState(
                     () => _searchQuery = query.toLowerCase(),
                   ),
-                  onSubmitted: (query) => _loadScreen(),
+                  onSubmitted: (query) => {
+                    Navigator.pop(context),
+                    _loadScreen(),
+                  },
+                  searchText: _searchQuery,
                 ),
                 Container(
                   width: 45,
@@ -291,12 +303,9 @@ class _SearchListScreenState extends State<SearchListScreen> {
                           context: context,
                           isScrollControlled: true,
                           builder: (BuildContext context) {
-                            final double screenHeight =
-                                MediaQuery.of(context).size.height;
-                            final double appBarHeight =
-                                AppBar().preferredSize.height;
-                            final double bottomSheetHeight =
-                                screenHeight - (appBarHeight * 3);
+                            final double screenHeight = MediaQuery.of(context).size.height;
+                            final double appBarHeight = AppBar().preferredSize.height;
+                            final double bottomSheetHeight = screenHeight - (appBarHeight * 3);
                             return SingleChildScrollView(
                               reverse: true,
                               child: Container(
@@ -307,10 +316,8 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
                                         Container(
                                           height: 30,
@@ -387,19 +394,15 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                     ),
                                     const Spacer(),
                                     Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Container(
                                           width: 180,
                                           height: 40,
                                           padding: const EdgeInsets.all(0),
                                           decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: blackTextColor,
-                                                width: 2.0),
+                                            border: Border.all(color: blackTextColor, width: 2.0),
                                             color: whiteTextColor,
                                             boxShadow: const [
                                               BoxShadow(
@@ -413,11 +416,9 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                               clearFilter();
                                             },
                                             style: ButtonStyle(
-                                              shape: MaterialStateProperty.all<
-                                                  OutlinedBorder>(
+                                              shape: MaterialStateProperty.all<OutlinedBorder>(
                                                 const RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.zero),
+                                                    borderRadius: BorderRadius.zero),
                                               ),
                                             ),
                                             child: const Text(
@@ -434,9 +435,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                           height: 40,
                                           padding: const EdgeInsets.all(0),
                                           decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: blackTextColor,
-                                                width: 2.0),
+                                            border: Border.all(color: blackTextColor, width: 2.0),
                                             color: whiteTextColor,
                                             boxShadow: const [
                                               BoxShadow(
@@ -454,11 +453,9 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                               Navigator.pop(context);
                                             },
                                             style: ButtonStyle(
-                                              shape: MaterialStateProperty.all<
-                                                  OutlinedBorder>(
+                                              shape: MaterialStateProperty.all<OutlinedBorder>(
                                                 const RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.zero),
+                                                    borderRadius: BorderRadius.zero),
                                               ),
                                             ),
                                             child: const Text(
@@ -498,27 +495,33 @@ class _SearchListScreenState extends State<SearchListScreen> {
               child: isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : ListView.builder(
-                      itemCount: filteredProjects.length,
+                      controller: _scrollController,
+                      itemCount: filteredProjects.length + (_loadingMore ? 1 : 0),
                       itemBuilder: (context, index) {
-                        final project = filteredProjects[index];
-                        return CustomProjectItem(
-                          project: project,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProjectDetailScreen(
-                                  project: project,
+                        if (index == filteredProjects.length && _loadingMore) {
+                          // Loading indicator for pagination
+                          return Center(child: CircularProgressIndicator());
+                        } else {
+                          final project = filteredProjects[index];
+                          return CustomProjectItem(
+                            project: project,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProjectDetailScreen(
+                                    project: project,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          canFavorite: isStudent,
-                          isFavorite: isFavoriteProject(project),
-                          onFavoriteToggle: (isFavorite) {
-                            updateFavoriteProject(project, isFavorite);
-                          },
-                        );
+                              );
+                            },
+                            canFavorite: isStudent,
+                            isFavorite: isFavoriteProject(project),
+                            onFavoriteToggle: (isFavorite) {
+                              updateFavoriteProject(project, isFavorite);
+                            },
+                          );
+                        }
                       },
                     ),
             ),

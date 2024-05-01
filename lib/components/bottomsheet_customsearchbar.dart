@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:studenthub/utils/colors.dart';
 
 class CustomSearchBar extends StatefulWidget {
-  final Function(String z) onChanged;
-  final Function(String z) onSubmitted;
+  final Function(String) onChanged;
+  final Function(String) onSubmitted;
+  final String searchText;
 
   const CustomSearchBar({
     Key? key,
     required this.onChanged,
     required this.onSubmitted,
+    this.searchText = '',
   }) : super(key: key);
 
   @override
@@ -17,6 +19,12 @@ class CustomSearchBar extends StatefulWidget {
 
 class _CustomSearchBarState extends State<CustomSearchBar> {
   final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.text = widget.searchText;
+  }
 
   @override
   Widget build(BuildContext context) {
