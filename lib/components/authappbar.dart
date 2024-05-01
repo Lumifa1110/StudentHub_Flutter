@@ -13,13 +13,13 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Function(bool)? onRoleChanged;
 
   const AuthAppBar({
-    Key? key,
+    super.key,
     required this.canBack,
     this.title,
     this.isShowIcon = true,
     this.isFromDashBoard = false,
     this.onRoleChanged,
-  }) : super(key: key);
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -97,7 +97,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
               title!,
               style: const TextStyle(
                 color: whiteTextColor,
-                fontSize: AppFonts.h1FontSize,
+                fontSize: AppFonts.h0FontSize,
                 fontWeight: FontWeight.w500,
               ),
             )
@@ -108,7 +108,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
                   'Student',
                   style: TextStyle(
                     color: whiteTextColor,
-                    fontSize: AppFonts.h1FontSize,
+                    fontSize: AppFonts.h0FontSize,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -116,7 +116,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
                   'Hub',
                   style: TextStyle(
                     color: blackTextColor,
-                    fontSize: AppFonts.h1FontSize,
+                    fontSize: AppFonts.h0FontSize,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

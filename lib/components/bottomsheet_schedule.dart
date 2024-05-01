@@ -1,24 +1,25 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:studenthub/components/index.dart';
 import 'package:studenthub/components/textfield/textfield_label_v2.dart';
 import 'package:studenthub/utils/colors.dart';
+import 'package:studenthub/utils/font.dart';
 
 class BottomSheetSchedule extends StatefulWidget {
   final String title;
   final DateTime startDate;
   final DateTime endDate;
+  final Function(String, DateTime, DateTime) handleScheduleInterview;
 
-  const BottomSheetSchedule({
-    Key? key,
-    required this.title,
-    required this.startDate,
-    required this.endDate,
-  }) : super(key: key);
+  const BottomSheetSchedule(
+      {super.key,
+      required this.title,
+      required this.startDate,
+      required this.endDate,
+      required this.handleScheduleInterview});
 
   @override
-  _BottomSheetScheduleState createState() => _BottomSheetScheduleState();
+  State<BottomSheetSchedule> createState() => _BottomSheetScheduleState();
 }
 
 class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
@@ -41,14 +42,15 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+      decoration: const BoxDecoration(color: Colors.white),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
             'Schedule a video call interview',
             style: TextStyle(
-              fontSize: 20,
+              fontSize: AppFonts.h2FontSize,
               fontWeight: FontWeight.bold,
               color: blackTextColor,
             ),
@@ -58,13 +60,13 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
             controller: _titleController,
             hint: 'Enter title for meeting',
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 20),
           const Text(
             'Start time',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: AppFonts.h3FontSize,
               fontWeight: FontWeight.w500,
-              color: blackTextColor,
+              color: AppFonts.secondaryColor,
             ),
           ),
           const SizedBox(height: 10),
@@ -143,13 +145,13 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
               const SizedBox(width: 30),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 20),
           const Text(
             'End time',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: AppFonts.h3FontSize,
               fontWeight: FontWeight.w500,
-              color: blackTextColor,
+              color: AppFonts.secondaryColor,
             ),
           ),
           const SizedBox(height: 10),
@@ -237,64 +239,40 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
                 )
               : const SizedBox(),
           Text('Duration: ${_duration.inMinutes} minutes'),
-          const Spacer(),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                width: 180,
-                height: 40,
-                padding: const EdgeInsets.all(0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: blackTextColor, width: 2.0),
-                  color: whiteTextColor,
-                  boxShadow: const [
-                    BoxShadow(
-                      color: blackTextColor,
-                      offset: Offset(2, 3),
-                    ),
-                  ],
-                ),
-                child: TextButton(
+          const SizedBox(height: 40),
+          SizedBox(
+            height: 40,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: blackTextColor,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFE8E8E8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
                     ),
+                    alignment: Alignment.center, // Center the text
                   ),
+                  child: const Text('Cancel',
+                      style: TextStyle(
+                          color: AppFonts.primaryColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold)),
                 ),
-              ),
-              Container(
-                width: 180,
-                height: 40,
-                padding: const EdgeInsets.all(0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: blackTextColor, width: 2.0),
-                  color: whiteTextColor,
-                  boxShadow: const [
-                    BoxShadow(
-                      color: blackTextColor,
-                      offset: Offset(2, 3),
-                    ),
-                  ],
-                ),
-                child: TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'Send Invite',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: blackTextColor,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+                ButtonSimple(
+                    label: 'Confirm',
+                    onPressed: () {
+                      widget.handleScheduleInterview(
+                          _titleController.text, _startDate, _endDate);
+                      Navigator.pop(context);
+                    },
+                    isButtonEnabled: _titleController.text.isNotEmpty),
+              ],
+            ),
           ),
         ],
       ),
@@ -305,8 +283,8 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: isStartDate ? _startDate : _endDate,
-      firstDate: DateTime.now().subtract(Duration(days: 365)),
-      lastDate: DateTime.now().add(Duration(days: 365)),
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
     );
     if (picked != null) {
       setState(() {

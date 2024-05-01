@@ -33,7 +33,8 @@ class CustomSearchBar extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: placeholder,
                 hintStyle: const TextStyle( 
-                  fontSize: AppFonts.h3FontSize
+                  fontSize: AppFonts.h3FontSize,
+                  color: AppFonts.tertiaryColor
                 ),
                 
                 border: InputBorder.none,

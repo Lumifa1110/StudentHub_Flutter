@@ -28,7 +28,7 @@ class TextFieldWithLabel2 extends StatelessWidget {
             style: const TextStyle(
               fontSize: AppFonts.h3FontSize,
               fontWeight: FontWeight.w500,
-              color: blackTextColor,
+              color: AppFonts.secondaryColor,
             ),
           ),
         ),

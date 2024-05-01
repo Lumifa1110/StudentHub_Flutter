@@ -11,6 +11,8 @@ import 'package:studenthub/components/textfield/search_bar.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:studenthub/models/index.dart';
 import 'package:studenthub/services/index.dart';
+import 'package:studenthub/utils/colors.dart';
+import 'package:studenthub/utils/font.dart';
 
 class MessageListScreen extends StatefulWidget {
   const MessageListScreen({super.key});
@@ -19,7 +21,8 @@ class MessageListScreen extends StatefulWidget {
   State<MessageListScreen> createState() => _MessageListScreenState();
 }
 
-class _MessageListScreenState extends State<MessageListScreen> with AutomaticKeepAliveClientMixin {
+class _MessageListScreenState extends State<MessageListScreen>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -69,7 +72,7 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
       print('Socket connected.');
     });
     socket.on('RECEIVE_MESSAGE', (data) {
-      print('RECEIVE_MESSAGE: $data');
+      //print('RECEIVE_MESSAGE: $data');
     });
     socket.onConnectError((data) => print('$data'));
     socket.onError((data) => print(data));
@@ -92,7 +95,9 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
   void fetchMessages() async {
     final Map<String, dynamic> response = await MessageService.getAllMessage();
     setState(() {
-      messages = response['result'].map<Message>((json) => Message.fromJson(json)).toList();
+      messages = response['result']
+          .map<Message>((json) => Message.fromJson(json))
+          .toList();
     });
     filterConversationList();
     getMessageCounts();
@@ -109,10 +114,12 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
 
       // Check if the message involves user
       if (sender.id == userId || receiver.id == userId) {
-        final otherPerson = sender.id == userId ? receiver.fullname : sender.fullname;
+        final otherPerson =
+            sender.id == userId ? receiver.fullname : sender.fullname;
         // Check if the conversation has been added to the map
         if (!conversationsMap.containsKey(otherPerson) ||
-            message.createdAt.isAfter(conversationsMap[otherPerson]!.createdAt)) {
+            message.createdAt
+                .isAfter(conversationsMap[otherPerson]!.createdAt)) {
           conversationsMap[otherPerson] = message;
         }
       }
@@ -135,8 +142,10 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
     for (final conversation in conversationList) {
       int count = 0;
       for (final message in messages) {
-        if (message.sender.id == userId && message.receiver.id == conversation.sender.id ||
-            message.sender.id == conversation.sender.id && message.receiver.id == userId) {
+        if (message.sender.id == userId &&
+                message.receiver.id == conversation.sender.id ||
+            message.sender.id == conversation.sender.id &&
+                message.receiver.id == userId) {
           count++;
         }
       }
@@ -152,13 +161,23 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
     super.build(context);
     return Scaffold(
       appBar: const AuthAppBar(canBack: false, title: 'Chat'),
-      backgroundColor: Colors.white,
+      backgroundColor: AppColor.background,
       body: SingleChildScrollView(
           child: Container(
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  CustomSearchBar(controller: searchController, placeholder: 'Search'),
+                  CustomSearchBar(
+                      controller: searchController, placeholder: 'Search'),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    child: const Text('Conversations',
+                        style: TextStyle(
+                            color: AppFonts.secondaryColor,
+                            fontSize: AppFonts.h2FontSize,
+                            fontWeight: FontWeight.w400)),
+                  ),
                   ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
