@@ -21,8 +21,7 @@ class MessageListScreen extends StatefulWidget {
   State<MessageListScreen> createState() => _MessageListScreenState();
 }
 
-class _MessageListScreenState extends State<MessageListScreen>
-    with AutomaticKeepAliveClientMixin {
+class _MessageListScreenState extends State<MessageListScreen> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -95,44 +94,44 @@ class _MessageListScreenState extends State<MessageListScreen>
 
   void fetchMessages() async {
     final Map<String, dynamic> response = await MessageService.getAllMessage();
-    setState(() {
-      messages = response['result']
-          .map<Message>((json) => Message.fromJson(json))
-          .toList();
-    });
-    filterConversationList();
-    getMessageCounts();
+    if (mounted) {
+      setState(() {
+        messages = response['result'].map<Message>((json) => Message.fromJson(json)).toList();
+      });
+      filterConversationList();
+      getMessageCounts();
+    }
   }
 
   Future<void> filterConversationList() async {
     // Create a map to store the latest message for each conversation involving user
-    final Map<String, Message> conversationsMap = {};
+    if (mounted) {
+      final Map<String, Message> conversationsMap = {};
 
-    // Iterate through each message
-    for (final message in messages) {
-      final sender = message.sender;
-      final receiver = message.receiver;
+      // Iterate through each message
+      for (final message in messages) {
+        final sender = message.sender;
+        final receiver = message.receiver;
 
-      // Check if the message involves user
-      if (sender.id == userId || receiver.id == userId) {
-        final otherPerson =
-            sender.id == userId ? receiver.fullname : sender.fullname;
-        // Check if the conversation has been added to the map
-        if (!conversationsMap.containsKey(otherPerson) ||
-            message.createdAt
-                .isAfter(conversationsMap[otherPerson]!.createdAt)) {
-          conversationsMap[otherPerson] = message;
+        // Check if the message involves user
+        if (sender.id == userId || receiver.id == userId) {
+          final otherPerson = sender.id == userId ? receiver.fullname : sender.fullname;
+          // Check if the conversation has been added to the map
+          if (!conversationsMap.containsKey(otherPerson) ||
+              message.createdAt.isAfter(conversationsMap[otherPerson]!.createdAt)) {
+            conversationsMap[otherPerson] = message;
+          }
         }
       }
+
+      // Convert the map to a list and sort by time (latest message at the top)
+      List<Message> sortedConversationList = conversationsMap.values.toList();
+      sortedConversationList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+      setState(() {
+        conversationList = sortedConversationList;
+      });
     }
-
-    // Convert the map to a list and sort by time (latest message at the top)
-    List<Message> sortedConversationList = conversationsMap.values.toList();
-    sortedConversationList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-
-    setState(() {
-      conversationList = sortedConversationList;
-    });
   }
 
   Future<void> getMessageCounts() async {
@@ -143,10 +142,8 @@ class _MessageListScreenState extends State<MessageListScreen>
     for (final conversation in conversationList) {
       int count = 0;
       for (final message in messages) {
-        if (message.sender.id == userId &&
-                message.receiver.id == conversation.sender.id ||
-            message.sender.id == conversation.sender.id &&
-                message.receiver.id == userId) {
+        if (message.sender.id == userId && message.receiver.id == conversation.sender.id ||
+            message.sender.id == conversation.sender.id && message.receiver.id == userId) {
           count++;
         }
       }
@@ -168,16 +165,17 @@ class _MessageListScreenState extends State<MessageListScreen>
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  CustomSearchBar(
-                      controller: searchController, placeholder: 'Search'),
+                  CustomSearchBar(controller: searchController, placeholder: 'Search'),
                   Container(
                     alignment: Alignment.centerLeft,
                     margin: const EdgeInsets.only(bottom: 16),
-                    child: const Text('Conversations',
-                        style: TextStyle(
-                            color: AppFonts.secondaryColor,
-                            fontSize: AppFonts.h2FontSize,
-                            fontWeight: FontWeight.w400)),
+                    child: const Text(
+                      'Conversations',
+                      style: TextStyle(
+                          color: AppFonts.secondaryColor,
+                          fontSize: AppFonts.h2FontSize,
+                          fontWeight: FontWeight.w400),
+                    ),
                   ),
                   ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),

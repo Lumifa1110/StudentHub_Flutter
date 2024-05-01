@@ -1,8 +1,11 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/user/user_avatar.dart';
 import 'package:studenthub/models/index.dart';
 import 'package:studenthub/screens/chat_flow/message_detail_screen.dart';
 import 'package:studenthub/services/index.dart';
+import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 String formatTimeAgo(DateTime time) {
@@ -24,8 +27,7 @@ class ConversationItem extends StatefulWidget {
   final Message message;
   final int messageCount;
 
-  const ConversationItem(
-      {super.key, required this.message, required this.messageCount});
+  const ConversationItem({super.key, required this.message, required this.messageCount});
 
   @override
   State<ConversationItem> createState() => _ConversationItemState();
@@ -33,6 +35,7 @@ class ConversationItem extends StatefulWidget {
 
 class _ConversationItemState extends State<ConversationItem> {
   late int userId;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -43,9 +46,12 @@ class _ConversationItemState extends State<ConversationItem> {
 
   Future<void> loadUserId() async {
     final response = await AuthService.getUserInfo();
-    setState(() {
-      userId = response['result']['id'];
-    });
+    if (mounted) {
+      setState(() {
+        userId = response['result']['id'];
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -56,86 +62,163 @@ class _ConversationItemState extends State<ConversationItem> {
           context,
           MaterialPageRoute(
             builder: (context) => MessageDetailScreen(
-                projectId: widget.message.project!.projectId,
-                chatter: widget.message.sender.id == userId
-                    ? widget.message.receiver
-                    : widget.message.sender),
+              projectId: widget.message.project!.projectId,
+              chatter: widget.message.sender.id == userId
+                  ? widget.message.receiver
+                  : widget.message.sender,
+            ),
           ),
         );
       },
       child: Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          padding:
-              const EdgeInsets.only(top: 6, bottom: 6, left: 12, right: 12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                spreadRadius: 2,
-                blurRadius: 2,
-              )
-            ],
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.only(top: 6, bottom: 6, left: 12, right: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 2,
+              blurRadius: 2,
+            ),
+          ],
+        ),
+        child: _isLoading ? _buildLoadingItem() : _buildConversationItem(),
+      ),
+    );
+  }
+
+  Widget _buildLoadingItem() {
+    return Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Container(
+            alignment: Alignment.centerLeft,
+            child: _isLoading
+                ? const UserAvatar(icon: Icons.person)
+                : Container(), // Placeholder for avatar
           ),
-          child: Row(children: [
-            // Sender avatar
-            Expanded(
-                flex: 1,
-                child: Container(
-                    alignment: Alignment.centerLeft,
-                    child: const UserAvatar(icon: Icons.person))),
-            const SizedBox(width: 12),
-            // Sender name + Message snapshot
-            Expanded(
-                flex: 6,
-                child: Container(
-                  padding: const EdgeInsets.only(left: 0),
-                  height: 60,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(children: [
-                          Expanded(
-                            flex: 4,
-                            child: Text(
-                                widget.message.sender.id == userId
-                                    ? widget.message.receiver.fullname
-                                    : widget.message.sender.fullname,
-                                style: const TextStyle(
-                                    color: AppFonts.primaryColor,
-                                    fontSize: AppFonts.h3FontSize,
-                                    fontWeight: FontWeight.w500)),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Container(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                  formatTimeAgo(widget.message.createdAt),
-                                  style: const TextStyle(
-                                      color: AppFonts.tertiaryColor,
-                                      fontSize: AppFonts.h5FontSize,
-                                      fontWeight: FontWeight.w400)),
-                            ),
-                          )
-                        ]),
-                        const SizedBox(height: 4),
-                        Flexible(
-                          child: Text(
-                            widget.message.content,
-                            style: const TextStyle(
-                                color: AppFonts.secondaryColor,
-                                fontSize: AppFonts.h4FontSize,
-                                fontWeight: FontWeight.w400),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          flex: 6,
+          child: Container(
+            padding: const EdgeInsets.only(left: 0),
+            height: 60,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 16,
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  decoration: BoxDecoration(
+                    color: lightergrayColor.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                      child: Container(color: Colors.transparent),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  height: 16,
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  decoration: BoxDecoration(
+                    color: lightergrayColor.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                      child: Container(color: Colors.transparent),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildConversationItem() {
+    return Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Container(
+            alignment: Alignment.centerLeft,
+            child: const UserAvatar(icon: Icons.person),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          flex: 6,
+          child: Container(
+            padding: const EdgeInsets.only(left: 0),
+            height: 60,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: Text(
+                        widget.message.sender.id == userId
+                            ? widget.message.receiver.fullname
+                            : widget.message.sender.fullname,
+                        style: const TextStyle(
+                          color: AppFonts.primaryColor,
+                          fontSize: AppFonts.h3FontSize,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          formatTimeAgo(widget.message.createdAt),
+                          style: const TextStyle(
+                            color: AppFonts.tertiaryColor,
+                            fontSize: AppFonts.h5FontSize,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
-                      ]),
-                )),
-          ])),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Flexible(
+                  child: Text(
+                    widget.message.content,
+                    style: const TextStyle(
+                      color: AppFonts.secondaryColor,
+                      fontSize: AppFonts.h4FontSize,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
