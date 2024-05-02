@@ -17,10 +17,21 @@ class InterviewItem extends StatefulWidget {
 
 class _InterviewItemState extends State<InterviewItem> {
   String formatDateTime(DateTime dateTime) {
-    // Define the format pattern
     final formatter = DateFormat('EEEE d/M/yyyy HH:mm');
-    // Format the DateTime object using the formatter
     return formatter.format(dateTime);
+  }
+
+  String calculateDuration(DateTime startTime, DateTime endTime) {
+    Duration difference = endTime.difference(startTime);
+    int hours = difference.inHours;
+    int minutes = difference.inMinutes.remainder(60);
+    if (hours > 0 && minutes > 0) {
+      return '$hours hour${hours > 1 ? 's' : ''} $minutes minute${minutes > 1 ? 's' : ''}';
+    } else if (hours > 0) {
+      return '$hours hour${hours > 1 ? 's' : ''}';
+    } else {
+      return '$minutes minute${minutes > 1 ? 's' : ''}';
+    }
   }
 
   bool isInterviewOccuring() {
@@ -55,14 +66,26 @@ class _InterviewItemState extends State<InterviewItem> {
               child: Column(children: [
                 Row(children: [
                   Expanded(
-                      flex: 1,
+                      flex: 3,
                       child: Container(
                           alignment: Alignment.centerLeft,
                           child: const Text('Scheduled Interview',
                               style: TextStyle(
                                   color: AppColor.primary,
                                   fontSize: AppFonts.h4FontSize,
-                                  fontWeight: FontWeight.w500))))
+                                  fontWeight: FontWeight.w500)))),
+                  Expanded(
+                      flex: 4,
+                      child: Container(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                              calculateDuration(widget.interview.startTime,
+                                  widget.interview.endTime),
+                              style: const TextStyle(
+                                  color: AppFonts.primaryColor,
+                                  fontSize: AppFonts.h4FontSize,
+                                  fontWeight: FontWeight.w400,
+                                  fontStyle: FontStyle.italic))))
                 ]),
                 Row(children: [
                   Expanded(
@@ -139,7 +162,9 @@ class _InterviewItemState extends State<InterviewItem> {
                           alignment: Alignment.centerRight,
                           child: ButtonSimple(
                             label: 'Join',
-                            onPressed: () {},
+                            onPressed: () {
+                              print(widget.interview.startTime.toString());
+                            },
                             isButtonEnabled:
                                 isInterviewOccuring() ? true : false,
                           )))

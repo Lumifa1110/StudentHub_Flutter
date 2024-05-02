@@ -5,10 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:socket_io_client/socket_io_client.dart';
 import 'package:studenthub/components/bottomsheet_schedule.dart';
 import 'package:studenthub/components/chat_flow/index.dart';
-import 'package:studenthub/components/chat_flow/message_item.dart';
 import 'package:studenthub/models/index.dart';
 import 'package:studenthub/services/index.dart';
 import 'package:studenthub/utils/colors.dart';
@@ -73,7 +71,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
   void socketConnect() async {
     socket = IO.io(
         'https://api.studenthub.dev',
-        OptionBuilder()
+        IO.OptionBuilder()
             .setTransports(['websocket'])
             .enableForceNewConnection()
             .disableAutoConnect()
@@ -81,7 +79,6 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
 
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    print('Chat token: $token');
     socket.io.options?['extraHeaders'] = {
       'Authorization': 'Bearer $token',
     };
@@ -115,9 +112,9 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
       print('RECEIVE_INTERVIEW: $data');
     });
 
-    socket.onConnectError((data) => print('$data'));
+    socket.onConnectError((data) => print('Socket connect error: $data'));
 
-    socket.onError((data) => print(data));
+    socket.onError((data) => print('Socker error: $data'));
   }
 
   void socketDisconnect() {
@@ -155,7 +152,9 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
     // Clear TextField after creating the new message
     messageInputController.clear();
     closeKeyboard();
-    scrollToBottom();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollToBottom();
+    });
   }
 
   void closeKeyboard() {
@@ -172,7 +171,6 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
 
   void buildMessages() {
     List<Widget> tempWidgets = [];
-    print('Build messages');
     DateTime? lastMessageTime;
     for (int i = 0; i < messages.length; i++) {
       final message = messages[i];
@@ -180,11 +178,9 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
       // Check if this is the first message or the time has changed since the last message
       if (lastMessageTime == null ||
           message.createdAt.day != lastMessageTime.day) {
-        print('${message.createdAt}');
         tempWidgets.add(buildTimestamp(message.createdAt));
       }
       // Add the message item
-      print(message.content);
       tempWidgets.add(MessageItem(message: message, isMyMessage: isMyMessage));
       lastMessageTime = message.createdAt;
     }
@@ -248,6 +244,9 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
           interview:
               Interview(title: title, startTime: startTime, endTime: endTime)));
     });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollToBottom();
+    });
   }
 
   @override
@@ -267,7 +266,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
             child: SingleChildScrollView(
                 controller: scrollController,
                 padding: const EdgeInsets.only(
-                    top: 20, bottom: 60, left: 20, right: 20),
+                    top: 20, bottom: 20, left: 20, right: 20),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: messageWidgets)
