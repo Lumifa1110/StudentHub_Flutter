@@ -15,8 +15,7 @@ class CompanyProfileEditScreen extends StatefulWidget {
   const CompanyProfileEditScreen({Key? key}) : super(key: key);
 
   @override
-  State<CompanyProfileEditScreen> createState() =>
-      _CompanyProfileEditScreenState();
+  State<CompanyProfileEditScreen> createState() => _CompanyProfileEditScreenState();
 }
 
 class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
@@ -48,8 +47,7 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
     );
 
     final response = await http.put(
-      Uri.parse(
-          '$uriBase/api/profile/company/$companyId'), // Replace with your API endpoint
+      Uri.parse('$uriBase/api/profile/company/$companyId'), // Replace with your API endpoint
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -62,8 +60,7 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
     if (response.statusCode == 201 || response.statusCode == 200) {
       // Handle successful response
       final updatedCompanyProfile = jsonDecode(response.body)['result'];
-      await prefs.setString(
-          'company_profile', jsonEncode(updatedCompanyProfile));
+      await prefs.setString('company_profile', jsonEncode(updatedCompanyProfile));
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -143,9 +140,7 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
                     alignment: Alignment.topCenter,
                     child: const Text(
                       'Welcome to Student Hub!',
-                      style: TextStyle(
-                          fontSize: AppFonts.h1FontSize,
-                          fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: AppFonts.h1FontSize, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -160,8 +155,7 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
                     child: const Text(
                       'Tell us about your company and you will be on your way connect with high skilled students',
                       textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.normal),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                     ),
                   ),
                 ),
@@ -175,8 +169,7 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
                     alignment: Alignment.topLeft,
                     child: const Text(
                       'How many people are there in your company?',
-                      style: TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.normal),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                     ),
                   ),
                 ),

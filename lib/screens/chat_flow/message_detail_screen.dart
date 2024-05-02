@@ -16,8 +16,7 @@ class MessageDetailScreen extends StatefulWidget {
   final int projectId;
   final Chatter chatter;
 
-  const MessageDetailScreen(
-      {super.key, required this.projectId, required this.chatter});
+  const MessageDetailScreen({super.key, required this.projectId, required this.chatter});
 
   @override
   State<MessageDetailScreen> createState() => _MessageDetailScreenState();
@@ -54,12 +53,10 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
   }
 
   void fetchMessages() async {
-    final response = await MessageService.getMessageByProjectIdAndUserId(
-        widget.projectId, widget.chatter.id);
+    final response =
+        await MessageService.getMessageByProjectIdAndUserId(widget.projectId, widget.chatter.id);
     setState(() {
-      messages = response['result']
-          .map<Message>((json) => Message.fromJson(json))
-          .toList();
+      messages = response['result'].map<Message>((json) => Message.fromJson(json)).toList();
       filteredAndSortedMessages();
       buildMessages();
     });
@@ -95,15 +92,12 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
       setState(() {
         Message newMessage = Message(
             content: data['notification']['message']['content'],
-            sender:
-                Chatter(id: data['notification']['sender']['id'], fullname: ''),
-            receiver: Chatter(
-                id: data['notification']['receiver']['id'], fullname: ''),
+            sender: Chatter(id: data['notification']['sender']['id'], fullname: ''),
+            receiver: Chatter(id: data['notification']['receiver']['id'], fullname: ''),
             createdAt: DateTime.parse(data['notification']['createdAt']));
         messages.add(newMessage);
         messageWidgets.add(MessageItem(
-            message: newMessage,
-            isMyMessage: data['notification']['sender']['id'] == userId));
+            message: newMessage, isMyMessage: data['notification']['sender']['id'] == userId));
       });
       //scrollToBottom();
     });
@@ -133,8 +127,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
 
   void filteredAndSortedMessages() {
     setState(() {
-      messages = List.from(messages)
-        ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+      messages = List.from(messages)..sort((a, b) => a.createdAt.compareTo(b.createdAt));
     });
   }
 
@@ -176,8 +169,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
       final message = messages[i];
       final isMyMessage = message.sender.id == userId;
       // Check if this is the first message or the time has changed since the last message
-      if (lastMessageTime == null ||
-          message.createdAt.day != lastMessageTime.day) {
+      if (lastMessageTime == null || message.createdAt.day != lastMessageTime.day) {
         tempWidgets.add(buildTimestamp(message.createdAt));
       }
       // Add the message item
@@ -224,11 +216,12 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
     );
   }
 
-  void handleScheduleInterview(
-      String title, DateTime startTime, DateTime endTime) {
+  void handleScheduleInterview(String title, DateTime startTime, DateTime endTime) {
     // Send socket
-    socket.emit("SCHEDULE_INTERVIEW", {
+
+    socket.emitWithAck("SCHEDULE_INTERVIEW", {
       "title": title,
+      "content": 'Interview $title',
       "startTime": startTime.toString(),
       "endTime": endTime.toString(),
       "projectId": widget.projectId,
@@ -236,13 +229,18 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
       "receiverId": widget.chatter.id,
       "meeting_room_code": "abcd",
       "meeting_room_id": "abcd"
+    }, ack: (data) {
+      // Callback function to handle acknowledgment data
+      print('SCHEDULE_INTERVIEW acknowledgment: $data');
+      // Here you can process the acknowledgment data received from the server
+      // For example, if the scheduling was successful, you can update the UI accordingly
+      // You can also handle errors or other response data from the server here
     });
     print('emitted');
     // Render
     setState(() {
       messageWidgets.add(InterviewItem(
-          interview:
-              Interview(title: title, startTime: startTime, endTime: endTime)));
+          interview: Interview(title: title, startTime: startTime, endTime: endTime)));
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       scrollToBottom();
@@ -254,8 +252,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
     super.build(context);
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.chatter.fullname,
-              style: const TextStyle(color: Colors.white)),
+          title: Text(widget.chatter.fullname, style: const TextStyle(color: Colors.white)),
           backgroundColor: mainColor,
           iconTheme: const IconThemeData(color: Colors.white),
         ),
@@ -265,11 +262,8 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
             flex: 7,
             child: SingleChildScrollView(
                 controller: scrollController,
-                padding: const EdgeInsets.only(
-                    top: 20, bottom: 20, left: 20, right: 20),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: messageWidgets)
+                padding: const EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 20),
+                child: Column(mainAxisAlignment: MainAxisAlignment.end, children: messageWidgets)
                 // child: Container(
                 // )
                 ),
@@ -285,13 +279,11 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                     color: Colors.grey.withOpacity(0.2),
                     spreadRadius: 2,
                     blurRadius: 2,
-                    offset: const Offset(0,
-                        -2), // Change the Y offset to make it appear at the top
+                    offset: const Offset(0, -2), // Change the Y offset to make it appear at the top
                   ),
                 ],
               ),
-              child:
-                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+              child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 Expanded(
                     flex: 1,
                     child: GestureDetector(
@@ -301,8 +293,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                           barrierColor: Colors.black.withAlpha(1),
                           isScrollControlled: true,
                           shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.vertical(top: Radius.circular(0)),
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(0)),
                           ),
                           builder: (BuildContext context) {
                             return Container(
@@ -313,29 +304,24 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                                     color: blackTextColor.withOpacity(0.5),
                                     spreadRadius: 6,
                                     blurRadius: 9,
-                                    offset: const Offset(
-                                        0, 1), // changes position of shadow
+                                    offset: const Offset(0, 1), // changes position of shadow
                                   ),
                                 ],
                               ),
                               child: SizedBox(
-                                  height: MediaQuery.of(context).size.height *
-                                      5 /
-                                      9,
+                                  height: MediaQuery.of(context).size.height * 5 / 9,
                                   child: BottomSheetSchedule(
                                     title: '',
                                     startDate: DateTime.now(),
                                     endDate: DateTime.now(),
-                                    handleScheduleInterview:
-                                        handleScheduleInterview,
+                                    handleScheduleInterview: handleScheduleInterview,
                                   )),
                             );
                           },
                         )
                       },
                       child: const FaIcon(
-                        FontAwesomeIcons
-                            .calendarCheck, // Use the FontAwesome icon you want
+                        FontAwesomeIcons.calendarCheck, // Use the FontAwesome icon you want
                         size: 34, // Adjust the size as needed
                         color: AppColor.primary, // Specify the color
                       ),
@@ -346,18 +332,15 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                       height: 3 * (AppFonts.h3FontSize) * 1.5,
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       decoration: BoxDecoration(
-                          color: Colors
-                              .white, // Change to your desired background color
+                          color: Colors.white, // Change to your desired background color
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(color: lightergrayColor),
                           boxShadow: [
                             BoxShadow(
-                              color:
-                                  Colors.grey.withOpacity(0.2), // Shadow color
+                              color: Colors.grey.withOpacity(0.2), // Shadow color
                               spreadRadius: 2,
                               blurRadius: 2,
-                              offset: const Offset(
-                                  0, 2), // Changes the position of the shadow
+                              offset: const Offset(0, 2), // Changes the position of the shadow
                             ),
                           ]),
                       child: Row(
@@ -368,8 +351,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                               cursorColor: AppColor.primary,
                               maxLines: null,
                               keyboardType: TextInputType.multiline,
-                              style: const TextStyle(
-                                  fontSize: AppFonts.h3FontSize),
+                              style: const TextStyle(fontSize: AppFonts.h3FontSize),
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                               ),

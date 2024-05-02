@@ -13,7 +13,7 @@ class CompanyProfile {
 
   Map<String, dynamic> toJson() {
     return {
-      'title': title,
+      'companyName': title,
       'size': size,
       'website': website,
       'description': description,
