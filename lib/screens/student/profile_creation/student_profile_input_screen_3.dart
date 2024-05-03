@@ -203,6 +203,11 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
     final Map<String, dynamic> userInfo = await AuthService.getUserInfo();
     final newStudentProfile = userInfo['result']['student'];
     await prefs.setString('student_profile', jsonEncode(newStudentProfile));
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const StudentDashboardScreen()),
+    );
   }
 
   @override
@@ -361,8 +366,6 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
                     label: 'Continue',
                     onPressed: () => {
                       handleSubmitProfile(context),
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => const StudentDashboardScreen()))
                     },
                     isButtonEnabled: resumeFilePicked && transcriptFilePicked,
                   ),

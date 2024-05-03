@@ -46,7 +46,7 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
 
     // NAVIGATE TO: sign-in screen
     if (mounted) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const StudentProfileInputScreen1()));
+      Navigator.pushReplacementNamed(context, '/signin');
     }
   }
 
@@ -85,21 +85,17 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
               const SizedBox(
                 height: 20,
               ),
-              TextFieldFloatingLabel(
-                  label: 'Fullname', controller: fullnameController),
+              TextFieldFloatingLabel(label: 'Fullname', controller: fullnameController),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  if (errorMessages
-                      .any((error) => error.toLowerCase().contains('fullname')))
+                  if (errorMessages.any((error) => error.toLowerCase().contains('fullname')))
                     ...errorMessages
-                        .where(
-                            (error) => error.toLowerCase().contains('fullname'))
+                        .where((error) => error.toLowerCase().contains('fullname'))
                         .map((error) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 5),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                         child: Text(
                           error,
                           style: const TextStyle(
@@ -115,20 +111,17 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
                     ),
                 ],
               ),
-              TextFieldFloatingLabel(
-                  label: 'Work email address', controller: emailController),
+              TextFieldFloatingLabel(label: 'Work email address', controller: emailController),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  if (errorMessages
-                      .any((error) => error.toLowerCase().contains('email')))
+                  if (errorMessages.any((error) => error.toLowerCase().contains('email')))
                     ...errorMessages
                         .where((error) => error.toLowerCase().contains('email'))
                         .map((error) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 5),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                         child: Text(
                           error,
                           style: const TextStyle(
@@ -153,15 +146,12 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  if (errorMessages
-                      .any((error) => error.toLowerCase().contains('password')))
+                  if (errorMessages.any((error) => error.toLowerCase().contains('password')))
                     ...errorMessages
-                        .where(
-                            (error) => error.toLowerCase().contains('password'))
+                        .where((error) => error.toLowerCase().contains('password'))
                         .map((error) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 5),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                         child: Text(
                           error,
                           style: const TextStyle(
@@ -198,16 +188,12 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: errorMessages
-                    .where((error) => error.contains('agree'))
-                    .map((error) {
+                children: errorMessages.where((error) => error.contains('agree')).map((error) {
                   return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                     child: Text(
                       error,
-                      style: const TextStyle(
-                          color: errorColor, fontSize: AppFonts.h3FontSize),
+                      style: const TextStyle(color: errorColor, fontSize: AppFonts.h3FontSize),
                     ),
                   );
                 }).toList(),
@@ -262,10 +248,7 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
                           child: const Text(
                             'Apply as Student',
                             style: TextStyle(
-                              shadows: [
-                                Shadow(
-                                    color: Colors.blue, offset: Offset(0, -3))
-                              ],
+                              shadows: [Shadow(color: Colors.blue, offset: Offset(0, -3))],
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                               color: Colors.transparent,
@@ -298,10 +281,7 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
                           child: const Text(
                             'Apply as Company',
                             style: TextStyle(
-                              shadows: [
-                                Shadow(
-                                    color: Colors.blue, offset: Offset(0, -3))
-                              ],
+                              shadows: [Shadow(color: Colors.blue, offset: Offset(0, -3))],
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                               color: Colors.transparent,

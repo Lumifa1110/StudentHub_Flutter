@@ -60,8 +60,19 @@ class _StudentProfileInputScreen1State extends State<StudentProfileInputScreen1>
     'Low',
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    fetchAllTechstack();
+    fetchAllSkillset();
+    isOpenLanguageInput = false;
+    selectedLanguageLevel = 'Medium';
+    isOpenEducationInput = false;
+  }
+
   void fetchAllTechstack() async {
     final Map<String, dynamic> response = await DefaultService.getAllTechstack();
+    print(response);
     setState(() {
       techStacks = response['result'].map<TechStack>((json) => TechStack.fromJson(json)).toList();
     });
@@ -73,16 +84,6 @@ class _StudentProfileInputScreen1State extends State<StudentProfileInputScreen1>
       skillSets = response['result'].map<SkillSet>((json) => SkillSet.fromJson(json)).toList();
       isCheckedList = {for (var skillset in skillSets) skillset.id: false};
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fetchAllTechstack();
-    fetchAllSkillset();
-    isOpenLanguageInput = false;
-    selectedLanguageLevel = 'Medium';
-    isOpenEducationInput = false;
   }
 
   void addSelectedSkills(int id) {

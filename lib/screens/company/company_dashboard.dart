@@ -32,6 +32,15 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
   bool isLoading = true;
   String errorMessage = '';
 
+  @override
+  void initState() {
+    super.initState();
+    _loadScreen()
+        .then((_) => _loadProject())
+        .then((_) => _loadWorking())
+        .then((_) => _loadArchived());
+  }
+
   // reomove a project id
   Future<void> removeAProject(dynamic projectId) async {
     _prefs = await SharedPreferences.getInstance();
@@ -108,20 +117,12 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
       print(response.body);
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _loadScreen()
-        .then((_) => _loadProject())
-        .then((_) => _loadWorking())
-        .then((_) => _loadArchived());
-  }
-
   Future<void> _loadScreen() async {
     _prefs = await SharedPreferences.getInstance();
     final role = _prefs.getInt('current_role');
     if (role == 1) {
       final profile = _prefs.getString('company_profile');
+      print('Company profile: $profile');
       if (profile == 'null') {
         Navigator.pushReplacementNamed(context, '/company');
       }
@@ -141,7 +142,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
         Uri.parse('$uriBase/api/project/company/$companyId/?typeFlag=0'),
         headers: {'Authorization': 'Bearer $token'},
       );
-      final response = await ProjectService.getProjectByCompanyId(companyId);
+      // final response = await ProjectService.getProjectByCompanyId(companyId);
       final responseDecode = jsonDecode(responseJson.body)["result"];
       print('status code: ${responseJson.statusCode}');
       if (responseDecode != null) {

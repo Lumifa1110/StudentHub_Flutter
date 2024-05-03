@@ -54,6 +54,8 @@ class _SigninScreenState extends State<SigninScreen> {
       },
     );
 
+    print(signInResponse);
+
     if (signInResponse['result'] == null) {
       final errorDetails = signInResponse['errorDetails'];
       setState(() {

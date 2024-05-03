@@ -26,7 +26,6 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
   final companyDescriptionController = TextEditingController();
 
   CompanySize companySizeState = CompanySize.justme;
-
   void handleCompanySizeChange(CompanySize? value) {
     setState(() {
       companySizeState = value!;
@@ -34,8 +33,8 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
   }
 
   Future<void> postCompanyProfile() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
+    // final prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
     final company_profile = _prefs.getString('company_profile');
     final companyId = jsonDecode(company_profile!)['id'];
     print(token);
@@ -60,7 +59,7 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
     if (response.statusCode == 201 || response.statusCode == 200) {
       // Handle successful response
       final updatedCompanyProfile = jsonDecode(response.body)['result'];
-      await prefs.setString('company_profile', jsonEncode(updatedCompanyProfile));
+      await _prefs.setString('company_profile', jsonEncode(updatedCompanyProfile));
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -141,21 +140,6 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
                     child: const Text(
                       'Welcome to Student Hub!',
                       style: TextStyle(fontSize: AppFonts.h1FontSize, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ]),
-              // TEXT: Guidance
-              Row(children: [
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    alignment: Alignment.topCenter,
-                    child: const Text(
-                      'Tell us about your company and you will be on your way connect with high skilled students',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                     ),
                   ),
                 ),

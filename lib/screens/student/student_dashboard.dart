@@ -25,8 +25,8 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
   late String? _token;
   late int _currentIdStudent;
   bool isLoading = true;
-  late List<dynamic> _responseSubmitProposal;
-  late List<dynamic> _responseActiveProposal;
+  late List<dynamic> _responseSubmitProposal = [];
+  late List<dynamic> _responseActiveProposal = [];
   late List<dynamic> _responseWorkingTab = [];
   late List<dynamic> _responseArchivedTab = [];
   late http.Client _client = http.Client();
@@ -133,8 +133,8 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
 
   Future<void> _loadScreen() async {
     _prefs = await SharedPreferences.getInstance();
-    _token = _prefs.getString('token');
-    _currentIdStudent = jsonDecode(_prefs.getString('student_profile')!)['id'];
+    // _token = _prefs.getString('token');
+    // _currentIdStudent = jsonDecode(_prefs.getString('student_profile')!)['id'];
     final role = _prefs.getInt('current_role');
 
     if (role == 0) {
