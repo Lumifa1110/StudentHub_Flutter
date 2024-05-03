@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
+import 'package:studenthub/screens/student/student_dashboard_detail.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 import 'package:http/http.dart' as http;
@@ -231,7 +232,17 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                                   children: [
                                                     OptionItemAllProjectScreen(
-                                                      onTap: () {},
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) => StudentDashboardDetail(
+                                                              detailProject: _responseActiveProposal[index],
+                                                              nameStudent: _prefs.getString('username')!,
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
                                                       response: _responseActiveProposal[index],
                                                     ),
                                                     if (index != _responseActiveProposal.length - 1)
@@ -282,7 +293,17 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                                   children: [
                                                     OptionItemAllProjectScreen(
-                                                        onTap: () {},
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) => StudentDashboardDetail(
+                                                                detailProject: _responseSubmitProposal[index],
+                                                                nameStudent: _prefs.getString('username')!,
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
                                                         response: _responseSubmitProposal[index]),
                                                     index == _responseSubmitProposal.length - 1
                                                         ? const SizedBox()
