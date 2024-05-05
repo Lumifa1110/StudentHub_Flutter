@@ -7,13 +7,15 @@ class Message {
   final Chatter receiver;
   final DateTime createdAt;
   final Project? project;
+  final Interview? interview;
 
   Message({
     required this.content,
     required this.sender,
     required this.receiver,
     required this.createdAt,
-    this.project
+    this.project,
+    this.interview
   });
 
   factory Message.fromJson(Map<String, dynamic> json) {
@@ -22,7 +24,8 @@ class Message {
       sender: Chatter.fromJson(json['sender']),
       receiver: Chatter.fromJson(json['receiver']),
       createdAt: DateTime.parse(json['createdAt']),
-      project: json['project'] != null ? Project.fromJson(json['project']) : null
+      project: json['project'] != null ? Project.fromJson(json['project']) : null,
+      interview: json['interview'] != null ? Interview.fromJson(json['interview']) : null
     );
   }
 }

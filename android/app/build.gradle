@@ -56,7 +56,14 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    configurations {
+        // Exclude kotlin-stdlib-jdk8 from being included if it's causing conflict
+        implementation.exclude module: 'kotlin-stdlib-jdk8'
     }
 }
 

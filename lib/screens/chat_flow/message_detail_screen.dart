@@ -1,4 +1,6 @@
 // ignore_for_file: avoid_print
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -16,7 +18,8 @@ class MessageDetailScreen extends StatefulWidget {
   final int projectId;
   final Chatter chatter;
 
-  const MessageDetailScreen({super.key, required this.projectId, required this.chatter});
+  const MessageDetailScreen(
+      {super.key, required this.projectId, required this.chatter});
 
   @override
   State<MessageDetailScreen> createState() => _MessageDetailScreenState();
@@ -52,19 +55,6 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
     super.dispose();
   }
 
-  void fetchMessages() async {
-    final response =
-        await MessageService.getMessageByProjectIdAndUserId(widget.projectId, widget.chatter.id);
-    setState(() {
-      messages = response['result'].map<Message>((json) => Message.fromJson(json)).toList();
-      filteredAndSortedMessages();
-      buildMessages();
-    });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      scrollToBottom();
-    });
-  }
-
   void socketConnect() async {
     socket = IO.io(
         'https://api.studenthub.dev',
@@ -92,18 +82,40 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
       setState(() {
         Message newMessage = Message(
             content: data['notification']['message']['content'],
-            sender: Chatter(id: data['notification']['sender']['id'], fullname: ''),
-            receiver: Chatter(id: data['notification']['receiver']['id'], fullname: ''),
+            sender:
+                Chatter(id: data['notification']['sender']['id'], fullname: ''),
+            receiver: Chatter(
+                id: data['notification']['receiver']['id'], fullname: ''),
             createdAt: DateTime.parse(data['notification']['createdAt']));
         messages.add(newMessage);
         messageWidgets.add(MessageItem(
-            message: newMessage, isMyMessage: data['notification']['sender']['id'] == userId));
+            message: newMessage,
+            isMyMessage: data['notification']['sender']['id'] == userId));
       });
       //scrollToBottom();
     });
 
     socket.on('RECEIVE_INTERVIEW', (data) {
       print('RECEIVE_INTERVIEW: $data');
+      final receivedInterview =
+          Interview.fromJson(data['notification']['interview']);
+      setState(() {
+        messageWidgets.add(InterviewItem(
+            interview: Interview(
+              id: receivedInterview.id,
+              title: receivedInterview.title,
+              startTime: receivedInterview.startTime,
+              endTime: receivedInterview.endTime,
+              disableFlag: receivedInterview.disableFlag,
+              meetingRoomId: receivedInterview.meetingRoomId,
+              meetingRoom: MeetingRoom.fromJson(data['notification']['meetingRoom'])
+            ),
+            handleEditInterview: handleEditInterview,
+            handleDeleteInterview: handleDeleteInterview));
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        scrollToBottom();
+      });
     });
 
     socket.onConnectError((data) => print('Socket connect error: $data'));
@@ -118,6 +130,21 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
     });
   }
 
+  void fetchMessages() async {
+    final response = await MessageService.getMessageByProjectIdAndUserId(
+        widget.projectId, widget.chatter.id);
+    setState(() {
+      messages = response['result']
+          .map<Message>((json) => Message.fromJson(json))
+          .toList();
+      filteredAndSortedMessages();
+      buildMessages();
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollToBottom();
+    });
+  }
+
   Future<void> loadUserId() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -127,7 +154,8 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
 
   void filteredAndSortedMessages() {
     setState(() {
-      messages = List.from(messages)..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+      messages = List.from(messages)
+        ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
     });
   }
 
@@ -167,14 +195,23 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
     DateTime? lastMessageTime;
     for (int i = 0; i < messages.length; i++) {
       final message = messages[i];
-      final isMyMessage = message.sender.id == userId;
-      // Check if this is the first message or the time has changed since the last message
-      if (lastMessageTime == null || message.createdAt.day != lastMessageTime.day) {
-        tempWidgets.add(buildTimestamp(message.createdAt));
+      if (message.interview != null) {
+        tempWidgets.add(InterviewItem(
+            interview: message.interview!,
+            handleEditInterview: handleEditInterview,
+            handleDeleteInterview: handleDeleteInterview));
+      } else {
+        final isMyMessage = message.sender.id == userId;
+        // Check if this is the first message or the time has changed since the last message
+        if (lastMessageTime == null ||
+            message.createdAt.day != lastMessageTime.day) {
+          tempWidgets.add(buildTimestamp(message.createdAt));
+        }
+        // Add the message item
+        tempWidgets
+            .add(MessageItem(message: message, isMyMessage: isMyMessage));
+        lastMessageTime = message.createdAt;
       }
-      // Add the message item
-      tempWidgets.add(MessageItem(message: message, isMyMessage: isMyMessage));
-      lastMessageTime = message.createdAt;
     }
     // Update messageWidgets once all messages are processed
     setState(() {
@@ -216,34 +253,53 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
     );
   }
 
-  void handleScheduleInterview(String title, DateTime startTime, DateTime endTime) {
-    // Send socket
+  String generateRandomString(int length) {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    final random = Random();
+    return String.fromCharCodes(Iterable.generate(
+        length, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
+  }
 
-    socket.emitWithAck("SCHEDULE_INTERVIEW", {
+  void handleCreateInterview(
+      String title, DateTime startTime, DateTime endTime) {
+    // Create meeting room
+    final String roomCode = generateRandomString(10);
+    final String roomId = generateRandomString(10);
+    // Send socket
+    socket.emit("SCHEDULE_INTERVIEW", {
       "title": title,
-      "content": 'Interview $title',
+      "content": 'New interview scheduled.',
       "startTime": startTime.toString(),
       "endTime": endTime.toString(),
       "projectId": widget.projectId,
       "senderId": userId,
       "receiverId": widget.chatter.id,
-      "meeting_room_code": "abcd",
-      "meeting_room_id": "abcd"
-    }, ack: (data) {
-      // Callback function to handle acknowledgment data
-      print('SCHEDULE_INTERVIEW acknowledgment: $data');
-      // Here you can process the acknowledgment data received from the server
-      // For example, if the scheduling was successful, you can update the UI accordingly
-      // You can also handle errors or other response data from the server here
+      "meeting_room_code": roomCode,
+      "meeting_room_id": roomId
     });
-    print('emitted');
-    // Render
-    setState(() {
-      messageWidgets.add(InterviewItem(
-          interview: Interview(title: title, startTime: startTime, endTime: endTime)));
+  }
+
+  void handleEditInterview(
+      int interviewId, String title, DateTime startTime, DateTime endTime) {
+    socket.emit("UPDATE_INTERVIEW", {
+      "interviewId": interviewId,
+      "title": title,
+      "projectId": widget.projectId,
+      "senderId": userId,
+      "receiverId": widget.chatter.id,
+      "updateAction": true
     });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      scrollToBottom();
+  }
+
+  void handleDeleteInterview(
+      int interviewId, String title, DateTime startTime, DateTime endTime) {
+    socket.emit("UPDATE_INTERVIEW", {
+      "interviewId": interviewId,
+      "title": title,
+      "projectId": widget.projectId,
+      "senderId": userId,
+      "receiverId": widget.chatter.id,
+      "deleteAction": true
     });
   }
 
@@ -252,7 +308,8 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
     super.build(context);
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.chatter.fullname, style: const TextStyle(color: Colors.white)),
+          title: Text(widget.chatter.fullname,
+              style: const TextStyle(color: Colors.white)),
           backgroundColor: mainColor,
           iconTheme: const IconThemeData(color: Colors.white),
         ),
@@ -262,11 +319,11 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
             flex: 7,
             child: SingleChildScrollView(
                 controller: scrollController,
-                padding: const EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 20),
-                child: Column(mainAxisAlignment: MainAxisAlignment.end, children: messageWidgets)
-                // child: Container(
-                // )
-                ),
+                padding: const EdgeInsets.only(
+                    top: 20, bottom: 20, left: 20, right: 20),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: messageWidgets)),
           ),
           Expanded(
             flex: 1,
@@ -279,11 +336,12 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                     color: Colors.grey.withOpacity(0.2),
                     spreadRadius: 2,
                     blurRadius: 2,
-                    offset: const Offset(0, -2), // Change the Y offset to make it appear at the top
+                    offset: const Offset(0, -2),
                   ),
                 ],
               ),
-              child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+              child:
+                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 Expanded(
                     flex: 1,
                     child: GestureDetector(
@@ -293,7 +351,8 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                           barrierColor: Colors.black.withAlpha(1),
                           isScrollControlled: true,
                           shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(0)),
+                            borderRadius:
+                                BorderRadius.vertical(top: Radius.circular(0)),
                           ),
                           builder: (BuildContext context) {
                             return Container(
@@ -304,26 +363,30 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                                     color: blackTextColor.withOpacity(0.5),
                                     spreadRadius: 6,
                                     blurRadius: 9,
-                                    offset: const Offset(0, 1), // changes position of shadow
+                                    offset: const Offset(0, 1),
                                   ),
                                 ],
                               ),
                               child: SizedBox(
-                                  height: MediaQuery.of(context).size.height * 5 / 9,
+                                  height: MediaQuery.of(context).size.height *
+                                      5 /
+                                      9,
                                   child: BottomSheetSchedule(
                                     title: '',
                                     startDate: DateTime.now(),
                                     endDate: DateTime.now(),
-                                    handleScheduleInterview: handleScheduleInterview,
+                                    enableEdit: false,
+                                    handleCreateInterview:
+                                        handleCreateInterview,
                                   )),
                             );
                           },
                         )
                       },
                       child: const FaIcon(
-                        FontAwesomeIcons.calendarCheck, // Use the FontAwesome icon you want
-                        size: 34, // Adjust the size as needed
-                        color: AppColor.primary, // Specify the color
+                        FontAwesomeIcons.calendarCheck,
+                        size: 34,
+                        color: AppColor.primary,
                       ),
                     )),
                 Expanded(
@@ -332,15 +395,15 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                       height: 3 * (AppFonts.h3FontSize) * 1.5,
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       decoration: BoxDecoration(
-                          color: Colors.white, // Change to your desired background color
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(color: lightergrayColor),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey.withOpacity(0.2), // Shadow color
+                              color: Colors.grey.withOpacity(0.2),
                               spreadRadius: 2,
                               blurRadius: 2,
-                              offset: const Offset(0, 2), // Changes the position of the shadow
+                              offset: const Offset(0, 2),
                             ),
                           ]),
                       child: Row(
@@ -351,7 +414,8 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                               cursorColor: AppColor.primary,
                               maxLines: null,
                               keyboardType: TextInputType.multiline,
-                              style: const TextStyle(fontSize: AppFonts.h3FontSize),
+                              style: const TextStyle(
+                                  fontSize: AppFonts.h3FontSize),
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                               ),

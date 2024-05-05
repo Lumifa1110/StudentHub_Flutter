@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:studenthub/components/bottomsheet_schedule.dart';
+import 'package:studenthub/components/chat_flow/interview_control_dialog.dart';
 import 'package:studenthub/components/index.dart';
 import 'package:studenthub/models/index.dart';
+import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class InterviewItem extends StatefulWidget {
   final Interview interview;
+  final Function(int, String, DateTime, DateTime)? handleEditInterview;
+  final Function(int, String, DateTime, DateTime)? handleDeleteInterview;
 
-  const InterviewItem({super.key, required this.interview});
+  const InterviewItem(
+      {super.key,
+      required this.interview,
+      this.handleEditInterview,
+      this.handleDeleteInterview});
 
   @override
   State<InterviewItem> createState() => _InterviewItemState();
@@ -163,11 +172,93 @@ class _InterviewItemState extends State<InterviewItem> {
                           child: ButtonSimple(
                             label: 'Join',
                             onPressed: () {
-                              print(widget.interview.startTime.toString());
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => InterviewScreen(
+                                          conferenceId: widget.interview
+                                              .meetingRoom!.meetingRoomId)));
                             },
-                            isButtonEnabled:
-                                isInterviewOccuring() ? true : false,
-                          )))
+                            // isButtonEnabled:
+                            //     (isInterviewOccuring() && widget.interview.disableFlag == false) ? true : false,
+                            isButtonEnabled: true
+                          ))),
+                  const SizedBox(width: 10),
+                  Container(
+                    width: 40, // Adjust the width as needed
+                    height: 40, // Adjust the height as needed
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color:
+                          Colors.black38, // Adjust the button color as needed
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return DialogEditInterview(
+                              editInterviewCallback: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  barrierColor: Colors.black.withAlpha(1),
+                                  isScrollControlled: true,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(0)),
+                                  ),
+                                  builder: (BuildContext context) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        color: lightestgrayColor,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                blackTextColor.withOpacity(0.5),
+                                            spreadRadius: 6,
+                                            blurRadius: 9,
+                                            offset: const Offset(0, 1),
+                                          ),
+                                        ],
+                                      ),
+                                      child: SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              5 /
+                                              9,
+                                          child: BottomSheetSchedule(
+                                            interviewId: widget.interview.id,
+                                            title: widget.interview.title,
+                                            startDate:
+                                                widget.interview.startTime,
+                                            endDate: widget.interview.endTime,
+                                            enableEdit: true,
+                                            handleEditInterview:
+                                                widget.handleEditInterview!,
+                                          )),
+                                    );
+                                  },
+                                );
+                              },
+                              deleteInterviewCallback: () {
+                                widget.handleDeleteInterview!(
+                                    widget.interview.id!,
+                                    widget.interview.title,
+                                    widget.interview.startTime,
+                                    widget.interview.endTime);
+                              },
+                            );
+                          },
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.more_horiz,
+                        color: Colors.white, // Adjust the color as needed
+                      ),
+                      iconSize: 24, // Adjust the icon size as needed
+                    ),
+                  )
                 ])
               ])))
     ]);

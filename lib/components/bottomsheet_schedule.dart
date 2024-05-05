@@ -6,17 +6,23 @@ import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class BottomSheetSchedule extends StatefulWidget {
+  final int? interviewId;
   final String title;
   final DateTime startDate;
   final DateTime endDate;
-  final Function(String, DateTime, DateTime) handleScheduleInterview;
+  final bool enableEdit;
+  final Function(String, DateTime, DateTime)? handleCreateInterview;
+  final Function(int, String, DateTime, DateTime)? handleEditInterview;
 
   const BottomSheetSchedule(
       {super.key,
+      this.interviewId,
       required this.title,
       required this.startDate,
       required this.endDate,
-      required this.handleScheduleInterview});
+      required this.enableEdit,
+      this.handleCreateInterview,
+      this.handleEditInterview});
 
   @override
   State<BottomSheetSchedule> createState() => _BottomSheetScheduleState();
@@ -266,9 +272,14 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
                 ButtonSimple(
                     label: 'Confirm',
                     onPressed: () {
-                      widget.handleScheduleInterview(
-                          _titleController.text, _startDate, _endDate);
-                      Navigator.pop(context);
+                      if (widget.enableEdit) {
+                        widget.handleEditInterview!(widget.interviewId!,
+                            _titleController.text, _startDate, _endDate);
+                      } else {
+                        widget.handleCreateInterview!(
+                            _titleController.text, _startDate, _endDate);
+                        Navigator.pop(context);
+                      }
                     },
                     isButtonEnabled: _titleController.text.isNotEmpty),
               ],
