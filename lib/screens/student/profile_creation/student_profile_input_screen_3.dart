@@ -151,7 +151,7 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
     });
   }
 
-  Future<void> handleSubmitProfile(BuildContext context) async {
+  Future<void> handleSubmitProfile() async {
     final prefs = await SharedPreferences.getInstance();
     final studentProfile = prefs.getString('student_profile');
 
@@ -204,10 +204,12 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
     final newStudentProfile = userInfo['result']['student'];
     await prefs.setString('student_profile', jsonEncode(newStudentProfile));
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const StudentDashboardScreen()),
-    );
+    if (mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const StudentDashboardScreen()),
+      );
+    }
   }
 
   @override
@@ -365,7 +367,7 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
                   child: ButtonSimple(
                     label: 'Continue',
                     onPressed: () => {
-                      handleSubmitProfile(context),
+                      handleSubmitProfile(),
                     },
                     isButtonEnabled: resumeFilePicked && transcriptFilePicked,
                   ),

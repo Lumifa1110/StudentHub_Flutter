@@ -1,4 +1,4 @@
-String f_timeSinceCreated(String createdAt) {
+String timeSinceCreated(String createdAt) {
   DateTime timeParse = DateTime.parse(createdAt);
   DateTime now = DateTime.now();
   Duration difference = now.difference(timeParse);
@@ -21,6 +21,7 @@ String convertProjectScoreFlagToTime(int flag) {
     return '1 to 3 months';
   } else if (flag == 2) {
     return '3 to 6 months';
-  } else
+  } else {
     return 'More than 6 months';
+  }
 }

@@ -5,12 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/project_proposal/dialog_send_hire.dart';
 import 'package:studenthub/components/user/user_avatar.dart';
 import 'package:studenthub/models/index.dart';
-import 'package:studenthub/models/student_model.dart';
 import 'package:studenthub/screens/chat_flow/index.dart';
 import 'package:studenthub/screens/student/view_candidate_sceen.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
-import 'package:studenthub/models/company_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:studenthub/config/config.dart';
 
@@ -28,14 +26,14 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
   late SharedPreferences _prefs;
   late String? _token;
 
-  Future<void> _declare_Prefs() async {
+  Future<void> declarePrefs() async {
     _prefs = await SharedPreferences.getInstance();
   }
 
   @override
   void initState() {
     super.initState();
-    _declare_Prefs().then((_) => _token = _prefs.getString('token'));
+    declarePrefs().then((_) => _token = _prefs.getString('token'));
     print('Proposal data: ${widget.itemsProposal['student']['userId']}');
     sentHireOffer = widget.itemsProposal['statusFlag'] == 2
         ? true
@@ -70,14 +68,13 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
 
   void messageCandidate() {
     Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => MessageDetailScreen(
-          projectId: widget.itemsProposal['projectId'], 
-          chatter: Chatter(id: widget.itemsProposal['student']['userId'], fullname: widget.itemsProposal['student']['user']['fullname'])
-        )
-      )
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) => MessageDetailScreen(
+                projectId: widget.itemsProposal['projectId'],
+                chatter: Chatter(
+                    id: widget.itemsProposal['student']['userId'],
+                    fullname: widget.itemsProposal['student']['user']['fullname']))));
   }
 
   // Future<void> messageCandidate() async {
@@ -185,7 +182,7 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                         margin: const EdgeInsets.only(bottom: 6),
                         child: Text(
                           widget.itemsProposal['coverLetter'],
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: AppFonts.secondaryColor, fontSize: AppFonts.h3FontSize),
                         )))
               ]),

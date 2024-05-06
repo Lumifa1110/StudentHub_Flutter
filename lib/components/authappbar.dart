@@ -52,7 +52,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
     Future<void> handlePressIcon() async {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
-      print(token);
+
       if (token != null) {
         if (isFromDashBoard == true) {
           navigateWithAnimation(
@@ -68,7 +68,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
 
     return AppBar(
-      backgroundColor: mainColor,
+      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       leadingWidth: 40,
       leading: canBack && Navigator.canPop(context)
           ? SizedBox(
@@ -78,7 +78,9 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
                 borderRadius: BorderRadius.zero,
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () => Navigator.of(context).pop(true),
+                  onTap: () {
+                    Navigator.pop(context, true);
+                  },
                   child: const Center(
                     child: Icon(
                       Icons.chevron_left,

@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:studenthub/components/card_switchaccount.dart';
@@ -12,7 +10,6 @@ import 'package:studenthub/models/index.dart';
 import 'package:studenthub/preferences/index.dart';
 import 'package:studenthub/screens/company/profile_creation/company_profile_edit_screen.dart';
 import 'package:studenthub/screens/index.dart';
-import 'package:studenthub/screens/student/profile_creation/student_profile_input_screen_1.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
@@ -47,9 +44,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
     super.initState();
     _loadSignedInAccounts();
     _loadRoles().then((_) {
-      _loadCurrentData().then((_) {
-        _check();
-      });
+      _loadCurrentData();
     });
   }
 
@@ -84,20 +79,13 @@ class _SwitchScreenState extends State<SwitchScreen> {
     _prefs = await SharedPreferences.getInstance();
     final currRole = _prefs.getInt('current_role');
     final accName = _prefs.getString('username');
+    print('Current: $currRole');
     if (currRole != null) {
       setState(() {
         _currentRole = currRole;
         _accountFullname = accName;
       });
     }
-  }
-
-  void _check() {
-    setState(() {
-      print('List roles: $_roles');
-      print('User selected role: $_currentRole');
-      print(widget.isDashboard);
-    });
   }
 
   void _navigateToProfile() {
@@ -134,7 +122,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
           },
         );
 
-        if (response.statusCode == 201) {
+        if (response.statusCode == 201 || response.statusCode == 200) {
           final keys = _prefs.getKeys();
           for (final key in keys) {
             if (key != 'signed_in_accounts') {
@@ -214,11 +202,11 @@ class _SwitchScreenState extends State<SwitchScreen> {
 
       // NAVIGATE TO: home screen
       if (mounted) {
-        while (Navigator.canPop(context)) {
-          Navigator.pop(context);
-        }
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          (route) => false,
+        );
       }
     }
   }
@@ -300,7 +288,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
                   child: InkWell(
                     onTap: () {
                       if (widget.isDashboard) {
-                        Navigator.of(context).pop();
+                        Navigator.of(context).pop(true);
                         if (_currentRole == 0) {
                           Navigator.pushReplacementNamed(context, '/student/dashboard');
                         } else if (_currentRole == 1) {
@@ -332,9 +320,6 @@ class _SwitchScreenState extends State<SwitchScreen> {
               ),
             )
           ],
-        ),
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.blue,
         ),
         backgroundColor: mainColor,
         actions: <Widget>[

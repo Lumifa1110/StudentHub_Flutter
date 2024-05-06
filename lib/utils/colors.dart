@@ -5,7 +5,7 @@ const Color darkbgColor = Color(0xFF636363);
 
 const Color mainColor = Color(0xFF0F90F0);
 
-const Color whiteTextColor = Colors.white;
+const Color whiteTextColor = Color(0xFFFFFFFF);
 
 const Color blackTextColor = Color(0xFF424242);
 

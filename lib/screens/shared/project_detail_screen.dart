@@ -60,8 +60,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       );
       if (response.statusCode == 200) {
         setState(() {
-          selectedProject =
-              Project.fromJson(jsonDecode(response.body)['result']);
+          selectedProject = Project.fromJson(jsonDecode(response.body)['result']);
         });
       }
     } catch (e) {
@@ -217,8 +216,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                               height: 40,
                               padding: const EdgeInsets.all(0),
                               decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: blackTextColor, width: 2.0),
+                                border: Border.all(color: blackTextColor, width: 2.0),
                                 color: whiteTextColor,
                                 boxShadow: const [
                                   BoxShadow(
@@ -232,18 +230,15 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          SubmitProposalScreen(
+                                      builder: (context) => SubmitProposalScreen(
                                         idProject: selectedProject?.projectId,
                                       ),
                                     ),
                                   );
                                 },
                                 style: ButtonStyle(
-                                  shape:
-                                      MaterialStateProperty.all<OutlinedBorder>(
-                                    const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero),
+                                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                                    const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                                   ),
                                 ),
                                 child: const Text(
@@ -262,8 +257,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                               height: 40,
                               padding: const EdgeInsets.all(0),
                               decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: blackTextColor, width: 2.0),
+                                border: Border.all(color: blackTextColor, width: 2.0),
                                 color: whiteTextColor,
                                 boxShadow: const [
                                   BoxShadow(
@@ -275,10 +269,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                               child: TextButton(
                                 onPressed: () {},
                                 style: ButtonStyle(
-                                  shape:
-                                      MaterialStateProperty.all<OutlinedBorder>(
-                                    const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero),
+                                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                                    const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                                   ),
                                 ),
                                 child: const Text(

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class ViewOfferScreen extends StatefulWidget {
-  const ViewOfferScreen({Key? key}) : super(key: key);
+  const ViewOfferScreen({super.key});
 
   @override
   State<ViewOfferScreen> createState() => _ViewOfferScreenState();
@@ -52,8 +51,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1, // Adjust the number of lines to fit your layout
-                  textAlign:
-                      TextAlign.start, // Adjust the text alignment as needed
+                  textAlign: TextAlign.start, // Adjust the text alignment as needed
                   style: TextStyle(
                     fontSize: AppFonts.h2FontSize,
                     color: AppColor.tertiary,
@@ -114,7 +112,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.all(5),
+                padding: const EdgeInsets.all(5),
                 color: lightestgrayColor,
                 child: const Text(
                   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
@@ -214,8 +212,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                           height: 40,
                           padding: const EdgeInsets.all(0),
                           decoration: BoxDecoration(
-                            border:
-                                Border.all(color: blackTextColor, width: 2.0),
+                            border: Border.all(color: blackTextColor, width: 2.0),
                             color: whiteTextColor,
                             boxShadow: const [
                               BoxShadow(
@@ -226,13 +223,11 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                           ),
                           child: TextButton(
                             onPressed: () {
-                              Navigator.pushNamed(
-                                  context, '/student/proposal/submit');
+                              Navigator.pushNamed(context, '/student/proposal/submit');
                             },
                             style: ButtonStyle(
                               shape: MaterialStateProperty.all<OutlinedBorder>(
-                                const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.zero),
+                                const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                               ),
                             ),
                             child: const Text(
@@ -263,8 +258,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                       onPressed: () {},
                       style: ButtonStyle(
                         shape: MaterialStateProperty.all<OutlinedBorder>(
-                          const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero),
+                          const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                         ),
                       ),
                       child: const Text(

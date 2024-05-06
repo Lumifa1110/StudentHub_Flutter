@@ -67,7 +67,7 @@ class LanguageItem extends StatelessWidget {
                       fontSize: AppFonts.h3FontSize,
                       fontWeight: FontWeight.w500))),
           hideDelete
-              ? SizedBox()
+              ? const SizedBox()
               : Expanded(
                   flex: 1,
                   child: GestureDetector(

@@ -11,8 +11,6 @@ import 'package:http/http.dart' as http;
 import 'package:studenthub/config/config.dart';
 import 'package:studenthub/utils/timer.dart';
 
-import '../../utils/mock_data.dart';
-
 class StudentDashboardScreen extends StatefulWidget {
   const StudentDashboardScreen({super.key});
 
@@ -29,7 +27,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
   late List<dynamic> _responseActiveProposal = [];
   late List<dynamic> _responseWorkingTab = [];
   late List<dynamic> _responseArchivedTab = [];
-  late http.Client _client = http.Client();
+  final http.Client _client = http.Client();
 
   @override
   void dispose() {
@@ -40,17 +38,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
   @override
   void initState() {
     super.initState();
-    _loadScreen()
-        .then((_) => _loadTabAllProject())
-        .then((_) => _loadWorkingTab())
-        .then((_) => _loadArchivedTab())
-        .then((_) {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    });
+    _loadScreen();
   }
 
   //Loading data of All Project Tab.
@@ -87,7 +75,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
         throw ('Status response of _loadSubmitProposal() is ${response.statusCode}');
       }
     } catch (e) {
-      print(e);
+      print('Error: $e');
     }
   }
 
@@ -100,14 +88,14 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
       );
 
       final List<dynamic> responseDecode = jsonDecode(response.body)['result'];
-      // print();
+
       for (int i = 0; i < responseDecode.length; i++) {
         if (responseDecode[i]['project']['typeFlag'] == 1) {
           _responseWorkingTab.add(responseDecode[i]);
         }
       }
     } catch (e) {
-      print(e);
+      print('Error: $e');
     }
   }
 
@@ -120,30 +108,51 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
       );
 
       final List<dynamic> responseDecode = jsonDecode(response.body)['result'];
-      // print();
+
       for (int i = 0; i < responseDecode.length; i++) {
         if (responseDecode[i]['project']['typeFlag'] == 2) {
           _responseArchivedTab.add(responseDecode[i]);
         }
       }
     } catch (e) {
-      print(e);
+      print('Error: $e');
     }
   }
 
   Future<void> _loadScreen() async {
+    print('student dashboard');
     _prefs = await SharedPreferences.getInstance();
-    // _token = _prefs.getString('token');
-    // _currentIdStudent = jsonDecode(_prefs.getString('student_profile')!)['id'];
     final role = _prefs.getInt('current_role');
+    print('Role: $role');
 
     if (role == 0) {
       final profile = _prefs.getString('student_profile');
       if (profile == 'null') {
-        Navigator.pushReplacementNamed(context, '/student');
+        if (mounted) {
+          Navigator.pop(context, true);
+          Navigator.of(context).pushNamed('/student');
+        }
+      } else {
+        _token = _prefs.getString('token');
+        _currentIdStudent = jsonDecode(_prefs.getString('student_profile')!)['id'];
+        _loadTabAllProject().then((_) => _loadWorkingTab()).then((_) => _loadArchivedTab()).then(
+          (_) {
+            if (mounted) {
+              setState(
+                () {
+                  isLoading = false;
+                },
+              );
+            }
+          },
+        );
       }
     } else {
-      Navigator.pushReplacementNamed(context, '/company/dashboard');
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/company/dashboard',
+        (route) => route.settings.name == '/home',
+      );
     }
   }
 
@@ -236,9 +245,12 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                                         Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
-                                                            builder: (context) => StudentDashboardDetail(
-                                                              detailProject: _responseActiveProposal[index],
-                                                              nameStudent: _prefs.getString('username')!,
+                                                            builder: (context) =>
+                                                                StudentDashboardDetail(
+                                                              detailProject:
+                                                                  _responseActiveProposal[index],
+                                                              nameStudent:
+                                                                  _prefs.getString('username')!,
                                                             ),
                                                           ),
                                                         );
@@ -300,6 +312,8 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                                               builder: (context) => StudentDashboardDetail(
                                                                 detailProject: _responseSubmitProposal[index],
                                                                 nameStudent: _prefs.getString('username')!,
+                                                                nameStudent:
+                                                                    _prefs.getString('username')!,
                                                               ),
                                                             ),
                                                           );
@@ -413,6 +427,7 @@ class OptionItemAllProjectScreen extends StatefulWidget {
 class _OptionItemAllProjectScreenState extends State<OptionItemAllProjectScreen> {
   @override
   Widget build(BuildContext context) {
+    if (!mounted) return const SizedBox();
     return InkWell(
       onTap: widget.onTap,
       child: Column(
@@ -424,7 +439,7 @@ class _OptionItemAllProjectScreenState extends State<OptionItemAllProjectScreen>
             overflow: TextOverflow.ellipsis,
           ),
           Text(
-            'Submitted ${f_timeSinceCreated(widget.response['createdAt'])}',
+            'Submitted ${timeSinceCreated(widget.response['createdAt'])}',
             style: const TextStyle(color: lightergrayColor, fontSize: AppFonts.h4FontSize),
           ),
           const SizedBox(

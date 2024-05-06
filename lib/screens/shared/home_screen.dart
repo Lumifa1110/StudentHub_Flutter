@@ -22,14 +22,22 @@ class _HomeScreenState extends State<HomeScreen> {
     final profile = prefs.getString('company_profile');
     if (mounted) {
       if (profile == 'null') {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const CompanyProfileInputScreen()));
+        final result = await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const CompanyProfileInputScreen()),
+        );
+        if (result == true) {
+          await _loadScreen();
+        }
       } else {
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => const CompanyDashboardScreen()));
       }
-      // Navigator.push(
-      //     context, MaterialPageRoute(builder: (context) => const CompanyDashboardScreen()));
+      // final result = await Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => const CompanyDashboardScreen()),
+      // );
+      // print(result);
     }
   }
 
@@ -39,14 +47,22 @@ class _HomeScreenState extends State<HomeScreen> {
     final profile = prefs.getString('student_profile');
     if (mounted) {
       if (profile == 'null') {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const StudentProfileInputScreen1()));
+        final result = await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const StudentProfileInputScreen1()),
+        );
+        if (result == true) {
+          await _loadScreen();
+        }
       } else {
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => const StudentDashboardScreen()));
       }
-      // Navigator.push(
-      //     context, MaterialPageRoute(builder: (context) => const StudentDashboardScreen()));
+      // final result = await Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => const StudentDashboardScreen()),
+      // );
+      // print(result);
     }
   }
 
@@ -62,15 +78,49 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // NAVIGATE TO: sign in screen
     if (mounted) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const SigninScreen()));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const SigninScreen()),
+      );
     }
+  }
+
+  Future<void> _loadScreen() async {
+    print('home');
+    prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == 'null') {
+      // Xóa current_role trong local
+      // Chuyển hướng đến màn hình SigninScreen
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const SigninScreen()),
+        );
+      }
+    } else {
+      await prefs.remove('current_role');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadScreen();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: bgColor,
-        appBar: AuthAppBar(canBack: false),
+        backgroundColor: Theme.of(context).colorScheme.background,
+        appBar: AuthAppBar(
+          canBack: false,
+          onRoleChanged: (result) {
+            print(result);
+            _loadScreen();
+          },
+        ),
         body: Center(
             child: Padding(
           padding: const EdgeInsets.all(20.0),

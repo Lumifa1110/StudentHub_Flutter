@@ -1,16 +1,12 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:studenthub/business/company_business.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
-import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/screens/company/alertdialog/alertdialog.dart';
 import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/config/config.dart';
-import 'package:studenthub/services/project_service.dart';
 
 class CompanyDashboardScreen extends StatefulWidget {
   const CompanyDashboardScreen({super.key});
@@ -50,13 +46,15 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
       // Replace $projectId with the actual ID
       headers: {'Authorization': 'Bearer $token'},
     );
-    setState(() {
-      isLoading = true;
-      _loadScreen()
-          .then((_) => _loadProject())
-          .then((_) => _loadWorking())
-          .then((_) => _loadArchived());
-    });
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      setState(() {
+        isLoading = true;
+        _loadScreen()
+            .then((_) => _loadProject())
+            .then((_) => _loadWorking())
+            .then((_) => _loadArchived());
+      });
+    }
   }
 
   // Start working project
@@ -83,8 +81,8 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
             .then((_) => _loadWorking())
             .then((_) => _loadArchived());
       });
-    } else
-      print(response.body);
+    }
+    print(response.body);
   }
 
   //Close a project
@@ -105,7 +103,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
       body: jsonEncode(data),
     );
     print(response.statusCode);
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       setState(() {
         isLoading = true;
         _loadScreen()
@@ -113,25 +111,35 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
             .then((_) => _loadWorking())
             .then((_) => _loadArchived());
       });
-    } else
+    } else {
       print(response.body);
+    }
   }
 
   Future<void> _loadScreen() async {
+    print('company dashboard');
     _prefs = await SharedPreferences.getInstance();
     final role = _prefs.getInt('current_role');
+    print('Role: $role');
     if (role == 1) {
       final profile = _prefs.getString('company_profile');
-      print('Company profile: $profile');
       if (profile == 'null') {
-        Navigator.pushReplacementNamed(context, '/company');
+        if (mounted) {
+          Navigator.pop(context, true);
+          Navigator.of(context).pushNamed('/company');
+        }
       }
     } else {
-      Navigator.pushReplacementNamed(context, '/student/dashboard');
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/company/dashboard',
+        (route) => route.settings.name == '/home',
+      );
     }
   }
 
   Future<void> _loadProject() async {
+    if (!mounted) return; // Check if the widget is still mounted
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     final companyProfile = _prefs.getString('company_profile');
@@ -156,14 +164,14 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
       }
     } catch (e) {
       if (mounted) {
-        print(e);
+        print('Error: $e');
         // Check again if the widget is still mounted before calling setState
         setState(() {
           isLoading = false;
           errorMessage = 'Failed to load projects. Please try again later.';
         });
       }
-      print(e);
+      print('Error: $e');
     }
   }
 
@@ -176,7 +184,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
 
     try {
       final responseJson = await http.get(
-        Uri.parse('${uriBase}/api/project/company/$companyId/?typeFlag=1'),
+        Uri.parse('$uriBase/api/project/company/$companyId/?typeFlag=1'),
         headers: {'Authorization': 'Bearer $token'},
       );
 
@@ -193,14 +201,14 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
       }
     } catch (e) {
       if (mounted) {
-        print(e);
+        print('Error: $e');
         // Check again if the widget is still mounted before calling setState
         setState(() {
           isLoading = false;
           errorMessage = 'Failed to load projects. Please try again later.';
         });
       }
-      print(e);
+      print('Error: $e');
     }
   }
 
@@ -213,7 +221,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
 
     try {
       final responseJson = await http.get(
-        Uri.parse('${uriBase}/api/project/company/$companyId/?typeFlag=2'),
+        Uri.parse('$uriBase/api/project/company/$companyId/?typeFlag=2'),
         headers: {'Authorization': 'Bearer $token'},
       );
       final responseDecode = jsonDecode(responseJson.body)["result"];
@@ -230,14 +238,14 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
       }
     } catch (e) {
       if (mounted) {
-        print(e);
+        print('Error: $e');
         // Check again if the widget is still mounted before calling setState
         setState(() {
           isLoading = false;
           errorMessage = 'Failed to load projects. Please try again later.';
         });
       }
-      print(e);
+      print('Error: $e');
     }
   }
 
@@ -501,15 +509,21 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [Text('${widget.project['countProposals']}'), Text('Proposals')],
+                      children: [
+                        Text('${widget.project['countProposals']}'),
+                        const Text('Proposals')
+                      ],
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [Text('${widget.project['countMessages']}'), Text('Messages')],
+                      children: [
+                        Text('${widget.project['countMessages']}'),
+                        const Text('Messages')
+                      ],
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [Text('${widget.project['countHired']}'), Text('Hired')],
+                      children: [Text('${widget.project['countHired']}'), const Text('Hired')],
                     ),
                   ],
                 ),
@@ -535,7 +549,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                           ElevatedButton(
                             onPressed: () {
                               // Implement your action
-                              Navigator.pop(context);
+                              Navigator.pop(context, true);
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -547,7 +561,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                           ElevatedButton(
                             onPressed: () {
                               // Implement your action
-                              Navigator.pop(context);
+                              Navigator.pop(context, true);
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -559,7 +573,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                           ElevatedButton(
                             onPressed: () {
                               // Implement your action
-                              Navigator.pop(context);
+                              Navigator.pop(context, true);
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -577,7 +591,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                           ElevatedButton(
                             onPressed: () {
                               // Implement your action
-                              Navigator.pop(context);
+                              Navigator.pop(context, true);
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -589,7 +603,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                           ElevatedButton(
                             onPressed: () {
                               // Implement your action
-                              Navigator.pop(context);
+                              Navigator.pop(context, true);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -621,7 +635,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                 },
                               );
 
-                              Navigator.pop(context);
+                              Navigator.pop(context, true);
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -659,7 +673,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                                   );
                                                 },
                                               );
-                                              Navigator.pop(context);
+                                              Navigator.pop(context, true);
                                             },
                                             style: ElevatedButton.styleFrom(
                                               shape: RoundedRectangleBorder(
@@ -683,7 +697,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                             );
                                           },
                                         );
-                                        Navigator.pop(context);
+                                        Navigator.pop(context, true);
                                       },
                                       style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(

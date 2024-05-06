@@ -1,10 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
@@ -14,7 +11,6 @@ import 'package:studenthub/config/config.dart';
 import 'package:studenthub/models/education_model.dart';
 import 'package:studenthub/models/index.dart';
 import 'package:studenthub/models/language_model.dart';
-import 'package:studenthub/services/api_services.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
@@ -55,7 +51,6 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     // print('Data: ${widget.candidateData}');
     _fetchCandidateProposal().then((value) => {

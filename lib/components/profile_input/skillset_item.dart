@@ -6,7 +6,7 @@ class SkillsetItem extends StatefulWidget {
   final bool isChecked;
   final Function(int) addSkillset;
   final Function(int) removeSkillset;
-  
+
   const SkillsetItem({
     super.key,
     required this.skillset,
@@ -26,7 +26,6 @@ class SkillsetItemState extends State<SkillsetItem> {
   void initState() {
     super.initState();
     isSelected = widget.isChecked;
-    print(isSelected);
   }
 
   @override
