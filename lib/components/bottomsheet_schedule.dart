@@ -45,6 +45,19 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
     _endDate = widget.endDate.add(_duration);
   }
 
+  String calculateDuration(DateTime startTime, DateTime endTime) {
+    Duration difference = endTime.difference(startTime);
+    int hours = difference.inHours;
+    int minutes = difference.inMinutes.remainder(60);
+    if (hours > 0 && minutes > 0) {
+      return '$hours hour${hours > 1 ? 's' : ''} $minutes minute${minutes > 1 ? 's' : ''}';
+    } else if (hours > 0) {
+      return '$hours hour${hours > 1 ? 's' : ''}';
+    } else {
+      return '$minutes minute${minutes > 1 ? 's' : ''}';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -244,7 +257,7 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
                   style: const TextStyle(color: Colors.red),
                 )
               : const SizedBox(),
-          Text('Duration: ${_duration.inMinutes} minutes'),
+          Text('Duration: ${calculateDuration(_startDate, _endDate)}'),
           const SizedBox(height: 40),
           SizedBox(
             height: 40,
@@ -278,8 +291,8 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
                       } else {
                         widget.handleCreateInterview!(
                             _titleController.text, _startDate, _endDate);
-                        Navigator.pop(context);
                       }
+                      Navigator.pop(context);
                     },
                     isButtonEnabled: _titleController.text.isNotEmpty),
               ],

@@ -114,8 +114,8 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
         final receiver = message.receiver;
 
         // Check if the message involves user
-        if (sender.id == userId || receiver.id == userId) {
-          final otherPerson = sender.id == userId ? receiver.fullname : sender.fullname;
+        if (sender!.id == userId || receiver!.id == userId) {
+          final otherPerson = sender.id == userId ? receiver!.fullname : sender.fullname;
           // Check if the conversation has been added to the map
           if (!conversationsMap.containsKey(otherPerson) ||
               message.createdAt.isAfter(conversationsMap[otherPerson]!.createdAt)) {
@@ -142,8 +142,8 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
     for (final conversation in conversationList) {
       int count = 0;
       for (final message in messages) {
-        if (message.sender.id == userId && message.receiver.id == conversation.sender.id ||
-            message.sender.id == conversation.sender.id && message.receiver.id == userId) {
+        if (message.sender!.id == userId && message.receiver!.id == conversation.sender!.id ||
+            message.sender!.id == conversation.sender!.id && message.receiver!.id == userId) {
           count++;
         }
       }

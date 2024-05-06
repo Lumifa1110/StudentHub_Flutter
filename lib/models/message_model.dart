@@ -3,16 +3,20 @@ import 'package:studenthub/models/index.dart';
 
 class Message {
   final String content;
-  final Chatter sender;
-  final Chatter receiver;
+  final int? senderId;
+  final int? receiverId;
+  final Chatter? sender;
+  final Chatter? receiver;
   final DateTime createdAt;
   final Project? project;
   final Interview? interview;
 
   Message({
     required this.content,
-    required this.sender,
-    required this.receiver,
+    this.senderId,
+    this.receiverId,
+    this.sender,
+    this.receiver,
     required this.createdAt,
     this.project,
     this.interview
@@ -21,8 +25,10 @@ class Message {
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
       content: json['content'],
-      sender: Chatter.fromJson(json['sender']),
-      receiver: Chatter.fromJson(json['receiver']),
+      senderId: json['senderId'],
+      receiverId: json['receiverId'],
+      sender: json['sender'] != null ? Chatter.fromJson(json['sender']) : null,
+      receiver: json['receiver'] != null ? Chatter.fromJson(json['receiver']) : null,
       createdAt: DateTime.parse(json['createdAt']),
       project: json['project'] != null ? Project.fromJson(json['project']) : null,
       interview: json['interview'] != null ? Interview.fromJson(json['interview']) : null

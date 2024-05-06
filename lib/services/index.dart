@@ -4,5 +4,6 @@ export 'default_service.dart';
 export 'student_service.dart';
 export 'company_service.dart';
 export 'message_service.dart';
+export 'interview_services.dart';
 export 'meeting_room_services.dart';
 export 'project_service.dart';

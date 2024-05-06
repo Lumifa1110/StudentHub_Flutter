@@ -96,20 +96,19 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
     });
 
     socket.on('RECEIVE_INTERVIEW', (data) {
-      print('RECEIVE_INTERVIEW: $data');
       final receivedInterview =
           Interview.fromJson(data['notification']['interview']);
       setState(() {
         messageWidgets.add(InterviewItem(
             interview: Interview(
-              id: receivedInterview.id,
-              title: receivedInterview.title,
-              startTime: receivedInterview.startTime,
-              endTime: receivedInterview.endTime,
-              disableFlag: receivedInterview.disableFlag,
-              meetingRoomId: receivedInterview.meetingRoomId,
-              meetingRoom: MeetingRoom.fromJson(data['notification']['meetingRoom'])
-            ),
+                id: receivedInterview.id,
+                title: receivedInterview.title,
+                startTime: receivedInterview.startTime,
+                endTime: receivedInterview.endTime,
+                disableFlag: receivedInterview.disableFlag,
+                meetingRoomId: receivedInterview.meetingRoomId,
+                meetingRoom:
+                    MeetingRoom.fromJson(data['notification']['meetingRoom'])),
             handleEditInterview: handleEditInterview,
             handleDeleteInterview: handleDeleteInterview));
       });
@@ -195,23 +194,23 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
     DateTime? lastMessageTime;
     for (int i = 0; i < messages.length; i++) {
       final message = messages[i];
+      final isMyMessage = message.sender!.id == userId;
+        // Check if this is the first message or the time has changed since the last message
+        if (lastMessageTime == null ||
+            message.createdAt.day != lastMessageTime.day) {
+          tempWidgets.add(buildTimestamp(message.createdAt));
+        }
       if (message.interview != null) {
         tempWidgets.add(InterviewItem(
             interview: message.interview!,
             handleEditInterview: handleEditInterview,
             handleDeleteInterview: handleDeleteInterview));
       } else {
-        final isMyMessage = message.sender.id == userId;
-        // Check if this is the first message or the time has changed since the last message
-        if (lastMessageTime == null ||
-            message.createdAt.day != lastMessageTime.day) {
-          tempWidgets.add(buildTimestamp(message.createdAt));
-        }
         // Add the message item
         tempWidgets
             .add(MessageItem(message: message, isMyMessage: isMyMessage));
-        lastMessageTime = message.createdAt;
       }
+      lastMessageTime = message.createdAt;
     }
     // Update messageWidgets once all messages are processed
     setState(() {
@@ -281,26 +280,35 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
 
   void handleEditInterview(
       int interviewId, String title, DateTime startTime, DateTime endTime) {
-    socket.emit("UPDATE_INTERVIEW", {
-      "interviewId": interviewId,
-      "title": title,
-      "projectId": widget.projectId,
-      "senderId": userId,
-      "receiverId": widget.chatter.id,
-      "updateAction": true
-    });
+    try {
+      print('id: $interviewId');
+      socket.emit("UPDATE_INTERVIEW", {
+        "interviewId": interviewId,
+        "title": title,
+        "startTime": startTime.toString(),
+        "endTime": endTime.toString(),
+        "updateAction": true
+      });
+    } catch (e) {
+      print('Error: update interview, $e');
+    }
   }
 
   void handleDeleteInterview(
       int interviewId, String title, DateTime startTime, DateTime endTime) {
-    socket.emit("UPDATE_INTERVIEW", {
-      "interviewId": interviewId,
-      "title": title,
-      "projectId": widget.projectId,
-      "senderId": userId,
-      "receiverId": widget.chatter.id,
-      "deleteAction": true
-    });
+    try {
+      print('id: $interviewId');
+      socket.emit("UPDATE_INTERVIEW", {
+        "interviewId": interviewId,
+        "title": title,
+        "startTime": startTime.toString(),
+        "endTime": endTime.toString(),
+        "deleteAction": true
+      });
+      print('delete interview');
+    } catch (e) {
+      print('Error: delete interview, $e');
+    }
   }
 
   @override

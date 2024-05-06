@@ -8,21 +8,6 @@ import 'package:studenthub/services/index.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
-String formatTimeAgo(DateTime time) {
-  DateTime now = DateTime.now();
-  Duration difference = now.difference(time);
-
-  if (difference.inSeconds < 60) {
-    return '1 min ago';
-  } else if (difference.inMinutes < 60) {
-    return '${difference.inMinutes} min ago';
-  } else if (difference.inHours < 24) {
-    return '${difference.inHours} ${difference.inHours == 1 ? 'hour' : 'hours'} ago';
-  } else {
-    return '${difference.inDays} ${difference.inDays == 1 ? 'day' : 'days'} ago';
-  }
-}
-
 class ConversationItem extends StatefulWidget {
   final Message message;
   final int messageCount;
@@ -63,9 +48,9 @@ class _ConversationItemState extends State<ConversationItem> {
           MaterialPageRoute(
             builder: (context) => MessageDetailScreen(
               projectId: widget.message.project!.projectId,
-              chatter: widget.message.sender.id == userId
-                  ? widget.message.receiver
-                  : widget.message.sender,
+              chatter: widget.message.sender!.id == userId
+                  ? widget.message.receiver!
+                  : widget.message.sender!,
             ),
           ),
         );
@@ -175,9 +160,9 @@ class _ConversationItemState extends State<ConversationItem> {
                     Expanded(
                       flex: 4,
                       child: Text(
-                        widget.message.sender.id == userId
-                            ? widget.message.receiver.fullname
-                            : widget.message.sender.fullname,
+                        widget.message.sender!.id == userId
+                            ? widget.message.receiver!.fullname
+                            : widget.message.sender!.fullname,
                         style: const TextStyle(
                           color: AppFonts.primaryColor,
                           fontSize: AppFonts.h3FontSize,
@@ -220,5 +205,20 @@ class _ConversationItemState extends State<ConversationItem> {
         ),
       ],
     );
+  }
+}
+
+String formatTimeAgo(DateTime time) {
+  DateTime now = DateTime.now();
+  Duration difference = now.difference(time);
+
+  if (difference.inSeconds < 60) {
+    return '1 min ago';
+  } else if (difference.inMinutes < 60) {
+    return '${difference.inMinutes} min ago';
+  } else if (difference.inHours < 24) {
+    return '${difference.inHours} ${difference.inHours == 1 ? 'hour' : 'hours'} ago';
+  } else {
+    return '${difference.inDays} ${difference.inDays == 1 ? 'day' : 'days'} ago';
   }
 }
