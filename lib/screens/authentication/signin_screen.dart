@@ -35,7 +35,10 @@ class _SigninScreenState extends State<SigninScreen> {
     final token = prefs.getString('token');
     if (token != null) {
       if (mounted) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
       }
     }
   }
@@ -94,7 +97,10 @@ class _SigninScreenState extends State<SigninScreen> {
       await fetchUserData();
 
       if (mounted) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
       }
     }
   }
@@ -128,7 +134,7 @@ class _SigninScreenState extends State<SigninScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       resizeToAvoidBottomInset: false,
       appBar: const AuthAppBar(
         canBack: false,
@@ -145,12 +151,12 @@ class _SigninScreenState extends State<SigninScreen> {
               width: 120,
               image: AssetImage('assets/images/smileyface.png'),
             ),
-            const Text(
+            Text(
               'Login with StudentHub!',
               style: TextStyle(
                 fontSize: 33,
                 fontWeight: FontWeight.bold,
-                color: darkblueColor,
+                color: Theme.of(context).primaryColor,
               ),
             ),
             const SizedBox(
@@ -174,8 +180,8 @@ class _SigninScreenState extends State<SigninScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                       child: Text(
                         error,
-                        style: const TextStyle(
-                          color: errorColor,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
                           fontSize: AppFonts.h3FontSize,
                         ),
                       ),
@@ -206,8 +212,8 @@ class _SigninScreenState extends State<SigninScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                       child: Text(
                         error,
-                        style: const TextStyle(
-                          color: errorColor,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
                           fontSize: AppFonts.h3FontSize,
                         ),
                       ),
@@ -235,8 +241,8 @@ class _SigninScreenState extends State<SigninScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                       child: Text(
                         error,
-                        style: const TextStyle(
-                          color: errorColor,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
                           fontSize: AppFonts.h3FontSize,
                         ),
                       ),
@@ -253,12 +259,12 @@ class _SigninScreenState extends State<SigninScreen> {
               margin: const EdgeInsets.symmetric(horizontal: 20),
               padding: const EdgeInsets.symmetric(vertical: 1),
               decoration: BoxDecoration(
-                border: Border.all(color: blackTextColor, width: 1.0),
+                border: Border.all(color: Theme.of(context).colorScheme.secondary, width: 1.0),
                 borderRadius: BorderRadius.circular(6),
-                color: mainColor,
-                boxShadow: const [
+                color: Theme.of(context).colorScheme.primary,
+                boxShadow: [
                   BoxShadow(
-                    color: blackTextColor,
+                    color: Theme.of(context).colorScheme.secondary.withOpacity(0.6),
                     spreadRadius: 2.0,
                     blurRadius: 0.6,
                   ),
@@ -279,11 +285,11 @@ class _SigninScreenState extends State<SigninScreen> {
             ),
             // Register
             const Spacer(),
-            const Text(
+            Text(
               '___Don\'t have a StudentHub account ?___',
               style: TextStyle(
                 fontSize: AppFonts.h2FontSize,
-                color: blackTextColor,
+                color: Theme.of(context).colorScheme.secondary,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -294,12 +300,12 @@ class _SigninScreenState extends State<SigninScreen> {
               width: MediaQuery.of(context).size.width * 0.6,
               padding: const EdgeInsets.symmetric(vertical: 1),
               decoration: BoxDecoration(
-                border: Border.all(color: blackTextColor, width: 1.0),
+                border: Border.all(color: Theme.of(context).colorScheme.secondary, width: 1.0),
                 borderRadius: BorderRadius.circular(6),
-                color: mainColor,
+                color: Theme.of(context).colorScheme.primary,
                 boxShadow: [
                   BoxShadow(
-                    color: blackTextColor.withOpacity(0.6),
+                    color: Theme.of(context).colorScheme.secondary.withOpacity(0.6),
                     spreadRadius: 2.0,
                     blurRadius: 0.6,
                   ),

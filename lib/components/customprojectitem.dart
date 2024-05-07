@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studenthub/enums/project_scope.dart';
 import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
@@ -65,7 +64,7 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 196,
       child: Stack(
         children: [
@@ -83,10 +82,9 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                 children: [
                   Flexible(
                     child: Text(
-                      'Created ${f_timeSinceCreated(widget.project.createdAt)}',
+                      'Created ${timeSinceCreated(widget.project.createdAt)}',
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: AppFonts.h4FontSize, color: lightgrayColor),
+                      style: const TextStyle(fontSize: AppFonts.h4FontSize, color: lightgrayColor),
                     ),
                   ),
                   Flexible(
@@ -113,8 +111,7 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                     child: Text(
                       'Time: ${checkProjectScope(widget.project.projectScopeFlag)}, ${widget.project.numberOfStudents} students needed',
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: AppFonts.h4FontSize, color: lightgrayColor),
+                      style: const TextStyle(fontSize: AppFonts.h4FontSize, color: lightgrayColor),
                     ),
                   ),
                   Flexible(
@@ -123,16 +120,14 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                       maxLines: 3,
                       widget.project.description!,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: AppFonts.h3FontSize, color: blackTextColor),
+                      style: const TextStyle(fontSize: AppFonts.h3FontSize, color: blackTextColor),
                     ),
                   ),
                   Flexible(
                     child: Text(
                       'Proposals: ${checkCountProposal(widget.project.countProposals)}',
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: AppFonts.h4FontSize, color: lightgrayColor),
+                      style: const TextStyle(fontSize: AppFonts.h4FontSize, color: lightgrayColor),
                     ),
                   ),
                 ],

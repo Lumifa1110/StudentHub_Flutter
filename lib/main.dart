@@ -3,19 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/screens/authentication/changepassword_screen.dart';
 import 'package:studenthub/screens/index.dart';
-import 'package:studenthub/screens/student/view_candidate_sceen.dart';
 import 'package:studenthub/screens/student/view_offer_screen.dart';
 import 'package:studenthub/theme/theme.dart';
 import 'package:studenthub/theme/theme_controller.dart';
-import 'package:studenthub/utils/colors.dart';
 
 void main() {
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.blue,
-      systemNavigationBarColor: AppColor.primary,
-    ),
-  );
   runApp(const StudentHub());
 }
 
@@ -38,6 +30,7 @@ class _StudentHubState extends State<StudentHub> {
   @override
   void initState() {
     _themeController.addListener(themeListener);
+
     super.initState();
   }
 
@@ -49,15 +42,21 @@ class _StudentHubState extends State<StudentHub> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.blue,
+        systemNavigationBarColor: Colors.blue,
+      ),
+    );
     return MaterialApp(
       title: 'Flutter Demo',
       // theme: ThemeData(
       //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       //   useMaterial3: true,
       // ),
+
       theme: lightTheme,
       darkTheme: darkTheme,
-      // themeMode: _themeController.themeMode,
       initialRoute: '/signin',
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
@@ -103,7 +102,7 @@ class _StudentHubState extends State<StudentHub> {
           case '/list':
             return MaterialPageRoute(builder: (context) => const ProjectListScreen());
           case '/company/project/step1':
-            return MaterialPageRoute(builder: (context) => ProjectPostStep1Page());
+            return MaterialPageRoute(builder: (context) => const ProjectPostStep1Page());
           default:
             return null;
         }

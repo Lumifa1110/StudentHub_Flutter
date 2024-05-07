@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/user/user_avatar.dart';
-import 'package:studenthub/models/student_model.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
-import 'package:studenthub/models/company_model.dart';
 
 class ProjectHiredStudentItem extends StatelessWidget {
   final dynamic itemsProposal;
@@ -30,8 +28,7 @@ class ProjectHiredStudentItem extends StatelessWidget {
               Expanded(
                   flex: 8,
                   child: Container(
-                    padding:
-                        const EdgeInsets.only(left: 20, top: 10, bottom: 10),
+                    padding: const EdgeInsets.only(left: 20, top: 10, bottom: 10),
                     height: 70,
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

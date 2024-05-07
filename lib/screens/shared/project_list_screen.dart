@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,9 +52,9 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
     _perPage = 10;
     _scrollController = ScrollController();
     _httpClient = http.Client();
+    _scrollController.addListener(_scrollListener);
     // _isMounted = true;
     _loadScreen();
-    _scrollController.addListener(_scrollListener);
   }
 
   void _scrollListener() {
@@ -101,7 +103,6 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
       }
 
       if (mounted) {
-        // Check if the widget is still mounted before calling setState()
         setState(() {
           isLoading = false;
         });
@@ -131,7 +132,13 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
         print('Error: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e');
+      if (e is TimeoutException) {
+        // Handle timeout error
+        print('Network timeout error: $e');
+      } else {
+        // Handle other errors
+        print('Error: $e');
+      }
     }
   }
 
@@ -343,7 +350,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
                       itemBuilder: (context, index) {
                         if (index == allProject.length && _loadingMore) {
                           // Loading indicator for pagination
-                          return Center(child: CircularProgressIndicator());
+                          return const Center(child: CircularProgressIndicator());
                         } else {
                           final project = allProject[index];
                           return CustomProjectItem(

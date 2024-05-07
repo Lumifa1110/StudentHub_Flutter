@@ -62,9 +62,12 @@ class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AuthAppBar(
+      appBar: AuthAppBar(
         canBack: true,
         title: 'Create company profile',
+        onRoleChanged: (result) {
+          Navigator.pushReplacementNamed(context, '/student/dashboard');
+        },
       ),
       body: SingleChildScrollView(
         child: Container(

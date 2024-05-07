@@ -60,7 +60,7 @@ class _RadioListProjectLengthState extends State<RadioListProjectLength> {
           ),
           Text(
             label,
-            style: TextStyle(color: blackTextColor, fontSize: 16),
+            style: const TextStyle(color: blackTextColor, fontSize: 16),
           ),
         ],
       ),

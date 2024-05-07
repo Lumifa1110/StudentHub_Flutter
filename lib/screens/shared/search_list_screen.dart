@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
@@ -500,7 +498,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
                       itemBuilder: (context, index) {
                         if (index == filteredProjects.length && _loadingMore) {
                           // Loading indicator for pagination
-                          return Center(child: CircularProgressIndicator());
+                          return const Center(child: CircularProgressIndicator());
                         } else {
                           final project = filteredProjects[index];
                           return CustomProjectItem(
