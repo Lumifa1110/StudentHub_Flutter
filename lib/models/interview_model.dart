@@ -4,6 +4,7 @@ class Interview {
   final int? id;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final DateTime? deletedAt;
   final String title;
   final DateTime startTime;
   final DateTime endTime;
@@ -15,6 +16,7 @@ class Interview {
     this.id,
     this.createdAt,
     this.updatedAt,
+    this.deletedAt,
     required this.title,
     required this.startTime,
     required this.endTime,
@@ -28,6 +30,7 @@ class Interview {
       id: json['id'],
       createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
       updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      deletedAt: json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null,
       title: json['title'],
       startTime: DateTime.parse(json['startTime']),
       endTime: DateTime.parse(json['endTime']),

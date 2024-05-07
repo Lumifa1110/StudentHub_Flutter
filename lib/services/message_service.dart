@@ -21,4 +21,14 @@ class MessageService {
       rethrow;
     }
   }
+
+  static Future<Map<String, dynamic>> sendMessage(dynamic body) async {
+    try {
+      final response = await ApiService.postRequest('/api/message/sendMessage', body);
+      return response;
+    } catch (e) {
+      print('Error send message: $e');
+      rethrow;
+    }
+  }
 }
