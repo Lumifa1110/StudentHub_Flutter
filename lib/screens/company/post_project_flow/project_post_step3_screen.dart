@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/utils/font.dart';
-import '../../../components/appbar_ps1.dart';
 import 'project_post_step4_screen.dart';
 
 class ProjectPostStep3Page extends StatefulWidget {
@@ -24,7 +23,6 @@ class ProjectPostStep3PageState extends State<ProjectPostStep3Page> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -46,9 +44,7 @@ class ProjectPostStep3PageState extends State<ProjectPostStep3Page> {
                   ),
                   Text(
                     '3/4 \t \t Next, provide project description',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: AppFonts.h2FontSize),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: AppFonts.h2FontSize),
                   ),
                   SizedBox(
                     height: 30,
@@ -56,8 +52,7 @@ class ProjectPostStep3PageState extends State<ProjectPostStep3Page> {
                   Text('Students are looking for'),
                   Padding(
                     padding: EdgeInsets.only(left: 20),
-                    child: Text(
-                        '• Clear expectation about your project or deliverables'),
+                    child: Text('• Clear expectation about your project or deliverables'),
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 20),
@@ -110,8 +105,7 @@ class ProjectPostStep3PageState extends State<ProjectPostStep3Page> {
                       );
                     }
                   },
-                  style: ElevatedButton.styleFrom(
-                      shape: const RoundedRectangleBorder()),
+                  style: ElevatedButton.styleFrom(shape: const RoundedRectangleBorder()),
                   child: const Text('Review your post'),
                 ),
               )

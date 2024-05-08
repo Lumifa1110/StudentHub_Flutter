@@ -37,7 +37,7 @@ class _TextFieldFloatingLabelState extends State<TextFieldFloatingLabel> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF636363).withOpacity(0.5),
+              color: Theme.of(context).colorScheme.onSecondary.withOpacity(0.5),
               spreadRadius: 3.0,
               blurRadius: 6.0,
               offset: const Offset(0, 3),
@@ -47,6 +47,7 @@ class _TextFieldFloatingLabelState extends State<TextFieldFloatingLabel> {
         child: TextField(
           controller: widget.controller,
           style: const TextStyle(
+            color: blackTextColor,
             fontSize: 18,
           ),
           cursorColor: blackTextColor,
@@ -60,17 +61,16 @@ class _TextFieldFloatingLabelState extends State<TextFieldFloatingLabel> {
               color: darkgrayColor,
             ),
             hintText: widget.hint,
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 6, horizontal: 1),
-            floatingLabelStyle: const TextStyle(
-              color: mainColor,
+            contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 1),
+            floatingLabelStyle: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
               fontSize: 18,
               height: 0.6,
               fontWeight: FontWeight.bold,
             ),
-            focusedBorder: const UnderlineInputBorder(
+            focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(
-                color: mainColor,
+                color: Theme.of(context).colorScheme.primary,
                 width: 3.0,
               ),
             ),

@@ -68,37 +68,41 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         'signed_in_accounts',
         signedInAccounts.map((account) => jsonEncode(account.toJson())).toList(),
       );
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text('Success'),
-          content: const Text('Password changed successfully.'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true);
-                Navigator.of(context).pop(true);
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Success'),
+            content: const Text('Password changed successfully.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                  Navigator.of(context).pop(true);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
     } else {
       // Show error dialog if request fails
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text('Error'),
-          content: const Text('Failed to change password. Please try again.'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Failed to change password. Please try again.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 

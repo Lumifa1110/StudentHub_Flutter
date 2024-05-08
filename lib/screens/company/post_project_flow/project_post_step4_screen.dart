@@ -20,17 +20,13 @@ class ProjectPostStep4Page extends StatefulWidget {
 
 class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
   late SharedPreferences _prefs;
-  
+
   Future<void> postProject(BuildContext context) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     final idCompany = jsonDecode(_prefs.getString('company_profile')!)['id'];
-    ProjectPost modelDataProject = ProjectPost(
-        '$idCompany',
-        widget.box['projectScore'],
-        widget.box['title'],
-        widget.box['quantityStudent'],
-        widget.box['description']);
+    ProjectPost modelDataProject = ProjectPost('$idCompany', widget.box['projectScore'],
+        widget.box['title'], widget.box['quantityStudent'], widget.box['description']);
     final modelDataProjectJson = modelDataProject.toJson();
     try {
       final response = await http.post(
@@ -58,8 +54,7 @@ class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       appBar: const AuthAppBar(canBack: true),
       body: Center(
         child: Padding(
@@ -67,128 +62,121 @@ class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      '4/4 \t \t Project details',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: AppFonts.h2FontSize),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    '4/4 \t \t Project details',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: AppFonts.h2FontSize),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    '${widget.box['title']}',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: AppFonts.h1FontSize,
+                        overflow: TextOverflow.ellipsis),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Divider(
+                    thickness: 2,
+                    indent: 10,
+                    endIndent: 10,
+                    color: Colors.black,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    'Describe your project:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Text(
+                      widget.box['description'],
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 10,
+                      softWrap: true,
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      '${widget.box['title']}',
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: AppFonts.h1FontSize,
-                          overflow: TextOverflow.ellipsis),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Divider(
-                      thickness: 2,
-                      indent: 10,
-                      endIndent: 10,
-                      color: Colors.black,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Text(
-                      'Describe your project:',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 20),
-                      child: Text(
-                        widget.box['description'],
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 10,
-                        softWrap: true,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Divider(
+                    thickness: 2,
+                    indent: 10,
+                    endIndent: 10,
+                    color: Colors.black,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      const Icon(
+                        CupertinoIcons.clock,
+                        size: 40,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Divider(
-                      thickness: 2,
-                      indent: 10,
-                      endIndent: 10,
-                      color: Colors.black,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
-                          CupertinoIcons.clock,
-                          size: 40,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 30),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Project scope',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 15.0),
+                              child: Text(
+                                  '• ${convertProjectScoreFlagToTime(widget.box['projectScore'])} months'),
+                            )
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 30),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Project scope',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 15.0),
-                                child: Text(
-                                    '• ${convertProjectScoreFlagToTime(widget.box['projectScore'])} months'),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
-                          CupertinoIcons.person_2,
-                          size: 40,
+                      )
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      const Icon(
+                        CupertinoIcons.person_2,
+                        size: 40,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 30.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Student required',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 15.0),
+                              child: Text('• ${widget.box['quantityStudent']} students'),
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 30.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Student required',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 15.0),
-                                child: Text(
-                                    '• ${widget.box['quantityStudent']} students'),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
+                      )
+                    ],
+                  ),
+                ],
               ),
               Align(
                 alignment: Alignment.bottomRight,
                 child: ElevatedButton(
-                  onPressed: () async{
+                  onPressed: () async {
                     postProject(context);
-
                   },
-                  style: ElevatedButton.styleFrom(
-                      shape: const RoundedRectangleBorder()),
+                  style: ElevatedButton.styleFrom(shape: const RoundedRectangleBorder()),
                   child: const Text('Post job'),
                 ),
               )
@@ -196,6 +184,6 @@ class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
           ),
         ),
       ),
-    ));
+    );
   }
 }

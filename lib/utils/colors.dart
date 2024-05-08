@@ -5,6 +5,7 @@ const Color darkbgColor = Color(0xFF636363);
 
 const Color mainColor = Color(0xFF0F90F0);
 
+const Color whiteTextColor = Color(0xFFFFFFFF);
 
 const Color blackTextColor = Color(0xFF424242);
 
@@ -24,8 +25,3 @@ class AppColor {
   static const background = Color(0xFFF9F8FE);
   static const textFieldBackground = Color(0xFFEBEBEB);
 }
-
-//Tabbar
-const Color greenAccent= Colors.greenAccent;
-const Color whiteTextColor = Colors.white;
-

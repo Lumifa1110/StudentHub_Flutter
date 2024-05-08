@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studenthub/components/appbar_ps1.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/utils/font.dart';
 import 'project_post_step2_screen.dart';
@@ -41,8 +40,7 @@ class ProjectPostStep1PageState extends State<ProjectPostStep1Page> {
               ),
               const Text(
                 '1/4 \t \t Let\'s start with a strong tittle',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: AppFonts.h2FontSize),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: AppFonts.h2FontSize),
               ),
               const SizedBox(
                 height: 30,
@@ -75,8 +73,7 @@ class ProjectPostStep1PageState extends State<ProjectPostStep1Page> {
               ),
               const Text(
                 'Example titles',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: AppFonts.h3FontSize),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: AppFonts.h3FontSize),
               ),
               const SizedBox(
                 height: 10,
@@ -106,8 +103,6 @@ class ProjectPostStep1PageState extends State<ProjectPostStep1Page> {
                       }
                       if (!_erro) {
                         final Map<String, dynamic> box_title = {};
-                        var putIfAbsent = box_title.putIfAbsent(
-                            'title', () => _titleProject.text);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -118,8 +113,7 @@ class ProjectPostStep1PageState extends State<ProjectPostStep1Page> {
                         );
                       }
                     },
-                    style: ElevatedButton.styleFrom(
-                        shape: const RoundedRectangleBorder()),
+                    style: ElevatedButton.styleFrom(shape: const RoundedRectangleBorder()),
                     child: const Text("Next: Score"),
                   )),
             ],

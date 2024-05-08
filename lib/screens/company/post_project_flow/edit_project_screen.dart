@@ -1,14 +1,10 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/button_simple.dart';
 import 'package:studenthub/components/textfield/textfield_label_v2.dart';
 import 'package:studenthub/config/config.dart';
-import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 import 'package:http/http.dart' as http;
@@ -41,7 +37,6 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
       'numberOfStudents': int.parse(_quantityStudent.text),
     };
 
-
     final response = await http.patch(
       Uri.parse('$uriBase/api/project/${widget.projectId}'),
       headers: {
@@ -68,19 +63,13 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
 
       _isChecked = responseDecode['projectScopeFlag'];
       _titleProject = TextEditingController(text: responseDecode['title']);
-      _quantityStudent =
-          TextEditingController(text: '${responseDecode['numberOfStudents']}');
-      _descriptionPrject =
-          TextEditingController(text: responseDecode['description']);
+      _quantityStudent = TextEditingController(text: '${responseDecode['numberOfStudents']}');
+      _descriptionPrject = TextEditingController(text: responseDecode['description']);
 
       setState(() {
         isLoading = false;
       });
     } catch (e) {}
-  }
-
-  Future<void> _saveChanged() async {
-    if (_titleProject.text.isEmpty) {}
   }
 
   @override
@@ -95,7 +84,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
       appBar: const AuthAppBar(canBack: true),
       backgroundColor: bgColor,
       body: isLoading
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : SingleChildScrollView(
@@ -105,8 +94,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextFieldWithLabel2(
-                        label: 'Title of project ${widget.projectId}',
-                        controller: _titleProject),
+                        label: 'Title of project ${widget.projectId}', controller: _titleProject),
                     const SizedBox(
                       height: 20,
                     ),
@@ -119,8 +107,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                       ),
                     ),
                     ListTile(
-                      title: const Text('Less Than 1 Month',
-                          style: TextStyle(fontSize: 14)),
+                      title: const Text('Less Than 1 Month', style: TextStyle(fontSize: 14)),
                       leading: Radio(
                         value: 0, // Set value to 3
                         groupValue: _isChecked,
@@ -132,8 +119,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                       ),
                     ),
                     ListTile(
-                      title: const Text('1 to 3 months',
-                          style: TextStyle(fontSize: 14)),
+                      title: const Text('1 to 3 months', style: TextStyle(fontSize: 14)),
                       leading: Radio(
                         value: 1, // Set value to 6
                         groupValue: _isChecked,
@@ -145,8 +131,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                       ),
                     ),
                     ListTile(
-                      title: const Text('3 to 6 months',
-                          style: TextStyle(fontSize: 14)),
+                      title: const Text('3 to 6 months', style: TextStyle(fontSize: 14)),
                       leading: Radio(
                         value: 2, // Set value to 6
                         groupValue: _isChecked,
@@ -158,8 +143,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                       ),
                     ),
                     ListTile(
-                      title: const Text('More than 6 months',
-                          style: TextStyle(fontSize: 14)),
+                      title: const Text('More than 6 months', style: TextStyle(fontSize: 14)),
                       leading: Radio(
                         value: 3, // Set value to 6
                         groupValue: _isChecked,
@@ -205,12 +189,11 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ButtonSimple(
-                          label: 'Save',
-                          onPressed: () {
-                            patchProject();
-                          },
-                          isButtonEnabled: true
-                        ),
+                            label: 'Save',
+                            onPressed: () {
+                              patchProject();
+                            },
+                            isButtonEnabled: true),
                       ],
                     ),
                   ],

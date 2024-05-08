@@ -26,7 +26,7 @@ class _NotificationScreenState extends State<NotificationScreen>
   bool get wantKeepAlive => true;
 
   late IO.Socket socket;
-  late int userId;
+  int userId = 0;
   List<NotificationModel> notifications = [];
 
   @override
@@ -45,6 +45,9 @@ class _NotificationScreenState extends State<NotificationScreen>
   }
 
   void socketConnect() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('userid')!;
+
     socket = IO.io(
         'https://api.studenthub.dev',
         IO.OptionBuilder()
@@ -53,7 +56,6 @@ class _NotificationScreenState extends State<NotificationScreen>
             .disableAutoConnect()
             .build());
 
-    final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     socket.io.options?['extraHeaders'] = {
       'Authorization': 'Bearer $token',
@@ -78,6 +80,8 @@ class _NotificationScreenState extends State<NotificationScreen>
   }
 
   void fetchNotification() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('userid')!;
     final response = await DefaultService.getNotification(userId);
     setState(() {
       notifications = response['result']

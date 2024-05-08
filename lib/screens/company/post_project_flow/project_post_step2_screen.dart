@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/utils/font.dart';
-import '../../../components/appbar_ps1.dart';
 import 'project_post_step3_screen.dart';
 
 class ProjectPostStep2Page extends StatefulWidget {
@@ -24,10 +23,9 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
         _erro = true;
       } else if (!(num.tryParse(value) != null)) {
         _erro = true;
-      } else if(num.tryParse(value) == 0){
+      } else if (num.tryParse(value) == 0) {
         _erro = true;
-      }
-      else {
+      } else {
         _erro = false;
       }
     });
@@ -61,9 +59,7 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
                 ),
                 const Text(
                   '2/4 \t\t Next, estimate the scope of your job',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: AppFonts.h2FontSize),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: AppFonts.h2FontSize),
                 ),
                 const SizedBox(
                   height: 10,
@@ -77,16 +73,13 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
                 ),
                 const Text(
                   'How long will your project take?',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: AppFonts.h3FontSize),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: AppFonts.h3FontSize),
                 ),
                 const SizedBox(
                   height: 20,
                 ),
                 ListTile(
-                  title: const Text('Less Than 1 Month',
-                      style: TextStyle(fontSize: 14)),
+                  title: const Text('Less Than 1 Month', style: TextStyle(fontSize: 14)),
                   leading: Radio(
                     value: 0, // Set value to 3
                     groupValue: _isChecked,
@@ -98,8 +91,7 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
                   ),
                 ),
                 ListTile(
-                  title: const Text('1 to 3 months',
-                      style: TextStyle(fontSize: 14)),
+                  title: const Text('1 to 3 months', style: TextStyle(fontSize: 14)),
                   leading: Radio(
                     value: 1, // Set value to 6
                     groupValue: _isChecked,
@@ -111,8 +103,7 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
                   ),
                 ),
                 ListTile(
-                  title: const Text('3 to 6 months',
-                      style: TextStyle(fontSize: 14)),
+                  title: const Text('3 to 6 months', style: TextStyle(fontSize: 14)),
                   leading: Radio(
                     value: 2, // Set value to 6
                     groupValue: _isChecked,
@@ -124,8 +115,7 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
                   ),
                 ),
                 ListTile(
-                  title: const Text('More than 6 months',
-                      style: TextStyle(fontSize: 14)),
+                  title: const Text('More than 6 months', style: TextStyle(fontSize: 14)),
                   leading: Radio(
                     value: 3, // Set value to 6
                     groupValue: _isChecked,
@@ -141,9 +131,7 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
                 ),
                 const Text(
                   'How many students do you want for this project?',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: AppFonts.h3FontSize),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: AppFonts.h3FontSize),
                 ),
                 const SizedBox(
                   height: 20,
@@ -152,11 +140,11 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
                   controller: _quantityStudent,
                   onChanged: validateTextfield,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     hintText: 'number of students',
-                    hintStyle: TextStyle(fontSize: 15),
+                    hintStyle: const TextStyle(fontSize: 15),
                     isDense: true,
-                    contentPadding: EdgeInsets.all(5),
+                    contentPadding: const EdgeInsets.all(5),
                     errorText: _erro ? 'Please enter number of students' : null,
                   ),
                 ),
@@ -175,8 +163,7 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
                           if (_quantityStudent.text.isNotEmpty) {
                             try {
                               int quantity = int.parse(_quantityStudent.text);
-                              widget.box.putIfAbsent(
-                                  'quantityStudent', () => quantity);
+                              widget.box.putIfAbsent('quantityStudent', () => quantity);
                             } catch (e) {
                               // Handle the case where parsing fails
                               print('Failed to parse quantity: $e');
@@ -187,8 +174,7 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
                             }
                           }
 
-                          widget.box
-                              .putIfAbsent('projectScore', () => _isChecked);
+                          widget.box.putIfAbsent('projectScore', () => _isChecked);
 
                           Navigator.push(
                             context,
@@ -201,8 +187,7 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
                         }
                       }
                     },
-                    style: ElevatedButton.styleFrom(
-                        shape: const RoundedRectangleBorder()),
+                    style: ElevatedButton.styleFrom(shape: const RoundedRectangleBorder()),
                     child: const Text('Next: Description'),
                   ),
                 )

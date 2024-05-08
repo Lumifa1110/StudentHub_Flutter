@@ -31,12 +31,13 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
   bool get wantKeepAlive => true;
 
   late IO.Socket socket;
-  late int userId;
+  int userId = 0;
   // Controller
   late List<Widget> messageWidgets = [];
   late ScrollController scrollController;
   final TextEditingController messageInputController = TextEditingController();
   // State
+  DateTime? lastMessageTime;
   late List<Message> messages = [];
 
   @override
@@ -88,6 +89,13 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                 id: data['notification']['receiver']['id'], fullname: ''),
             createdAt: DateTime.parse(data['notification']['createdAt']));
         messages.add(newMessage);
+        // add Timestamp
+        if (lastMessageTime == null ||
+            newMessage.createdAt.day != lastMessageTime!.day) {
+          messageWidgets.add(buildTimestamp(newMessage.createdAt));
+          lastMessageTime = newMessage.createdAt;
+        }
+        // add MessageItem widget
         messageWidgets.add(MessageItem(
             message: newMessage,
             isMyMessage: data['notification']['sender']['id'] == userId));
@@ -97,8 +105,15 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
 
     socket.on('RECEIVE_INTERVIEW', (data) {
       final receivedInterview =
-          Interview.fromJson(data['notification']['interview']);
+          Interview.fromJson(data['notification']['message']['interview']);
       setState(() {
+        // add Timestamp
+        if (lastMessageTime == null ||
+            receivedInterview.createdAt!.day != lastMessageTime!.day) {
+          messageWidgets.add(buildTimestamp(receivedInterview.createdAt!));
+          lastMessageTime = receivedInterview.createdAt!;
+        }
+        // add MessageItem widget
         messageWidgets.add(InterviewItem(
             interview: Interview(
                 id: receivedInterview.id,
@@ -107,8 +122,8 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                 endTime: receivedInterview.endTime,
                 disableFlag: receivedInterview.disableFlag,
                 meetingRoomId: receivedInterview.meetingRoomId,
-                meetingRoom:
-                    MeetingRoom.fromJson(data['notification']['meetingRoom'])),
+                meetingRoom: MeetingRoom.fromJson(data['notification']
+                    ['message']['interview']['meetingRoom'])),
             handleEditInterview: handleEditInterview,
             handleDeleteInterview: handleDeleteInterview));
       });
@@ -158,15 +173,13 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
     });
   }
 
-  Future<void> handleSubmitMessage() async {
+  void handleSubmitMessage() {
     String content = messageInputController.text.trim();
-    final prefs = await SharedPreferences.getInstance();
-    final userId = prefs.getInt('userid');
-    socket.emit("SEND_MESSAGE", {
-      "content": content,
+    MessageService.sendMessage({
       "projectId": widget.projectId,
       "senderId": userId,
       "receiverId": widget.chatter.id,
+      "content": content,
       "messageFlag": 0
     });
     // Clear TextField after creating the new message
@@ -191,29 +204,37 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
 
   void buildMessages() {
     List<Widget> tempWidgets = [];
-    DateTime? lastMessageTime;
+    DateTime? tempLastMessageTime = lastMessageTime;
     for (int i = 0; i < messages.length; i++) {
       final message = messages[i];
       final isMyMessage = message.sender!.id == userId;
-        // Check if this is the first message or the time has changed since the last message
-        if (lastMessageTime == null ||
-            message.createdAt.day != lastMessageTime.day) {
+      // Check if this is the first message or the time has changed since the last message
+      if (message.interview != null) {
+        if (message.interview?.deletedAt == null) {
+          if (tempLastMessageTime == null ||
+              message.createdAt.day != tempLastMessageTime.day) {
+            tempWidgets.add(buildTimestamp(message.createdAt));
+          }
+          tempWidgets.add(InterviewItem(
+              interview: message.interview!,
+              handleEditInterview: handleEditInterview,
+              handleDeleteInterview: handleDeleteInterview));
+          tempLastMessageTime = message.createdAt;
+        }
+      } else {
+        if (tempLastMessageTime == null ||
+            message.createdAt.day != tempLastMessageTime.day) {
           tempWidgets.add(buildTimestamp(message.createdAt));
         }
-      if (message.interview != null) {
-        tempWidgets.add(InterviewItem(
-            interview: message.interview!,
-            handleEditInterview: handleEditInterview,
-            handleDeleteInterview: handleDeleteInterview));
-      } else {
         // Add the message item
         tempWidgets
             .add(MessageItem(message: message, isMyMessage: isMyMessage));
+        tempLastMessageTime = message.createdAt;
       }
-      lastMessageTime = message.createdAt;
     }
     // Update messageWidgets once all messages are processed
     setState(() {
+      lastMessageTime = tempLastMessageTime;
       messageWidgets = List.from(tempWidgets);
     });
   }
@@ -264,8 +285,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
     // Create meeting room
     final String roomCode = generateRandomString(10);
     final String roomId = generateRandomString(10);
-    // Send socket
-    socket.emit("SCHEDULE_INTERVIEW", {
+    InterviewService.createInterview({
       "title": title,
       "content": 'New interview scheduled.',
       "startTime": startTime.toString(),
@@ -274,38 +294,27 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
       "senderId": userId,
       "receiverId": widget.chatter.id,
       "meeting_room_code": roomCode,
-      "meeting_room_id": roomId
+      "meeting_room_id": roomId,
+      "expired_at": endTime.toString(),
     });
   }
 
   void handleEditInterview(
       int interviewId, String title, DateTime startTime, DateTime endTime) {
     try {
-      print('id: $interviewId');
-      socket.emit("UPDATE_INTERVIEW", {
-        "interviewId": interviewId,
+      InterviewService.updateInterview(interviewId, {
         "title": title,
         "startTime": startTime.toString(),
         "endTime": endTime.toString(),
-        "updateAction": true
       });
     } catch (e) {
       print('Error: update interview, $e');
     }
   }
 
-  void handleDeleteInterview(
-      int interviewId, String title, DateTime startTime, DateTime endTime) {
+  void handleDeleteInterview(int interviewId) {
     try {
-      print('id: $interviewId');
-      socket.emit("UPDATE_INTERVIEW", {
-        "interviewId": interviewId,
-        "title": title,
-        "startTime": startTime.toString(),
-        "endTime": endTime.toString(),
-        "deleteAction": true
-      });
-      print('delete interview');
+      InterviewService.deleteInterview(interviewId);
     } catch (e) {
       print('Error: delete interview, $e');
     }

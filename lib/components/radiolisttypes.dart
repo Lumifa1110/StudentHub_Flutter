@@ -7,7 +7,7 @@ class RadioListTypes extends StatefulWidget {
   final UserRole? selectedType;
   final Function(UserRole) onTypeSelected;
 
-  RadioListTypes({
+  const RadioListTypes({
     Key? key,
     required this.selectedType,
     required this.onTypeSelected,

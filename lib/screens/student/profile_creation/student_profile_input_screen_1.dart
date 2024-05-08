@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/index.dart';
 import 'package:studenthub/components/profile_input/custom_textfield.dart';
 import 'package:studenthub/components/profile_input/education_item.dart';
 import 'package:studenthub/components/profile_input/language_item.dart';
 import 'package:studenthub/components/profile_input/list_empty_box.dart';
+import 'package:studenthub/config/config.dart';
 import 'package:studenthub/models/education_model.dart';
 import 'package:studenthub/models/index.dart';
 import 'package:studenthub/models/language_model.dart';
@@ -14,6 +18,7 @@ import 'package:studenthub/services/index.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 import 'index.dart';
+import 'package:http/http.dart' as http;
 
 class StudentProfileInputScreen1 extends StatefulWidget {
   const StudentProfileInputScreen1({super.key});
@@ -23,9 +28,10 @@ class StudentProfileInputScreen1 extends StatefulWidget {
 }
 
 class _StudentProfileInputScreen1State extends State<StudentProfileInputScreen1> {
+  late SharedPreferences _prefs;
+
   // TextField controllers
   final fullnameController = TextEditingController();
-  final techStackController = TextEditingController();
   final languageController = TextEditingController();
   final educationController = TextEditingController();
   final educationStartYearController = TextEditingController();
@@ -39,15 +45,18 @@ class _StudentProfileInputScreen1State extends State<StudentProfileInputScreen1>
   late List<SkillSet> skillSets = [];
   final List<SkillSet> studentSelectedSkills = [];
   late Map<int, bool> isCheckedList;
+  bool isSkillLoading = false;
 
   // Language states
   final List<Language> studentSelectedLanguages = [];
   late String selectedLanguageLevel;
+  bool isLanguageLoading = false;
 
   // Education states
   final List<Education> studentSelectedEducations = [];
   late DateTime selectedStartDate = DateTime.now();
   late DateTime selectedEndDate = DateTime.now();
+  bool isEducationLoading = false;
 
   // UI handling states
   late bool isOpenLanguageInput;
@@ -59,31 +68,91 @@ class _StudentProfileInputScreen1State extends State<StudentProfileInputScreen1>
     'Medium',
     'Low',
   ];
+  bool _isMounted = false;
+
+  @override
+  void dispose() {
+    languageController.dispose();
+    educationController.dispose();
+    _isMounted = false;
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
-    fetchAllTechstack();
-    fetchAllSkillset();
+    _isMounted = true;
+    fetchAllTechstack().then((value) => fetchAllSkillset().then((value) {
+          if (_isMounted) {
+            _loadScreen();
+          }
+        }));
+
     isOpenLanguageInput = false;
     selectedLanguageLevel = 'Medium';
     isOpenEducationInput = false;
   }
 
-  void fetchAllTechstack() async {
+  Future<void> fetchAllTechstack() async {
     final Map<String, dynamic> response = await DefaultService.getAllTechstack();
-    print(response);
-    setState(() {
-      techStacks = response['result'].map<TechStack>((json) => TechStack.fromJson(json)).toList();
-    });
+    if (_isMounted) {
+      setState(() {
+        techStacks = response['result'].map<TechStack>((json) => TechStack.fromJson(json)).toList();
+      });
+    }
   }
 
-  void fetchAllSkillset() async {
+  Future<void> fetchAllSkillset() async {
     final Map<String, dynamic> response = await DefaultService.getAllSkillset();
-    setState(() {
-      skillSets = response['result'].map<SkillSet>((json) => SkillSet.fromJson(json)).toList();
-      isCheckedList = {for (var skillset in skillSets) skillset.id: false};
-    });
+    if (_isMounted) {
+      setState(() {
+        skillSets = response['result'].map<SkillSet>((json) => SkillSet.fromJson(json)).toList();
+        isCheckedList = {for (var skillset in skillSets) skillset.id: false};
+      });
+    }
+  }
+
+  Future<void> _loadScreen() async {
+    if (!_isMounted) return;
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+    final studentProfile = jsonDecode(_prefs.getString('student_profile')!);
+
+    if (studentProfile != null) {
+      final studentId = studentProfile['id'];
+
+      try {
+        final response = await http.get(
+          Uri.parse('$uriBase/api/profile/student/$studentId'),
+          headers: {'Authorization': 'Bearer $token'},
+        );
+
+        if (response.statusCode >= 200 && response.statusCode < 300) {
+          final studentData = jsonDecode(response.body)['result'];
+          setState(() {
+            fullnameController.text = studentData['fullname'] ?? '';
+            selectedTechStack = studentData['techStack']['id'];
+            final List<dynamic> skillSetJson = studentData['skillSets'];
+            for (final skill in skillSetJson) {
+              addSelectedSkills(skill['id']);
+            }
+            if (studentSelectedSkills.isNotEmpty) {
+              isSkillLoading = false;
+            }
+            final List<dynamic> languageJson = studentData['languages'];
+            studentSelectedLanguages.addAll(
+              languageJson.map((langJson) => Language.fromJson(langJson)),
+            );
+            final List<dynamic> educationJson = studentData['educations'];
+            studentSelectedEducations.addAll(
+              educationJson.map((eduJson) => Education.fromJson(eduJson)),
+            );
+          });
+        }
+      } catch (e) {
+        print('Error: $e');
+      }
+    }
   }
 
   void addSelectedSkills(int id) {
@@ -172,17 +241,16 @@ class _StudentProfileInputScreen1State extends State<StudentProfileInputScreen1>
   }
 
   @override
-  void dispose() {
-    languageController.dispose();
-    educationController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     // late List<bool> checkedItemList = [];
     return Scaffold(
-      appBar: const AuthAppBar(canBack: true, title: 'Create student profile'),
+      appBar: AuthAppBar(
+        canBack: true,
+        title: 'Student Profile',
+        onRoleChanged: (result) {
+          Navigator.pushReplacementNamed(context, '/company/dashboard');
+        },
+      ),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),

@@ -24,15 +24,16 @@ class _SubmitProposalScreenState extends State<SubmitProposalScreen> {
   final TextEditingController _coverLetter = TextEditingController();
   bool _erro = false;
 
-  Future<void> _loading_pref() async {
+  Future<void> loadingPref() async {
     _pref = await SharedPreferences.getInstance();
   }
 
   @override
   void initState() {
     super.initState();
-    _loading_pref().then((_) => _token = _pref.getString('token')).then((_) =>
-        _idStudent = jsonDecode(_pref.getString('student_profile')!)['id']);
+    loadingPref()
+        .then((_) => _token = _pref.getString('token'))
+        .then((_) => _idStudent = jsonDecode(_pref.getString('student_profile')!)['id']);
   }
 
   //Post proposal
@@ -52,12 +53,14 @@ class _SubmitProposalScreenState extends State<SubmitProposalScreen> {
         body: jsonEncode(data),
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
-        Navigator.pushReplacementNamed(context, '/list');
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, '/list');
+        }
       } else {
-        print(response.body);
+        print('Body: ${response.body}');
       }
     } catch (e) {
-      print(e);
+      print('Error: $e');
     }
   }
 
@@ -84,14 +87,12 @@ class _SubmitProposalScreenState extends State<SubmitProposalScreen> {
               const SizedBox(height: 20),
               const Text(
                 'Cover letter',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: AppFonts.h2FontSize),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: AppFonts.h2FontSize),
               ),
               const SizedBox(height: 10),
               const Text(
                 'Describe why do you fit to this project',
-                style: TextStyle(
-                    fontSize: AppFonts.h3FontSize, color: blackTextColor),
+                style: TextStyle(fontSize: AppFonts.h3FontSize, color: blackTextColor),
               ),
               const SizedBox(height: 10),
               TextField(
@@ -99,7 +100,7 @@ class _SubmitProposalScreenState extends State<SubmitProposalScreen> {
                 onChanged: validateTextfield,
                 controller: _coverLetter,
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     isDense: true,
                     errorText: _erro ? 'Please enter cover letter' : null),
               ),
@@ -117,9 +118,7 @@ class _SubmitProposalScreenState extends State<SubmitProposalScreen> {
                         ),
                         child: const Text(
                           "Cancel",
-                          style: TextStyle(
-                              fontSize: AppFonts.h3FontSize,
-                              color: whiteTextColor),
+                          style: TextStyle(fontSize: AppFonts.h3FontSize, color: whiteTextColor),
                         )),
                   ),
                   const SizedBox(width: 10),
@@ -135,9 +134,7 @@ class _SubmitProposalScreenState extends State<SubmitProposalScreen> {
                       ),
                       child: const Text(
                         "Submit proposal",
-                        style: TextStyle(
-                            fontSize: AppFonts.h3FontSize,
-                            color: whiteTextColor),
+                        style: TextStyle(fontSize: AppFonts.h3FontSize, color: whiteTextColor),
                       ),
                     ),
                   ),

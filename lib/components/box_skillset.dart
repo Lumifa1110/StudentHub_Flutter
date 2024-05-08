@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studenthub/models/index.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
@@ -36,8 +35,7 @@ class _BoxSkillsetState extends State<BoxSkillset> {
       child: widget.hideDelete
           ? Text(
               widget.text,
-              style: const TextStyle(
-                  color: whiteTextColor, fontSize: AppFonts.h2FontSize),
+              style: const TextStyle(color: whiteTextColor, fontSize: AppFonts.h2FontSize),
             )
           : Wrap(
               alignment: WrapAlignment.center,
@@ -45,8 +43,7 @@ class _BoxSkillsetState extends State<BoxSkillset> {
               children: [
                 Text(
                   widget.text,
-                  style: const TextStyle(
-                      color: whiteTextColor, fontSize: AppFonts.h2FontSize),
+                  style: const TextStyle(color: whiteTextColor, fontSize: AppFonts.h2FontSize),
                 ),
                 SizedBox(
                   height: 36,

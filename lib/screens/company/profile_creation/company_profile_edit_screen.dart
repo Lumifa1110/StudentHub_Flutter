@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:studenthub/components/button_simple.dart';
 import 'package:studenthub/components/textfield/textfield_label_v2.dart';
 import 'package:studenthub/config/config.dart';
@@ -12,7 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:studenthub/utils/font.dart';
 
 class CompanyProfileEditScreen extends StatefulWidget {
-  const CompanyProfileEditScreen({Key? key}) : super(key: key);
+  const CompanyProfileEditScreen({super.key});
 
   @override
   State<CompanyProfileEditScreen> createState() => _CompanyProfileEditScreenState();
@@ -85,8 +84,8 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
   Future<void> _loadScreen() async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
-    final company_profile = _prefs.getString('company_profile');
-    final companyId = jsonDecode(company_profile!)['id'];
+    final companyProfile = _prefs.getString('company_profile');
+    final companyId = jsonDecode(companyProfile!)['id'];
 
     try {
       final response = await http.get(
@@ -94,12 +93,9 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
         headers: {'Authorization': 'Bearer $token'},
       );
 
-      print(response.statusCode);
-      print(response.body);
-
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final companyData = jsonDecode(response.body)['result'];
-        print(companyData);
+        // print(companyData);
         setState(() {
           companyNameController.text = companyData['companyName'] ?? '';
           companyWebsiteController.text = companyData['website'] ?? '';
@@ -116,7 +112,6 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadScreen();
   }
@@ -124,7 +119,10 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AuthAppBar(canBack: true),
+      appBar: const AuthAppBar(
+        canBack: true,
+        title: 'Company Profile',
+      ),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
