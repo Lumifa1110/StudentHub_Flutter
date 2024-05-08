@@ -11,7 +11,6 @@ import 'package:http/http.dart' as http;
 import 'package:studenthub/config/config.dart';
 import 'package:studenthub/utils/timer.dart';
 
-import '../../utils/mock_data.dart';
 
 class StudentDashboardScreen extends StatefulWidget {
   const StudentDashboardScreen({super.key});
@@ -58,11 +57,11 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
     //Loading Active proposal
     try {
       final response = await _client.get(
-        Uri.parse('$uriBase/api/proposal/project/$_currentIdStudent?statusFlag=1'),
+        Uri.parse('$uriBase/api/proposal/project/$_currentIdStudent?statusFlag=1&typeFlag=0'),
         headers: {'Authorization': 'Bearer $_token'},
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.statusCode == 200) {
         if (jsonDecode(response.body)['result'] != null) {
           _responseActiveProposal = jsonDecode(response.body)['result'];
         }
@@ -76,7 +75,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
     //Loading submitted proposal
     try {
       final response = await _client.get(
-        Uri.parse('$uriBase/api/proposal/project/$_currentIdStudent?statusFlag=0'),
+        Uri.parse('$uriBase/api/proposal/project/$_currentIdStudent?statusFlag=0&typeFlag=0'),
         headers: {'Authorization': 'Bearer $_token'},
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -133,8 +132,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
 
   Future<void> _loadScreen() async {
     _prefs = await SharedPreferences.getInstance();
-    // _token = _prefs.getString('token');
-    // _currentIdStudent = jsonDecode(_prefs.getString('student_profile')!)['id'];
+    _token = _prefs.getString('token');
     final role = _prefs.getInt('current_role');
 
     if (role == 0) {
@@ -142,7 +140,11 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
       if (profile == 'null') {
         Navigator.pushReplacementNamed(context, '/student');
       }
-    } else {
+      else{
+        _currentIdStudent = jsonDecode(_prefs.getString('student_profile')!)['id'];
+      }
+    }
+    else {
       Navigator.pushReplacementNamed(context, '/company/dashboard');
     }
   }
@@ -177,11 +179,12 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                     borderRadius: BorderRadius.circular(10)),
                 child: TabBar(
                     indicator: BoxDecoration(
-                      color: Colors.greenAccent,
+                      color: mainColor,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(width: 1),
                     ),
                     indicatorSize: TabBarIndicatorSize.tab,
+                    labelColor: whiteTextColor,
                     tabs: const <Widget>[
                       Tab(
                         text: 'All project',

@@ -5,10 +5,12 @@ import 'package:studenthub/utils/font.dart';
 class Dialog_ extends StatelessWidget {
 
   final Future<void> Function(dynamic idProject) f_function;
+  final String titleDialog;
   final dynamic project;
   final String question;
-  final String titleAcceptButton;
-  const Dialog_({super.key, required this.f_function, required this.project, required this.question, required this.titleAcceptButton});
+  final String textAcceptButton;
+
+  const Dialog_({super.key, required this.f_function, required this.titleDialog, this.project, required this.question, required this.textAcceptButton});
 
 
 
@@ -20,9 +22,9 @@ class Dialog_ extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(6.0),
       ),
-      title: const Text(
-        'Hire offer',
-        style: TextStyle(
+      title: Text(
+      titleDialog,
+        style: const TextStyle(
           color: AppColor.primary,
           fontSize: AppFonts.h2FontSize,
           fontWeight: FontWeight.w500,
@@ -64,7 +66,7 @@ class Dialog_ extends StatelessWidget {
               },
               child: Align(
                 alignment: Alignment.centerRight,
-                child: Text(titleAcceptButton),
+                child: Text(textAcceptButton),
               ),
             ),
           ],
