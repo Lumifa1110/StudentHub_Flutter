@@ -72,6 +72,9 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
             color: blackTextColor,
             thickness: 2.0,
           ),
+          const SizedBox(
+            height: 5,
+          ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: InkWell(
@@ -80,13 +83,6 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Flexible(
-                    child: Text(
-                      'Created ${timeSinceCreated(widget.project.createdAt)}',
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: AppFonts.h4FontSize, color: lightgrayColor),
-                    ),
-                  ),
                   Flexible(
                     child: Text(
                       widget.project.title,
@@ -126,6 +122,13 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                   Flexible(
                     child: Text(
                       'Proposals: ${checkCountProposal(widget.project.countProposals)}',
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: AppFonts.h4FontSize, color: lightgrayColor),
+                    ),
+                  ),
+                  Flexible(
+                    child: Text(
+                      'Created ${timeSinceCreated(widget.project.createdAt)}',
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(fontSize: AppFonts.h4FontSize, color: lightgrayColor),
                     ),

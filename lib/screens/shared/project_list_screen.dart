@@ -274,6 +274,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AuthAppBar(
         canBack: false,
         onRoleChanged: (result) {
@@ -303,9 +304,9 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
                   Container(
                     width: 40,
                     height: 40,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: blackTextColor,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                     child: Center(
                       child: IconButton(

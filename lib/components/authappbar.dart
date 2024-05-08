@@ -68,7 +68,11 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
 
     return AppBar(
-      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Theme.of(context).primaryColor,
+        systemNavigationBarColor: Theme.of(context).primaryColor,
+      ),
+      backgroundColor: Theme.of(context).colorScheme.primary,
       leadingWidth: 40,
       leading: canBack && Navigator.canPop(context)
           ? SizedBox(
@@ -110,15 +114,15 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
                   'Student',
                   style: TextStyle(
                     color: whiteTextColor,
-                    fontSize: AppFonts.h0FontSize,
+                    fontSize: AppFonts.halpFontSize,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
                   'Hub',
                   style: TextStyle(
-                    color: blackTextColor,
-                    fontSize: AppFonts.h0FontSize,
+                    color: lightergrayColor,
+                    fontSize: AppFonts.halpFontSize,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

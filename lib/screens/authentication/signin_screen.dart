@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:studenthub/components/authappbar.dart';
@@ -6,6 +8,7 @@ import 'package:studenthub/components/textfield_floatinglabel.dart';
 import 'package:studenthub/models/user_model.dart';
 import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/services/index.dart';
+import 'package:studenthub/theme/theme_controller.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
@@ -21,6 +24,8 @@ class _SigninScreenState extends State<SigninScreen> {
   final TextEditingController passwordController = TextEditingController();
 
   List<String> errorMessages = [];
+
+  bool isDark = false;
 
   late SharedPreferences prefs;
 
@@ -146,17 +151,23 @@ class _SigninScreenState extends State<SigninScreen> {
             const SizedBox(
               height: 20,
             ),
-            const Image(
-              height: 120,
-              width: 120,
-              image: AssetImage('assets/images/smileyface.png'),
+            GestureDetector(
+              onTap: () {
+                isDark = !isDark;
+                Provider.of<ThemeController>(context, listen: false).toggleTheme(isDark);
+              },
+              child: const Image(
+                height: 120,
+                width: 120,
+                image: AssetImage('assets/images/smileyface.png'),
+              ),
             ),
             Text(
               'Login with StudentHub!',
               style: TextStyle(
                 fontSize: 33,
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).colorScheme.onBackground,
               ),
             ),
             const SizedBox(
@@ -254,42 +265,19 @@ class _SigninScreenState extends State<SigninScreen> {
                   ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushNamed('/forgotpassword');
-                    },
-                    child: Text(
-                      'Forgot Password',
-                      style: TextStyle(
-                        color: Colors.blue, // Change the color of the text here
-                        decoration: TextDecoration.underline, // Add underline to indicate it's clickable
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
             Container(
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(horizontal: 20),
               padding: const EdgeInsets.symmetric(vertical: 1),
               decoration: BoxDecoration(
-                border: Border.all(color: Theme.of(context).colorScheme.secondary, width: 1.0),
-                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: lightestgrayColor, width: 1.0),
+                borderRadius: BorderRadius.circular(9),
                 color: Theme.of(context).colorScheme.primary,
                 boxShadow: [
                   BoxShadow(
-                    color: Theme.of(context).colorScheme.secondary.withOpacity(0.6),
-                    spreadRadius: 2.0,
-                    blurRadius: 0.6,
+                    color: Theme.of(context).colorScheme.shadow.withOpacity(0.8),
+                    blurRadius: 5.0,
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
@@ -306,13 +294,41 @@ class _SigninScreenState extends State<SigninScreen> {
                 ),
               ),
             ),
+            const SizedBox(
+              height: 5,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/forgotpassword');
+                    },
+                    child: const Text(
+                      'Forgot Password',
+                      style: TextStyle(
+                        shadows: [Shadow(color: mainColor, offset: Offset(0, -3))],
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.transparent,
+                        decoration: TextDecoration.underline,
+                        decorationColor: mainColor,
+                        decorationThickness: 2,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             // Register
             const Spacer(),
             Text(
               '___Don\'t have a StudentHub account ?___',
               style: TextStyle(
                 fontSize: AppFonts.h2FontSize,
-                color: Theme.of(context).colorScheme.secondary,
+                color: Theme.of(context).colorScheme.onSurface,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -323,14 +339,14 @@ class _SigninScreenState extends State<SigninScreen> {
               width: MediaQuery.of(context).size.width * 0.6,
               padding: const EdgeInsets.symmetric(vertical: 1),
               decoration: BoxDecoration(
-                border: Border.all(color: Theme.of(context).colorScheme.secondary, width: 1.0),
-                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: lightestgrayColor, width: 1.0),
+                borderRadius: BorderRadius.circular(9),
                 color: Theme.of(context).colorScheme.primary,
                 boxShadow: [
                   BoxShadow(
-                    color: Theme.of(context).colorScheme.secondary.withOpacity(0.6),
-                    spreadRadius: 2.0,
-                    blurRadius: 0.6,
+                    color: Theme.of(context).colorScheme.shadow.withOpacity(0.8),
+                    blurRadius: 5.0,
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),

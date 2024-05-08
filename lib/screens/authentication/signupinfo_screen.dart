@@ -52,7 +52,7 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: const AuthAppBar(
         canBack: true,
         isShowIcon: false,
@@ -65,20 +65,20 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
                 height: 30,
               ),
               widget.selectedType == UserRole.company
-                  ? const Text(
+                  ? Text(
                       'Sign up as Company',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: blackTextColor,
+                        color: Theme.of(context).colorScheme.onBackground,
                       ),
                     )
-                  : const Text(
+                  : Text(
                       'Sign up as Student',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: blackTextColor,
+                        color: Theme.of(context).colorScheme.onBackground,
                       ),
                     ),
               const SizedBox(
@@ -179,7 +179,7 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
                     _isAgree = value;
                   });
                 },
-                activeColor: mainColor,
+                activeColor: Theme.of(context).colorScheme.primary,
                 checkColor: whiteTextColor,
                 controlAffinity: ListTileControlAffinity.leading,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 10),
@@ -202,14 +202,14 @@ class _SignupInfoScreenState extends State<SignupInfoScreen> {
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 padding: const EdgeInsets.all(0),
                 decoration: BoxDecoration(
-                  border: Border.all(color: lightgrayColor, width: 2.0),
-                  color: mainColor,
-                  boxShadow: const [
+                  border: Border.all(color: lightestgrayColor, width: 1.0),
+                  borderRadius: BorderRadius.circular(9),
+                  color: Theme.of(context).colorScheme.primary,
+                  boxShadow: [
                     BoxShadow(
-                      color: lightgrayColor,
-                      offset: Offset(0, 0),
-                      blurRadius: 1.0,
-                      spreadRadius: 1.0,
+                      color: Theme.of(context).colorScheme.shadow.withOpacity(0.8),
+                      blurRadius: 5.0,
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),

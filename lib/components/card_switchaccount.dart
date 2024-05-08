@@ -22,7 +22,7 @@ class CardSwitchAccount extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: ListTile(
-        tileColor: isSelected ? Colors.green : null,
+        tileColor: isSelected ? mainColor : whiteTextColor,
         dense: true,
         leading: Icon(
           accountAvt,

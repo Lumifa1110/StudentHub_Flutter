@@ -5,6 +5,7 @@ import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/services/index.dart';
 import 'package:studenthub/utils/colors.dart';
+import 'package:studenthub/utils/font.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -149,14 +150,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 45,
                 padding: const EdgeInsets.all(0),
                 decoration: BoxDecoration(
-                  border: Border.all(color: lightgrayColor, width: 2.0),
-                  color: mainColor,
-                  boxShadow: const [
+                  border: Border.all(color: lightestgrayColor, width: 1.0),
+                  borderRadius: BorderRadius.circular(9),
+                  color: Theme.of(context).colorScheme.primary,
+                  boxShadow: [
                     BoxShadow(
-                      color: lightgrayColor,
-                      offset: Offset(0, 0),
-                      blurRadius: 1.0,
-                      spreadRadius: 1.0,
+                      color: Theme.of(context).colorScheme.shadow.withOpacity(0.8),
+                      blurRadius: 5.0,
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),
@@ -164,16 +165,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: handleCompany,
                   style: ButtonStyle(
                     shape: MaterialStateProperty.all<OutlinedBorder>(
-                      const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.zero,
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(9),
                       ),
                     ),
-                    backgroundColor: MaterialStateProperty.all<Color>(mainColor),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                   child: const Text(
                     'Company',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: AppFonts.h1_2FontSize,
                       color: whiteTextColor,
                     ),
                   ),
@@ -187,14 +190,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 45,
                 padding: const EdgeInsets.all(0),
                 decoration: BoxDecoration(
-                  border: Border.all(color: lightgrayColor, width: 2.0),
-                  color: mainColor,
-                  boxShadow: const [
+                  border: Border.all(color: lightergrayColor, width: 1.0),
+                  borderRadius: BorderRadius.circular(9),
+                  color: Theme.of(context).colorScheme.primary,
+                  boxShadow: [
                     BoxShadow(
-                      color: lightgrayColor,
-                      offset: Offset(0, 0),
-                      blurRadius: 1.0,
-                      spreadRadius: 1.0,
+                      color: Theme.of(context).colorScheme.shadow.withOpacity(0.8),
+                      blurRadius: 5.0,
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),
@@ -202,16 +205,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: handleStudent,
                   style: ButtonStyle(
                     shape: MaterialStateProperty.all<OutlinedBorder>(
-                      const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.zero,
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(9),
                       ),
                     ),
-                    backgroundColor: MaterialStateProperty.all<Color>(mainColor),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                   child: const Text(
                     'Student',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: AppFonts.h1_2FontSize,
                       color: whiteTextColor,
                     ),
                   ),

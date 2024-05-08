@@ -30,12 +30,21 @@ class CustomRadioCard extends StatelessWidget {
         child: Container(
           height: 80,
           decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(9),
             border: Border.all(
-              color: blackTextColor,
+              color: Theme.of(context).colorScheme.onSurface,
               width: 2.0,
             ),
-            color:
-                selectedType == accountType ? lightestgrayColor : Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).colorScheme.shadow.withOpacity(0.8),
+                blurRadius: 6.0,
+                offset: const Offset(0, 6),
+              ),
+            ],
+            color: selectedType == accountType
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.surface,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,16 +52,21 @@ class CustomRadioCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 10),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
                     child: Icon(
                       Icons.contact_page,
                       size: 40,
+                      color: selectedType == accountType
+                          ? whiteTextColor
+                          : Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   Radio<UserRole>(
                     value: accountType,
-                    activeColor: blackTextColor,
+                    activeColor: selectedType == accountType
+                        ? whiteTextColor
+                        : Theme.of(context).colorScheme.onSurface,
                     groupValue: selectedType,
                     onChanged: (UserRole? value) {
                       onTap();
@@ -64,10 +78,11 @@ class CustomRadioCard extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 15),
                 child: Text(
                   _getTypeDisplayName(accountType),
-                  style: const TextStyle(
-                    color: blackTextColor,
+                  style: TextStyle(
+                    color: selectedType == accountType
+                        ? whiteTextColor
+                        : Theme.of(context).colorScheme.onSurface,
                     fontSize: 18,
-                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),

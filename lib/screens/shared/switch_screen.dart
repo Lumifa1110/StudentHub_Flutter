@@ -274,8 +274,9 @@ class _SwitchScreenState extends State<SwitchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
         elevation: 5.0,
         leadingWidth: 40,
         leading: Navigator.canPop(context)
@@ -316,12 +317,12 @@ class _SwitchScreenState extends State<SwitchScreen> {
               'Accounts',
               style: TextStyle(
                 color: whiteTextColor,
-                fontSize: AppFonts.h1FontSize,
+                fontSize: AppFonts.h0FontSize,
+                fontWeight: FontWeight.w500,
               ),
             )
           ],
         ),
-        backgroundColor: mainColor,
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.search),
@@ -360,36 +361,38 @@ class _SwitchScreenState extends State<SwitchScreen> {
                     height: 20,
                   ),
             const SizedBox(
-              height: 10,
+              height: 5,
             ),
-            const Divider(
+            Divider(
               height: 1,
-              thickness: 1,
-              color: Colors.black,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
             const SizedBox(
-              height: 10,
+              height: 5,
             ),
-            _roles.isNotEmpty && _currentRole != null
-                ? SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        for (var role in _roles)
-                          CardSwitchAccount(
-                            accountAvt: Icons.person,
-                            accountFullname: _accountFullname ?? '',
-                            accountRole: role,
-                            isSelected: role == _currentRole.toString(),
-                            onTap: () => _handleRoleSelection(role),
-                          ),
-                      ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: _roles.isNotEmpty && _currentRole != null
+                  ? SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          for (var role in _roles)
+                            CardSwitchAccount(
+                              accountAvt: Icons.person,
+                              accountFullname: _accountFullname ?? '',
+                              accountRole: role,
+                              isSelected: role == _currentRole.toString(),
+                              onTap: () => _handleRoleSelection(role),
+                            ),
+                        ],
+                      ),
+                    )
+                  : const SizedBox(
+                      height: 20,
                     ),
-                  )
-                : const SizedBox(
-                    height: 20,
-                  ),
-            const Divider(
-              color: blackTextColor,
+            ),
+            Divider(
+              color: Theme.of(context).colorScheme.onSurface,
               thickness: 3.0,
             ),
             Padding(

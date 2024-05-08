@@ -5,20 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:http/http.dart' as http;
 import 'package:studenthub/config/config.dart';
+import 'package:studenthub/utils/font.dart';
 
-
-class ForgotPasswordScreen extends StatefulWidget{
+class ForgotPasswordScreen extends StatefulWidget {
   @override
   State<ForgotPasswordScreen> createState() => StateForgotPasswordScreen();
 }
 
-class StateForgotPasswordScreen extends State<ForgotPasswordScreen>{
+class StateForgotPasswordScreen extends State<ForgotPasswordScreen> {
   final TextEditingController _emailEnter = TextEditingController();
   bool _erro = false;
 
   Future<void> postForgotPassword(BuildContext context) async {
-
-    Map<String, dynamic> emailForgotPassword = {"email" : _emailEnter.text};
+    Map<String, dynamic> emailForgotPassword = {"email": _emailEnter.text};
     try {
       final response = await http.post(
         Uri.parse('$uriBase/api/user/forgotPassword'),
@@ -44,7 +43,7 @@ class StateForgotPasswordScreen extends State<ForgotPasswordScreen>{
             ],
           ),
         );
-      } else
+      } else {
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
@@ -58,89 +57,122 @@ class StateForgotPasswordScreen extends State<ForgotPasswordScreen>{
             ],
           ),
         );
+      }
     } catch (e) {
       print(e);
     }
   }
+
   void _fValiteDate(String value) {
     setState(() {
       _erro = value.isEmpty;
     });
   }
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: const AuthAppBar(
         canBack: false,
         isShowIcon: false,
       ),
-      body: Container(
-        height:  MediaQuery.sizeOf(context).height*2/7,
-        width: MediaQuery.sizeOf(context).width*3/4,
-        margin: EdgeInsets.only(left: MediaQuery.sizeOf(context).width*1/8, top: MediaQuery.sizeOf(context).height*1/6),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: Colors.black
-          )
-        ),
-        child:Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                flex: 2 ,
-                  child: Text("Find your account password", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),)
+      body: Center(
+        child: Container(
+          height: MediaQuery.sizeOf(context).height * 2 / 6,
+          width: MediaQuery.sizeOf(context).width * 5 / 6,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.black),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).colorScheme.shadow.withOpacity(0.8),
+                blurRadius: 5.0,
+                spreadRadius: 2.0,
+                offset: const Offset(0, 0),
               ),
-              Expanded(
-                flex: 7,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Please enter your email to find your account password.", style: TextStyle(fontSize: 12)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      TextField(
-                        style: TextStyle(fontSize: 12),
-                        controller: _emailEnter,
-                        onChanged: _fValiteDate,
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(),
-                          hintStyle: const TextStyle(fontSize: 12),
-                          isDense: true,
-                          contentPadding: const EdgeInsets.all(10),
-                          errorText: _erro ? 'Please enter a email' : null,
-                          hintText: 'Email',
-                          // fon
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    "Find your account password",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ),
+                Expanded(
+                    flex: 7,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("Please enter your email to find your account password.",
+                            style: TextStyle(fontSize: AppFonts.h3FontSize)),
+                        const SizedBox(
+                          height: 10,
                         ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                              onPressed: (){
-                                Navigator.of(context).pushNamed('/signin');
-                              },
-                              child: Text('Cancel')
+                        TextField(
+                          style: const TextStyle(fontSize: 14),
+                          controller: _emailEnter,
+                          onChanged: _fValiteDate,
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
+                            hintStyle: const TextStyle(fontSize: 16),
+                            isDense: true,
+                            contentPadding: const EdgeInsets.all(10),
+                            errorText: _erro ? 'Please enter a email' : null,
+                            hintText: 'Email',
+                            // fon
                           ),
-                          SizedBox(width: 5,),
-                          ElevatedButton(
-                              onPressed: (){
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(true);
+                              },
+                              child: const Text(
+                                'Cancel',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
                                 postForgotPassword(context);
                               },
-                              child: Text('Confirm')
-                          ),
-                        ],
-                      ),
-                    ],
-                  )
-              )
-            ],
+                              child: const Text(
+                                'Confirm',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ))
+              ],
+            ),
           ),
         ),
       ),

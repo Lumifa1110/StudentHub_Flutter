@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/screens/authentication/changepassword_screen.dart';
 import 'package:studenthub/screens/authentication/forgotpassword_screen.dart';
@@ -22,6 +21,8 @@ class StudentHub extends StatefulWidget {
 }
 
 class _StudentHubState extends State<StudentHub> {
+  // ThemeMode _themeMode = ThemeMode.dark;
+
   @override
   void dispose() {
     _themeController.removeListener(themeListener);
@@ -31,7 +32,6 @@ class _StudentHubState extends State<StudentHub> {
   @override
   void initState() {
     _themeController.addListener(themeListener);
-
     super.initState();
   }
 
@@ -43,21 +43,15 @@ class _StudentHubState extends State<StudentHub> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.blue,
-        systemNavigationBarColor: Colors.blue,
-      ),
-    );
     return MaterialApp(
       title: 'Flutter Demo',
       // theme: ThemeData(
       //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       //   useMaterial3: true,
       // ),
-
       theme: lightTheme,
       darkTheme: darkTheme,
+      // themeMode: _themeMode,
       initialRoute: '/signin',
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {

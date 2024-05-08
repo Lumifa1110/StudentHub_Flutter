@@ -4,6 +4,7 @@ class AppFonts {
   // FONT SIZE
   // ---------
   // heading
+  static const double halpFontSize = 26.0;
   static const double h0FontSize = 24.0;
   static const double h1FontSize = 22.0;
   static const double h1_2FontSize = 20.0;

@@ -311,9 +311,12 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                                           Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                              builder: (context) => StudentDashboardDetail(
-                                                                detailProject: _responseSubmitProposal[index],
-                                                                nameStudent: _prefs.getString('username')!,
+                                                              builder: (context) =>
+                                                                  StudentDashboardDetail(
+                                                                detailProject:
+                                                                    _responseSubmitProposal[index],
+                                                                nameStudent:
+                                                                    _prefs.getString('username')!,
                                                               ),
                                                             ),
                                                           );
