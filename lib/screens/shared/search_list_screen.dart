@@ -282,7 +282,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
                     () => _searchQuery = query.toLowerCase(),
                   ),
                   onSubmitted: (query) => {
-                    Navigator.pop(context),
+                    Navigator.pop(context, true),
                     _loadScreen(),
                   },
                   searchText: _searchQuery,
