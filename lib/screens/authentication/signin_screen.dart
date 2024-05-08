@@ -254,6 +254,29 @@ class _SigninScreenState extends State<SigninScreen> {
                   ),
               ],
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/forgotpassword');
+                    },
+                    child: Text(
+                      'Forgot Password',
+                      style: TextStyle(
+                        color: Colors.blue, // Change the color of the text here
+                        decoration: TextDecoration.underline, // Add underline to indicate it's clickable
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
             Container(
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(horizontal: 20),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/screens/authentication/changepassword_screen.dart';
+import 'package:studenthub/screens/authentication/forgotpassword_screen.dart';
 import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/screens/student/view_offer_screen.dart';
 import 'package:studenthub/theme/theme.dart';
@@ -83,6 +84,8 @@ class _StudentHubState extends State<StudentHub> {
             return MaterialPageRoute(builder: (context) => const ViewOfferScreen());
           case '/signin':
             return MaterialPageRoute(builder: (context) => const SigninScreen());
+          case '/forgotpassword':
+            return MaterialPageRoute(builder: (context) =>  ForgotPasswordScreen());
           case '/user/changepassword':
             return MaterialPageRoute(builder: (context) => const ChangePasswordScreen());
           case '/signup':
