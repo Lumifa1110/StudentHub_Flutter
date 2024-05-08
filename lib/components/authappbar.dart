@@ -103,7 +103,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
               title!,
               style: const TextStyle(
                 color: whiteTextColor,
-                fontSize: AppFonts.h0FontSize,
+                fontSize: AppFonts.halpFontSize,
                 fontWeight: FontWeight.w500,
               ),
             )

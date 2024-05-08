@@ -59,13 +59,13 @@ class _ConversationItemState extends State<ConversationItem> {
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.only(top: 6, bottom: 6, left: 12, right: 12),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              spreadRadius: 2,
-              blurRadius: 2,
+              color: Theme.of(context).colorScheme.shadow.withOpacity(0.3),
+              spreadRadius: 3.0,
+              blurRadius: 3.0,
             ),
           ],
         ),
@@ -81,9 +81,7 @@ class _ConversationItemState extends State<ConversationItem> {
           flex: 1,
           child: Container(
             alignment: Alignment.centerLeft,
-            child: _isLoading
-                ? const UserAvatar(icon: Icons.person)
-                : Container(), // Placeholder for avatar
+            child: _isLoading ? const UserAvatar(icon: Icons.person) : Container(),
           ),
         ),
         const SizedBox(width: 12),
@@ -142,7 +140,10 @@ class _ConversationItemState extends State<ConversationItem> {
           flex: 1,
           child: Container(
             alignment: Alignment.centerLeft,
-            child: const UserAvatar(icon: Icons.person),
+            child: UserAvatar(
+              icon: Icons.person,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
           ),
         ),
         const SizedBox(width: 12),
@@ -163,9 +164,9 @@ class _ConversationItemState extends State<ConversationItem> {
                         widget.message.sender!.id == userId
                             ? widget.message.receiver!.fullname
                             : widget.message.sender!.fullname,
-                        style: const TextStyle(
-                          color: AppFonts.primaryColor,
-                          fontSize: AppFonts.h3FontSize,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontSize: AppFonts.h2FontSize,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -176,8 +177,8 @@ class _ConversationItemState extends State<ConversationItem> {
                         alignment: Alignment.centerRight,
                         child: Text(
                           formatTimeAgo(widget.message.createdAt),
-                          style: const TextStyle(
-                            color: AppFonts.tertiaryColor,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.9),
                             fontSize: AppFonts.h5FontSize,
                             fontWeight: FontWeight.w400,
                           ),
@@ -190,9 +191,9 @@ class _ConversationItemState extends State<ConversationItem> {
                 Flexible(
                   child: Text(
                     widget.message.content,
-                    style: const TextStyle(
-                      color: AppFonts.secondaryColor,
-                      fontSize: AppFonts.h4FontSize,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontSize: AppFonts.h3FontSize,
                       fontWeight: FontWeight.w400,
                     ),
                     overflow: TextOverflow.ellipsis,

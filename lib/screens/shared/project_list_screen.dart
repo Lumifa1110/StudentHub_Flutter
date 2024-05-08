@@ -342,7 +342,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               child: isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : ListView.builder(

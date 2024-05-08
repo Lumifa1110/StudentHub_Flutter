@@ -64,81 +64,97 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20, left: 10, right: 10, top: 10),
+      padding: const EdgeInsets.all(5),
       height: 196,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: const BorderRadius.all(Radius.circular(9)),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.shadow.withOpacity(0.6),
+            spreadRadius: 3.0,
+            blurRadius: 6.0,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
       child: Stack(
         children: [
-          const Divider(
-            color: blackTextColor,
-            thickness: 2.0,
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: InkWell(
-              onTap: widget.onTap,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Flexible(
-                    child: Text(
-                      widget.project.title,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: AppFonts.h2FontSize,
-                          fontWeight: FontWeight.w500,
-                          color: AppColor.tertiary),
+          InkWell(
+            onTap: widget.onTap,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Created ${timeSinceCreated(widget.project.createdAt)}',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: AppFonts.h4FontSize,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                Flexible(
+                  flex: 2,
+                  child: Text(
+                    widget.project.title,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: AppFonts.h1FontSize,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
-                  Flexible(
-                    child: Text(
-                      widget.project.companyName ?? 'Unknown',
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: AppFonts.h2FontSize,
-                          fontWeight: FontWeight.w500,
-                          color: AppColor.tertiary),
+                ),
+                Text(
+                  widget.project.companyName ?? 'Unknown',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: AppFonts.h2FontSize,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).primaryColor),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: Text(
+                    'Time: ${checkProjectScope(widget.project.projectScopeFlag)}, ${widget.project.numberOfStudents} students needed',
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: AppFonts.h4FontSize,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
-                  Flexible(
+                ),
+                Flexible(
+                  flex: 4,
+                  child: SizedBox(
+                    height: 80,
                     child: Text(
-                      'Time: ${checkProjectScope(widget.project.projectScopeFlag)}, ${widget.project.numberOfStudents} students needed',
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: AppFonts.h4FontSize, color: lightgrayColor),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 3,
-                    child: Text(
-                      maxLines: 3,
                       widget.project.description!,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: AppFonts.h3FontSize, color: blackTextColor),
+                      maxLines: 3,
+                      style: TextStyle(
+                        fontSize: AppFonts.h3FontSize,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
                   ),
-                  Flexible(
-                    child: Text(
-                      'Proposals: ${checkCountProposal(widget.project.countProposals)}',
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: AppFonts.h4FontSize, color: lightgrayColor),
-                    ),
+                ),
+                Text(
+                  'Proposals: ${checkCountProposal(widget.project.countProposals)}',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: AppFonts.h4FontSize,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
-                  Flexible(
-                    child: Text(
-                      'Created ${timeSinceCreated(widget.project.createdAt)}',
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: AppFonts.h4FontSize, color: lightgrayColor),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           Positioned(
-            top: 20,
+            top: 15,
             right: 0,
             child: widget.canFavorite
                 ? IconButton(

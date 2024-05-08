@@ -21,7 +21,7 @@ ThemeData darkTheme = ThemeData(
   colorScheme: const ColorScheme.dark(
     background: Color(0xFF333333),
     primary: Color(0xFF0050A0),
-    surface: Color(0xFF8E8989),
+    surface: Color(0xFF505050),
     secondary: Color(0xFF0C0C0C),
     shadow: Color(0xFFFFFFFF),
     error: Color(0xFFC40606),

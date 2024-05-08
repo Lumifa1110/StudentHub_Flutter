@@ -6,11 +6,7 @@ class CustomSearchBar extends StatelessWidget {
   final TextEditingController controller;
   final String placeholder;
 
-  const CustomSearchBar({
-    super.key,
-    required this.controller,
-    required this.placeholder
-  });
+  const CustomSearchBar({super.key, required this.controller, required this.placeholder});
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +14,8 @@ class CustomSearchBar extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 30),
       padding: const EdgeInsets.only(top: 2, bottom: 2, left: 16, right: 4),
       decoration: BoxDecoration(
-        color: AppColor.textFieldBackground,
-        borderRadius: BorderRadius.circular(20),
+        color: Color(0xFFDEDEDE),
+        borderRadius: BorderRadius.circular(21),
       ),
       child: Row(
         children: [
@@ -27,16 +23,11 @@ class CustomSearchBar extends StatelessWidget {
             child: TextField(
               controller: controller,
               cursorColor: AppColor.primary,
-              style: const TextStyle(
-                fontSize: AppFonts.h3FontSize
-              ),
+              style: const TextStyle(fontSize: AppFonts.h3FontSize),
               decoration: InputDecoration(
                 hintText: placeholder,
-                hintStyle: const TextStyle( 
-                  fontSize: AppFonts.h3FontSize,
-                  color: AppFonts.tertiaryColor
-                ),
-                
+                hintStyle:
+                    const TextStyle(fontSize: AppFonts.h3FontSize, color: AppFonts.tertiaryColor),
                 border: InputBorder.none,
               ),
             ),

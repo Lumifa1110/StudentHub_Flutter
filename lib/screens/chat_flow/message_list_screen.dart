@@ -159,7 +159,7 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
     super.build(context);
     return Scaffold(
       appBar: const AuthAppBar(canBack: false, title: 'Chat'),
-      backgroundColor: AppColor.background,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
           child: Container(
               padding: const EdgeInsets.all(20),
