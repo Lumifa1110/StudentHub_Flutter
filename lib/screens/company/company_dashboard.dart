@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:studenthub/components/authappbar.dart';
@@ -9,6 +10,7 @@ import 'package:studenthub/screens/company/alertdialog/alertdialog.dart';
 import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/config/config.dart';
 import 'package:studenthub/utils/colors.dart';
+import 'package:studenthub/utils/font.dart';
 
 class CompanyDashboardScreen extends StatefulWidget {
   const CompanyDashboardScreen({super.key});
@@ -276,14 +278,16 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
                           children: [
                             const Text(
                               'Your projects',
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 25),
                             ),
                             const SizedBox(
                               width: 30,
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.pushNamed(context, '/company/project/step1');
+                                Navigator.pushNamed(
+                                    context, '/company/project/step1');
                               },
                               style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
@@ -351,18 +355,24 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
                                         height: 10,
                                       ),
                                       Card(
-                                        color: Theme.of(context).colorScheme.surface,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .surface,
                                         surfaceTintColor: Colors.transparent,
-                                        elevation: 5.0,
-                                        shadowColor: Theme.of(context).colorScheme.shadow,
+                                        elevation: 2.0,
+                                        shadowColor: Theme.of(context)
+                                            .colorScheme
+                                            .shadow,
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10),
                                           child: OptionProjectCompany(
                                             onTap: () {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) => ProjectProposalListScreen(
+                                                  builder: (context) =>
+                                                      ProjectProposalListScreen(
                                                     project: project,
                                                   ),
                                                 ),
@@ -390,16 +400,21 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
                                         height: 10,
                                       ),
                                       Card(
-                                        color: Theme.of(context).colorScheme.surface,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .surface,
                                         surfaceTintColor: Colors.transparent,
-                                        elevation: 5.0,
-                                        shadowColor: Theme.of(context).colorScheme.shadow,
+                                        elevation: 2.0,
+                                        shadowColor: Theme.of(context)
+                                            .colorScheme
+                                            .shadow,
                                         child: OptionProjectCompany(
                                           onTap: () {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => ProjectProposalListScreen(
+                                                builder: (context) =>
+                                                    ProjectProposalListScreen(
                                                   project: project,
                                                 ),
                                               ),
@@ -426,16 +441,21 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
                                         height: 20,
                                       ),
                                       Card(
-                                        color: Theme.of(context).colorScheme.surface,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .surface,
                                         surfaceTintColor: Colors.transparent,
-                                        elevation: 5.0,
-                                        shadowColor: Theme.of(context).colorScheme.shadow,
+                                        elevation: 2.0,
+                                        shadowColor: Theme.of(context)
+                                            .colorScheme
+                                            .shadow,
                                         child: OptionProjectCompany(
                                           onTap: () {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => ProjectProposalListScreen(
+                                                builder: (context) =>
+                                                    ProjectProposalListScreen(
                                                   project: project,
                                                 ),
                                               ),
@@ -496,8 +516,8 @@ class OptionProjectCompany extends StatefulWidget {
 
 class OptionProjectCompanyState extends State<OptionProjectCompany> {
   Widget buttonShowModalBottomSheet() {
-    return ElevatedButton(
-      onPressed: () {
+    return GestureDetector(
+      onTap: () {
         showModalBottomSheet<void>(
           context: context,
           builder: (BuildContext context) {
@@ -573,8 +593,8 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                EditProjectScreen(projectId: widget.project['id']),
+                            builder: (context) => EditProjectScreen(
+                                projectId: widget.project['id']),
                           ),
                         );
                       },
@@ -634,7 +654,8 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                             return Dialog_(
                                               titleDialog: 'Start working',
                                               textAcceptButton: 'Yes',
-                                              question: 'Do you want to start working the project?',
+                                              question:
+                                                  'Do you want to start working the project?',
                                               project: widget.project,
                                               f_function: widget.workingProject,
                                             );
@@ -644,10 +665,12 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                       },
                                       style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(0),
+                                          borderRadius:
+                                              BorderRadius.circular(0),
                                         ),
                                       ),
-                                      child: const Text('Start working this project'),
+                                      child: const Text(
+                                          'Start working this project'),
                                     ),
                               ElevatedButton(
                                 onPressed: () async {
@@ -659,7 +682,8 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                       return Dialog_(
                                         titleDialog: 'Closed a project',
                                         textAcceptButton: 'Yes',
-                                        question: 'Do you want to close the project?',
+                                        question:
+                                            'Do you want to close the project?',
                                         project: widget.project,
                                         f_function: widget.archivedProject,
                                       );
@@ -683,8 +707,20 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
           },
         );
       },
-      style: ElevatedButton.styleFrom(),
-      child: Center(child: const Text('...')),
+      child: Container(
+        height: 20,
+        decoration: BoxDecoration(
+          color: AppColor.primary,
+          borderRadius: BorderRadius.circular(10)
+        ),
+        child: const Center(
+        child: FaIcon(
+          FontAwesomeIcons.ellipsis,
+          color: Colors.white,
+          size: 14
+        ),
+      ),
+      )
     );
   }
 
@@ -700,12 +736,25 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  widget.project['title'],
-                  style:
-                      const TextStyle(color: mainColor, fontSize: 25, fontWeight: FontWeight.bold),
+                Expanded(
+                  flex: 9,
+                  child: Text(
+                    widget.project['title'],
+                    style: const TextStyle(
+                        color: mainColor,
+                        fontSize: AppFonts.h1FontSize,
+                        fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 4,
+                  ),
                 ),
-                buttonShowModalBottomSheet(),
+                Expanded(
+                  flex: 1,
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: buttonShowModalBottomSheet()
+                    ),
+                )
               ],
             ),
 
@@ -768,7 +817,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                       children: [
                         const Text('State: '),
                         Text(
-                            '${widget.project['typeFlag'] == 0 ? 'New' : widget.project['typeFlag'] == 1 ? 'Ưorking' : 'Archived'}')
+                            '${widget.project['typeFlag'] == 0 ? 'New' : widget.project['typeFlag'] == 1 ? 'Working' : 'Archived'}')
                       ],
                     ),
                   ],

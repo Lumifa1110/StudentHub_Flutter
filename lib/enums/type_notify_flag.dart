@@ -2,5 +2,6 @@ enum TypeNotifyFlag {
   offer,
   interview,
   submitted,
-  chat
+  chat,
+  hired
 }

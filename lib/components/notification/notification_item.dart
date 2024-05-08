@@ -41,6 +41,12 @@ class NotificationItem extends StatelessWidget {
         notificationContent =
             "${notification.sender!.fullname}: ${notification.message!.content}";
         break;
+      case TypeNotifyFlag.hired:
+        typeNotifyIcon = FontAwesomeIcons.briefcase;
+        typeNotifyLabel = "Hired";
+        notificationContent =
+            "${notification.sender!.fullname} sent you a message";
+        break;
       default:
         typeNotifyIcon = FontAwesomeIcons.question;
         typeNotifyLabel = "Unknown";
