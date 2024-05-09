@@ -11,7 +11,6 @@ import 'package:studenthub/components/textfield/search_bar.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:studenthub/models/index.dart';
 import 'package:studenthub/services/index.dart';
-import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class MessageListScreen extends StatefulWidget {

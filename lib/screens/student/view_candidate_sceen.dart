@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:external_path/external_path.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -88,9 +89,11 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
     final bytes = await consolidateHttpClientResponseBytes(response);
 
     // Get the directory where the file will be saved
-    final directory = (await getDownloadsDirectory());
-    print('Direc: $directory');
-    final filePath = '/storage/emulated/0/Download/$fileDefault';
+    final directory =
+        await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOADS);
+    print('Direc: ${directory}');
+    final filePath = '${directory}/$fileDefault';
+    print(filePath);
 
     // Write the file to disk
     final File file = File(filePath);

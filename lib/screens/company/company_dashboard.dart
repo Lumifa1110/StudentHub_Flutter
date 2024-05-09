@@ -290,9 +290,11 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
                                 Navigator.pushNamed(context, '/company/project/step1');
                               },
                               style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  backgroundColor: mainColor),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                backgroundColor: Theme.of(context).colorScheme.primary,
+                              ),
                               child: const Text(
                                 'Post a jobs',
                                 style: TextStyle(color: whiteTextColor),
@@ -300,35 +302,33 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
                         Container(
+                          margin: EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(16),
                             color: Colors.white,
-                            // boxShadow: [
-                            //   BoxShadow(
-                            //       color: Colors.white,
-                            //       offset: Offset(0,0),
-                            //       blurRadius: 5,
-                            //       spreadRadius: 2.0
-                            //   )
-                            // ]
                           ),
                           child: TabBar(
+                            unselectedLabelStyle: const TextStyle(
+                              color: blackTextColor,
+                              fontSize: AppFonts.h3FontSize,
+                            ),
                             indicator: BoxDecoration(
-                              color: mainColor,
-                              borderRadius: BorderRadius.circular(11),
-                              border: const Border(
+                              color: Theme.of(context).colorScheme.primary,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border(
                                 bottom: BorderSide(
-                                  color: Colors.blue, // Color of the border
+                                  color: Theme.of(context).colorScheme.primary,
                                   width: 1.0, // Width of the border
                                 ),
                               ),
                             ),
                             indicatorSize: TabBarIndicatorSize.tab,
                             labelColor: whiteTextColor,
+                            labelStyle: const TextStyle(
+                              color: blackTextColor,
+                              fontSize: AppFonts.h3FontSize,
+                            ),
                             tabs: const [
                               Tab(
                                 text: 'All project',

@@ -20,32 +20,27 @@ class NotificationItem extends StatelessWidget {
       case TypeNotifyFlag.offer:
         typeNotifyIcon = FontAwesomeIcons.envelopeOpenText;
         typeNotifyLabel = "Offer";
-        notificationContent =
-            "${notification.sender!.fullname} sent you a message";
+        notificationContent = "${notification.sender!.fullname} sent you a message";
         break;
       case TypeNotifyFlag.interview:
         typeNotifyIcon = FontAwesomeIcons.video;
         typeNotifyLabel = "Interview";
-        notificationContent =
-            "${notification.sender!.fullname} scheduled an interview";
+        notificationContent = "${notification.sender!.fullname} scheduled an interview";
         break;
       case TypeNotifyFlag.submitted:
         typeNotifyIcon = FontAwesomeIcons.check;
         typeNotifyLabel = "Proposal";
-        notificationContent =
-            "${notification.sender!.fullname} sent you a message";
+        notificationContent = "${notification.sender!.fullname} sent you a message";
         break;
       case TypeNotifyFlag.chat:
         typeNotifyIcon = FontAwesomeIcons.message;
         typeNotifyLabel = "Message";
-        notificationContent =
-            "${notification.sender!.fullname}: ${notification.message!.content}";
+        notificationContent = "${notification.sender!.fullname}: ${notification.message!.content}";
         break;
       case TypeNotifyFlag.hired:
         typeNotifyIcon = FontAwesomeIcons.briefcase;
         typeNotifyLabel = "Hired";
-        notificationContent =
-            "${notification.sender!.fullname} sent you a message";
+        notificationContent = "${notification.sender!.fullname} sent you a message";
         break;
       default:
         typeNotifyIcon = FontAwesomeIcons.question;
@@ -57,8 +52,7 @@ class NotificationItem extends StatelessWidget {
         Expanded(
             flex: 1,
             child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                 decoration: const BoxDecoration(
                   color: AppColor.background,
                   border: Border(
@@ -70,8 +64,7 @@ class NotificationItem extends StatelessWidget {
                     Expanded(
                       flex: 1,
                       child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: FaIcon(typeNotifyIcon, size: 24)),
+                          alignment: Alignment.centerLeft, child: FaIcon(typeNotifyIcon, size: 24)),
                     ),
                     const SizedBox(width: 4),
                     Expanded(
@@ -94,9 +87,9 @@ class NotificationItem extends StatelessWidget {
                                     alignment: Alignment.centerRight,
                                     child: Text(formatTimeAgo(notification.createdAt!),
                                         style: const TextStyle(
-                                            color: AppFonts.secondaryColor,
-                                            fontSize: AppFonts.h4FontSize,
-                                            )),
+                                          color: AppFonts.secondaryColor,
+                                          fontSize: AppFonts.h4FontSize,
+                                        )),
                                   ),
                                 ),
                               ],

@@ -122,8 +122,9 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                             // Project post time
                             Container(
                               margin: const EdgeInsets.only(bottom: 20),
-                              child: Text('Created ${timeSinceCreated(widget.project['createdAt'])}',
-                                  style: TextStyle(
+                              child: Text(
+                                  'Created ${timeSinceCreated(widget.project['createdAt'])}',
+                                  style: const TextStyle(
                                       color: AppFonts.secondaryColor,
                                       fontSize: AppFonts.h4FontSize,
                                       fontWeight: FontWeight.w400)),
@@ -165,7 +166,7 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                                   child: const FaIcon(FontAwesomeIcons.message, size: 12),
                                 ),
                                 Text('Messages - ${widget.project['countMessages']}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: AppFonts.primaryColor,
                                         fontSize: AppFonts.h3FontSize,
                                         fontWeight: FontWeight.w400)),

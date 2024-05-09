@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -210,7 +209,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
         Uri.parse('$uriBase/api/favoriteProject/$studentId'),
         headers: {
           'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json', // Specify the content type as JSON
+          'Content-Type': 'application/json',
         },
         body: jsonEncode({
           'projectId': projectId,
@@ -343,7 +342,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : ListView.builder(
@@ -357,8 +356,8 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
                           final project = allProject[index];
                           return CustomProjectItem(
                             project: project,
-                            onTap: () {
-                              Navigator.push(
+                            onTap: () async {
+                              final result = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ProjectDetailScreen(
@@ -366,6 +365,13 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
                                   ),
                                 ),
                               );
+
+                              if (result == true) {
+                                setState(() {
+                                  isLoading = true;
+                                });
+                                _loadScreen();
+                              }
                             },
                             canFavorite: isStudent,
                             isFavorite: isFavoriteProject(project),

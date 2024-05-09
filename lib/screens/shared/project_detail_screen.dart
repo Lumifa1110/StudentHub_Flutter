@@ -27,11 +27,13 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   late SharedPreferences _prefs;
   Project? selectedProject;
   bool isStudent = true;
+  late http.Client _httpClient;
 
   @override
   void initState() {
     super.initState();
     _loadScreen();
+    _httpClient = http.Client();
     // fetchProjectDetails(widget.itemId);
     selectedProject = widget.project;
   }
@@ -83,6 +85,37 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     }
   }
 
+  Future<void> _patchFavoriteProject(int projectId, int disableFlag) async {
+    _prefs = await SharedPreferences.getInstance();
+    final token = _prefs.getString('token');
+    final studentProfile = _prefs.getString('student_profile');
+    final studentId = jsonDecode(studentProfile!)['id'];
+
+    try {
+      final response = await _httpClient.patch(
+        Uri.parse('$uriBase/api/favoriteProject/$studentId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'projectId': projectId,
+          'disableFlag': disableFlag,
+        }),
+      );
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        // Successfully patched favorite projects
+        print('Favorite projects updated successfully');
+      } else {
+        // Handle error
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Fetch project details based on the itemId and display them
@@ -103,34 +136,36 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                   ),
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 10),
-                    child: const Text.rich(
-                      TextSpan(text: 'Project detail'),
+                    child: Text.rich(
+                      const TextSpan(text: 'Project detail'),
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: blackTextColor,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top: 10),
+                    margin: const EdgeInsets.only(top: 5),
                     child: Text(
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       selectedProject!.title,
                       style: const TextStyle(
-                        fontSize: AppFonts.h1FontSize,
+                        fontSize: AppFonts.halpFontSize,
                         fontWeight: FontWeight.w900,
-                        color: AppColor.tertiary,
+                        color: mainColor,
                       ),
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(bottom: 10),
                     child: Text(
-                      'Company name',
+                      selectedProject!.companyName!,
                       style: TextStyle(
                         fontSize: AppFonts.h1_2FontSize,
                         fontWeight: FontWeight.w900,
-                        color: blackTextColor.withOpacity(0.5),
+                        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
                       ),
                     ),
                   ),
@@ -161,19 +196,19 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     child: ListTile(
                       leading: const Icon(Icons.alarm, size: 42),
                       contentPadding: const EdgeInsets.all(0),
-                      title: const Text(
+                      title: Text(
                         "Project scope",
                         style: TextStyle(
                           fontSize: AppFonts.h2FontSize,
                           fontWeight: FontWeight.bold,
-                          color: blackTextColor,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       subtitle: Text(
                         '\t\t\t\t\t-\t${checkProjectScope(selectedProject!.projectScopeFlag)}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: AppFonts.h3FontSize,
-                          color: lightgrayColor,
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.9),
                         ),
                       ),
                       dense: true,
@@ -187,19 +222,19 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                         size: 36,
                       ),
                       contentPadding: const EdgeInsets.all(0),
-                      title: const Text(
+                      title: Text(
                         "Student requires",
                         style: TextStyle(
                           fontSize: AppFonts.h2FontSize,
                           fontWeight: FontWeight.bold,
-                          color: blackTextColor,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       subtitle: Text(
                         '\t\t\t\t\t-\t${selectedProject!.numberOfStudents} ${selectedProject!.numberOfStudents == 1 ? 'student' : 'students'}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: AppFonts.h3FontSize,
-                          color: lightgrayColor,
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.9),
                         ),
                       ),
                       dense: true,
@@ -267,7 +302,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                 ],
                               ),
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  _patchFavoriteProject(selectedProject!.projectId, 0);
+                                },
                                 style: ButtonStyle(
                                   shape: MaterialStateProperty.all<OutlinedBorder>(
                                     const RoundedRectangleBorder(borderRadius: BorderRadius.zero),

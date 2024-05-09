@@ -93,7 +93,7 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: AppFonts.h4FontSize,
-                    color: Theme.of(context).colorScheme.onSurface,
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                   ),
                 ),
                 Flexible(
@@ -101,10 +101,10 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                   child: Text(
                     widget.project.title,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: AppFonts.h1FontSize,
-                      fontWeight: FontWeight.w500,
-                      color: Theme.of(context).colorScheme.primary,
+                    style: const TextStyle(
+                      fontSize: AppFonts.h0FontSize,
+                      fontWeight: FontWeight.w600,
+                      color: mainColor,
                     ),
                   ),
                 ),
@@ -112,9 +112,10 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                   widget.project.companyName ?? 'Unknown',
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                      fontSize: AppFonts.h2FontSize,
-                      fontWeight: FontWeight.w500,
-                      color: Theme.of(context).primaryColor),
+                    fontSize: AppFonts.h2FontSize,
+                    fontWeight: FontWeight.w500,
+                    color: mainColor.withOpacity(0.8),
+                  ),
                 ),
                 Flexible(
                   flex: 1,
@@ -123,7 +124,7 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: AppFonts.h4FontSize,
-                      color: Theme.of(context).colorScheme.onSurface,
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                     ),
                   ),
                 ),
