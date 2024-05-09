@@ -12,6 +12,8 @@ import 'package:studenthub/config/config.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
+import '../../utils/timer.dart';
+
 class CompanyDashboardScreen extends StatefulWidget {
   const CompanyDashboardScreen({super.key});
 
@@ -149,7 +151,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
 
     try {
       final responseJson = await http.get(
-        Uri.parse('$uriBase/api/project/company/$companyId/?typeFlag=0'),
+        Uri.parse('$uriBase/api/project/company/$companyId/'),
         headers: {'Authorization': 'Bearer $token'},
       );
       // final response = await ProjectService.getProjectByCompanyId(companyId);
@@ -502,13 +504,6 @@ class OptionProjectCompany extends StatefulWidget {
     required this.currentTab,
   });
 
-  int f_dayCreatedAgo(String createdAt) {
-    DateTime timeParse = DateTime.parse(createdAt);
-    DateTime now = DateTime.now();
-    Duration difference = now.difference(timeParse);
-
-    return difference.inDays;
-  }
 
   @override
   State<OptionProjectCompany> createState() => OptionProjectCompanyState();
@@ -522,9 +517,9 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
           context: context,
           builder: (BuildContext context) {
             return SizedBox(
-              height: widget.currentTab == 0
+              height: widget.project['typeFlag'] == 0
                   ? 450
-                  : widget.currentTab == 1
+                  : widget.project['typeFlag'] == 1
                       ? 400
                       : 350,
               child: Center(
@@ -631,7 +626,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                       ),
                       child: const Text('Remove posting'),
                     ),
-                    widget.currentTab == 2
+                    widget.project['typeFlag'] == 2
                         ? const SizedBox()
                         : Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -642,7 +637,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                 endIndent: 10,
                                 color: Colors.black,
                               ),
-                              widget.currentTab == 1
+                              widget.project['typeFlag'] == 1
                                   ? const SizedBox()
                                   : ElevatedButton(
                                       onPressed: () async {
@@ -759,7 +754,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
             ),
 
             Text(
-              'Created ${widget.f_dayCreatedAgo(widget.project['createdAt'])} days ago',
+              'Created ${timeSinceCreated(widget.project['createdAt'])}',
               style: const TextStyle(color: Colors.grey),
             ),
             const SizedBox(

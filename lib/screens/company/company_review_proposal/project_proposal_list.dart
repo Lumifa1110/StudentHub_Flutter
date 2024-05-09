@@ -9,6 +9,8 @@ import 'package:studenthub/utils/font.dart';
 import 'package:studenthub/config/config.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../utils/timer.dart';
+
 class ProjectProposalListScreen extends StatefulWidget {
   final dynamic project;
   const ProjectProposalListScreen({super.key, required this.project});
@@ -114,16 +116,16 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                             // Project Name
                             Text(widget.project['title'],
                                 style: const TextStyle(
-                                    color: AppFonts.primaryColor,
+                                    color: mainColor,
                                     fontSize: AppFonts.h1FontSize,
-                                    fontWeight: FontWeight.w600)),
+                                    fontWeight: FontWeight.bold)),
                             // Project post time
                             Container(
                               margin: const EdgeInsets.only(bottom: 20),
-                              child: const Text('created 3 days ago',
+                              child: Text('Created ${timeSinceCreated(widget.project['createdAt'])}',
                                   style: TextStyle(
                                       color: AppFonts.secondaryColor,
-                                      fontSize: AppFonts.h3FontSize,
+                                      fontSize: AppFonts.h4FontSize,
                                       fontWeight: FontWeight.w400)),
                             ),
                             // Project proposal stats
@@ -162,7 +164,7 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                                   margin: const EdgeInsets.only(right: 6),
                                   child: const FaIcon(FontAwesomeIcons.message, size: 12),
                                 ),
-                                const Text('Messages - 8',
+                                Text('Messages - ${widget.project['countMessages']}',
                                     style: TextStyle(
                                         color: AppFonts.primaryColor,
                                         fontSize: AppFonts.h3FontSize,
