@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/theme/theme_controller.dart';
+import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -23,9 +24,15 @@ class _SettingScreenState extends State<SettingScreen> {
   final MaterialStateProperty<Icon?> thumbIcon = MaterialStateProperty.resolveWith<Icon?>(
     (Set<MaterialState> states) {
       if (states.contains(MaterialState.selected)) {
-        return const Icon(Icons.check);
+        return const Icon(
+          Icons.check,
+          color: whiteTextColor,
+        );
       }
-      return const Icon(Icons.close);
+      return const Icon(
+        Icons.close,
+        color: whiteTextColor,
+      );
     },
   );
   @override
@@ -49,6 +56,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 Consumer<ThemeController>(
                   builder: (context, themeController, _) {
                     return Switch(
+                      thumbIcon: thumbIcon,
                       value: themeController.themeMode == ThemeMode.dark,
                       onChanged: (value) {
                         themeController.toggleTheme(value);
