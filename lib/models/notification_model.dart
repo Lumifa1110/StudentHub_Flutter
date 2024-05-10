@@ -83,6 +83,8 @@ class NotificationModel {
         return TypeNotifyFlag.submitted;
       case '3':
         return TypeNotifyFlag.chat;
+      case '4':
+        return TypeNotifyFlag.hired;
       default:
         throw ArgumentError('Invalid notifyFlagString: $typeNotifyFlagString');
     }
