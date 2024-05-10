@@ -102,12 +102,12 @@ class ProjectPostStep1PageState extends State<ProjectPostStep1Page> {
                         _fValiteDate(_titleProject.text.trim());
                       }
                       if (!_erro) {
-                        final Map<String, dynamic> box_title = {};
+                        final Map<String, dynamic> box = {"title": _titleProject.text};
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ProjectPostStep2Page(
-                              box: box_title,
+                              box: box,
                             ),
                           ),
                         );

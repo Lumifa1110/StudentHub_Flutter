@@ -8,11 +8,13 @@ class Message {
   final Chatter? sender;
   final Chatter? receiver;
   final DateTime createdAt;
+  final int? projectId;
   final Project? project;
   final Interview? interview;
 
   Message({
     required this.content,
+    this.projectId,
     this.senderId,
     this.receiverId,
     this.sender,
@@ -31,7 +33,8 @@ class Message {
       receiver: json['receiver'] != null ? Chatter.fromJson(json['receiver']) : null,
       createdAt: DateTime.parse(json['createdAt']),
       project: json['project'] != null ? Project.fromJson(json['project']) : null,
-      interview: json['interview'] != null ? Interview.fromJson(json['interview']) : null
+      interview: json['interview'] != null ? Interview.fromJson(json['interview']) : null,
+      projectId: json['projectId'],
     );
   }
 }

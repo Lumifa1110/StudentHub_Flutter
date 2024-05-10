@@ -54,6 +54,7 @@ class _ConversationItemState extends State<ConversationItem> {
             ),
           ),
         );
+        // print(widget.message.project!.projectId);
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),

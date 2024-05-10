@@ -136,7 +136,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
     } else {
       Navigator.pushNamedAndRemoveUntil(
         context,
-        '/company/dashboard',
+        '/student/dashboard',
         (route) => route.settings.name == '/home',
       );
     }

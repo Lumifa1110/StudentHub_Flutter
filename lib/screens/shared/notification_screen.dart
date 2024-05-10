@@ -88,6 +88,8 @@ class _NotificationScreenState extends State<NotificationScreen>
           .where((json) => json['notifyFlag'] == '0')
           .map<NotificationModel>((json) => NotificationModel.fromJson(json))
           .toList();
+      notifications = notifications.reversed.toList();
+      print('Result: ${response['result']}');
     });
   }
 
@@ -138,8 +140,9 @@ class _NotificationScreenState extends State<NotificationScreen>
                         });
                       },
                       child: NotificationItem(
-                        notification: notifications[index],
-                      ));
+                        notification: notifications[index], userId: userId,
+                      )
+                  );
                 })
         ],
       )),

@@ -65,39 +65,35 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
       print(e);
     }
   }
-
-  void messageCandidate() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => MessageDetailScreen(
-                projectId: widget.itemsProposal['projectId'],
-                chatter: Chatter(
-                    id: widget.itemsProposal['student']['userId'],
-                    fullname: widget.itemsProposal['student']['user']['fullname']))));
+  Future<void> messageCandidate() async {
+    final Map<String, dynamic> data = {
+      'statusFlag': 1,
+      'disableFlag': 0,
+    };
+    try {
+      final response = await http.patch(
+        Uri.parse('$uriBase/api/proposal/${widget.itemsProposal['id']}'),
+        headers: {
+          'Authorization': 'Bearer $_token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(data),
+      );
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MessageDetailScreen(
+                    projectId: widget.itemsProposal['projectId'],
+                    chatter: Chatter(
+                        id: widget.itemsProposal['student']['userId'],
+                        fullname: widget.itemsProposal['student']['user']['fullname']))));
+      }
+    } catch (e) {
+      print(e);
+    }
   }
-
-  // Future<void> messageCandidate() async {
-  //   final Map<String, dynamic> data = {
-  //     'statusFlag': 1,
-  //     'disableFlag': 0,
-  //   };
-  //   try {
-  //     final response = await http.patch(
-  //       Uri.parse('$uriBase/api/proposal/${widget.itemsProposal['id']}'),
-  //       headers: {
-  //         'Authorization': 'Bearer $_token',
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: jsonEncode(data),
-  //     );
-  //     if (response.statusCode == 200 || response.statusCode == 201) {
-  //       setState(() {});
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

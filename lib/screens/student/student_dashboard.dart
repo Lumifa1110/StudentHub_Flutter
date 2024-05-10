@@ -231,9 +231,8 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                               fontWeight: FontWeight.bold,
                                               fontSize: AppFonts.h3FontSize),
                                         ),
+                                        SizedBox(height: 10,),
                                         Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10.0),
                                             child: ListView.builder(
                                               itemCount: _responseActiveProposal.length,
                                               // Number of items in your list
@@ -242,34 +241,40 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                                 return Column(
                                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                                   children: [
-                                                    OptionItemAllProjectScreen(
-                                                      onTap: () {
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                StudentDashboardDetail(
-                                                              detailProject:
-                                                                  _responseActiveProposal[index],
-                                                              nameStudent:
-                                                                  _prefs.getString('username')!,
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                      response: _responseActiveProposal[index],
+                                                    Card(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .surface,
+                                                      surfaceTintColor: Colors.transparent,
+                                                      elevation: 2.0,
+                                                      shadowColor: Theme.of(context)
+                                                          .colorScheme
+                                                          .shadow,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(10.0),
+                                                        child: OptionItemAllProjectScreen(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    StudentDashboardDetail(
+                                                                  detailProject:
+                                                                      _responseActiveProposal[index],
+                                                                  nameStudent:
+                                                                      _prefs.getString('username')!,
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                          response: _responseActiveProposal[index],
+                                                        ),
+                                                      ),
                                                     ),
-                                                    if (index != _responseActiveProposal.length - 1)
-                                                      const Divider(
-                                                        height: 60,
-                                                        endIndent: 10,
-                                                        thickness: 2,
-                                                      )
                                                   ],
                                                 );
                                               },
                                             ),
-                                          ),
                                         ),
                                       ],
                                     ),
@@ -297,8 +302,6 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                           height: 10,
                                         ),
                                         Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10.0),
                                             child: ListView.builder(
                                               itemCount: _responseSubmitProposal.length,
                                               // Number of items in your list
@@ -306,34 +309,39 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                                 return Column(
                                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                                   children: [
-                                                    OptionItemAllProjectScreen(
-                                                        onTap: () {
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  StudentDashboardDetail(
-                                                                detailProject:
-                                                                    _responseSubmitProposal[index],
-                                                                nameStudent:
-                                                                    _prefs.getString('username')!,
-                                                              ),
-                                                            ),
-                                                          );
-                                                        },
-                                                        response: _responseSubmitProposal[index]),
-                                                    index == _responseSubmitProposal.length - 1
-                                                        ? const SizedBox()
-                                                        : const Divider(
-                                                            height: 60,
-                                                            endIndent: 10,
-                                                            thickness: 2,
-                                                          ),
+                                                    Card(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .surface,
+                                                      surfaceTintColor: Colors.transparent,
+                                                      elevation: 2.0,
+                                                      shadowColor: Theme.of(context)
+                                                          .colorScheme
+                                                          .shadow,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(10.0),
+                                                        child: OptionItemAllProjectScreen(
+                                                            onTap: () {
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder: (context) =>
+                                                                      StudentDashboardDetail(
+                                                                    detailProject:
+                                                                        _responseSubmitProposal[index],
+                                                                    nameStudent:
+                                                                        _prefs.getString('username')!,
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            },
+                                                            response: _responseSubmitProposal[index]),
+                                                      ),
+                                                    ),
                                                   ],
                                                 );
                                               },
                                             ),
-                                          ),
                                         ),
                                       ],
                                     ),
@@ -357,17 +365,36 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
-                                    OptionItemWorkingAndArchiedScreen(
-                                      onTap: () {},
-                                      response: _responseWorkingTab[index],
+                                    Card(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .surface,
+                                      surfaceTintColor: Colors.transparent,
+                                      elevation: 2.0,
+                                      shadowColor: Theme.of(context)
+                                          .colorScheme
+                                          .shadow,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: OptionItemAllProjectScreen(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    StudentDashboardDetail(
+                                                      detailProject:
+                                                      _responseWorkingTab[index],
+                                                      nameStudent:
+                                                      _prefs.getString('username')!,
+                                                    ),
+                                              ),
+                                            );
+                                          },
+                                          response: _responseWorkingTab[index],
+                                        ),
+                                      ),
                                     ),
-                                    index == _responseWorkingTab.length - 1
-                                        ? const SizedBox()
-                                        : const Divider(
-                                            height: 60,
-                                            endIndent: 10,
-                                            thickness: 2,
-                                          ),
                                   ],
                                 );
                               }),
@@ -388,9 +415,35 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
-                                    OptionItemWorkingAndArchiedScreen(
-                                      onTap: () {},
-                                      response: _responseArchivedTab[index],
+                                    Card(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .surface,
+                                      surfaceTintColor: Colors.transparent,
+                                      elevation: 2.0,
+                                      shadowColor: Theme.of(context)
+                                          .colorScheme
+                                          .shadow,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: OptionItemAllProjectScreen(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    StudentDashboardDetail(
+                                                      detailProject:
+                                                      _responseArchivedTab[index],
+                                                      nameStudent:
+                                                      _prefs.getString('username')!,
+                                                    ),
+                                              ),
+                                            );
+                                          },
+                                          response: _responseArchivedTab[index],
+                                        ),
+                                      ),
                                     ),
                                     index == _responseArchivedTab.length - 1
                                         ? const SizedBox()
@@ -438,7 +491,7 @@ class _OptionItemAllProjectScreenState extends State<OptionItemAllProjectScreen>
         children: <Widget>[
           Text(
             widget.response['project']['title'],
-            style: const TextStyle(color: AppColor.tertiary, fontSize: AppFonts.h3FontSize),
+            style: const TextStyle(color: mainColor, fontSize: AppFonts.h3FontSize, fontWeight: FontWeight.bold),
             overflow: TextOverflow.ellipsis,
           ),
           Text(
@@ -492,7 +545,7 @@ class _OptionItemWorkingScreenState extends State<OptionItemWorkingAndArchiedScr
           children: <Widget>[
             Text(
               widget.response['project']['title'],
-              style: const TextStyle(color: Colors.green),
+              style: const TextStyle(color: mainColor),
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(

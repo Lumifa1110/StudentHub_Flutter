@@ -68,6 +68,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
 
     return AppBar(
+      centerTitle: false,
       systemOverlayStyle: SystemUiOverlayStyle(
         statusBarColor: Theme.of(context).primaryColor,
         systemNavigationBarColor: Theme.of(context).primaryColor,
