@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/enums/index.dart';
 import 'package:studenthub/models/index.dart';
 import 'package:studenthub/utils/colors.dart';
@@ -20,20 +19,7 @@ class NotificationItem extends StatefulWidget {
 }
 
 class _NotificationItemState extends State<NotificationItem> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   userId = 0;
-  //   loadUserId();
-  // }
-  // Future<void> loadUserId() async {
-  //   final response = await AuthService.getUserInfo();
-  //   if (mounted) {
-  //     setState(() {
-  //       userId = response['result']['id'];
-  //     });
-  //   }
-  // }
+
   @override
   Widget build(BuildContext context) {
     IconData typeNotifyIcon;

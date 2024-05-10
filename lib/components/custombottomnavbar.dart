@@ -41,21 +41,22 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2), // Shadow color
-            spreadRadius: 2, // Spread radius
-            blurRadius: 2, // Blur radius
+            color: Theme.of(context).colorScheme.shadow.withOpacity(0.2), // Shadow color
+            spreadRadius: 2.0, // Spread radius
+            blurRadius: 2.0, // Blur radius
             offset: const Offset(0, -3), // Offset from the bottom
           ),
         ],
       ),
       child: BottomNavigationBar(
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
         type: BottomNavigationBarType.fixed,
         iconSize: 24,
         selectedFontSize: AppFonts.h3FontSize,
-        selectedItemColor: AppColor.primary,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
         unselectedFontSize: AppFonts.h3FontSize,
-        unselectedItemColor: AppFonts.secondaryColor,
+        unselectedItemColor: Theme.of(context).colorScheme.onSurface,
         currentIndex: _selectedIndex,
         onTap: (newIndex) {
           if (newIndex == _selectedIndex) return;
@@ -65,37 +66,31 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
           switch (newIndex) {
             case 0:
               {
-                _navigateWithAnimation('/list', const ProjectListScreen(),
-                    widget.initialIndex, newIndex);
+                _navigateWithAnimation(
+                    '/list', const ProjectListScreen(), widget.initialIndex, newIndex);
                 break;
               }
             case 1:
               {
                 if (_userRole == UserRole.company) {
-                  _navigateWithAnimation(
-                      '/company/dashboard',
-                      const CompanyDashboardScreen(),
-                      widget.initialIndex,
-                      newIndex);
+                  _navigateWithAnimation('/company/dashboard', const CompanyDashboardScreen(),
+                      widget.initialIndex, newIndex);
                 } else if (_userRole == UserRole.student) {
-                  _navigateWithAnimation(
-                      '/student/dashboard',
-                      const StudentDashboardScreen(),
-                      widget.initialIndex,
-                      newIndex);
+                  _navigateWithAnimation('/student/dashboard', const StudentDashboardScreen(),
+                      widget.initialIndex, newIndex);
                 }
                 break;
               }
             case 2:
               {
-                _navigateWithAnimation('/message', const MessageListScreen(),
-                    widget.initialIndex, newIndex);
+                _navigateWithAnimation(
+                    '/message', const MessageListScreen(), widget.initialIndex, newIndex);
                 break;
               }
             case 3:
               {
-                _navigateWithAnimation('/notification',
-                    const NotificationScreen(), widget.initialIndex, newIndex);
+                _navigateWithAnimation(
+                    '/notification', const NotificationScreen(), widget.initialIndex, newIndex);
                 break;
               }
             // Add cases for additional pages if needed
@@ -143,8 +138,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
     );
   }
 
-  void _navigateWithAnimation(
-      String routeName, Widget widgetname, int currentindex, int newindex) {
+  void _navigateWithAnimation(String routeName, Widget widgetname, int currentindex, int newindex) {
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => widgetname,
@@ -156,8 +150,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
             begin = const Offset(-1.0, 0.0);
           }
 
-          var tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
           return SlideTransition(
             position: animation.drive(tween),

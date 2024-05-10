@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:external_path/external_path.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -33,12 +34,7 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
   bool isTranscriptLoading = true;
   late String candidateName = 'Luu Minh Phat';
   dynamic proposalCandidate;
-  final List<SkillSet> studentSelectedSkills = [
-    SkillSet(id: 1, name: 'C'),
-    SkillSet(id: 2, name: 'C++'),
-    SkillSet(id: 3, name: 'C#'),
-    SkillSet(id: 3, name: 'JavaScript'),
-  ];
+  final List<SkillSet> studentSelectedSkills = [];
   final List<Education> studentSelectedEducations = [];
   final List<Language> studentLanguages = [
     Language(id: 697, languageName: "English", level: "High"),
@@ -52,6 +48,7 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
   @override
   void initState() {
     super.initState();
+    print(widget.candidateData);
     // print('Data: ${widget.candidateData}');
     _fetchCandidateProposal().then((value) => {
           _fetchResumeLink(),
@@ -72,14 +69,14 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
     if (isResume) {
       fileUrl = _linkResume!;
       fileName = 'resume';
-      fileExtention = getFileExtension(proposalCandidate['student']['resume']);
+      fileExtention = getFileExtension(widget.candidateData['student']['resume']);
       setState(() {
         isResumeLoading = true;
       });
     } else {
       fileUrl = _linkTranscript!;
       fileName = 'transcript';
-      fileExtention = getFileExtension(proposalCandidate['student']['transcript']);
+      fileExtention = getFileExtension(widget.candidateData['student']['transcript']);
       setState(() {
         isTranscriptLoading = true;
       });
@@ -92,9 +89,11 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
     final bytes = await consolidateHttpClientResponseBytes(response);
 
     // Get the directory where the file will be saved
-    final directory = (await getDownloadsDirectory());
-    print('Direc: $directory');
-    final filePath = '/storage/emulated/0/Download/$fileDefault';
+    final directory =
+        await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOADS);
+    print('Direc: ${directory}');
+    final filePath = '${directory}/$fileDefault';
+    print(filePath);
 
     // Write the file to disk
     final File file = File(filePath);
@@ -113,6 +112,8 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
+    print(widget.candidateId);
+
     try {
       final response = await http.get(
         Uri.parse('$uriBase/api/proposal/${widget.candidateId}'),
@@ -123,11 +124,17 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
       );
       // print(response.body);
       proposalCandidate = jsonDecode(response.body)["result"];
+      print(proposalCandidate);
 
       final List<dynamic> educationsJson = proposalCandidate['student']['educations'];
       print(educationsJson);
       studentSelectedEducations.clear();
       studentSelectedEducations.addAll(educationsJson.map((edu) => Education.fromJson(edu)));
+
+      final List<dynamic> skillsJson = proposalCandidate['student']['skillSets'];
+      print(skillsJson);
+      studentSelectedSkills.clear();
+      studentSelectedSkills.addAll(skillsJson.map((skill) => SkillSet.fromJson(skill)));
 
       candidateName = widget.candidateData['student']['user']['fullname'];
 
