@@ -34,7 +34,7 @@ class MessageItem extends StatelessWidget {
             ),
           ),
         Flexible(
-          flex: 2,
+          flex: 4,
           fit: FlexFit.loose,
           child: Container(
             constraints: BoxConstraints(

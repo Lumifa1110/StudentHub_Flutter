@@ -5,8 +5,9 @@ import 'package:studenthub/utils/font.dart';
 class CustomSearchBar extends StatelessWidget {
   final TextEditingController controller;
   final String placeholder;
+  final VoidCallback onChange;
 
-  const CustomSearchBar({super.key, required this.controller, required this.placeholder});
+  const CustomSearchBar({super.key, required this.controller, required this.placeholder, required this.onChange});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class CustomSearchBar extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 30),
       padding: const EdgeInsets.only(top: 2, bottom: 2, left: 16, right: 4),
       decoration: BoxDecoration(
-        color: Color(0xFFDEDEDE),
+        color: const Color(0xFFDEDEDE),
         borderRadius: BorderRadius.circular(21),
       ),
       child: Row(
@@ -22,6 +23,9 @@ class CustomSearchBar extends StatelessWidget {
           Expanded(
             child: TextField(
               controller: controller,
+              onChanged: (value) {
+                onChange();
+              },
               cursorColor: AppColor.primary,
               style: const TextStyle(fontSize: AppFonts.h3FontSize),
               decoration: InputDecoration(

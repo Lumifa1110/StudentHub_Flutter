@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:studenthub/enums/index.dart';
 import 'package:studenthub/models/index.dart';
+import 'package:studenthub/screens/student/view_candidate_sceen.dart';
+import 'package:studenthub/services/index.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 import '../../screens/chat_flow/message_detail_screen.dart';
-import '../../services/auth_service.dart';
 
 class NotificationItem extends StatefulWidget {
   final NotificationModel notification;
-  final int ?userId;
+  final int? userId;
 
   const NotificationItem({super.key, required this.notification, this.userId});
 
@@ -19,7 +20,6 @@ class NotificationItem extends StatefulWidget {
 }
 
 class _NotificationItemState extends State<NotificationItem> {
-
   @override
   Widget build(BuildContext context) {
     IconData typeNotifyIcon;
@@ -31,7 +31,7 @@ class _NotificationItemState extends State<NotificationItem> {
         typeNotifyIcon = FontAwesomeIcons.envelopeOpenText;
         typeNotifyLabel = "Offer";
         notificationContent =
-            "${widget.notification.sender!.fullname} sent you a message";
+            "${widget.notification.sender!.fullname} sent you a job offer";
         break;
       case TypeNotifyFlag.interview:
         typeNotifyIcon = FontAwesomeIcons.video;
@@ -40,10 +40,9 @@ class _NotificationItemState extends State<NotificationItem> {
             "${widget.notification.sender!.fullname} scheduled an interview";
         break;
       case TypeNotifyFlag.submitted:
-        typeNotifyIcon = FontAwesomeIcons.check;
+        typeNotifyIcon = FontAwesomeIcons.fileContract;
         typeNotifyLabel = "Proposal";
-        notificationContent =
-            "${widget.notification.sender!.fullname} sent you a message";
+        notificationContent = widget.notification.content;
         break;
       case TypeNotifyFlag.chat:
         typeNotifyIcon = FontAwesomeIcons.message;
@@ -63,40 +62,71 @@ class _NotificationItemState extends State<NotificationItem> {
     }
 
     return GestureDetector(
-      onTap: () async{
+      onTap: () async {
         switch (widget.notification.typeNotifyFlag) {
           case TypeNotifyFlag.offer:
-            Navigator.pushNamed(context, '/offer/view');
-           // print( widget.notification.message!.project);
-            break;
+            {
+              Navigator.pushNamed(context, '/offer/view');
+              break;
+            }
           case TypeNotifyFlag.interview:
-            print('interview');
-            break;
+            {
+              if (mounted) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MessageDetailScreen(
+                        projectId: widget.notification.message!.projectId!,
+                        chatter: widget.notification.message!.senderId ==
+                                widget.userId
+                            ? widget.notification.receiver!
+                            : widget.notification.sender!,
+                      ),
+                    ));
+              }
+              break;
+            }
           case TypeNotifyFlag.submitted:
-            print('submitted');
-            break;
+            {
+              final proposalData = await ProposalService.getProjectByCompanyId(
+                  widget.notification.proposalId!);
+              if (mounted) {
+                Navigator.push(
+                  // ignore: use_build_context_synchronously
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ViewCandidateSceen(
+                      candidateId: widget.notification.proposalId,
+                      candidateData: proposalData['result'],
+                    ),
+                  ),
+                );
+              }
+              break;
+            }
           case TypeNotifyFlag.chat:
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context) => MessageDetailScreen(
-                projectId: widget.notification.message!.projectId!,
-                chatter: widget.notification.message!.senderId == widget.userId
-                    ? widget.notification.receiver!
-                    : widget.notification.sender!,
-              ),
-            ));
-            // SharedPreferences _prefs = await SharedPreferences.getInstance();
-            // print(widget.userId);
-            // print(widget.notification.sender);
-
-
-
-            break;
+            {
+              if (mounted) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MessageDetailScreen(
+                        projectId: widget.notification.message!.projectId!,
+                        chatter: widget.notification.message!.senderId ==
+                                widget.userId
+                            ? widget.notification.receiver!
+                            : widget.notification.sender!,
+                      ),
+                    ));
+              }
+              break;
+            }
           case TypeNotifyFlag.hired:
-            print('hired');
-
-            break;
+            {
+              print('hired');
+              break;
+            }
           default:
-
         }
       },
       child: Row(
@@ -139,11 +169,13 @@ class _NotificationItemState extends State<NotificationItem> {
                                     flex: 4,
                                     child: Align(
                                       alignment: Alignment.centerRight,
-                                      child: Text(formatTimeAgo(widget.notification.createdAt!),
+                                      child: Text(
+                                          formatTimeAgo(
+                                              widget.notification.createdAt!),
                                           style: const TextStyle(
-                                              color: AppFonts.secondaryColor,
-                                              fontSize: AppFonts.h4FontSize,
-                                              )),
+                                            color: AppFonts.secondaryColor,
+                                            fontSize: AppFonts.h4FontSize,
+                                          )),
                                     ),
                                   ),
                                 ],
@@ -153,13 +185,20 @@ class _NotificationItemState extends State<NotificationItem> {
                                 children: [
                                   Expanded(
                                       flex: 1,
-                                      child: Text(notificationContent,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: const TextStyle(
-                                              color: AppFonts.secondaryColor,
-                                              fontSize: AppFonts.h3FontSize,
-                                              fontWeight: FontWeight.w400)))
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(notificationContent,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                              style: const TextStyle(
+                                                  color:
+                                                      AppFonts.secondaryColor,
+                                                  fontSize: AppFonts.h4FontSize,
+                                                  fontWeight: FontWeight.w400))
+                                        ],
+                                      ))
                                 ],
                               )
                             ],

@@ -339,7 +339,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
         child: Column(
           children: [
             isSearchActive
-                ? CustomSearchBar(controller: searchController, placeholder: 'Search...')
+                ? CustomSearchBar(controller: searchController, placeholder: 'Search...', onChange: () {})
                 : const SizedBox(
                     height: 10,
                   ),

@@ -224,6 +224,7 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: const AuthAppBar(
+        title: 'Candidate',
         canBack: true,
         isShowIcon: false,
       ),
