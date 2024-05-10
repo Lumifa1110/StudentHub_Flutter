@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/screens/authentication/changepassword_screen.dart';
 import 'package:studenthub/screens/authentication/forgotpassword_screen.dart';
 import 'package:studenthub/screens/index.dart';
+import 'package:studenthub/screens/shared/setting_screen.dart';
 import 'package:studenthub/screens/student/view_offer_screen.dart';
 import 'package:studenthub/theme/theme.dart';
 import 'package:studenthub/theme/theme_controller.dart';
 
 void main() {
-  runApp(const StudentHub());
+  runApp(ChangeNotifierProvider(
+    create: (context) => ThemeController(),
+    child: const StudentHub(),
+  ));
 }
 
 ThemeController _themeController = ThemeController();
@@ -49,8 +55,10 @@ class _StudentHubState extends State<StudentHub> {
       //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       //   useMaterial3: true,
       // ),
-      theme: lightTheme,
-      darkTheme: darkTheme,
+      theme: Provider.of<ThemeController>(context).themeMode == ThemeMode.light
+          ? lightTheme
+          : darkTheme,
+
       // themeMode: _themeMode,
       initialRoute: '/signin',
       debugShowCheckedModeBanner: false,
@@ -79,7 +87,7 @@ class _StudentHubState extends State<StudentHub> {
           case '/signin':
             return MaterialPageRoute(builder: (context) => const SigninScreen());
           case '/forgotpassword':
-            return MaterialPageRoute(builder: (context) =>  ForgotPasswordScreen());
+            return MaterialPageRoute(builder: (context) => ForgotPasswordScreen());
           case '/user/changepassword':
             return MaterialPageRoute(builder: (context) => const ChangePasswordScreen());
           case '/signup':
@@ -100,6 +108,8 @@ class _StudentHubState extends State<StudentHub> {
             return MaterialPageRoute(builder: (context) => const ProjectListScreen());
           case '/company/project/step1':
             return MaterialPageRoute(builder: (context) => const ProjectPostStep1Page());
+          case '/setting':
+            return MaterialPageRoute(builder: (context) => const SettingScreen());
           default:
             return null;
         }

@@ -339,7 +339,8 @@ class _SwitchScreenState extends State<SwitchScreen> {
         child: Column(
           children: [
             isSearchActive
-                ? CustomSearchBar(controller: searchController, placeholder: 'Search...', onChange: () {})
+                ? CustomSearchBar(
+                    controller: searchController, placeholder: 'Search...', onChange: () {})
                 : const SizedBox(
                     height: 10,
                   ),
@@ -437,7 +438,9 @@ class _SwitchScreenState extends State<SwitchScreen> {
                     ),
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(context, '/setting');
+                    },
                     child: const ListTile(
                       leading: Icon(
                         Icons.settings,

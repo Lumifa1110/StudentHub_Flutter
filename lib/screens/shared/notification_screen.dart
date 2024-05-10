@@ -140,9 +140,9 @@ class _NotificationScreenState extends State<NotificationScreen>
                         });
                       },
                       child: NotificationItem(
-                        notification: notifications[index], userId: userId,
-                      )
-                  );
+                        notification: notifications[index],
+                        userId: userId,
+                      ));
                 })
         ],
       )),
