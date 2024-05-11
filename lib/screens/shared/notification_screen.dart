@@ -89,7 +89,7 @@ class _NotificationScreenState extends State<NotificationScreen>
           .map<NotificationModel>((json) => NotificationModel.fromJson(json))
           .toList();
       notifications = notifications.reversed.toList();
-      print('Result: ${response['result']}');
+      print('Result: ${response['result'][81]}');
     });
   }
 

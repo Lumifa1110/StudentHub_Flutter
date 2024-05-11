@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:studenthub/enums/index.dart';
+import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/models/index.dart';
 
 class NotificationModel {
@@ -19,6 +21,8 @@ class NotificationModel {
   final Chatter? receiver;
   final Interview? interview;
   final MeetingRoom? meetingRoom;
+  final Proposal? proposal;
+
 
   NotificationModel({
     required this.id,
@@ -37,7 +41,8 @@ class NotificationModel {
     this.sender,
     this.receiver,
     this.interview,
-    this.meetingRoom
+    this.meetingRoom,
+    this.proposal,
   });
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
@@ -59,6 +64,7 @@ class NotificationModel {
       receiver: json['receiver'] != null ? Chatter.fromJson(json['receiver']) : null,
       interview: json['interview'] != null ? Interview.fromJson(json['interview']) : null,
       meetingRoom: json['meetingRoom'] != null ? MeetingRoom.fromJson(json['meetingRoom']) : null,
+      proposal: json['proposal'] != null ? Proposal.fromJson(json['proposal']) : null
     );
   }
 
@@ -83,8 +89,26 @@ class NotificationModel {
         return TypeNotifyFlag.submitted;
       case '3':
         return TypeNotifyFlag.chat;
+      case '4':
+        return TypeNotifyFlag.hired;
+
+
       default:
         throw ArgumentError('Invalid notifyFlagString: $typeNotifyFlagString');
     }
   }
+}
+
+
+class Proposal{
+  final int ?statusFlag;
+
+  Proposal({this.statusFlag});
+
+  factory Proposal.fromJson(Map<String, dynamic> json) {
+    return Proposal(
+      statusFlag: json['statusFlag']
+    );
+  }
+
 }

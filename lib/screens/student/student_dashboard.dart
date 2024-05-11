@@ -46,7 +46,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
     //Loading Active proposal
     try {
       final response = await _client.get(
-        Uri.parse('$uriBase/api/proposal/project/$_currentIdStudent?statusFlag=1&typeFlag=0'),
+        Uri.parse('$uriBase/api/proposal/project/$_currentIdStudent?typeFlag=0'),
         headers: {'Authorization': 'Bearer $_token'},
       );
 
@@ -70,6 +70,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         if (jsonDecode(response.body)['result'] != null) {
           _responseSubmitProposal = jsonDecode(response.body)['result'];
+          // print(jsonDecode(response.body)['result']);
         }
       } else {
         throw ('Status response of _loadSubmitProposal() is ${response.statusCode}');
@@ -176,20 +177,20 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
             children: [
               const Text(
                 'Your projects',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: AppFonts.h3FontSize),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
               ),
               const SizedBox(
                 height: 10,
               ),
               Container(
                 decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: blackTextColor),
+                    color: whiteTextColor,
                     borderRadius: BorderRadius.circular(10)),
                 child: TabBar(
                     indicator: BoxDecoration(
                       color: mainColor,
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 1),
+                      // border: Border.all(width: 1),
                     ),
                     indicatorSize: TabBarIndicatorSize.tab,
                     labelColor: whiteTextColor,

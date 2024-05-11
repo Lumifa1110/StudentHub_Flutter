@@ -1,10 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
+import 'package:http/http.dart' as http;
+
+
+import '../../config/config.dart';
+import '../../models/notification_model.dart';
 
 class ViewOfferScreen extends StatefulWidget {
-  const ViewOfferScreen({super.key});
+  final NotificationModel notification;
+
+  const ViewOfferScreen({super.key, required this.notification});
 
   @override
   State<ViewOfferScreen> createState() => _ViewOfferScreenState();
@@ -12,6 +22,43 @@ class ViewOfferScreen extends StatefulWidget {
 
 class _ViewOfferScreenState extends State<ViewOfferScreen> {
   late bool isStudent = true;
+  late SharedPreferences _prefs;
+  late final _token;
+
+  Future<void> _loadingScreen() async{
+    _prefs = await SharedPreferences.getInstance();
+    _token = _prefs.getString('token');
+  }
+  @override
+  void initState() {
+    super.initState();
+    _loadingScreen();
+  }
+
+  Future<void> acceptOffer() async {
+    final Map<String, dynamic> data = {
+      'statusFlag': 3,
+      'disableFlag': 0,
+    };
+    try {
+      final response = await http.patch(
+        Uri.parse('$uriBase/api/proposal/${widget.notification!.proposalId}'),
+        headers: {
+          'Authorization': 'Bearer $_token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(data),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('ok');
+        // setState(() {
+        //
+        // });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,9 +72,9 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(),
-              const Center(
+              Center(
                 child: Text(
-                  'OFFERING',
+                  '${widget.notification!.title}',
                   style: TextStyle(
                     fontSize: AppFonts.h1FontSize,
                     fontWeight: FontWeight.bold,
@@ -47,7 +94,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: const Text(
-                  'Lumifa Company is a very long company name case',
+                  '',
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1, // Adjust the number of lines to fit your layout
@@ -223,7 +270,8 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                           ),
                           child: TextButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, '/student/proposal/submit');
+                              // Navigator.pushNamed(context, '/student/proposal/submit');
+                              print(widget.notification!.senderId);
                             },
                             style: ButtonStyle(
                               shape: MaterialStateProperty.all<OutlinedBorder>(
@@ -255,7 +303,13 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                       ],
                     ),
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if(widget.notification.proposal!.statusFlag != 3){
+                            acceptOffer();
+                        }
+                        else
+                          print('not ok');
+                      },
                       style: ButtonStyle(
                         shape: MaterialStateProperty.all<OutlinedBorder>(
                           const RoundedRectangleBorder(borderRadius: BorderRadius.zero),

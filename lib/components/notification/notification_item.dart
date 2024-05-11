@@ -6,7 +6,7 @@ import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 import '../../screens/chat_flow/message_detail_screen.dart';
-import '../../services/auth_service.dart';
+import '../../screens/student/view_offer_screen.dart';
 
 class NotificationItem extends StatefulWidget {
   final NotificationModel notification;
@@ -66,7 +66,7 @@ class _NotificationItemState extends State<NotificationItem> {
       onTap: () async{
         switch (widget.notification.typeNotifyFlag) {
           case TypeNotifyFlag.offer:
-            Navigator.pushNamed(context, '/offer/view');
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ViewOfferScreen(notification: widget.notification)));
            // print( widget.notification.message!.project);
             break;
           case TypeNotifyFlag.interview:
@@ -84,11 +84,6 @@ class _NotificationItemState extends State<NotificationItem> {
                     : widget.notification.sender!,
               ),
             ));
-            // SharedPreferences _prefs = await SharedPreferences.getInstance();
-            // print(widget.userId);
-            // print(widget.notification.sender);
-
-
 
             break;
           case TypeNotifyFlag.hired:
