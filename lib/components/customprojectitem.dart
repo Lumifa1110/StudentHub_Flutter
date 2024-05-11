@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
@@ -119,7 +117,9 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                     color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                   ),
                 ),
-                const SizedBox(height: 5,),
+                const SizedBox(
+                  height: 5,
+                ),
 
                 // Flexible(
                 //   flex: 1,
@@ -132,7 +132,9 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                 //     ),
                 //   ),
                 // ),
-                const SizedBox(height: 5,),
+                const SizedBox(
+                  height: 5,
+                ),
 
                 Flexible(
                   flex: 4,
@@ -142,14 +144,16 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                       children: [
                         Row(
                           children: [
-                            Text('Time: ',
+                            Text(
+                              'Time: ',
                               style: TextStyle(
                                 fontSize: AppFonts.h3FontSize,
                                 fontWeight: FontWeight.bold,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
-                            Text(checkProjectScope(widget.project.projectScopeFlag),
+                            Text(
+                              checkProjectScope(widget.project.projectScopeFlag),
                               style: TextStyle(
                                 fontSize: AppFonts.h3FontSize,
                                 color: Theme.of(context).colorScheme.onSurface,
@@ -159,14 +163,16 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                         ),
                         Row(
                           children: [
-                            Text('Need: ',
+                            Text(
+                              'Need: ',
                               style: TextStyle(
                                 fontSize: AppFonts.h3FontSize,
                                 fontWeight: FontWeight.bold,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
-                            Text('${widget.project.numberOfStudents}',
+                            Text(
+                              '${widget.project.numberOfStudents}',
                               style: TextStyle(
                                 fontSize: AppFonts.h3FontSize,
                                 color: Theme.of(context).colorScheme.onSurface,
@@ -176,7 +182,8 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                         ),
                         Row(
                           children: [
-                            Text('Description: ',
+                            Text(
+                              'Description: ',
                               style: TextStyle(
                                 fontSize: AppFonts.h3FontSize,
                                 fontWeight: FontWeight.bold,
@@ -184,7 +191,8 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                               ),
                             ),
                             Expanded(
-                              child: Text('${widget.project.description}',
+                              child: Text(
+                                '${widget.project.description}',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -197,14 +205,16 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                         ),
                         Row(
                           children: [
-                            Text('Proposals: ',
+                            Text(
+                              'Proposals: ',
                               style: TextStyle(
                                 fontSize: AppFonts.h3FontSize,
                                 fontWeight: FontWeight.bold,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
-                            Text('${checkCountProposal(widget.project.countProposals)}',
+                            Text(
+                              checkCountProposal(widget.project.countProposals),
                               style: TextStyle(
                                 fontSize: AppFonts.h3FontSize,
                                 color: Theme.of(context).colorScheme.onSurface,

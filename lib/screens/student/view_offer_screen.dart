@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
@@ -78,7 +76,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
               Center(
                 child: Text(
                   '${widget.response['title']}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: AppFonts.h1FontSize,
                     fontWeight: FontWeight.bold,
                     color: blackTextColor,
@@ -104,7 +102,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                     children: [
                       Row(
                         children: [
-                          Text('Title: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          const Text('Title: ', style: TextStyle(fontWeight: FontWeight.bold)),
                           Text('${widget.response['proposal']['project']['title']}')
                         ],
                       ),
@@ -113,8 +111,10 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                       ),
                       Row(
                         children: [
-                          Text('Number of students: ',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          const Text(
+                            'Number of students: ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           Text('${widget.response['proposal']['project']['numberOfStudents']}'),
                         ],
                       ),
@@ -124,7 +124,8 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Project Scope: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          const Text('Project Scope: ',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
                           Expanded(
                               child: Text(convertProjectScoreFlagToTime(
                                   widget.response['proposal']['project']['numberOfStudents']))),
@@ -136,15 +137,18 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Description: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          const Text(
+                            'Description: ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           Expanded(
-                              child: Container(
                             child: SingleChildScrollView(
-                                child: Text(
-                              '${widget.response['proposal']['project']['description']}',
-                              overflow: TextOverflow.ellipsis,
-                            )),
-                          )),
+                              child: Text(
+                                '${widget.response['proposal']['project']['description']}',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
                         ],
                       )
                     ],
@@ -172,7 +176,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                     children: [
                       Row(
                         children: [
-                          Text(
+                          const Text(
                             'Name: ',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
@@ -185,7 +189,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             'Cover Letter: ',
                             style: TextStyle(fontWeight: FontWeight.bold),
                             overflow: TextOverflow.ellipsis,
@@ -203,7 +207,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                       ),
                       Row(
                         children: [
-                          Text(
+                          const Text(
                             'Skill: ',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),

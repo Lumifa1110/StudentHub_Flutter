@@ -638,7 +638,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                               );
                                             },
                                           );
-                                          Navigator.pop(context);
+                                          Navigator.pop(context, true);
                                         },
                                         style: ElevatedButton.styleFrom(
                                           shape: RoundedRectangleBorder(

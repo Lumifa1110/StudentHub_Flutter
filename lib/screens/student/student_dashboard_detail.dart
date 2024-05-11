@@ -34,7 +34,7 @@ class StudentDashboardDetail extends StatelessWidget {
                   height: 5,
                 ),
                 Container(
-                  // height: 400,
+                    // height: 400,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10), border: Border.all()),
                     child: Padding(
@@ -87,10 +87,15 @@ class StudentDashboardDetail extends StatelessWidget {
                                   child: Text('Description',
                                       style: TextStyle(fontWeight: FontWeight.bold))),
                               Expanded(
-                                  child: Container(
-                                    height: 100,
-                                    child: SingleChildScrollView(child: Text('${detailProject['project']['description']}',)),
-                                  )),
+                                child: SizedBox(
+                                  height: 100,
+                                  child: SingleChildScrollView(
+                                    child: Text(
+                                      '${detailProject['project']['description']}',
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           )
                         ],
@@ -141,7 +146,12 @@ class StudentDashboardDetail extends StatelessWidget {
                               maxLines: 4,
                             ),
                           ),
-                          Expanded(child: Text('${detailProject['coverLetter']}', overflow: TextOverflow.ellipsis, maxLines: 4,)),
+                          Expanded(
+                              child: Text(
+                            '${detailProject['coverLetter']}',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 4,
+                          )),
                         ],
                       ),
                       const SizedBox(

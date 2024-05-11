@@ -39,8 +39,9 @@ class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
       );
       if (response.statusCode == 201) {
         Navigator.pushReplacementNamed(context, '/company/dashboard');
-      } else
+      } else {
         print(response.body);
+      }
     } catch (e) {
       print(e);
     }

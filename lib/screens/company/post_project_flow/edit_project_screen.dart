@@ -17,7 +17,7 @@ class EditProjectScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _EditProjectScreenState createState() => _EditProjectScreenState();
+  State<EditProjectScreen> createState() => _EditProjectScreenState();
 }
 
 class _EditProjectScreenState extends State<EditProjectScreen> {
