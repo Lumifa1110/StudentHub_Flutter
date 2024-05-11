@@ -81,22 +81,24 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
       );
       print(response.statusCode);
       if (response.statusCode == 200) {
-        if (mounted)
-        {
+        if (mounted) {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => MessageDetailScreen(
-                      projectId: widget.itemsProposal['projectId'],
-                      chatter: Chatter(
-                          id: widget.itemsProposal['student']['userId'],
-                          fullname: widget.itemsProposal['student']['user']['fullname']
+                  builder: (context) =>
+                      MessageDetailScreen(
+                          projectId: widget.itemsProposal['projectId'],
+                          chatter: Chatter(
+                              id: widget.itemsProposal['student']['userId'],
+                              fullname: widget
+                                  .itemsProposal['student']['user']['fullname']
+                          )
                       )
-                  )
               )
           );
         }
-    } catch (e) {
+      }
+    }catch (e) {
       print(e);
     }
   }
