@@ -18,8 +18,7 @@ class MessageDetailScreen extends StatefulWidget {
   final int projectId;
   final Chatter chatter;
 
-  const MessageDetailScreen(
-      {super.key, required this.projectId, required this.chatter});
+  const MessageDetailScreen({super.key, required this.projectId, required this.chatter});
 
   @override
   State<MessageDetailScreen> createState() => _MessageDetailScreenState();
@@ -39,10 +38,12 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
   // State
   DateTime? lastMessageTime;
   late List<Message> messages = [];
+  bool _isMounted = false;
 
   @override
   void initState() {
     super.initState();
+    _isMounted = true;
     scrollController = ScrollController();
     loadUserId();
     socketConnect();
@@ -53,6 +54,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
   void dispose() {
     socketDisconnect();
     scrollController.dispose();
+    _isMounted = false;
     super.dispose();
   }
 
@@ -83,33 +85,27 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
       setState(() {
         Message newMessage = Message(
             content: data['notification']['message']['content'],
-            sender:
-                Chatter(id: data['notification']['sender']['id'], fullname: ''),
-            receiver: Chatter(
-                id: data['notification']['receiver']['id'], fullname: ''),
+            sender: Chatter(id: data['notification']['sender']['id'], fullname: ''),
+            receiver: Chatter(id: data['notification']['receiver']['id'], fullname: ''),
             createdAt: DateTime.parse(data['notification']['createdAt']));
         messages.add(newMessage);
         // add Timestamp
-        if (lastMessageTime == null ||
-            newMessage.createdAt.day != lastMessageTime!.day) {
+        if (lastMessageTime == null || newMessage.createdAt.day != lastMessageTime!.day) {
           messageWidgets.add(buildTimestamp(newMessage.createdAt));
           lastMessageTime = newMessage.createdAt;
         }
         // add MessageItem widget
         messageWidgets.add(MessageItem(
-            message: newMessage,
-            isMyMessage: data['notification']['sender']['id'] == userId));
+            message: newMessage, isMyMessage: data['notification']['sender']['id'] == userId));
       });
       //scrollToBottom();
     });
 
     socket.on('RECEIVE_INTERVIEW', (data) {
-      final receivedInterview =
-          Interview.fromJson(data['notification']['message']['interview']);
+      final receivedInterview = Interview.fromJson(data['notification']['message']['interview']);
       setState(() {
         // add Timestamp
-        if (lastMessageTime == null ||
-            receivedInterview.createdAt!.day != lastMessageTime!.day) {
+        if (lastMessageTime == null || receivedInterview.createdAt!.day != lastMessageTime!.day) {
           messageWidgets.add(buildTimestamp(receivedInterview.createdAt!));
           lastMessageTime = receivedInterview.createdAt!;
         }
@@ -122,8 +118,8 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                 endTime: receivedInterview.endTime,
                 disableFlag: receivedInterview.disableFlag,
                 meetingRoomId: receivedInterview.meetingRoomId,
-                meetingRoom: MeetingRoom.fromJson(data['notification']
-                    ['message']['interview']['meetingRoom'])),
+                meetingRoom: MeetingRoom.fromJson(
+                    data['notification']['message']['interview']['meetingRoom'])),
             handleEditInterview: handleEditInterview,
             handleDeleteInterview: handleDeleteInterview));
       });
@@ -145,18 +141,18 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
   }
 
   void fetchMessages() async {
-    final response = await MessageService.getMessageByProjectIdAndUserId(
-        widget.projectId, widget.chatter.id);
-    setState(() {
-      messages = response['result']
-          .map<Message>((json) => Message.fromJson(json))
-          .toList();
-      filteredAndSortedMessages();
-      buildMessages();
-    });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      scrollToBottom();
-    });
+    final response =
+        await MessageService.getMessageByProjectIdAndUserId(widget.projectId, widget.chatter.id);
+    if (_isMounted) {
+      setState(() {
+        messages = response['result'].map<Message>((json) => Message.fromJson(json)).toList();
+        filteredAndSortedMessages();
+        buildMessages();
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        scrollToBottom();
+      });
+    }
   }
 
   Future<void> loadUserId() async {
@@ -168,8 +164,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
 
   void filteredAndSortedMessages() {
     setState(() {
-      messages = List.from(messages)
-        ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+      messages = List.from(messages)..sort((a, b) => a.createdAt.compareTo(b.createdAt));
     });
   }
 
@@ -211,8 +206,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
       // Check if this is the first message or the time has changed since the last message
       if (message.interview != null) {
         if (message.interview?.deletedAt == null) {
-          if (tempLastMessageTime == null ||
-              message.createdAt.day != tempLastMessageTime.day) {
+          if (tempLastMessageTime == null || message.createdAt.day != tempLastMessageTime.day) {
             tempWidgets.add(buildTimestamp(message.createdAt));
           }
           tempWidgets.add(InterviewItem(
@@ -222,13 +216,11 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
           tempLastMessageTime = message.createdAt;
         }
       } else {
-        if (tempLastMessageTime == null ||
-            message.createdAt.day != tempLastMessageTime.day) {
+        if (tempLastMessageTime == null || message.createdAt.day != tempLastMessageTime.day) {
           tempWidgets.add(buildTimestamp(message.createdAt));
         }
         // Add the message item
-        tempWidgets
-            .add(MessageItem(message: message, isMyMessage: isMyMessage));
+        tempWidgets.add(MessageItem(message: message, isMyMessage: isMyMessage));
         tempLastMessageTime = message.createdAt;
       }
     }
@@ -276,12 +268,11 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
   String generateRandomString(int length) {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
     final random = Random();
-    return String.fromCharCodes(Iterable.generate(
-        length, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
+    return String.fromCharCodes(
+        Iterable.generate(length, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
   }
 
-  void handleCreateInterview(
-      String title, DateTime startTime, DateTime endTime) {
+  void handleCreateInterview(String title, DateTime startTime, DateTime endTime) {
     // Create meeting room
     final String roomCode = generateRandomString(10);
     final String roomId = generateRandomString(10);
@@ -299,8 +290,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
     });
   }
 
-  void handleEditInterview(
-      int interviewId, String title, DateTime startTime, DateTime endTime) {
+  void handleEditInterview(int interviewId, String title, DateTime startTime, DateTime endTime) {
     try {
       InterviewService.updateInterview(interviewId, {
         "title": title,
@@ -325,8 +315,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
     super.build(context);
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.chatter.fullname,
-              style: const TextStyle(color: Colors.white)),
+          title: Text(widget.chatter.fullname, style: const TextStyle(color: Colors.white)),
           backgroundColor: mainColor,
           iconTheme: const IconThemeData(color: Colors.white),
         ),
@@ -336,11 +325,8 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
             flex: 7,
             child: SingleChildScrollView(
                 controller: scrollController,
-                padding: const EdgeInsets.only(
-                    top: 20, bottom: 20, left: 20, right: 20),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: messageWidgets)),
+                padding: const EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 20),
+                child: Column(mainAxisAlignment: MainAxisAlignment.end, children: messageWidgets)),
           ),
           Expanded(
             flex: 1,
@@ -357,8 +343,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                   ),
                 ],
               ),
-              child:
-                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+              child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 Expanded(
                     flex: 1,
                     child: GestureDetector(
@@ -368,8 +353,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                           barrierColor: Colors.black.withAlpha(1),
                           isScrollControlled: true,
                           shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.vertical(top: Radius.circular(0)),
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(0)),
                           ),
                           builder: (BuildContext context) {
                             return Container(
@@ -385,16 +369,13 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                                 ],
                               ),
                               child: SizedBox(
-                                  height: MediaQuery.of(context).size.height *
-                                      5 /
-                                      9,
+                                  height: MediaQuery.of(context).size.height * 5 / 9,
                                   child: BottomSheetSchedule(
                                     title: '',
                                     startDate: DateTime.now(),
                                     endDate: DateTime.now(),
                                     enableEdit: false,
-                                    handleCreateInterview:
-                                        handleCreateInterview,
+                                    handleCreateInterview: handleCreateInterview,
                                   )),
                             );
                           },
@@ -431,8 +412,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                               cursorColor: AppColor.primary,
                               maxLines: null,
                               keyboardType: TextInputType.multiline,
-                              style: const TextStyle(
-                                  fontSize: AppFonts.h3FontSize),
+                              style: const TextStyle(fontSize: AppFonts.h3FontSize),
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                               ),

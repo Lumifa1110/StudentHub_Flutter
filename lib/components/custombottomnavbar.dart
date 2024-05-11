@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/preferences/user_preferences.dart';
 import 'package:studenthub/screens/index.dart';
-import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class CustomBottomNavBar extends StatefulWidget {
