@@ -7,3 +7,4 @@ export 'message_service.dart';
 export 'interview_services.dart';
 export 'meeting_room_services.dart';
 export 'project_service.dart';
+export 'proposal_services.dart';

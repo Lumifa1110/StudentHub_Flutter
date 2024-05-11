@@ -50,14 +50,13 @@ class _InterviewItemState extends State<InterviewItem> {
     }
   }
 
-  bool isInterviewOccuring() {
+  bool isInterviewOccurring() {
     DateTime currentTime = DateTime.now();
-    if (currentTime.isAfter(widget.interview.startTime) &&
-        currentTime.isBefore(widget.interview.endTime)) {
-      return true;
-    } else {
-      return false;
-    }
+    DateTime startTime = widget.interview.startTime;
+    DateTime endTime = widget.interview.endTime;
+    Duration tolerance = const Duration(seconds: 1);
+    return currentTime.isAfter(startTime.subtract(tolerance)) &&
+        currentTime.isBefore(endTime.add(tolerance));
   }
 
   void handleEditAndUpdateState(
@@ -195,20 +194,17 @@ class _InterviewItemState extends State<InterviewItem> {
                         child: Container(
                             alignment: Alignment.centerRight,
                             child: ButtonSimple(
-                                label: 'Join',
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => InterviewScreen(
-                                              conferenceId: widget
-                                                  .interview
-                                                  .meetingRoom!
-                                                  .meetingRoomId)));
-                                },
-                                // isButtonEnabled:
-                                //     (isInterviewOccuring() && widget.interview.disableFlag == false) ? true : false,
-                                isButtonEnabled: true))),
+                              label: 'Join',
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => InterviewScreen(
+                                            conferenceId: widget.interview
+                                                .meetingRoom!.meetingRoomId)));
+                              },
+                              isButtonEnabled: isInterviewOccurring(),
+                            ))),
                     const SizedBox(width: 10),
                     Container(
                       width: 40, // Adjust the width as needed

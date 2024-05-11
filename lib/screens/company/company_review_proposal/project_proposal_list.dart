@@ -192,12 +192,17 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                           ]),
                         ),
                         Container(
-                            margin: const EdgeInsets.only(bottom: 20),
-                            child: const TabBar(tabs: [
+                          margin: const EdgeInsets.only(bottom: 20),
+                          child: const TabBar(
+                            labelStyle: TextStyle(color: mainColor, fontSize: AppFonts.h3FontSize),
+                            unselectedLabelStyle: TextStyle(color: blackTextColor),
+                            tabs: [
                               Tab(text: 'Proposals'),
                               Tab(text: 'Detail'),
                               Tab(text: 'Hire'),
-                            ])),
+                            ],
+                          ),
+                        ),
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10.0),

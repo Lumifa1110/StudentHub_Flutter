@@ -88,8 +88,7 @@ class _NotificationScreenState extends State<NotificationScreen>
           .where((json) => json['notifyFlag'] == '0')
           .map<NotificationModel>((json) => NotificationModel.fromJson(json))
           .toList();
-      notifications = notifications.reversed.toList();
-      print('Result: ${response['result'][81]}');
+      // notifications = notifications.reversed.toList();
     });
   }
 
@@ -127,6 +126,7 @@ class _NotificationScreenState extends State<NotificationScreen>
             )
           else
             ListView.builder(
+                reverse: true,
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: notifications.length,
@@ -140,9 +140,9 @@ class _NotificationScreenState extends State<NotificationScreen>
                         });
                       },
                       child: NotificationItem(
-                        notification: notifications[index], userId: userId,
-                      )
-                  );
+                        notification: notifications[index],
+                        userId: userId,
+                      ));
                 })
         ],
       )),

@@ -64,9 +64,9 @@ class _ConversationItemState extends State<ConversationItem> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Theme.of(context).colorScheme.shadow.withOpacity(0.3),
-              spreadRadius: 3.0,
-              blurRadius: 3.0,
+              color: Theme.of(context).colorScheme.shadow.withOpacity(0.1),
+              spreadRadius: 2.0,
+              blurRadius: 2.0,
             ),
           ],
         ),
@@ -194,7 +194,7 @@ class _ConversationItemState extends State<ConversationItem> {
                     widget.message.content,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurface,
-                      fontSize: AppFonts.h3FontSize,
+                      fontSize: AppFonts.h4FontSize,
                       fontWeight: FontWeight.w400,
                     ),
                     overflow: TextOverflow.ellipsis,

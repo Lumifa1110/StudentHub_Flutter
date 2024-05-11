@@ -7,7 +7,7 @@ class ProjectService {
       final response = await ApiService.getRequest('/api/project/company/$companyId');
       return response;
     } catch (e) {
-      print('Error get project by companny ID: $e');
+      print('Error get project by company ID: $e');
       rethrow;
     }
   }

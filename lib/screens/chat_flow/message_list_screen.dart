@@ -103,6 +103,7 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
   }
 
   Future<void> filterConversationList() async {
+    print("Search text: ${searchController.text}");
     // Create a map to store the latest message for each conversation involving user
     if (mounted) {
       final Map<String, Message> conversationsMap = {};
@@ -115,10 +116,15 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
         // Check if the message involves user
         if (sender!.id == userId || receiver!.id == userId) {
           final otherPerson = sender.id == userId ? receiver!.fullname : sender.fullname;
-          // Check if the conversation has been added to the map
-          if (!conversationsMap.containsKey(otherPerson) ||
-              message.createdAt.isAfter(conversationsMap[otherPerson]!.createdAt)) {
-            conversationsMap[otherPerson] = message;
+
+          // Check if the other person's name matches the search query
+          if (otherPerson.toLowerCase().contains(searchController.text.toLowerCase())) {  
+
+            // Check if the conversation has been added to the map
+            if (!conversationsMap.containsKey(otherPerson) ||
+                message.createdAt.isAfter(conversationsMap[otherPerson]!.createdAt)) {
+              conversationsMap[otherPerson] = message;
+            }
           }
         }
       }
@@ -164,7 +170,7 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  CustomSearchBar(controller: searchController, placeholder: 'Search'),
+                  CustomSearchBar(controller: searchController, placeholder: 'Search', onChange: filterConversationList),
                   Container(
                     alignment: Alignment.centerLeft,
                     margin: const EdgeInsets.only(bottom: 16),
