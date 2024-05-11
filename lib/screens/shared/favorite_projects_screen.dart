@@ -25,15 +25,13 @@ class _FavoriteProjectsScreenState extends State<FavoriteProjectsScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _favoriteList = widget.favoriteList;
   }
 
   bool isFavoriteProject(Project project) {
     return _favoriteList
-        .where(
-            (favoriteProject) => favoriteProject.projectId == project.projectId)
+        .where((favoriteProject) => favoriteProject.projectId == project.projectId)
         .isNotEmpty;
   }
 
@@ -55,8 +53,7 @@ class _FavoriteProjectsScreenState extends State<FavoriteProjectsScreen> {
               children: [
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     child: ListView.builder(
                       itemCount: _favoriteList.length,
                       itemBuilder: (context, index) {

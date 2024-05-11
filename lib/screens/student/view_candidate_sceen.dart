@@ -22,10 +22,10 @@ class ViewCandidateSceen extends StatefulWidget {
   const ViewCandidateSceen({super.key, this.candidateId, this.candidateData});
 
   @override
-  State<ViewCandidateSceen> createState() => _ViewCandidateSceenState();
+  ViewCandidateSceenState createState() => ViewCandidateSceenState();
 }
 
-class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
+class ViewCandidateSceenState extends State<ViewCandidateSceen> {
   bool isLoading = true;
   bool isResumeLoading = true;
   bool isTranscriptLoading = true;
@@ -88,8 +88,8 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
     // Get the directory where the file will be saved
     final directory =
         await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOADS);
-    print('Direc: ${directory}');
-    final filePath = '${directory}/$fileDefault';
+    print('Direc: $directory');
+    final filePath = '$directory/$fileDefault';
     print(filePath);
 
     // Write the file to disk
@@ -387,7 +387,8 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                             child: Container(
                               padding: const EdgeInsets.all(6),
                               decoration: BoxDecoration(
-                                border: Border.all(color: Theme.of(context).colorScheme.primary, width: 1),
+                                border: Border.all(
+                                    color: Theme.of(context).colorScheme.primary, width: 1),
                                 borderRadius: BorderRadius.circular(9),
                                 color: Theme.of(context).colorScheme.surface,
                               ),
@@ -438,7 +439,8 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                               height: 250,
                               padding: const EdgeInsets.all(6),
                               decoration: BoxDecoration(
-                                border: Border.all(color: Theme.of(context).colorScheme.primary, width: 1),
+                                border: Border.all(
+                                    color: Theme.of(context).colorScheme.primary, width: 1),
                                 borderRadius: BorderRadius.circular(9),
                                 color: Theme.of(context).colorScheme.surface,
                               ),
@@ -446,9 +448,8 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                                   child: Text(
                                 '${widget.candidateData['coverLetter']}',
                                 style: TextStyle(
-                                  fontSize: AppFonts.h2FontSize,
-                                  color: Theme.of(context).colorScheme.onSurface
-                                ),
+                                    fontSize: AppFonts.h2FontSize,
+                                    color: Theme.of(context).colorScheme.onSurface),
                               )),
                             ),
                           ),
@@ -492,7 +493,8 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                                     TextStyle(color: Colors.white, fontSize: AppFonts.h3FontSize),
                               ),
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.primary),
+                                backgroundColor: MaterialStateProperty.all<Color>(
+                                    Theme.of(context).colorScheme.primary),
                               ),
                             ),
                           ),
@@ -524,7 +526,8 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                                     TextStyle(color: Colors.white, fontSize: AppFonts.h3FontSize),
                               ),
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.primary),
+                                backgroundColor: MaterialStateProperty.all<Color>(
+                                    Theme.of(context).colorScheme.primary),
                                 // Kích thước của nút
                               ),
                             ),

@@ -9,15 +9,14 @@ class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);
 
   @override
-  _SettingScreenState createState() => _SettingScreenState();
+  SettingScreenState createState() => SettingScreenState();
 }
 
-class _SettingScreenState extends State<SettingScreen> {
+class SettingScreenState extends State<SettingScreen> {
   late bool isDark = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 

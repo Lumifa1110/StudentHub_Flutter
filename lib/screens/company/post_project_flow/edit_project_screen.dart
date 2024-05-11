@@ -47,8 +47,9 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
     );
     if (response.statusCode == 200) {
       Navigator.pushReplacementNamed(context, '/company/dashboard');
-    } else
+    } else {
       print('erro');
+    }
   }
 
   Future<void> _loadProject() async {
@@ -56,7 +57,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
     _token = _prefs.getString('token');
     try {
       final response = await http.get(
-        Uri.parse('${uriBase}/api/project/${widget.projectId}'),
+        Uri.parse('$uriBase/api/project/${widget.projectId}'),
         headers: {'Authorization': 'Bearer $_token'},
       );
       final responseDecode = jsonDecode(response.body)['result'];
@@ -69,7 +70,9 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
       setState(() {
         isLoading = false;
       });
-    } catch (e) {}
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 
   @override

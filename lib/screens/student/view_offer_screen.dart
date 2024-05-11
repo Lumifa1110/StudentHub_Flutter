@@ -8,7 +8,6 @@ import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 import 'package:http/http.dart' as http;
 
-
 import '../../business/company_business.dart';
 import '../../config/config.dart';
 import '../../models/notification_model.dart';
@@ -96,9 +95,9 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                 ),
               ),
               Container(
-                decoration: BoxDecoration(border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10)
-                ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10)),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
@@ -125,8 +124,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Project Scope: ',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text('Project Scope: ', style: TextStyle(fontWeight: FontWeight.bold)),
                           Expanded(
                               child: Text(convertProjectScoreFlagToTime(
                                   widget.response['proposal']['project']['numberOfStudents']))),
@@ -138,12 +136,15 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Description: ',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text('Description: ', style: TextStyle(fontWeight: FontWeight.bold)),
                           Expanded(
                               child: Container(
-                                child: SingleChildScrollView(child: Text('${widget.response['proposal']['project']['description']}', overflow: TextOverflow.ellipsis,)),
-                              )),
+                            child: SingleChildScrollView(
+                                child: Text(
+                              '${widget.response['proposal']['project']['description']}',
+                              overflow: TextOverflow.ellipsis,
+                            )),
+                          )),
                         ],
                       )
                     ],
@@ -164,9 +165,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
               Container(
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10)
-
-                ),
+                    borderRadius: BorderRadius.circular(10)),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
@@ -192,7 +191,11 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 4,
                           ),
-                          Expanded(child: Text('${widget.response['proposal']['coverLetter']}', overflow: TextOverflow.ellipsis,)),
+                          Expanded(
+                              child: Text(
+                            '${widget.response['proposal']['coverLetter']}',
+                            overflow: TextOverflow.ellipsis,
+                          )),
                         ],
                       ),
                       const SizedBox(
@@ -204,10 +207,13 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                             'Skill: ',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          Expanded(child: Text('${widget.response['proposal']['student']['techStack']['name']}',overflow: TextOverflow.ellipsis,)),
+                          Expanded(
+                              child: Text(
+                            '${widget.response['proposal']['student']['techStack']['name']}',
+                            overflow: TextOverflow.ellipsis,
+                          )),
                         ],
                       ),
-
                     ],
                   ),
                 ),
@@ -223,20 +229,17 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                   color: blackTextColor,
                 ),
               ),
-
               Container(
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10)
-
-                ),
+                    borderRadius: BorderRadius.circular(10)),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
                     children: [
                       Row(
                         children: [
-                          Text(
+                          const Text(
                             'Sender: ',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
@@ -251,14 +254,17 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                       ),
                       Row(
                         children: [
-                          Text(
+                          const Text(
                             'Receiver: ',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          Expanded(child: Text('${widget.response['receiver']['email']}',overflow: TextOverflow.ellipsis,)),
+                          Expanded(
+                              child: Text(
+                            '${widget.response['receiver']['email']}',
+                            overflow: TextOverflow.ellipsis,
+                          )),
                         ],
                       ),
-
                     ],
                   ),
                 ),
@@ -277,12 +283,10 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                 color: lightestgrayColor,
                 child: Text(
                   'Dear ${widget.response['receiver']['fullname']}.\n ${widget.response['content']}. \n   Your receipt of this offer is a result of your hard work and expertise in the field you study and work in. The company has seen potential and drive in you and believes that you will make a positive contribution to their ${widget.response['proposal']['project']['title']}project.\n   If you wish to join this project, we encourage you to accept the offer promptly. This will open up opportunities for you to develop your skills, build relationships in the industry, and contribute to an exciting and meaningful project.\n   If you have any questions about the offer or the working process, please do not hesitate to contact us. We are more than happy to assist you and provide any necessary information to help you make the most informed decision.\n   We look forward to working with you in the near future!\n   Best regards,\n     ${widget.response['sender']['fullname']} ',
-                  style: TextStyle(fontSize: AppFonts.h3FontSize),
+                  style: const TextStyle(fontSize: AppFonts.h3FontSize),
                 ),
               ),
-
               const SizedBox(height: 30),
-
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -337,7 +341,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                     ),
                     child: TextButton(
                       onPressed: () {
-                        if(widget.notification.proposal!.statusFlag != 3){
+                        if (widget.notification.proposal!.statusFlag != 3) {
                           showDialog(
                             context: context,
                             builder: (_) => AlertDialog(
@@ -355,9 +359,8 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                               ],
                             ),
                           );
-                            acceptOffer();
-                        }
-                        else{
+                          acceptOffer();
+                        } else {
                           showDialog(
                             context: context,
                             builder: (_) => AlertDialog(
@@ -381,8 +384,8 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                         ),
                       ),
                       child: Text(
-                        widget.notification.proposal!.statusFlag == 3 ? 'Accepted': 'Accept',
-                        style: TextStyle(
+                        widget.notification.proposal!.statusFlag == 3 ? 'Accepted' : 'Accept',
+                        style: const TextStyle(
                           fontSize: 16,
                           color: blackTextColor,
                         ),

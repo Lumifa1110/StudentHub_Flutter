@@ -48,7 +48,6 @@ class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 

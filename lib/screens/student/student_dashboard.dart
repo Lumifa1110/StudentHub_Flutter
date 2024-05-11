@@ -2,7 +2,6 @@ import 'dart:convert';
 
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
@@ -11,7 +10,6 @@ import 'package:studenthub/utils/font.dart';
 import 'package:http/http.dart' as http;
 import 'package:studenthub/config/config.dart';
 import 'package:studenthub/utils/timer.dart';
-
 import '../../utils/colors.dart';
 import '../../utils/statusflag_conversed.dart';
 
@@ -22,7 +20,10 @@ class StudentDashboardScreen extends StatefulWidget {
   State<StudentDashboardScreen> createState() => _StudentDashboardScreenState();
 }
 
-class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
+class _StudentDashboardScreenState extends State<StudentDashboardScreen>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
   late SharedPreferences _prefs;
   late String? _token;
   late int _currentIdStudent;
@@ -57,11 +58,10 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
       if (response.statusCode == 200) {
         final responseDecode = jsonDecode(response.body)['result'];
         if (jsonDecode(response.body)['result'] != null) {
-          for(int i = 0; i < responseDecode.length; i++) {
-            if(responseDecode[i]['statusFlag'] != 0){
+          for (int i = 0; i < responseDecode.length; i++) {
+            if (responseDecode[i]['statusFlag'] != 0) {
               _responseActiveProposal.add(responseDecode[i]!);
-            }
-            else{
+            } else {
               _responseSubmitProposal.add(responseDecode[i]!);
             }
           }
@@ -125,8 +125,8 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
       final profile = _prefs.getString('student_profile');
       if (profile == 'null') {
         if (mounted) {
-          Navigator.pop(context as BuildContext, true);
-          Navigator.of(context as BuildContext).pushNamed('/student');
+          Navigator.pop(context, true);
+          Navigator.of(context).pushNamed('/student');
         }
       } else {
         _token = _prefs.getString('token');
@@ -145,7 +145,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
       }
     } else {
       Navigator.pushNamedAndRemoveUntil(
-        context as BuildContext ,
+        context,
         '/company/dashboard',
         (route) => route.settings.name == '/home',
       );
@@ -154,7 +154,9 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AuthAppBar(
         canBack: false,
         onRoleChanged: (result) {
@@ -215,7 +217,8 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                   child: Container(
                                     padding: const EdgeInsets.all(10.0),
                                     decoration: BoxDecoration(
-                                        border: Border.all(color: Theme.of(context).colorScheme.shadow),
+                                        border:
+                                            Border.all(color: Theme.of(context).colorScheme.shadow),
                                         borderRadius: BorderRadius.circular(10)),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,51 +229,49 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                               fontWeight: FontWeight.bold,
                                               fontSize: AppFonts.h3FontSize),
                                         ),
-                                        const SizedBox(height: 10,),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
                                         Expanded(
-                                            child: ListView.builder(
-                                              itemCount: _responseActiveProposal.length,
-                                              // Number of items in your list
-                                              itemBuilder: (BuildContext context, int index) {
-                                                // itemBuilder builds each item in the list
-                                                return Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                  children: [
-                                                    Card(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .surface,
-                                                      surfaceTintColor: Colors.transparent,
-                                                      elevation: 2.0,
-                                                      shadowColor: Theme.of(context)
-                                                          .colorScheme
-                                                          .shadow,
-                                                      child: Padding(
-                                                        padding: const EdgeInsets.all(10.0),
-                                                        child: OptionItemAllProjectScreen(
-                                                          onTap: () {
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder: (context) =>
-                                                                    StudentDashboardDetail(
-                                                                  detailProject:
-                                                                      _responseActiveProposal[index],
-                                                                  nameStudent:
-                                                                      _prefs.getString('username')!,
-                                                                ),
+                                          child: ListView.builder(
+                                            itemCount: _responseActiveProposal.length,
+                                            // Number of items in your list
+                                            itemBuilder: (BuildContext context, int index) {
+                                              // itemBuilder builds each item in the list
+                                              return Column(
+                                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                children: [
+                                                  Card(
+                                                    color: Theme.of(context).colorScheme.surface,
+                                                    surfaceTintColor: Colors.transparent,
+                                                    elevation: 2.0,
+                                                    shadowColor:
+                                                        Theme.of(context).colorScheme.shadow,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(10.0),
+                                                      child: OptionItemAllProjectScreen(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  StudentDashboardDetail(
+                                                                detailProject:
+                                                                    _responseActiveProposal[index],
+                                                                nameStudent:
+                                                                    _prefs.getString('username')!,
                                                               ),
-                                                            );
-                                                          },
-                                                          response: _responseActiveProposal[index],
-                                                        ),
+                                                            ),
+                                                          );
+                                                        },
+                                                        response: _responseActiveProposal[index],
                                                       ),
                                                     ),
-                                                    const SizedBox(height: 5,)
-                                                  ],
-                                                );
-                                              },
-                                            ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -283,7 +284,8 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                   child: Container(
                                     padding: const EdgeInsets.all(10.0),
                                     decoration: BoxDecoration(
-                                        border: Border.all(color: Theme.of(context).colorScheme.shadow),
+                                        border:
+                                            Border.all(color: Theme.of(context).colorScheme.shadow),
                                         borderRadius: BorderRadius.circular(10)),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -298,46 +300,44 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                           height: 10,
                                         ),
                                         Expanded(
-                                            child: ListView.builder(
-                                              itemCount: _responseSubmitProposal.length,
-                                              // Number of items in your list
-                                              itemBuilder: (BuildContext context, int index) {
-                                                return Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                  children: [
-                                                    Card(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .surface,
-                                                      surfaceTintColor: Colors.transparent,
-                                                      elevation: 2.0,
-                                                      shadowColor: Theme.of(context)
-                                                          .colorScheme
-                                                          .shadow,
-                                                      child: Padding(
-                                                        padding: const EdgeInsets.all(10.0),
-                                                        child: OptionItemAllProjectScreen(
-                                                            onTap: () {
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder: (context) =>
-                                                                      StudentDashboardDetail(
-                                                                    detailProject:
-                                                                        _responseSubmitProposal[index],
-                                                                    nameStudent:
-                                                                        _prefs.getString('username')!,
-                                                                  ),
+                                          child: ListView.builder(
+                                            itemCount: _responseSubmitProposal.length,
+                                            // Number of items in your list
+                                            itemBuilder: (BuildContext context, int index) {
+                                              return Column(
+                                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                children: [
+                                                  Card(
+                                                    color: Theme.of(context).colorScheme.surface,
+                                                    surfaceTintColor: Colors.transparent,
+                                                    elevation: 2.0,
+                                                    shadowColor:
+                                                        Theme.of(context).colorScheme.shadow,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(10.0),
+                                                      child: OptionItemAllProjectScreen(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    StudentDashboardDetail(
+                                                                  detailProject:
+                                                                      _responseSubmitProposal[
+                                                                          index],
+                                                                  nameStudent:
+                                                                      _prefs.getString('username')!,
                                                                 ),
-                                                              );
-                                                            },
-                                                            response: _responseSubmitProposal[index]),
-                                                      ),
+                                                              ),
+                                                            );
+                                                          },
+                                                          response: _responseSubmitProposal[index]),
                                                     ),
-                                                  ],
-                                                );
-                                              },
-                                            ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -357,19 +357,15 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                         Expanded(
                           child: ListView.builder(
                               itemCount: _responseWorkingTab.length,
-                              itemBuilder: (context, index) {
+                              itemBuilder: (BuildContext context, index) {
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
                                     Card(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .surface,
+                                      color: Theme.of(context).colorScheme.surface,
                                       surfaceTintColor: Colors.transparent,
                                       elevation: 2.0,
-                                      shadowColor: Theme.of(context)
-                                          .colorScheme
-                                          .shadow,
+                                      shadowColor: Theme.of(context).colorScheme.shadow,
                                       child: Padding(
                                         padding: const EdgeInsets.all(10.0),
                                         child: OptionItemAllProjectScreen(
@@ -377,13 +373,10 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) =>
-                                                    StudentDashboardDetail(
-                                                      detailProject:
-                                                      _responseWorkingTab[index],
-                                                      nameStudent:
-                                                      _prefs.getString('username')!,
-                                                    ),
+                                                builder: (context) => StudentDashboardDetail(
+                                                  detailProject: _responseWorkingTab[index],
+                                                  nameStudent: _prefs.getString('username')!,
+                                                ),
                                               ),
                                             );
                                           },
@@ -407,19 +400,15 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                         Expanded(
                           child: ListView.builder(
                               itemCount: _responseArchivedTab.length,
-                              itemBuilder: (context, index) {
+                              itemBuilder: (BuildContext context, index) {
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
                                     Card(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .surface,
+                                      color: Theme.of(context).colorScheme.surface,
                                       surfaceTintColor: Colors.transparent,
                                       elevation: 2.0,
-                                      shadowColor: Theme.of(context)
-                                          .colorScheme
-                                          .shadow,
+                                      shadowColor: Theme.of(context).colorScheme.shadow,
                                       child: Padding(
                                         padding: const EdgeInsets.all(10.0),
                                         child: OptionItemAllProjectScreen(
@@ -427,13 +416,10 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) =>
-                                                    StudentDashboardDetail(
-                                                      detailProject:
-                                                      _responseArchivedTab[index],
-                                                      nameStudent:
-                                                      _prefs.getString('username')!,
-                                                    ),
+                                                builder: (context) => StudentDashboardDetail(
+                                                  detailProject: _responseArchivedTab[index],
+                                                  nameStudent: _prefs.getString('username')!,
+                                                ),
                                               ),
                                             );
                                           },
@@ -441,7 +427,9 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(height: 5,)
+                                    const SizedBox(
+                                      height: 5,
+                                    )
                                   ],
                                 );
                               }),
@@ -485,25 +473,29 @@ class _OptionItemAllProjectScreenState extends State<OptionItemAllProjectScreen>
               Expanded(
                 child: Text(
                   widget.response['project']['title'],
-                  style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: AppFonts.h3FontSize, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontSize: AppFonts.h3FontSize,
+                      fontWeight: FontWeight.bold),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
               Container(
-                  width: MediaQuery.of(context).size.width/7,
+                  width: MediaQuery.of(context).size.width / 7,
                   decoration: BoxDecoration(
                       color: statusFlagColors(widget.response['statusFlag']),
-                      borderRadius: BorderRadius.circular(10)
-                  ),
+                      borderRadius: BorderRadius.circular(10)),
                   child: Center(
-                      child: Text('${statusFlagConversed(widget.response['statusFlag'])}', style: const TextStyle(color: whiteTextColor),)
-                  )
-              ),
+                      child: Text(
+                    '${statusFlagConversed(widget.response['statusFlag'])}',
+                    style: const TextStyle(color: whiteTextColor),
+                  ))),
             ],
           ),
           Text(
             'Submitted ${timeSinceCreated(widget.response['createdAt'])}',
-            style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: AppFonts.h4FontSize),
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface, fontSize: AppFonts.h4FontSize),
           ),
           const SizedBox(
             height: 10,

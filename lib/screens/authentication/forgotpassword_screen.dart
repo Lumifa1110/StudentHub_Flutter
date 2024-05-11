@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:http/http.dart' as http;
@@ -8,6 +6,8 @@ import 'package:studenthub/config/config.dart';
 import 'package:studenthub/utils/font.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({super.key});
+
   @override
   State<ForgotPasswordScreen> createState() => StateForgotPasswordScreen();
 }
@@ -35,8 +35,7 @@ class StateForgotPasswordScreen extends State<ForgotPasswordScreen> {
             actions: <Widget>[
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(true);
-                  Navigator.of(context).pop(true);
+                  Navigator.of(context).popUntil(ModalRoute.withName(Navigator.defaultRouteName));
                 },
                 child: const Text('OK'),
               ),

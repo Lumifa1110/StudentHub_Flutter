@@ -11,7 +11,6 @@ import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/config/config.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
-
 import '../../utils/timer.dart';
 
 class CompanyDashboardScreen extends StatefulWidget {
@@ -87,8 +86,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
             .then((_) => _loadWorking())
             .then((_) => _loadArchived());
       });
-    } else
+    } else {
       print(response.body);
+    }
   }
 
   //Close a project
@@ -117,8 +117,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
             .then((_) => _loadWorking())
             .then((_) => _loadArchived());
       });
-    } else
+    } else {
       print(response.body);
+    }
   }
 
   Future<void> _loadScreen() async {
@@ -720,7 +721,6 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                 )
               ],
             ),
-
             Text(
               'Created ${timeSinceCreated(widget.project['createdAt'])}',
               style: const TextStyle(color: Colors.grey),
@@ -733,7 +733,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -772,8 +772,11 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const Text('State: '),
-                        Text(
-                            '${widget.project['typeFlag'] == 0 ? 'New' : widget.project['typeFlag'] == 1 ? 'Working' : 'Archived'}')
+                        Text(widget.project['typeFlag'] == 0
+                            ? 'New'
+                            : widget.project['typeFlag'] == 1
+                                ? 'Working'
+                                : 'Archived')
                       ],
                     ),
                   ],

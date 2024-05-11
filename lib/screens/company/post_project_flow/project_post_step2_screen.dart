@@ -33,7 +33,6 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
