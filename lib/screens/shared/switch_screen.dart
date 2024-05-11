@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:sn_progress_dialog/sn_progress_dialog.dart';
@@ -11,7 +10,6 @@ import 'package:studenthub/models/index.dart';
 import 'package:studenthub/preferences/index.dart';
 import 'package:studenthub/screens/company/profile_creation/company_profile_edit_screen.dart';
 import 'package:studenthub/screens/index.dart';
-import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 import '../../services/index.dart';
@@ -246,10 +244,10 @@ class _SwitchScreenState extends State<SwitchScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return const AlertDialog(
-          title: Text('Success'),
-          content: Icon(Icons.check, color: AppColor.tertiary),
-          actions: <Widget>[
+        return AlertDialog(
+          title: const Text('Success'),
+          content: Icon(Icons.check, color: Theme.of(context).colorScheme.tertiary),
+          actions: const <Widget>[
             // TextButton(
             //   onPressed: () {
             //     Navigator.of(context).pop();
@@ -353,7 +351,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
                     child: const Center(
                       child: Icon(
                         Icons.chevron_left,
-                        color: whiteTextColor,
+                        color: Colors.white,
                         size: 24,
                       ),
                     ),
@@ -367,7 +365,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
             Text(
               'Accounts',
               style: TextStyle(
-                color: whiteTextColor,
+                color: Colors.white,
                 fontSize: AppFonts.h0FontSize,
                 fontWeight: FontWeight.w500,
               ),

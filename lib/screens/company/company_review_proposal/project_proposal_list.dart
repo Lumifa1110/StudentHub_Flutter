@@ -4,7 +4,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/project_proposal/index.dart';
-import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 import 'package:studenthub/config/config.dart';
 import 'package:http/http.dart' as http;
@@ -98,13 +97,13 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
             : errorMessage.isNotEmpty
                 ? Center(child: Text(errorMessage))
                 : Container(
-                    color: const Color(0xFFF8F8F8),
+                    color: Theme.of(context).colorScheme.background,
                     child: Column(
                       children: [
                         // Project name
                         Container(
                           alignment: Alignment.centerLeft,
-                          decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                          decoration: BoxDecoration(color: Theme.of(context).colorScheme.primaryContainer, boxShadow: [
                             BoxShadow(
                                 color: Colors.grey.withOpacity(0.2),
                                 spreadRadius: 2,
@@ -115,8 +114,8 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                             // Project Name
                             Text(widget.project['title'],
-                                style: const TextStyle(
-                                    color: mainColor,
+                                style: TextStyle(
+                                    color: Theme.of(context).colorScheme.primary,
                                     fontSize: AppFonts.h1FontSize,
                                     fontWeight: FontWeight.bold)),
                             // Project post time
@@ -124,17 +123,17 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                               margin: const EdgeInsets.only(bottom: 20),
                               child: Text(
                                   'Created ${timeSinceCreated(widget.project['createdAt'])}',
-                                  style: const TextStyle(
-                                      color: AppFonts.secondaryColor,
+                                  style: TextStyle(
+                                      color: Theme.of(context).colorScheme.onSurface,
                                       fontSize: AppFonts.h4FontSize,
                                       fontWeight: FontWeight.w400)),
                             ),
                             // Project proposal stats
                             Container(
                               margin: const EdgeInsets.only(bottom: 6),
-                              child: const Text('Status:',
+                              child: Text('Status:',
                                   style: TextStyle(
-                                      color: AppColor.primary,
+                                      color: Theme.of(context).colorScheme.primary,
                                       fontSize: AppFonts.h3FontSize,
                                       fontWeight: FontWeight.w400)),
                             ),
@@ -149,8 +148,8 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                                   child: const FaIcon(FontAwesomeIcons.idCardClip, size: 12),
                                 ),
                                 Text('Proposals - ${_proposal['items'].length}',
-                                    style: const TextStyle(
-                                        color: AppFonts.primaryColor,
+                                    style: TextStyle(
+                                        color: Theme.of(context).colorScheme.onSurface,
                                         fontSize: AppFonts.h3FontSize,
                                         fontWeight: FontWeight.w400)),
                               ]),
@@ -166,8 +165,8 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                                   child: const FaIcon(FontAwesomeIcons.message, size: 12),
                                 ),
                                 Text('Messages - ${widget.project['countMessages']}',
-                                    style: const TextStyle(
-                                        color: AppFonts.primaryColor,
+                                    style: TextStyle(
+                                        color: Theme.of(context).colorScheme.onSurface,
                                         fontSize: AppFonts.h3FontSize,
                                         fontWeight: FontWeight.w400)),
                               ]),
@@ -183,8 +182,8 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                                   child: const FaIcon(FontAwesomeIcons.user, size: 12),
                                 ),
                                 Text('Hired - ${_listItemsHired['items'].length}',
-                                    style: const TextStyle(
-                                        color: AppFonts.primaryColor,
+                                    style: TextStyle(
+                                        color: Theme.of(context).colorScheme.onSurface,
                                         fontSize: AppFonts.h3FontSize,
                                         fontWeight: FontWeight.w400)),
                               ]),
@@ -193,10 +192,10 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                         ),
                         Container(
                           margin: const EdgeInsets.only(bottom: 20),
-                          child: const TabBar(
-                            labelStyle: TextStyle(color: mainColor, fontSize: AppFonts.h3FontSize),
-                            unselectedLabelStyle: TextStyle(color: blackTextColor),
-                            tabs: [
+                          child: TabBar(
+                            labelStyle: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: AppFonts.h3FontSize),
+                            unselectedLabelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                            tabs: const [
                               Tab(text: 'Proposals'),
                               Tab(text: 'Detail'),
                               Tab(text: 'Hire'),

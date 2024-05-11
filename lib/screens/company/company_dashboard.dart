@@ -303,14 +303,14 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
                           ],
                         ),
                         Container(
-                          margin: EdgeInsets.symmetric(vertical: 10),
+                          margin: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(16),
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.primaryContainer,
                           ),
                           child: TabBar(
-                            unselectedLabelStyle: const TextStyle(
-                              color: blackTextColor,
+                            unselectedLabelStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontSize: AppFonts.h3FontSize,
                             ),
                             indicator: BoxDecoration(

@@ -18,7 +18,7 @@ class UserAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: radius,
-      backgroundColor: backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       child: Icon(
         icon,
         size: radius * 1, // Adjust the icon size as needed

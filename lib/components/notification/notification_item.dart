@@ -54,7 +54,7 @@ class _NotificationItemState extends State<NotificationItem> {
         typeNotifyIcon = FontAwesomeIcons.briefcase;
         typeNotifyLabel = "Hired";
         notificationContent =
-            "${widget.notification.sender!.fullname} sent you a message";
+            widget.notification.content.replaceAll("sent you a message", '');
         break;
       default:
         typeNotifyIcon = FontAwesomeIcons.question;
@@ -122,7 +122,6 @@ class _NotificationItemState extends State<NotificationItem> {
             }
           case TypeNotifyFlag.hired:
             {
-              print('hired');
               break;
             }
           default:

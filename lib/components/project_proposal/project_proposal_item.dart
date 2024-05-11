@@ -81,14 +81,15 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
       );
       print(response.statusCode);
       if (response.statusCode == 200) {
-        Navigator.push(
+        if (mounted)
+        {Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => MessageDetailScreen(
                     projectId: widget.itemsProposal['projectId'],
                     chatter: Chatter(
                         id: widget.itemsProposal['student']['userId'],
-                        fullname: widget.itemsProposal['student']['user']['fullname']))));
+                        fullname: widget.itemsProposal['student']['user']['fullname']))));}
       }
     } catch (e) {
       print(e);
@@ -101,7 +102,7 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
         margin: const EdgeInsets.only(bottom: 20),
         padding: const EdgeInsets.only(bottom: 8, left: 12, right: 12),
         decoration: BoxDecoration(
-          color: whiteTextColor,
+          color: Theme.of(context).colorScheme.primaryContainer,
           borderRadius: BorderRadius.circular(6),
           border: Border.all(color: Colors.black12),
         ),
@@ -134,13 +135,13 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(widget.itemsProposal['student']['user']['fullname'],
-                                style: const TextStyle(
-                                    color: AppFonts.primaryColor,
+                                style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onSurface,
                                     fontSize: AppFonts.h2FontSize,
                                     fontWeight: FontWeight.w500)),
-                            const Text('Excellent',
+                            Text('Excellent',
                                 style: TextStyle(
-                                    color: AppFonts.secondaryColor,
+                                    color: Theme.of(context).colorScheme.onSurface,
                                     fontSize: AppFonts.h3FontSize,
                                     fontWeight: FontWeight.w400)),
                           ]),
@@ -154,8 +155,8 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(widget.itemsProposal['student']['techStack']['name']!,
-                        style: const TextStyle(
-                            color: AppColor.primary,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
                             fontSize: AppFonts.h3FontSize,
                             fontWeight: FontWeight.w500)),
                     const Text('Excellent',
@@ -172,14 +173,14 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                     child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
                         decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(4),
                             border: Border.all(color: Colors.black12)),
                         margin: const EdgeInsets.only(bottom: 6),
                         child: Text(
                           widget.itemsProposal['coverLetter'],
-                          style: const TextStyle(
-                              color: AppFonts.secondaryColor, fontSize: AppFonts.h3FontSize),
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface, fontSize: AppFonts.h3FontSize),
                         )))
               ]),
               // Buttons
@@ -198,7 +199,7 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                             margin: const EdgeInsets.only(right: 12),
                             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
                             decoration: BoxDecoration(
-                                color: AppColor.primary, borderRadius: BorderRadius.circular(6)),
+                                color: Theme.of(context).colorScheme.primary, borderRadius: BorderRadius.circular(6)),
                             child: const Text('Message',
                                 style: TextStyle(
                                     color: Colors.white,

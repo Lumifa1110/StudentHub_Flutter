@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/user/user_avatar.dart';
-import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class ProjectHiredStudentItem extends StatelessWidget {
@@ -14,9 +13,9 @@ class ProjectHiredStudentItem extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 20),
         padding: const EdgeInsets.only(bottom: 8, left: 12, right: 12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.primaryContainer,
           borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: blackTextColor),
+          border: Border.all(color: Theme.of(context).colorScheme.shadow),
         ),
         child: Column(
           children: [
@@ -35,13 +34,13 @@ class ProjectHiredStudentItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(itemsProposal['student']['user']['fullname'],
-                              style: const TextStyle(
-                                  color: AppFonts.primaryColor,
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSurface,
                                   fontSize: AppFonts.h2FontSize,
                                   fontWeight: FontWeight.w500)),
-                          const Text('Excellent',
+                          Text('Excellent',
                               style: TextStyle(
-                                  color: AppFonts.secondaryColor,
+                                  color: Theme.of(context).colorScheme.onSurface,
                                   fontSize: AppFonts.h3FontSize,
                                   fontWeight: FontWeight.w400)),
                         ]),
@@ -55,8 +54,8 @@ class ProjectHiredStudentItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(itemsProposal['student']['techStack']['name']!,
-                      style: const TextStyle(
-                          color: AppColor.primary,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
                           fontSize: AppFonts.h3FontSize,
                           fontWeight: FontWeight.w500)),
                   const Text('Excellent',

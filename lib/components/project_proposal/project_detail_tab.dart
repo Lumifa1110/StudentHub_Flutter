@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 import 'package:studenthub/business/company_business.dart';
 
@@ -15,7 +13,7 @@ class ProjectDetailTab extends StatelessWidget {
       child: Container(
           margin: const EdgeInsets.only(bottom: 20),
           decoration:
-              BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(6), boxShadow: [
+              BoxDecoration(color: Theme.of(context).colorScheme.primaryContainer, borderRadius: BorderRadius.circular(6), boxShadow: [
             BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 2,
@@ -28,16 +26,16 @@ class ProjectDetailTab extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.black12),
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    border: Border.all(color: Theme.of(context).colorScheme.shadow),
                     borderRadius: BorderRadius.circular(10)),
                 child: Row(children: [
-                  const Expanded(
+                  Expanded(
                       flex: 1,
                       child: Icon(
                         Icons.access_time,
                         size: 30,
-                        color: AppColor.primary,
+                        color: Theme.of(context).colorScheme.primary,
                       )),
                   Expanded(
                       flex: 12,
@@ -48,18 +46,18 @@ class ProjectDetailTab extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Expanded(
+                              Expanded(
                                 child: Text('Project scope',
                                     style: TextStyle(
-                                        color: AppColor.primary,
+                                        color: Theme.of(context).colorScheme.primary,
                                         fontSize: AppFonts.h3FontSize,
                                         fontWeight: FontWeight.w500)),
                               ),
                               Expanded(
                                 child: Text(
                                     convertProjectScoreFlagToTime(project['projectScopeFlag']!),
-                                    style: const TextStyle(
-                                        color: AppFonts.primaryColor,
+                                    style: TextStyle(
+                                        color: Theme.of(context).colorScheme.onSurface,
                                         fontSize: AppFonts.h3FontSize,
                                         fontWeight: FontWeight.w400)),
                               ),
@@ -71,16 +69,16 @@ class ProjectDetailTab extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.black12),
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    border: Border.all(color: Theme.of(context).colorScheme.shadow),
                     borderRadius: BorderRadius.circular(10)),
                 child: Row(children: [
-                  const Expanded(
+                  Expanded(
                       flex: 1,
                       child: Icon(
                         Icons.group,
                         size: 30,
-                        color: AppColor.primary,
+                        color: Theme.of(context).colorScheme.primary,
                       )),
                   Expanded(
                       flex: 12,
@@ -91,17 +89,17 @@ class ProjectDetailTab extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Expanded(
+                              Expanded(
                                 child: Text('Student required:',
                                     style: TextStyle(
-                                        color: AppColor.primary,
+                                        color: Theme.of(context).colorScheme.primary,
                                         fontSize: AppFonts.h3FontSize,
                                         fontWeight: FontWeight.w500)),
                               ),
                               Expanded(
                                 child: Text('${project['numberOfStudents']} students',
-                                    style: const TextStyle(
-                                        color: AppFonts.primaryColor,
+                                    style: TextStyle(
+                                        color: Theme.of(context).colorScheme.onSurface,
                                         fontSize: AppFonts.h3FontSize,
                                         fontWeight: FontWeight.w400)),
                               ),
@@ -116,38 +114,38 @@ class ProjectDetailTab extends StatelessWidget {
                     child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
                         decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.primaryContainer,
                             borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.black12)),
+                            border: Border.all(color: Theme.of(context).colorScheme.shadow)),
                         margin: const EdgeInsets.only(bottom: 10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                                 children: [
-                            const Expanded(
+                            Expanded(
                                 flex: 1,
                                 child: Icon(
                                   Icons.description,
                                   size: 30,
-                                  color: AppColor.primary,
+                                  color: Theme.of(context).colorScheme.primary,
                                 )),
                             Expanded(
                                 flex: 12,
                                 child: Container(
                                   padding: const EdgeInsets.only(left: 20),
                                   // height: 40,
-                                  child:const Text('Description',
+                                  child: Text('Description',
                                       style: TextStyle(
-                                          color: AppColor.primary,
+                                          color: Theme.of(context).colorScheme.primary,
                                           fontSize: AppFonts.h3FontSize,
                                           fontWeight: FontWeight.w500)),
                                 ))
                           ]),
                             const SizedBox(height: 12),
                             Text('     ${project['description']!}',
-                              style: const TextStyle(
-                                  color: AppFonts.secondaryColor, fontSize: AppFonts.h3FontSize),
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSurface, fontSize: AppFonts.h3FontSize),
                             ),
                           ],
                         )))

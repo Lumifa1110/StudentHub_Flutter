@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/screens/student/student_dashboard_detail.dart';
-import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 import 'package:http/http.dart' as http;
 import 'package:studenthub/config/config.dart';
@@ -184,16 +183,16 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    color: whiteTextColor,
+                    color: Theme.of(context).colorScheme.primaryContainer,
                     borderRadius: BorderRadius.circular(10)),
                 child: TabBar(
                     indicator: BoxDecoration(
-                      color: mainColor,
+                      color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(10),
                       // border: Border.all(width: 1),
                     ),
                     indicatorSize: TabBarIndicatorSize.tab,
-                    labelColor: whiteTextColor,
+                    labelColor: Colors.white,
                     tabs: const <Widget>[
                       Tab(
                         text: 'All project',
@@ -221,7 +220,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                   child: Container(
                                     padding: const EdgeInsets.all(10.0),
                                     decoration: BoxDecoration(
-                                        border: Border.all(color: blackTextColor),
+                                        border: Border.all(color: Theme.of(context).colorScheme.shadow),
                                         borderRadius: BorderRadius.circular(10)),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,7 +231,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                               fontWeight: FontWeight.bold,
                                               fontSize: AppFonts.h3FontSize),
                                         ),
-                                        SizedBox(height: 10,),
+                                        const SizedBox(height: 10,),
                                         Expanded(
                                             child: ListView.builder(
                                               itemCount: _responseActiveProposal.length,
@@ -288,7 +287,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                   child: Container(
                                     padding: const EdgeInsets.all(10.0),
                                     decoration: BoxDecoration(
-                                        border: Border.all(color: blackTextColor),
+                                        border: Border.all(color: Theme.of(context).colorScheme.shadow),
                                         borderRadius: BorderRadius.circular(10)),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -492,12 +491,12 @@ class _OptionItemAllProjectScreenState extends State<OptionItemAllProjectScreen>
         children: <Widget>[
           Text(
             widget.response['project']['title'],
-            style: const TextStyle(color: mainColor, fontSize: AppFonts.h3FontSize, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: AppFonts.h3FontSize, fontWeight: FontWeight.bold),
             overflow: TextOverflow.ellipsis,
           ),
           Text(
             'Submitted ${timeSinceCreated(widget.response['createdAt'])}',
-            style: const TextStyle(color: lightergrayColor, fontSize: AppFonts.h4FontSize),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: AppFonts.h4FontSize),
           ),
           const SizedBox(
             height: 10,
@@ -510,9 +509,9 @@ class _OptionItemAllProjectScreenState extends State<OptionItemAllProjectScreen>
             padding: const EdgeInsets.only(left: 20),
             child: Text(
               '${widget.response['project']['description']}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: AppFonts.h4FontSize,
-                color: blackTextColor,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
@@ -546,7 +545,7 @@ class _OptionItemWorkingScreenState extends State<OptionItemWorkingAndArchiedScr
           children: <Widget>[
             Text(
               widget.response['project']['title'],
-              style: const TextStyle(color: mainColor),
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(

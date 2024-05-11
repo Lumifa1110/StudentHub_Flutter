@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class CardSwitchAccount extends StatelessWidget {
@@ -22,12 +21,12 @@ class CardSwitchAccount extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: ListTile(
-        tileColor: isSelected ? mainColor : whiteTextColor,
+        tileColor: isSelected ? Theme.of(context).colorScheme.primary : Colors.white,
         dense: true,
         leading: Icon(
           accountAvt,
           size: 36,
-          color: isSelected ? whiteTextColor : blackTextColor,
+          color: isSelected ? Colors.white : Colors.black54,
         ),
         title: Text(
           accountFullname,
@@ -35,7 +34,7 @@ class CardSwitchAccount extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               fontSize: AppFonts.h2FontSize,
               fontWeight: FontWeight.w500,
-              color: isSelected ? whiteTextColor : blackTextColor),
+              color: isSelected ? Colors.white : Colors.black54),
         ),
         subtitle: Text(
           accountRole == '0'
@@ -44,7 +43,7 @@ class CardSwitchAccount extends StatelessWidget {
                   ? 'Company'
                   : 'Account',
           style: TextStyle(
-              fontSize: AppFonts.h3FontSize, color: isSelected ? whiteTextColor : blackTextColor),
+              fontSize: AppFonts.h3FontSize, color: isSelected ? Colors.white : Colors.black54),
         ),
       ),
     );
