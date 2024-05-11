@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 import 'package:studenthub/components/card_switchaccount.dart';
 import 'package:studenthub/components/textfield/search_bar.dart';
 import 'package:studenthub/config/config.dart';
@@ -10,7 +10,6 @@ import 'package:studenthub/models/index.dart';
 import 'package:studenthub/preferences/index.dart';
 import 'package:studenthub/screens/company/profile_creation/company_profile_edit_screen.dart';
 import 'package:studenthub/screens/index.dart';
-import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 import '../../services/index.dart';
@@ -88,6 +87,8 @@ class _SwitchScreenState extends State<SwitchScreen> {
     }
   }
 
+  void showIsChanging() {}
+
   void _navigateToProfile() {
     final currole = _prefs.getInt('current_role');
     if (currole == 0) {
@@ -111,6 +112,11 @@ class _SwitchScreenState extends State<SwitchScreen> {
   }
 
   void _handleAccountSwitch(String email, String password) async {
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(
+      max: 100,
+      msg: 'Changing...',
+    );
     final prefs = await SharedPreferences.getInstance();
     final existToken = _prefs.getString('token');
     if (existToken != null) {
@@ -152,7 +158,30 @@ class _SwitchScreenState extends State<SwitchScreen> {
     );
 
     if (signInResponse['result'] == null) {
+      pd.close();
+      final List<String>? signedInAccountsJson = prefs.getStringList('signed_in_accounts');
+      List<User> signedInAccounts = [];
+      if (signedInAccountsJson != null) {
+        signedInAccounts =
+            signedInAccountsJson.map((json) => User.fromJson(jsonDecode(json))).toList();
+      }
+      List<User> updatedSignedInAccounts =
+          signedInAccounts.where((account) => account.email != email).toList();
+      await _prefs.setStringList(
+        'signed_in_accounts',
+        updatedSignedInAccounts.map((account) => jsonEncode(account.toJson())).toList(),
+      );
+
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const SigninScreen()),
+          (route) => false,
+        );
+      }
     } else {
+      pd.close();
+      _showSuccessDialog();
       // SAVE LOCAL: email + password
       final userJson = user.toJson();
       await prefs.setString('user', jsonEncode(userJson));
@@ -209,6 +238,26 @@ class _SwitchScreenState extends State<SwitchScreen> {
         );
       }
     }
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Success'),
+          content: Icon(Icons.check, color: Theme.of(context).colorScheme.tertiary),
+          actions: const <Widget>[
+            // TextButton(
+            //   onPressed: () {
+            //     Navigator.of(context).pop();
+            //   },
+            //   child: Text('OK'),
+            // ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> fetchUserData() async {
@@ -302,7 +351,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
                     child: const Center(
                       child: Icon(
                         Icons.chevron_left,
-                        color: whiteTextColor,
+                        color: Colors.white,
                         size: 24,
                       ),
                     ),
@@ -316,7 +365,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
             Text(
               'Accounts',
               style: TextStyle(
-                color: whiteTextColor,
+                color: Colors.white,
                 fontSize: AppFonts.h0FontSize,
                 fontWeight: FontWeight.w500,
               ),

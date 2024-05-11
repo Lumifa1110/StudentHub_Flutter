@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:external_path/external_path.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/index.dart';
@@ -12,9 +11,7 @@ import 'package:studenthub/config/config.dart';
 import 'package:studenthub/models/education_model.dart';
 import 'package:studenthub/models/index.dart';
 import 'package:studenthub/models/language_model.dart';
-import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 
@@ -25,7 +22,7 @@ class ViewCandidateSceen extends StatefulWidget {
   const ViewCandidateSceen({super.key, this.candidateId, this.candidateData});
 
   @override
-  _ViewCandidateSceenState createState() => _ViewCandidateSceenState();
+  State<ViewCandidateSceen> createState() => _ViewCandidateSceenState();
 }
 
 class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
@@ -222,7 +219,7 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: const AuthAppBar(
         title: 'Candidate',
         canBack: true,
@@ -240,7 +237,7 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(9),
-                          color: mainColor,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         child: Row(
@@ -249,13 +246,13 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                               flex: 2,
                               child: CircleAvatar(
                                 radius: 50,
-                                backgroundColor: blackTextColor,
+                                backgroundColor: Colors.white,
                                 child: Text(
                                   getInitials(candidateName),
                                   style: const TextStyle(
                                     fontSize: 30,
                                     fontWeight: FontWeight.bold,
-                                    color: AppColor.tertiary,
+                                    color: Colors.black54,
                                   ),
                                 ),
                               ),
@@ -273,14 +270,14 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                                       style: const TextStyle(
                                           fontSize: AppFonts.h1FontSize,
                                           fontWeight: FontWeight.bold,
-                                          color: whiteTextColor),
+                                          color: Colors.white),
                                     ),
                                     Text(
                                       '${proposalCandidate['student']['techStack']!['name']}',
                                       style: TextStyle(
                                         fontSize: AppFonts.h1_2FontSize,
                                         fontWeight: FontWeight.w500,
-                                        color: lightestgrayColor.withOpacity(0.8),
+                                        color: Colors.white.withOpacity(0.8),
                                       ),
                                     )
                                   ],
@@ -293,18 +290,18 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                       const SizedBox(
                         height: 10,
                       ),
-                      const Text(
+                      Text(
                         'Educations',
                         style: TextStyle(
                             fontSize: AppFonts.h1_2FontSize,
                             fontWeight: FontWeight.bold,
-                            color: mainColor),
+                            color: Theme.of(context).colorScheme.primary),
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(9),
-                          color: mainColor,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                         child: Column(
@@ -317,7 +314,7 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                                     style: TextStyle(
                                         fontSize: AppFonts.h3FontSize,
                                         fontWeight: FontWeight.w500,
-                                        color: whiteTextColor),
+                                        color: Colors.white),
                                   ),
                                 ]
                               : studentSelectedEducations.map(
@@ -326,10 +323,10 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                                       '${edu.startYear.year} - ${edu.endYear != null ? edu.endYear!.year : 'On going'}: \t ${edu.schoolName}',
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                           fontSize: AppFonts.h2FontSize,
                                           fontWeight: FontWeight.w500,
-                                          color: whiteTextColor),
+                                          color: Theme.of(context).colorScheme.surface),
                                     );
                                   },
                                 ).toList(),
@@ -338,12 +335,12 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                       const SizedBox(
                         height: 10,
                       ),
-                      const Text(
+                      Text(
                         'Languages',
                         style: TextStyle(
                             fontSize: AppFonts.h1_2FontSize,
                             fontWeight: FontWeight.bold,
-                            color: mainColor),
+                            color: Theme.of(context).colorScheme.primary),
                       ),
                       Container(
                           width: MediaQuery.of(context).size.width,
@@ -355,13 +352,13 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: studentLanguages.isEmpty
                                 ? [
-                                    const Text(
+                                    Text(
                                       'No education is provided',
                                       maxLines: 1,
                                       style: TextStyle(
                                           fontSize: AppFonts.h3FontSize,
                                           fontWeight: FontWeight.w500,
-                                          color: whiteTextColor),
+                                          color: Theme.of(context).colorScheme.surface),
                                     ),
                                   ]
                                 : studentLanguages.map(
@@ -377,12 +374,12 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                       const SizedBox(
                         height: 10,
                       ),
-                      const Text(
+                      Text(
                         'Skills',
                         style: TextStyle(
                             fontSize: AppFonts.h1_2FontSize,
                             fontWeight: FontWeight.bold,
-                            color: mainColor),
+                            color: Theme.of(context).colorScheme.primary),
                       ),
                       Row(
                         children: [
@@ -390,22 +387,22 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                             child: Container(
                               padding: const EdgeInsets.all(6),
                               decoration: BoxDecoration(
-                                border: Border.all(color: mainColor, width: 1),
+                                border: Border.all(color: Theme.of(context).colorScheme.primary, width: 1),
                                 borderRadius: BorderRadius.circular(9),
-                                color: whiteTextColor,
+                                color: Theme.of(context).colorScheme.surface,
                               ),
                               child: Wrap(
                                 spacing: 8.0, // Adjust the spacing between items
                                 runSpacing: 8.0, // Adjust the spacing between lines
                                 children: studentSelectedSkills.isEmpty
                                     ? [
-                                        const SizedBox(
+                                        SizedBox(
                                           height: 50, // Set your desired height here
                                           child: Center(
                                             child: Text(
                                               'No skill is selected',
                                               style: TextStyle(
-                                                  color: blackTextColor,
+                                                  color: Theme.of(context).colorScheme.onSurface,
                                                   fontSize: AppFonts.h3FontSize),
                                             ),
                                           ),
@@ -427,12 +424,12 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Text(
+                      Text(
                         'Cover Letter',
                         style: TextStyle(
                             fontSize: AppFonts.h1_2FontSize,
                             fontWeight: FontWeight.bold,
-                            color: mainColor),
+                            color: Theme.of(context).colorScheme.primary),
                       ),
                       Row(
                         children: [
@@ -441,16 +438,16 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                               height: 250,
                               padding: const EdgeInsets.all(6),
                               decoration: BoxDecoration(
-                                border: Border.all(color: mainColor, width: 1),
+                                border: Border.all(color: Theme.of(context).colorScheme.primary, width: 1),
                                 borderRadius: BorderRadius.circular(9),
-                                color: whiteTextColor,
+                                color: Theme.of(context).colorScheme.surface,
                               ),
                               child: SingleChildScrollView(
                                   child: Text(
                                 '${widget.candidateData['coverLetter']}',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: AppFonts.h2FontSize,
-                                  color: blackTextColor,
+                                  color: Theme.of(context).colorScheme.onSurface
                                 ),
                               )),
                             ),
@@ -460,12 +457,12 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Text(
+                      Text(
                         'Download Files',
                         style: TextStyle(
                             fontSize: AppFonts.h1_2FontSize,
                             fontWeight: FontWeight.bold,
-                            color: mainColor),
+                            color: Theme.of(context).colorScheme.primary),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -480,22 +477,22 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                                       height: 30,
                                       width: 30,
                                       child: CircularProgressIndicator(
-                                        color: whiteTextColor,
+                                        color: Colors.white,
                                       ),
                                     )
                                   : Icon(
                                       _linkResume != null
                                           ? Icons.download
                                           : Icons.file_download_off,
-                                      color: whiteTextColor,
+                                      color: Colors.white,
                                     ),
                               label: const Text(
                                 'Resume',
                                 style:
-                                    TextStyle(color: whiteTextColor, fontSize: AppFonts.h3FontSize),
+                                    TextStyle(color: Colors.white, fontSize: AppFonts.h3FontSize),
                               ),
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(mainColor),
+                                backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.primary),
                               ),
                             ),
                           ),
@@ -512,22 +509,22 @@ class _ViewCandidateSceenState extends State<ViewCandidateSceen> {
                                       height: 30,
                                       width: 30,
                                       child: CircularProgressIndicator(
-                                        color: whiteTextColor,
+                                        color: Colors.white,
                                       ),
                                     )
                                   : Icon(
                                       _linkTranscript != null
                                           ? Icons.download
                                           : Icons.file_download_off,
-                                      color: whiteTextColor,
+                                      color: Colors.white,
                                     ),
                               label: const Text(
                                 'Transcript',
                                 style:
-                                    TextStyle(color: whiteTextColor, fontSize: AppFonts.h3FontSize),
+                                    TextStyle(color: Colors.white, fontSize: AppFonts.h3FontSize),
                               ),
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(mainColor),
+                                backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.primary),
                                 // Kích thước của nút
                               ),
                             ),

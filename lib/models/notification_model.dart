@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:studenthub/enums/index.dart';
-import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/models/index.dart';
 
 class NotificationModel {
@@ -22,7 +20,6 @@ class NotificationModel {
   final Interview? interview;
   final MeetingRoom? meetingRoom;
   final Proposal? proposal;
-
 
   NotificationModel({
     required this.id,
@@ -47,25 +44,24 @@ class NotificationModel {
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
-      id: json['id'],
-      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
-      updatedAt: json['updated'] != null ? DateTime.parse(json['updatedAt']) : null,
-      deletedAt: json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null,
-      senderId: json['senderId'],
-      receiverId: json['receiverId'],
-      messageId: json['messageId'],
-      title: json['title'],
-      notifyFlag: mapNotifyFlag(json['notifyFlag']),
-      typeNotifyFlag: mapTypeNotifyFlag(json['typeNotifyFlag']),
-      proposalId: json['proposalId'],
-      content: json['content'],
-      message: json['message'] != null ? Message.fromJson(json['message']) : null,
-      sender: json['sender'] != null ? Chatter.fromJson(json['sender']) : null,
-      receiver: json['receiver'] != null ? Chatter.fromJson(json['receiver']) : null,
-      interview: json['interview'] != null ? Interview.fromJson(json['interview']) : null,
-      meetingRoom: json['meetingRoom'] != null ? MeetingRoom.fromJson(json['meetingRoom']) : null,
-      proposal: json['proposal'] != null ? Proposal.fromJson(json['proposal']) : null
-    );
+        id: json['id'],
+        createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+        updatedAt: json['updated'] != null ? DateTime.parse(json['updatedAt']) : null,
+        deletedAt: json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null,
+        senderId: json['senderId'],
+        receiverId: json['receiverId'],
+        messageId: json['messageId'],
+        title: json['title'],
+        notifyFlag: mapNotifyFlag(json['notifyFlag']),
+        typeNotifyFlag: mapTypeNotifyFlag(json['typeNotifyFlag']),
+        proposalId: json['proposalId'],
+        content: json['content'],
+        message: json['message'] != null ? Message.fromJson(json['message']) : null,
+        sender: json['sender'] != null ? Chatter.fromJson(json['sender']) : null,
+        receiver: json['receiver'] != null ? Chatter.fromJson(json['receiver']) : null,
+        interview: json['interview'] != null ? Interview.fromJson(json['interview']) : null,
+        meetingRoom: json['meetingRoom'] != null ? MeetingRoom.fromJson(json['meetingRoom']) : null,
+        proposal: json['proposal'] != null ? Proposal.fromJson(json['proposal']) : null);
   }
 
   static NotifyFlag mapNotifyFlag(String? notifyFlagString) {
@@ -92,23 +88,18 @@ class NotificationModel {
       case '4':
         return TypeNotifyFlag.hired;
 
-
       default:
         throw ArgumentError('Invalid notifyFlagString: $typeNotifyFlagString');
     }
   }
 }
 
-
-class Proposal{
-  final int ?statusFlag;
+class Proposal {
+  final int? statusFlag;
 
   Proposal({this.statusFlag});
 
   factory Proposal.fromJson(Map<String, dynamic> json) {
-    return Proposal(
-      statusFlag: json['statusFlag']
-    );
+    return Proposal(statusFlag: json['statusFlag']);
   }
-
 }

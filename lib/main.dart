@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/screens/authentication/changepassword_screen.dart';
 import 'package:studenthub/screens/authentication/forgotpassword_screen.dart';
 import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/screens/shared/setting_screen.dart';
-import 'package:studenthub/screens/student/view_offer_screen.dart';
 import 'package:studenthub/theme/theme.dart';
 import 'package:studenthub/theme/theme_controller.dart';
 

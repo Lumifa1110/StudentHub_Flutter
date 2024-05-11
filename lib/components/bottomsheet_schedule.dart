@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:studenthub/components/index.dart';
 import 'package:studenthub/components/textfield/textfield_label_v2.dart';
-import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class BottomSheetSchedule extends StatefulWidget {
@@ -62,16 +61,16 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-      decoration: const BoxDecoration(color: Colors.white),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.primaryContainer),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Schedule a video call interview',
             style: TextStyle(
               fontSize: AppFonts.h2FontSize,
               fontWeight: FontWeight.bold,
-              color: blackTextColor,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           TextFieldWithLabel2(
@@ -80,12 +79,12 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
             hint: 'Enter title for meeting',
           ),
           const SizedBox(height: 20),
-          const Text(
+          Text(
             'Start time',
             style: TextStyle(
               fontSize: AppFonts.h3FontSize,
               fontWeight: FontWeight.w500,
-              color: AppFonts.secondaryColor,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 10),
@@ -97,17 +96,19 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
                 width: 120, // Set a fixed width
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: whiteTextColor,
-                  border: Border.all(color: blackTextColor),
+                  color: Theme.of(context).colorScheme.surface,
+                  border: Border.all(color: Theme.of(context).colorScheme.shadow),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: InkWell(
                   onTap: () => _selectDate(context, true),
                   child: InputDecorator(
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       isDense: true,
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.zero,
+                      filled: true,
+                      fillColor: Theme.of(context).colorScheme.surface
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -133,8 +134,8 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: whiteTextColor,
-                  border: Border.all(color: blackTextColor),
+                  color: Theme.of(context).colorScheme.surface,
+                  border: Border.all(color: Theme.of(context).colorScheme.shadow),
                   borderRadius: BorderRadius.circular(5),
                 ),
                 width: 80,
@@ -153,10 +154,20 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
                       });
                     }
                   },
-                  child: Text(
-                    "${_startDate.hour}:${_startDate.minute}",
-                    style: const TextStyle(
-                      fontSize: 16,
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      isDense: true,
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
+                      filled: true,
+                      fillColor: Theme.of(context).colorScheme.surface
+                    ),
+                    child: Text(
+                      "${_startDate.hour}:${_startDate.minute}",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.onSurface
+                      ),
                     ),
                   ),
                 ),
@@ -165,12 +176,12 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
             ],
           ),
           const SizedBox(height: 20),
-          const Text(
+          Text(
             'End time',
             style: TextStyle(
               fontSize: AppFonts.h3FontSize,
               fontWeight: FontWeight.w500,
-              color: AppFonts.secondaryColor,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 10),
@@ -182,17 +193,19 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
                 width: 120,
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: whiteTextColor,
-                  border: Border.all(color: blackTextColor),
+                  color: Theme.of(context).colorScheme.surface,
+                  border: Border.all(color: Theme.of(context).colorScheme.shadow),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: InkWell(
                   onTap: () => _selectDate(context, false),
                   child: InputDecorator(
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       isDense: true,
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.zero,
+                      filled: true,
+                      fillColor: Theme.of(context).colorScheme.surface
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -217,8 +230,8 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: whiteTextColor,
-                  border: Border.all(color: blackTextColor),
+                  color: Theme.of(context).colorScheme.surface,
+                  border: Border.all(color: Theme.of(context).colorScheme.shadow),
                   borderRadius: BorderRadius.circular(5),
                 ),
                 width: 80,
@@ -237,10 +250,20 @@ class _BottomSheetScheduleState extends State<BottomSheetSchedule> {
                       });
                     }
                   },
-                  child: Text(
-                    "${_endDate.hour}:${_endDate.minute}",
-                    style: const TextStyle(
-                      fontSize: 16,
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      isDense: true,
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
+                      filled: true,
+                      fillColor: Theme.of(context).colorScheme.surface
+                    ),
+                    child: Text(
+                      "${_endDate.hour}:${_endDate.minute}",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.onSurface
+                      ),
                     ),
                   ),
                 ),

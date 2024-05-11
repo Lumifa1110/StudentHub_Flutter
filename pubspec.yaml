@@ -54,6 +54,7 @@ dependencies:
   timeline_tile: ^2.0.0
   zego_uikit_prebuilt_video_conference: ^2.7.4
   external_path: ^1.0.3
+  sn_progress_dialog: ^1.1.4
 
 dev_dependencies:
   flutter_test:

@@ -86,12 +86,12 @@ class _InterviewItemState extends State<InterviewItem> {
                 margin: const EdgeInsets.only(top: 30, bottom: 30),
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.black12),
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    border: Border.all(color: Theme.of(context).colorScheme.onSurface),
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
+                        color: Theme.of(context).colorScheme.shadow.withOpacity(0.2),
                         spreadRadius: 2,
                         blurRadius: 2,
                       ),
@@ -102,9 +102,9 @@ class _InterviewItemState extends State<InterviewItem> {
                         flex: 3,
                         child: Container(
                             alignment: Alignment.centerLeft,
-                            child: const Text('Scheduled Interview',
+                            child: Text('Scheduled Interview',
                                 style: TextStyle(
-                                    color: AppColor.primary,
+                                    color: Theme.of(context).colorScheme.primary,
                                     fontSize: AppFonts.h4FontSize,
                                     fontWeight: FontWeight.w500)))),
                     Expanded(
@@ -114,8 +114,8 @@ class _InterviewItemState extends State<InterviewItem> {
                             child: Text(
                                 calculateDuration(widget.interview.startTime,
                                     widget.interview.endTime),
-                                style: const TextStyle(
-                                    color: AppFonts.primaryColor,
+                                style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onSurface,
                                     fontSize: AppFonts.h4FontSize,
                                     fontWeight: FontWeight.w400,
                                     fontStyle: FontStyle.italic))))
@@ -126,18 +126,18 @@ class _InterviewItemState extends State<InterviewItem> {
                         child: Container(
                             alignment: Alignment.centerLeft,
                             child: Text(widget.interview.title,
-                                style: const TextStyle(
-                                    color: AppFonts.primaryColor,
+                                style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onSurface,
                                     fontSize: AppFonts.h2FontSize,
                                     fontWeight: FontWeight.w500))))
                   ]),
                   const SizedBox(height: 10),
                   Row(children: [
-                    const Expanded(
+                    Expanded(
                         flex: 1,
                         child: FaIcon(
                           FontAwesomeIcons.clock,
-                          color: AppFonts.primaryColor,
+                          color: Theme.of(context).colorScheme.onSurface,
                           size: 26,
                         )),
                     const SizedBox(width: 6),
@@ -147,25 +147,25 @@ class _InterviewItemState extends State<InterviewItem> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Start Time',
+                              Text('Start Time',
                                   style: TextStyle(
-                                      color: AppFonts.secondaryColor,
+                                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                                       fontSize: AppFonts.h5FontSize,
                                       fontWeight: FontWeight.w400)),
                               Text(formatDateTime(widget.interview.startTime),
-                                  style: const TextStyle(
-                                      color: AppFonts.primaryColor,
+                                  style: TextStyle(
+                                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                                       fontSize: AppFonts.h3FontSize,
                                       fontWeight: FontWeight.w500)),
                             ]))
                   ]),
                   const SizedBox(height: 8),
                   Row(children: [
-                    const Expanded(
+                    Expanded(
                         flex: 1,
                         child: FaIcon(
                           FontAwesomeIcons.clock,
-                          color: AppFonts.primaryColor,
+                          color: Theme.of(context).colorScheme.onSurface,
                           size: 26,
                         )),
                     const SizedBox(width: 6),
@@ -175,14 +175,14 @@ class _InterviewItemState extends State<InterviewItem> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('End Time',
+                              Text('End Time',
                                   style: TextStyle(
-                                      color: AppFonts.secondaryColor,
+                                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                                       fontSize: AppFonts.h5FontSize,
                                       fontWeight: FontWeight.w400)),
                               Text(formatDateTime(widget.interview.endTime),
-                                  style: const TextStyle(
-                                      color: AppFonts.primaryColor,
+                                  style: TextStyle(
+                                      color: Theme.of(context).colorScheme.onSurface,
                                       fontSize: AppFonts.h3FontSize,
                                       fontWeight: FontWeight.w500)),
                             ]))
@@ -203,16 +203,16 @@ class _InterviewItemState extends State<InterviewItem> {
                                             conferenceId: widget.interview
                                                 .meetingRoom!.meetingRoomId)));
                               },
-                              isButtonEnabled: isInterviewOccurring(),
+                              isButtonEnabled: true,
                             ))),
                     const SizedBox(width: 10),
                     Container(
-                      width: 40, // Adjust the width as needed
-                      height: 40, // Adjust the height as needed
-                      decoration: const BoxDecoration(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color:
-                            Colors.black38, // Adjust the button color as needed
+                            Theme.of(context).colorScheme.surface,
                       ),
                       child: IconButton(
                         onPressed: () {
@@ -272,9 +272,9 @@ class _InterviewItemState extends State<InterviewItem> {
                             },
                           );
                         },
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.more_horiz,
-                          color: Colors.white, // Adjust the color as needed
+                          color: Theme.of(context).colorScheme.onSurface, // Adjust the color as needed
                         ),
                         iconSize: 24, // Adjust the icon size as needed
                       ),

@@ -28,10 +28,11 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
   late SharedPreferences _prefs;
   late final _token;
 
-  Future<void> _loadingScreen() async{
+  Future<void> _loadingScreen() async {
     _prefs = await SharedPreferences.getInstance();
     _token = _prefs.getString('token');
   }
+
   @override
   void initState() {
     super.initState();
@@ -45,7 +46,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
     };
     try {
       final response = await http.patch(
-        Uri.parse('$uriBase/api/proposal/${widget.notification!.proposalId}'),
+        Uri.parse('$uriBase/api/proposal/${widget.notification.proposalId}'),
         headers: {
           'Authorization': 'Bearer $_token',
           'Content-Type': 'application/json',
@@ -62,6 +63,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
       print(e);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -303,7 +305,6 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                           child: TextButton(
                             onPressed: () {
                               Navigator.of(context).pop(true);
-                              print(widget.response);
                             },
                             style: ButtonStyle(
                               shape: MaterialStateProperty.all<OutlinedBorder>(

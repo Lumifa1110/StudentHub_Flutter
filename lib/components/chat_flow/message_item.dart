@@ -41,14 +41,14 @@ class MessageItem extends StatelessWidget {
               maxWidth: MediaQuery.of(context).size.width * (2 / 3),
             ),
             decoration: BoxDecoration(
-              color: isMyMessage ? Colors.blue : Colors.grey[300],
+              color: isMyMessage ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.primaryContainer,
               borderRadius: BorderRadius.circular(8.0),
             ),
             padding: const EdgeInsets.all(16.0),
             margin: const EdgeInsets.symmetric(vertical: 4.0),
             child: Text(
               message.content,
-              style: TextStyle(fontSize: 16.0, color: isMyMessage ? Colors.white : Colors.black),
+              style: TextStyle(fontSize: 16.0, color: isMyMessage ? Colors.white : Theme.of(context).colorScheme.onSurface),
             ),
           ),
         ),

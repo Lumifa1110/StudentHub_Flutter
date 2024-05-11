@@ -15,7 +15,7 @@ class CustomSearchBar extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 30),
       padding: const EdgeInsets.only(top: 2, bottom: 2, left: 16, right: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFDEDEDE),
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(21),
       ),
       child: Row(
@@ -31,13 +31,13 @@ class CustomSearchBar extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: placeholder,
                 hintStyle:
-                    const TextStyle(fontSize: AppFonts.h3FontSize, color: AppFonts.tertiaryColor),
+                    TextStyle(fontSize: AppFonts.h3FontSize, color: Theme.of(context).colorScheme.onSurface),
                 border: InputBorder.none,
               ),
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: Icon(Icons.search, color: Theme.of(context).colorScheme.onSurface),
             onPressed: () {
               // Handle search button pressed
             },

@@ -174,10 +174,10 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
                   Container(
                     alignment: Alignment.centerLeft,
                     margin: const EdgeInsets.only(bottom: 16),
-                    child: const Text(
+                    child: Text(
                       'Conversations',
                       style: TextStyle(
-                          color: AppFonts.secondaryColor,
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: AppFonts.h2FontSize,
                           fontWeight: FontWeight.w400),
                     ),
