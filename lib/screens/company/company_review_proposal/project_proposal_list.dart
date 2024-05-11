@@ -217,8 +217,10 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                                             shrinkWrap: true,
                                             itemCount: _proposal['items'].length,
                                             itemBuilder: (BuildContext context, int index) {
-                                              return ProjectProposalItem(
-                                                  itemsProposal: _proposal['items'][index]);
+                                              return _proposal['items'][index]['statusFlag'] != 3 ? ProjectProposalItem(
+                                                  itemsProposal: _proposal['items'][index]): _proposal['items'].length == 1?const Center(
+                                                child: Text('These aren\'t Proposals yet'),
+                                              ): null;
                                             }),
                                       ),
                                 ProjectDetailTab(
