@@ -13,8 +13,11 @@ import '../../screens/student/view_offer_screen.dart';
 class NotificationItem extends StatefulWidget {
   final NotificationModel notification;
   final int? userId;
+  final dynamic response;
 
-  const NotificationItem({super.key, required this.notification, this.userId});
+  const NotificationItem({super.key, required this.notification, this.userId, this.response});
+
+
 
   @override
   State<NotificationItem> createState() => _NotificationItemState();
@@ -66,7 +69,7 @@ class _NotificationItemState extends State<NotificationItem> {
       onTap: () async {
         switch (widget.notification.typeNotifyFlag) {
           case TypeNotifyFlag.offer:
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ViewOfferScreen(notification: widget.notification)));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ViewOfferScreen(notification: widget.notification, response: widget.response)));
            // print( widget.notification.message!.project);
             break;
           case TypeNotifyFlag.interview:

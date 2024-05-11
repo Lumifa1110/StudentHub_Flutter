@@ -88,7 +88,11 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                     projectId: widget.itemsProposal['projectId'],
                     chatter: Chatter(
                         id: widget.itemsProposal['student']['userId'],
-                        fullname: widget.itemsProposal['student']['user']['fullname']))));
+                        fullname: widget.itemsProposal['student']['user']['fullname']
+                    )
+                )
+            )
+        );
       }
     } catch (e) {
       print(e);
@@ -191,7 +195,23 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                       flex: 1,
                       child: InkWell(
                         onTap: () {
-                          messageCandidate();
+                          if(widget.itemsProposal['statusFlag']<1){
+                            messageCandidate();
+                          }
+                          else{
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MessageDetailScreen(
+                                        projectId: widget.itemsProposal['projectId'],
+                                        chatter: Chatter(
+                                            id: widget.itemsProposal['student']['userId'],
+                                            fullname: widget.itemsProposal['student']['user']['fullname']
+                                        )
+                                    )
+                                )
+                            );
+                          }
                         },
                         child: Container(
                             alignment: Alignment.center,
@@ -210,12 +230,31 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                       flex: 1,
                       child: GestureDetector(
                         onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return DialogSendHire(sendHireOffer: sendHireOffer);
-                            },
-                          );
+                          if(!sentHireOffer){
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return DialogSendHire(sendHireOffer: sendHireOffer);
+                              },
+                            );
+                          }
+                          else{
+                            showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                title: const Text('Notification!'),
+                                content: const Text('You have sent an offer to the candidate.'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(true);
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
                         },
                         child: Container(
                             alignment: Alignment.center,

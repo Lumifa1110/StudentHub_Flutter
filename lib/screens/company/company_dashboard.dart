@@ -733,13 +733,6 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),
-
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //   children: [
-            //
-            //   ],
-            // ),
             SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

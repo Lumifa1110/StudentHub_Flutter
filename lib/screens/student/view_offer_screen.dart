@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
@@ -8,13 +9,15 @@ import 'package:studenthub/utils/font.dart';
 import 'package:http/http.dart' as http;
 
 
+import '../../business/company_business.dart';
 import '../../config/config.dart';
 import '../../models/notification_model.dart';
 
 class ViewOfferScreen extends StatefulWidget {
   final NotificationModel notification;
+  final dynamic response;
 
-  const ViewOfferScreen({super.key, required this.notification});
+  const ViewOfferScreen({super.key, required this.notification, required this.response});
 
   @override
   State<ViewOfferScreen> createState() => _ViewOfferScreenState();
@@ -71,10 +74,9 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(),
               Center(
                 child: Text(
-                  '${widget.notification!.title}',
+                  '${widget.response['title']}',
                   style: TextStyle(
                     fontSize: AppFonts.h1FontSize,
                     fontWeight: FontWeight.bold,
@@ -82,9 +84,9 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               const Text(
-                'Party A:',
+                '  Project',
                 style: TextStyle(
                   fontSize: AppFonts.h1_2FontSize,
                   fontWeight: FontWeight.bold,
@@ -92,22 +94,65 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: const Text(
-                  '',
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1, // Adjust the number of lines to fit your layout
-                  textAlign: TextAlign.start, // Adjust the text alignment as needed
-                  style: TextStyle(
-                    fontSize: AppFonts.h2FontSize,
-                    color: AppColor.tertiary,
+                decoration: BoxDecoration(border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text('Title: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text('${widget.response['proposal']['project']['title']}')
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        children: [
+                          Text('Number of students: ',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text('${widget.response['proposal']['project']['numberOfStudents']}'),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Project Scope: ',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          Expanded(
+                              child: Text(convertProjectScoreFlagToTime(
+                                  widget.response['proposal']['project']['numberOfStudents']))),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Description: ',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          Expanded(
+                              child: Container(
+                                child: SingleChildScrollView(child: Text('${widget.response['proposal']['project']['description']}', overflow: TextOverflow.ellipsis,)),
+                              )),
+                        ],
+                      )
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(
+                height: 10,
+              ),
               const Text(
-                'Party B:',
+                '  Proposal',
                 style: TextStyle(
                   fontSize: AppFonts.h1_2FontSize,
                   fontWeight: FontWeight.bold,
@@ -115,81 +160,110 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.only(left: 10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Talented Lumifa Student',
-                          softWrap: true,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: AppFonts.h2FontSize,
-                            color: AppColor.tertiary,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10)
+
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'Name: ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      'Applied on April 1',
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: TextStyle(
-                          fontSize: AppFonts.h3FontSize,
-                          color: lightgrayColor.withOpacity(0.5),
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 5),
-              const Text(
-                'Job Description: ',
-                style: TextStyle(
-                  fontSize: AppFonts.h1_2FontSize,
-                  fontWeight: FontWeight.bold,
-                  color: blackTextColor,
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(5),
-                color: lightestgrayColor,
-                child: const Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-                  style: TextStyle(fontSize: AppFonts.h3FontSize),
-                ),
-              ),
-              const SizedBox(height: 5),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Position:',
-                    style: TextStyle(
-                      fontSize: AppFonts.h1_2FontSize,
-                      fontWeight: FontWeight.bold,
-                      color: blackTextColor,
-                    ),
+                          Expanded(child: Text(widget.response['receiver']['fullname'])),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Cover Letter: ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 4,
+                          ),
+                          Expanded(child: Text('${widget.response['proposal']['coverLetter']}', overflow: TextOverflow.ellipsis,)),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            'Skill: ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Expanded(child: Text('${widget.response['proposal']['student']['techStack']['name']}',overflow: TextOverflow.ellipsis,)),
+                        ],
+                      ),
+
+                    ],
                   ),
-                  Text(
-                    'Fullstack Deveploper',
-                    style: TextStyle(
-                      fontSize: AppFonts.h2FontSize,
-                      color: blackTextColor,
-                    ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text(
+                '  Party',
+                style: TextStyle(
+                  fontSize: AppFonts.h1_2FontSize,
+                  fontWeight: FontWeight.bold,
+                  color: blackTextColor,
+                ),
+              ),
+
+              Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10)
+
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'Sender: ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Expanded(child: Text(widget.response['sender']['email'])),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            'Receiver: ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Expanded(child: Text('${widget.response['receiver']['email']}',overflow: TextOverflow.ellipsis,)),
+                        ],
+                      ),
+
+                    ],
                   ),
-                ],
+                ),
               ),
               const SizedBox(height: 5),
               const Text(
-                'Terms and Conditions: ',
+                'Content: ',
                 style: TextStyle(
                   fontSize: AppFonts.h1_2FontSize,
                   fontWeight: FontWeight.bold,
@@ -199,56 +273,14 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
               Container(
                 padding: const EdgeInsets.all(5),
                 color: lightestgrayColor,
-                child: const Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                child: Text(
+                  'Dear ${widget.response['receiver']['fullname']}.\n ${widget.response['content']}. \n   Your receipt of this offer is a result of your hard work and expertise in the field you study and work in. The company has seen potential and drive in you and believes that you will make a positive contribution to their ${widget.response['proposal']['project']['title']}project.\n   If you wish to join this project, we encourage you to accept the offer promptly. This will open up opportunities for you to develop your skills, build relationships in the industry, and contribute to an exciting and meaningful project.\n   If you have any questions about the offer or the working process, please do not hesitate to contact us. We are more than happy to assist you and provide any necessary information to help you make the most informed decision.\n   We look forward to working with you in the near future!\n   Best regards,\n     ${widget.response['sender']['fullname']} ',
                   style: TextStyle(fontSize: AppFonts.h3FontSize),
                 ),
               ),
-              const SizedBox(height: 5),
-              const Text(
-                'Benefits: ',
-                style: TextStyle(
-                  fontSize: AppFonts.h1_2FontSize,
-                  fontWeight: FontWeight.bold,
-                  color: blackTextColor,
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(5),
-                color: lightestgrayColor,
-                child: const Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                  style: TextStyle(fontSize: AppFonts.h3FontSize),
-                ),
-              ),
-              const SizedBox(height: 5),
-              const Text(
-                'Payment: ',
-                style: TextStyle(
-                  fontSize: AppFonts.h1_2FontSize,
-                  fontWeight: FontWeight.bold,
-                  color: blackTextColor,
-                ),
-              ),
-              const SizedBox(height: 5),
-              const Text(
-                'Start Date: ',
-                style: TextStyle(
-                  fontSize: AppFonts.h1_2FontSize,
-                  fontWeight: FontWeight.bold,
-                  color: blackTextColor,
-                ),
-              ),
-              const SizedBox(height: 5),
-              const Text(
-                'End Date (expected): ',
-                style: TextStyle(
-                  fontSize: AppFonts.h1_2FontSize,
-                  fontWeight: FontWeight.bold,
-                  color: blackTextColor,
-                ),
-              ),
-              const SizedBox(height: 10),
+
+              const SizedBox(height: 30),
+
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -270,8 +302,8 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                           ),
                           child: TextButton(
                             onPressed: () {
-                              // Navigator.pushNamed(context, '/student/proposal/submit');
-                              print(widget.notification!.senderId);
+                              Navigator.of(context).pop(true);
+                              print(widget.response);
                             },
                             style: ButtonStyle(
                               shape: MaterialStateProperty.all<OutlinedBorder>(
@@ -279,7 +311,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                               ),
                             ),
                             child: const Text(
-                              'Reject',
+                              'Cancel',
                               style: TextStyle(
                                 fontSize: 16,
                                 color: blackTextColor,
@@ -305,18 +337,50 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                     child: TextButton(
                       onPressed: () {
                         if(widget.notification.proposal!.statusFlag != 3){
+                          showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: const Text('Success'),
+                              content: const Text('Accept the offer successful.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(true);
+                                    Navigator.of(context).pop(true);
+                                    acceptOffer();
+                                  },
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
                             acceptOffer();
                         }
-                        else
-                          print('not ok');
+                        else{
+                          showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: const Text('Notification!'),
+                              content: const Text('You have accepted the offer.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(true);
+                                  },
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
                       },
                       style: ButtonStyle(
                         shape: MaterialStateProperty.all<OutlinedBorder>(
                           const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                         ),
                       ),
-                      child: const Text(
-                        'Accept',
+                      child: Text(
+                        widget.notification.proposal!.statusFlag == 3 ? 'Accepted': 'Accept',
                         style: TextStyle(
                           fontSize: 16,
                           color: blackTextColor,

@@ -25,3 +25,14 @@ class AppColor {
   static const background = Color(0xFFF9F8FE);
   static const textFieldBackground = Color(0xFFEBEBEB);
 }
+ Color statusFlagColors(int status){
+    if(status == 0){
+      return Colors.grey;
+    }
+    if(status == 1){
+      return Colors.green;
+    }    if(status == 2){
+      return Colors.orange;
+    }
+    return Colors.blue;
+ }

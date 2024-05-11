@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
@@ -66,8 +68,8 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20, left: 10, right: 10, top: 10),
-      padding: const EdgeInsets.all(5),
-      height: 196,
+      padding: const EdgeInsets.all(10),
+      height: 215,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: const BorderRadius.all(Radius.circular(9)),
@@ -88,14 +90,6 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Created ${timeSinceCreated(widget.project.createdAt)}',
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: AppFonts.h4FontSize,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                  ),
-                ),
                 Flexible(
                   flex: 2,
                   child: Text(
@@ -117,45 +111,116 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                     color: mainColor.withOpacity(0.8),
                   ),
                 ),
-                Flexible(
-                  flex: 1,
-                  child: Text(
-                    'Time: ${checkProjectScope(widget.project.projectScopeFlag)}, ${widget.project.numberOfStudents} students needed',
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: AppFonts.h4FontSize,
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                    ),
-                  ),
-                ),
-                Flexible(
-                  flex: 4,
-                  child: SizedBox(
-                    height: 80,
-                    child: Text(
-                      widget.project.description!,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 3,
-                      style: TextStyle(
-                        fontSize: AppFonts.h3FontSize,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ),
-                  ),
-                ),
                 Text(
-                  'Proposals: ${checkCountProposal(widget.project.countProposals)}',
+                  'Created ${timeSinceCreated(widget.project.createdAt)}',
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: AppFonts.h4FontSize,
-                    color: Theme.of(context).colorScheme.onSurface,
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  ),
+                ),
+                const SizedBox(height: 5,),
+
+                // Flexible(
+                //   flex: 1,
+                //   child: Text(
+                //     'Time: ${checkProjectScope(widget.project.projectScopeFlag)}, ${widget.project.numberOfStudents} students needed',
+                //     overflow: TextOverflow.ellipsis,
+                //     style: TextStyle(
+                //       fontSize: AppFonts.h3FontSize,
+                //       color: Theme.of(context).colorScheme.onSurface,
+                //     ),
+                //   ),
+                // ),
+                const SizedBox(height: 5,),
+
+                Flexible(
+                  flex: 4,
+                  child: SizedBox(
+                    height: 100,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text('Time: ',
+                              style: TextStyle(
+                                fontSize: AppFonts.h3FontSize,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                            Text(checkProjectScope(widget.project.projectScopeFlag),
+                              style: TextStyle(
+                                fontSize: AppFonts.h3FontSize,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text('Need: ',
+                              style: TextStyle(
+                                fontSize: AppFonts.h3FontSize,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                            Text('${widget.project.numberOfStudents}',
+                              style: TextStyle(
+                                fontSize: AppFonts.h3FontSize,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text('Description: ',
+                              style: TextStyle(
+                                fontSize: AppFonts.h3FontSize,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                            Expanded(
+                              child: Text('${widget.project.description}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: AppFonts.h3FontSize,
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text('Proposals: ',
+                              style: TextStyle(
+                                fontSize: AppFonts.h3FontSize,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                            Text('${checkCountProposal(widget.project.countProposals)}',
+                              style: TextStyle(
+                                fontSize: AppFonts.h3FontSize,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
           ),
           Positioned(
-            top: 15,
+            top: -10,
             right: 0,
             child: widget.canFavorite
                 ? IconButton(

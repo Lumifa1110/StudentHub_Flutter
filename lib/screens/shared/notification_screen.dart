@@ -28,6 +28,7 @@ class _NotificationScreenState extends State<NotificationScreen>
   late IO.Socket socket;
   int userId = 0;
   List<NotificationModel> notifications = [];
+  late final dynamic response;
 
   @override
   void initState() {
@@ -82,13 +83,14 @@ class _NotificationScreenState extends State<NotificationScreen>
   void fetchNotification() async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt('userid')!;
-    final response = await DefaultService.getNotification(userId);
+    response = await DefaultService.getNotification(userId);
     setState(() {
       notifications = response['result']
           .where((json) => json['notifyFlag'] == '0')
           .map<NotificationModel>((json) => NotificationModel.fromJson(json))
           .toList();
       // notifications = notifications.reversed.toList();
+      // print(response['result);
     });
   }
 
@@ -142,6 +144,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                       child: NotificationItem(
                         notification: notifications[index],
                         userId: userId,
+                        response: response['result'][index],
                       ));
                 })
         ],

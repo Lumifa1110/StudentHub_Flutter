@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
@@ -10,6 +12,8 @@ import 'package:studenthub/utils/font.dart';
 import 'package:http/http.dart' as http;
 import 'package:studenthub/config/config.dart';
 import 'package:studenthub/utils/timer.dart';
+
+import '../../utils/statusflag_conversed.dart';
 
 class StudentDashboardScreen extends StatefulWidget {
   const StudentDashboardScreen({super.key});
@@ -51,32 +55,22 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
       );
 
       if (response.statusCode == 200) {
+        final responseDecode = jsonDecode(response.body)['result'];
         if (jsonDecode(response.body)['result'] != null) {
-          _responseActiveProposal = jsonDecode(response.body)['result'];
+          for(int i = 0; i < responseDecode.length; i++) {
+            if(responseDecode[i]['statusFlag'] != 0){
+              _responseActiveProposal.add(responseDecode[i]!);
+            }
+            else{
+              _responseSubmitProposal.add(responseDecode[i]!);
+            }
+          }
         }
       } else {
         throw ('Status response of _loadActiveProposal() is ${response.statusCode}');
       }
     } catch (e) {
       print(e);
-    }
-
-    //Loading submitted proposal
-    try {
-      final response = await _client.get(
-        Uri.parse('$uriBase/api/proposal/project/$_currentIdStudent?statusFlag=0&typeFlag=0'),
-        headers: {'Authorization': 'Bearer $_token'},
-      );
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        if (jsonDecode(response.body)['result'] != null) {
-          _responseSubmitProposal = jsonDecode(response.body)['result'];
-          // print(jsonDecode(response.body)['result']);
-        }
-      } else {
-        throw ('Status response of _loadSubmitProposal() is ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
     }
   }
 
@@ -131,8 +125,8 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
       final profile = _prefs.getString('student_profile');
       if (profile == 'null') {
         if (mounted) {
-          Navigator.pop(context, true);
-          Navigator.of(context).pushNamed('/student');
+          Navigator.pop(context as BuildContext, true);
+          Navigator.of(context as BuildContext).pushNamed('/student');
         }
       } else {
         _token = _prefs.getString('token');
@@ -151,7 +145,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
       }
     } else {
       Navigator.pushNamedAndRemoveUntil(
-        context,
+        context as BuildContext ,
         '/company/dashboard',
         (route) => route.settings.name == '/home',
       );
@@ -232,7 +226,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                               fontWeight: FontWeight.bold,
                                               fontSize: AppFonts.h3FontSize),
                                         ),
-                                        SizedBox(height: 10,),
+                                        const SizedBox(height: 10,),
                                         Expanded(
                                             child: ListView.builder(
                                               itemCount: _responseActiveProposal.length,
@@ -272,6 +266,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                                         ),
                                                       ),
                                                     ),
+                                                    const SizedBox(height: 5,)
                                                   ],
                                                 );
                                               },
@@ -339,6 +334,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                                             response: _responseSubmitProposal[index]),
                                                       ),
                                                     ),
+                                                    const SizedBox(height: 5,)
                                                   ],
                                                 );
                                               },
@@ -396,6 +392,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                         ),
                                       ),
                                     ),
+                                    const SizedBox(height: 5,)
                                   ],
                                 );
                               }),
@@ -446,13 +443,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                         ),
                                       ),
                                     ),
-                                    index == _responseArchivedTab.length - 1
-                                        ? const SizedBox()
-                                        : const Divider(
-                                            height: 60,
-                                            endIndent: 10,
-                                            thickness: 2,
-                                          ),
+                                    const SizedBox(height: 5,)
                                   ],
                                 );
                               }),
@@ -490,10 +481,27 @@ class _OptionItemAllProjectScreenState extends State<OptionItemAllProjectScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            widget.response['project']['title'],
-            style: const TextStyle(color: mainColor, fontSize: AppFonts.h3FontSize, fontWeight: FontWeight.bold),
-            overflow: TextOverflow.ellipsis,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  widget.response['project']['title'],
+                  style: const TextStyle(color: mainColor, fontSize: AppFonts.h3FontSize, fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Container(
+                  width: MediaQuery.of(context).size.width/7,
+                  decoration: BoxDecoration(
+                      color: statusFlagColors(widget.response['statusFlag']),
+                      borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: Center(
+                      child: Text('${statusFlagConversed(widget.response['statusFlag'])}', style: const TextStyle(color: whiteTextColor),)
+                  )
+              ),
+            ],
           ),
           Text(
             'Submitted ${timeSinceCreated(widget.response['createdAt'])}',
@@ -503,7 +511,7 @@ class _OptionItemAllProjectScreenState extends State<OptionItemAllProjectScreen>
             height: 10,
           ),
           const Text(
-            'Description',
+            'Description:',
             style: TextStyle(fontWeight: FontWeight.w500),
           ),
           Padding(
@@ -519,53 +527,6 @@ class _OptionItemAllProjectScreenState extends State<OptionItemAllProjectScreen>
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class OptionItemWorkingAndArchiedScreen extends StatefulWidget {
-  final VoidCallback onTap;
-  final dynamic response;
-
-  const OptionItemWorkingAndArchiedScreen({super.key, required this.onTap, this.response});
-
-  @override
-  State<OptionItemWorkingAndArchiedScreen> createState() => _OptionItemWorkingScreenState();
-}
-
-class _OptionItemWorkingScreenState extends State<OptionItemWorkingAndArchiedScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: widget.onTap,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              widget.response['project']['title'],
-              style: const TextStyle(color: mainColor),
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              'Time ${convertProjectScoreFlagToTime(widget.response['project']['projectScopeFlag'])}, ${widget.response['project']['numberOfStudents']} students',
-              style: const TextStyle(color: Colors.grey),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Text('Students are looking for'),
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text('${widget.response['project']['description']}'),
-            ),
-          ],
-        ),
       ),
     );
   }

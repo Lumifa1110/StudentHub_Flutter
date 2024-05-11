@@ -30,7 +30,11 @@ class StudentDashboardDetail extends StatelessWidget {
                   'Project',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
+                const SizedBox(
+                  height: 5,
+                ),
                 Container(
+                  // height: 400,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10), border: Border.all()),
                     child: Padding(
@@ -83,11 +87,10 @@ class StudentDashboardDetail extends StatelessWidget {
                                   child: Text('Description',
                                       style: TextStyle(fontWeight: FontWeight.bold))),
                               Expanded(
-                                  child: Text(
-                                '${detailProject['project']['description']}',
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 5,
-                              )),
+                                  child: Container(
+                                    height: 100,
+                                    child: SingleChildScrollView(child: Text('${detailProject['project']['description']}',)),
+                                  )),
                             ],
                           )
                         ],
@@ -101,6 +104,9 @@ class StudentDashboardDetail extends StatelessWidget {
             const Text(
               'My proposal',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 5,
             ),
             Container(
                 decoration:
@@ -135,7 +141,7 @@ class StudentDashboardDetail extends StatelessWidget {
                               maxLines: 4,
                             ),
                           ),
-                          Expanded(child: Text('${detailProject['coverLetter']}')),
+                          Expanded(child: Text('${detailProject['coverLetter']}', overflow: TextOverflow.ellipsis, maxLines: 4,)),
                         ],
                       ),
                       const SizedBox(
