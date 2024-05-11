@@ -7,7 +7,6 @@ import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 import 'package:http/http.dart' as http;
 
-
 import '../../config/config.dart';
 import '../../models/notification_model.dart';
 
@@ -25,10 +24,11 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
   late SharedPreferences _prefs;
   late final _token;
 
-  Future<void> _loadingScreen() async{
+  Future<void> _loadingScreen() async {
     _prefs = await SharedPreferences.getInstance();
     _token = _prefs.getString('token');
   }
+
   @override
   void initState() {
     super.initState();
@@ -42,7 +42,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
     };
     try {
       final response = await http.patch(
-        Uri.parse('$uriBase/api/proposal/${widget.notification!.proposalId}'),
+        Uri.parse('$uriBase/api/proposal/${widget.notification.proposalId}'),
         headers: {
           'Authorization': 'Bearer $_token',
           'Content-Type': 'application/json',
@@ -59,6 +59,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
       print(e);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,8 +75,8 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
               Container(),
               Center(
                 child: Text(
-                  '${widget.notification!.title}',
-                  style: TextStyle(
+                  widget.notification.title,
+                  style: const TextStyle(
                     fontSize: AppFonts.h1FontSize,
                     fontWeight: FontWeight.bold,
                     color: blackTextColor,
@@ -271,7 +272,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                           child: TextButton(
                             onPressed: () {
                               // Navigator.pushNamed(context, '/student/proposal/submit');
-                              print(widget.notification!.senderId);
+                              print(widget.notification.senderId);
                             },
                             style: ButtonStyle(
                               shape: MaterialStateProperty.all<OutlinedBorder>(
@@ -304,10 +305,9 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                     ),
                     child: TextButton(
                       onPressed: () {
-                        if(widget.notification.proposal!.statusFlag != 3){
-                            acceptOffer();
-                        }
-                        else
+                        if (widget.notification.proposal!.statusFlag != 3) {
+                          acceptOffer();
+                        } else
                           print('not ok');
                       },
                       style: ButtonStyle(
