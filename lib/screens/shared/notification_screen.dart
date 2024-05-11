@@ -10,7 +10,6 @@ import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/components/notification/notification_item.dart';
 import 'package:studenthub/models/index.dart';
 import 'package:studenthub/services/index.dart';
-import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -101,24 +100,24 @@ class _NotificationScreenState extends State<NotificationScreen>
     super.build(context);
     return Scaffold(
       appBar: const AuthAppBar(canBack: false, title: 'Notification'),
-      backgroundColor: AppColor.background,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
           child: Column(
         children: [
           if (notifications.isEmpty)
-            const Center(
+            Center(
               child: Column(
                 children: [
-                  SizedBox(height: 100),
+                  const SizedBox(height: 100),
                   FaIcon(
                     FontAwesomeIcons.bell,
-                    color: AppColor.primary,
+                    color: Theme.of(context).colorScheme.primary,
                     size: 140,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Text("You don't have any notification",
                       style: TextStyle(
-                          color: AppFonts.primaryColor,
+                          color: Theme.of(context).colorScheme.primary,
                           fontSize: AppFonts.h2FontSize,
                           fontWeight: FontWeight.w500)),
                 ],
@@ -126,7 +125,6 @@ class _NotificationScreenState extends State<NotificationScreen>
             )
           else
             ListView.builder(
-                reverse: true,
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: notifications.length,

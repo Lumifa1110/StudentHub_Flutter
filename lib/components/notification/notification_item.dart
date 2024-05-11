@@ -4,7 +4,6 @@ import 'package:studenthub/enums/index.dart';
 import 'package:studenthub/models/index.dart';
 import 'package:studenthub/screens/student/view_candidate_sceen.dart';
 import 'package:studenthub/services/index.dart';
-import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 import '../../screens/chat_flow/message_detail_screen.dart';
@@ -136,10 +135,10 @@ class _NotificationItemState extends State<NotificationItem> {
               child: Container(
                   padding:
                       const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                  decoration: const BoxDecoration(
-                    color: AppColor.background,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.background,
                     border: Border(
-                      bottom: BorderSide(color: Colors.black12),
+                      bottom: BorderSide(color: Theme.of(context).colorScheme.shadow),
                     ),
                   ),
                   child: Row(
@@ -160,8 +159,8 @@ class _NotificationItemState extends State<NotificationItem> {
                                   Expanded(
                                     flex: 6,
                                     child: Text(typeNotifyLabel,
-                                        style: const TextStyle(
-                                            color: AppFonts.primaryColor,
+                                        style: TextStyle(
+                                            color: Theme.of(context).colorScheme.onSurface,
                                             fontSize: AppFonts.h3FontSize,
                                             fontWeight: FontWeight.w900)),
                                   ),
@@ -172,8 +171,8 @@ class _NotificationItemState extends State<NotificationItem> {
                                       child: Text(
                                           formatTimeAgo(
                                               widget.notification.createdAt!),
-                                          style: const TextStyle(
-                                            color: AppFonts.secondaryColor,
+                                          style: TextStyle(
+                                            color: Theme.of(context).colorScheme.onSurface,
                                             fontSize: AppFonts.h4FontSize,
                                           )),
                                     ),
@@ -192,9 +191,9 @@ class _NotificationItemState extends State<NotificationItem> {
                                           Text(notificationContent,
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 2,
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                   color:
-                                                      AppFonts.secondaryColor,
+                                                      Theme.of(context).colorScheme.onSurface,
                                                   fontSize: AppFonts.h4FontSize,
                                                   fontWeight: FontWeight.w400))
                                         ],

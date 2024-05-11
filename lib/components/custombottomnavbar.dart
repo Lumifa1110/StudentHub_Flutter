@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:studenthub/enums/user_role.dart';
 import 'package:studenthub/preferences/user_preferences.dart';
 import 'package:studenthub/screens/index.dart';
-import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class CustomBottomNavBar extends StatefulWidget {
@@ -41,15 +40,15 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).colorScheme.shadow.withOpacity(0.2), // Shadow color
+            color: Theme.of(context).colorScheme.shadow.withOpacity(0.1), // Shadow color
             spreadRadius: 2.0, // Spread radius
             blurRadius: 2.0, // Blur radius
-            offset: const Offset(0, -3), // Offset from the bottom
+            offset: const Offset(0, -1), // Offset from the bottom
           ),
         ],
       ),
       child: BottomNavigationBar(
-        backgroundColor: Theme.of(context).colorScheme.tertiary,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         type: BottomNavigationBarType.fixed,
         iconSize: 24,
         selectedFontSize: AppFonts.h3FontSize,

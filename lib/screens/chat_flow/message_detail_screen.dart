@@ -11,7 +11,6 @@ import 'package:studenthub/components/bottomsheet_schedule.dart';
 import 'package:studenthub/components/chat_flow/index.dart';
 import 'package:studenthub/models/index.dart';
 import 'package:studenthub/services/index.dart';
-import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class MessageDetailScreen extends StatefulWidget {
@@ -327,10 +326,10 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
         appBar: AppBar(
           title: Text(widget.chatter.fullname,
               style: const TextStyle(color: Colors.white)),
-          backgroundColor: mainColor,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           iconTheme: const IconThemeData(color: Colors.white),
         ),
-        backgroundColor: const Color(0xFFF8F8F8),
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: Column(children: [
           Expanded(
             flex: 7,
@@ -347,7 +346,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
-                color: AppColor.background,
+                color: Theme.of(context).colorScheme.background,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.2),
@@ -374,10 +373,10 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                           builder: (BuildContext context) {
                             return Container(
                               decoration: BoxDecoration(
-                                color: lightestgrayColor,
+                                color: Theme.of(context).colorScheme.surface,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: blackTextColor.withOpacity(0.5),
+                                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                                     spreadRadius: 6,
                                     blurRadius: 9,
                                     offset: const Offset(0, 1),
@@ -400,10 +399,10 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                           },
                         )
                       },
-                      child: const FaIcon(
+                      child: FaIcon(
                         FontAwesomeIcons.calendarCheck,
                         size: 34,
-                        color: AppColor.primary,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     )),
                 Expanded(
@@ -412,9 +411,9 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                       height: 3 * (AppFonts.h3FontSize) * 1.5,
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.surface,
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: lightergrayColor),
+                          border: Border.all(color: Theme.of(context).colorScheme.surface),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.2),
@@ -428,13 +427,16 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                           Expanded(
                             child: TextField(
                               controller: messageInputController,
-                              cursorColor: AppColor.primary,
+                              cursorColor: Theme.of(context).colorScheme.primary,
                               maxLines: null,
                               keyboardType: TextInputType.multiline,
-                              style: const TextStyle(
-                                  fontSize: AppFonts.h3FontSize),
-                              decoration: const InputDecoration(
+                              style: TextStyle(
+                                  fontSize: AppFonts.h3FontSize,
+                                  color: Theme.of(context).colorScheme.onSurface),
+                              decoration: InputDecoration(
                                 border: InputBorder.none,
+                                filled: true,
+                                fillColor: Theme.of(context).colorScheme.surface
                               ),
                             ),
                           ),
@@ -447,10 +449,10 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
                       alignment: Alignment.centerRight,
                       child: GestureDetector(
                         onTap: () => {handleSubmitMessage()},
-                        child: const FaIcon(
+                        child: FaIcon(
                           FontAwesomeIcons.play,
                           size: 30, // Adjust the size as needed
-                          color: AppColor.primary, // Adjust the color as needed
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     )),

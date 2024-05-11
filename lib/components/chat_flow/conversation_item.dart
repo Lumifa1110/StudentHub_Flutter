@@ -60,7 +60,7 @@ class _ConversationItemState extends State<ConversationItem> {
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.only(top: 6, bottom: 6, left: 12, right: 12),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
+          color: Theme.of(context).colorScheme.primaryContainer,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
