@@ -9,7 +9,6 @@ import 'package:studenthub/components/bottomsheet_customsearchbar.dart';
 import 'package:studenthub/config/config.dart';
 import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/screens/index.dart';
-import 'package:studenthub/utils/colors.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -306,7 +305,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
                     height: 40,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Theme.of(context).colorScheme.onSurface,
+                      color: Theme.of(context).colorScheme.surface,
                     ),
                     child: Center(
                       child: IconButton(
@@ -327,9 +326,9 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
                             _loadScreen();
                           }
                         },
-                        icon: const FaIcon(
+                        icon: FaIcon(
                           FontAwesomeIcons.solidHeart,
-                          color: whiteTextColor,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                     ),

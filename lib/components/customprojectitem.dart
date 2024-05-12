@@ -244,7 +244,7 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
                       isFavorite ? Icons.favorite : Icons.favorite_border,
                       size: 30,
                     ),
-                    color: mainColor,
+                    color: Theme.of(context).colorScheme.primary,
                   )
                 : Container(),
           ),

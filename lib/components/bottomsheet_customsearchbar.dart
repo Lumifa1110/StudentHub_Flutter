@@ -83,9 +83,9 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                     width: 36,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: whiteTextColor,
+                      color: Theme.of(context).colorScheme.primaryContainer,
                       border: Border.all(
-                        color: blackTextColor,
+                        color: Theme.of(context).colorScheme.onSurface,
                         width: 2.0,
                       ),
                     ),
@@ -95,12 +95,12 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                         _searchController.clear();
                         Navigator.pop(context, true);
                       },
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.close,
                         size: 18,
-                        color: blackTextColor,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
-                      color: blackTextColor,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -113,7 +113,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                 alignment: Alignment.center,
                 padding: const EdgeInsets.only(left: 13),
                 decoration: BoxDecoration(
-                  color: whiteTextColor,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(30),
                   border: Border.all(color: blackTextColor, width: 2.0),
                 ),
@@ -126,13 +126,13 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                         controller: _searchController,
                         onChanged: widget.onChanged,
                         onSubmitted: _onSubmitted,
-                        style: const TextStyle(
-                          color: blackTextColor,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: 'Search for projects',
                           hintStyle: TextStyle(
-                              color: blackTextColor,
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontSize: AppFonts.h2FontSize,
                               fontWeight: FontWeight.w400),
                           border: InputBorder.none,
@@ -210,20 +210,20 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
         alignment: Alignment.center,
         padding: const EdgeInsets.only(left: 10),
         decoration: BoxDecoration(
-          color: whiteTextColor,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(30),
           border: Border.all(color: lightgrayColor, width: 2.0),
         ),
-        child: const Row(
+        child: Row(
           children: [
             Icon(
               Icons.search,
-              color: blackTextColor,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Text(
               'Search for projects',
-              style: TextStyle(color: blackTextColor, fontSize: 18, fontWeight: FontWeight.w400),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w400),
             ),
           ],
         ),
