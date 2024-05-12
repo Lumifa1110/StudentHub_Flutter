@@ -9,11 +9,15 @@ import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 import 'package:http/http.dart' as http;
 
+import '../company_dashboard.dart';
+
 class EditProjectScreen extends StatefulWidget {
   final int? projectId;
+  final int? currentTab;
   const EditProjectScreen({
     Key? key,
     required this.projectId,
+    this.currentTab,
   }) : super(key: key);
 
   @override
@@ -46,7 +50,15 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
       body: jsonEncode(data),
     );
     if (response.statusCode == 200) {
-      Navigator.pushReplacementNamed(context, '/company/dashboard');
+      print(widget.currentTab);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CompanyDashboardScreen(
+            currentTab: widget.currentTab,
+          ),
+        ),
+      );
     } else {
       print('erro');
     }
@@ -194,7 +206,21 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                         ButtonSimple(
                             label: 'Save',
                             onPressed: () {
-                              patchProject();
+                              showDialog(
+                                context: context,
+                                builder: (_) => AlertDialog(
+                                  title: const Text('Success'),
+                                  content: const Text('You have successfully saved your edit project!'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        patchProject();
+                                      },
+                                      child: const Text('OK'),
+                                    ),
+                                  ],
+                                ),
+                              );
                             },
                             isButtonEnabled: true),
                       ],

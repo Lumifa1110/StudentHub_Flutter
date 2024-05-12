@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/utils/colors.dart';
@@ -9,6 +10,7 @@ import 'package:http/http.dart' as http;
 import '../../business/company_business.dart';
 import '../../config/config.dart';
 import '../../models/notification_model.dart';
+import '../shared/notification_screen.dart';
 
 class ViewOfferScreen extends StatefulWidget {
   final NotificationModel notification;
@@ -51,10 +53,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
         body: jsonEncode(data),
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print('ok');
-        // setState(() {
-        //
-        // });
+
       }
     } catch (e) {
       print(e);
@@ -354,8 +353,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.of(context).pop(true);
-                                    Navigator.of(context).pop(true);
+                                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> NotificationScreen()), (route) => false);
                                     acceptOffer();
                                   },
                                   child: const Text('OK'),
@@ -363,7 +361,6 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                               ],
                             ),
                           );
-                          acceptOffer();
                         } else {
                           showDialog(
                             context: context,
