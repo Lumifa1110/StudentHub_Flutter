@@ -171,6 +171,7 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
               child: Column(
                 children: [
                   CustomSearchBar(controller: searchController, placeholder: 'Search', onChange: filterConversationList),
+                  const SizedBox(height: 30),
                   Container(
                     alignment: Alignment.centerLeft,
                     margin: const EdgeInsets.only(bottom: 16),
