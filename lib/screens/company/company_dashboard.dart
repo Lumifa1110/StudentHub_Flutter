@@ -5,7 +5,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:studenthub/components/authappbar.dart';
+
 import 'package:studenthub/components/custombottomnavbar.dart';
+import 'package:studenthub/components/textfield/search_bar.dart';
 import 'package:studenthub/screens/company/alertdialog/alertdialog.dart';
 import 'package:studenthub/screens/index.dart';
 import 'package:studenthub/config/config.dart';
@@ -25,9 +27,13 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
   @override
   bool get wantKeepAlive => true;
 
+  final TextEditingController searchController = TextEditingController();
   late List<dynamic> _listAllProject = [];
   late List<dynamic> _listProjectWorking = [];
   late List<dynamic> _listProjectArchived = [];
+  late List<dynamic> _listAllProjectFiltered = [];
+  late List<dynamic> _listProjectWorkingFiltered = [];
+  late List<dynamic> _listProjectArchivedFiltered = [];
 
   late SharedPreferences _prefs;
   bool isLoading = true;
@@ -160,6 +166,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
       print('status code: ${responseJson.statusCode}');
       if (responseDecode != null) {
         _listAllProject = responseDecode;
+        _listAllProjectFiltered = responseDecode;
       }
       if (mounted) {
         // Check again if the widget is still mounted before calling setState
@@ -196,6 +203,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
       final responseDecode = jsonDecode(responseJson.body)["result"];
       if (responseDecode != null) {
         _listProjectWorking = responseDecode;
+        _listProjectWorkingFiltered = responseDecode;
       }
 
       if (mounted) {
@@ -233,6 +241,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
 
       if (responseDecode != null) {
         _listProjectArchived = responseDecode;
+        _listProjectArchivedFiltered = responseDecode;
       }
 
       if (mounted) {
@@ -252,6 +261,14 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
       }
       print('Error: $e');
     }
+  }
+
+  Future<void> filterProjectList() async {
+    setState(() {
+      _listAllProjectFiltered = _listAllProject.where((project) => project['title'].toLowerCase().contains(searchController.text)).toList();
+      _listProjectWorkingFiltered = _listProjectWorking.where((project) => project['title'].toLowerCase().contains(searchController.text)).toList();
+      _listProjectArchivedFiltered = _listProjectArchived.where((project) => project['title'].toLowerCase().contains(searchController.text)).toList();
+    });
   }
 
   @override
@@ -317,12 +334,6 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
                             indicator: BoxDecoration(
                               color: Theme.of(context).colorScheme.primary,
                               borderRadius: BorderRadius.circular(16),
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  width: 1.0, // Width of the border
-                                ),
-                              ),
                             ),
                             indicatorSize: TabBarIndicatorSize.tab,
                             labelColor: whiteTextColor,
@@ -343,13 +354,14 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
                             ],
                           ),
                         ),
+                        CustomSearchBar(controller: searchController, placeholder: 'Search', onChange: filterProjectList),
                         Expanded(
                           child: TabBarView(
                             children: [
                               ListView.builder(
-                                itemCount: _listAllProject.length,
+                                itemCount: _listAllProjectFiltered.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  final project = _listAllProject[index];
+                                  final project = _listAllProjectFiltered[index];
                                   return Column(
                                     children: [
                                       const SizedBox(
@@ -386,9 +398,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
                                 },
                               ),
                               ListView.builder(
-                                itemCount: _listProjectWorking.length,
+                                itemCount: _listProjectWorkingFiltered.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  final project = _listProjectWorking[index];
+                                  final project = _listProjectWorkingFiltered[index];
                                   return Column(
                                     children: [
                                       const SizedBox(
@@ -422,9 +434,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
                                 },
                               ),
                               ListView.builder(
-                                itemCount: _listProjectArchived.length,
+                                itemCount: _listProjectArchivedFiltered.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  final project = _listProjectArchived[index];
+                                  final project = _listProjectArchivedFiltered[index];
                                   return Column(
                                     children: [
                                       const SizedBox(
