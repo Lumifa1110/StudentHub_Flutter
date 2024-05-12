@@ -64,7 +64,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: const AuthAppBar(canBack: true),
       body: SingleChildScrollView(
         child: Padding(
@@ -76,20 +76,20 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
               Center(
                 child: Text(
                   '${widget.response['title']}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: AppFonts.h1FontSize,
                     fontWeight: FontWeight.bold,
-                    color: blackTextColor,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 '  Project',
                 style: TextStyle(
                   fontSize: AppFonts.h1_2FontSize,
                   fontWeight: FontWeight.bold,
-                  color: blackTextColor,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               Container(
@@ -158,12 +158,12 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
               const SizedBox(
                 height: 10,
               ),
-              const Text(
+              Text(
                 '  Proposal',
                 style: TextStyle(
                   fontSize: AppFonts.h1_2FontSize,
                   fontWeight: FontWeight.bold,
-                  color: blackTextColor,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               Container(
@@ -225,12 +225,12 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
               const SizedBox(
                 height: 10,
               ),
-              const Text(
+              Text(
                 '  Party',
                 style: TextStyle(
                   fontSize: AppFonts.h1_2FontSize,
                   fontWeight: FontWeight.bold,
-                  color: blackTextColor,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               Container(
@@ -274,20 +274,20 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                 ),
               ),
               const SizedBox(height: 5),
-              const Text(
+              Text(
                 'Content: ',
                 style: TextStyle(
                   fontSize: AppFonts.h1_2FontSize,
                   fontWeight: FontWeight.bold,
-                  color: blackTextColor,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               Container(
                 padding: const EdgeInsets.all(5),
-                color: lightestgrayColor,
+                color: Theme.of(context).colorScheme.primaryContainer,
                 child: Text(
                   'Dear ${widget.response['receiver']['fullname']}.\n ${widget.response['content']}. \n   Your receipt of this offer is a result of your hard work and expertise in the field you study and work in. The company has seen potential and drive in you and believes that you will make a positive contribution to their ${widget.response['proposal']['project']['title']}project.\n   If you wish to join this project, we encourage you to accept the offer promptly. This will open up opportunities for you to develop your skills, build relationships in the industry, and contribute to an exciting and meaningful project.\n   If you have any questions about the offer or the working process, please do not hesitate to contact us. We are more than happy to assist you and provide any necessary information to help you make the most informed decision.\n   We look forward to working with you in the near future!\n   Best regards,\n     ${widget.response['sender']['fullname']} ',
-                  style: const TextStyle(fontSize: AppFonts.h3FontSize),
+                  style: TextStyle(fontSize: AppFonts.h3FontSize, color: Theme.of(context).colorScheme.onSurface),
                 ),
               ),
               const SizedBox(height: 30),

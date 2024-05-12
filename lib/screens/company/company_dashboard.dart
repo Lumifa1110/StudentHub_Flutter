@@ -436,9 +436,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
                                 },
                               ),
                               ListView.builder(
-                                itemCount: _listProjectArchived.length,
+                                itemCount: _listProjectArchivedFiltered.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  final project = _listProjectArchived[index];
+                                  final project = _listProjectArchivedFiltered[index];
                                   return Column(
                                     children: [
                                       const SizedBox(
