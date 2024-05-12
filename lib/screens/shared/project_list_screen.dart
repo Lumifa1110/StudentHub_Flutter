@@ -265,7 +265,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
       setState(() {
         isLoading = true;
       });
-      Navigator.pop(context);
+      Navigator.pop(context, true);
       _loadScreen();
     }
   }

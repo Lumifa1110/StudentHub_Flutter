@@ -176,7 +176,8 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                         ),
                         onTap: () {
                           _searchController.text = history[index];
-                          Navigator.pop(context, true); // Close the bottom sheet
+                          _onSubmitted(_searchController.text);
+                          // Navigator.pop(context, true); // Close the bottom sheet
                         },
                       ),
                     );

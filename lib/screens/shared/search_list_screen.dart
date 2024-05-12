@@ -288,7 +288,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
                   searchText: _searchQuery,
                 ),
                 Container(
-                  width: 45,
+                  width: 50,
                   height: 45,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
@@ -489,7 +489,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               child: isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : ListView.builder(
