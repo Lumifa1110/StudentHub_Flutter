@@ -10,7 +10,6 @@ import 'package:studenthub/config/config.dart';
 import 'package:studenthub/enums/project_scope.dart';
 import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/screens/shared/project_detail_screen.dart';
-import 'package:studenthub/utils/colors.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -290,9 +289,9 @@ class _SearchListScreenState extends State<SearchListScreen> {
                 Container(
                   width: 50,
                   height: 45,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: whiteTextColor,
+                    color: Theme.of(context).colorScheme.surface,
                   ),
                   child: Center(
                     child: IconButton(
@@ -322,9 +321,9 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                           width: 30,
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
-                                            color: whiteTextColor,
+                                            color: Theme.of(context).colorScheme.surface,
                                             border: Border.all(
-                                              color: blackTextColor,
+                                              color: Theme.of(context).colorScheme.onSurface,
                                               width: 2.0,
                                             ),
                                           ),
@@ -333,11 +332,11 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                             onPressed: () {
                                               Navigator.pop(context);
                                             },
-                                            icon: const Center(
+                                            icon: Center(
                                               child: Icon(
                                                 Icons.close,
                                                 size: 18,
-                                                color: blackTextColor,
+                                                color: Theme.of(context).colorScheme.onSurface,
                                                 weight: 5.0,
                                               ),
                                             ),
@@ -348,21 +347,21 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                     const SizedBox(
                                       height: 10,
                                     ),
-                                    const Text(
+                                    Text(
                                       'Filter by',
                                       style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
-                                        color: blackTextColor,
+                                        color: Theme.of(context).colorScheme.onSurface,
                                       ),
                                     ),
                                     const SizedBox(
                                       height: 10,
                                     ),
-                                    const Divider(
+                                    Divider(
                                       height: 1.0,
                                       thickness: 2.0,
-                                      color: blackTextColor,
+                                      color: Theme.of(context).colorScheme.onSurface,
                                     ),
                                     TextFieldWithLabel2(
                                       label: 'Students needed',
@@ -375,12 +374,12 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                     const SizedBox(
                                       height: 20,
                                     ),
-                                    const Text(
+                                    Text(
                                       'Project length',
                                       style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w500,
-                                          color: blackTextColor),
+                                          color: Theme.of(context).colorScheme.onSurface),
                                     ),
                                     RadioListProjectLength(
                                       selectedLength: selectedProjectScope,
@@ -400,12 +399,12 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                           height: 40,
                                           padding: const EdgeInsets.all(0),
                                           decoration: BoxDecoration(
-                                            border: Border.all(color: blackTextColor, width: 2.0),
-                                            color: whiteTextColor,
-                                            boxShadow: const [
+                                            border: Border.all(color: Theme.of(context).colorScheme.onSurface, width: 2.0),
+                                            color: Theme.of(context).colorScheme.surface,
+                                            boxShadow: [
                                               BoxShadow(
-                                                color: blackTextColor,
-                                                offset: Offset(2, 3),
+                                                color: Theme.of(context).colorScheme.shadow,
+                                                offset: const Offset(2, 3),
                                               ),
                                             ],
                                           ),
@@ -419,11 +418,11 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                                     borderRadius: BorderRadius.zero),
                                               ),
                                             ),
-                                            child: const Text(
+                                            child: Text(
                                               'Clear filters',
                                               style: TextStyle(
                                                 fontSize: 16,
-                                                color: blackTextColor,
+                                                color: Theme.of(context).colorScheme.onSurface,
                                               ),
                                             ),
                                           ),
@@ -433,12 +432,12 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                           height: 40,
                                           padding: const EdgeInsets.all(0),
                                           decoration: BoxDecoration(
-                                            border: Border.all(color: blackTextColor, width: 2.0),
-                                            color: whiteTextColor,
-                                            boxShadow: const [
+                                            border: Border.all(color: Theme.of(context).colorScheme.onSurface, width: 2.0),
+                                            color: Theme.of(context).colorScheme.surface,
+                                            boxShadow: [
                                               BoxShadow(
-                                                color: blackTextColor,
-                                                offset: Offset(2, 3),
+                                                color: Theme.of(context).colorScheme.shadow,
+                                                offset: const Offset(2, 3),
                                               ),
                                             ],
                                           ),
@@ -456,11 +455,11 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                                     borderRadius: BorderRadius.zero),
                                               ),
                                             ),
-                                            child: const Text(
+                                            child: Text(
                                               'Apply',
                                               style: TextStyle(
                                                 fontSize: 16,
-                                                color: blackTextColor,
+                                                color: Theme.of(context).colorScheme.onSurface,
                                               ),
                                             ),
                                           ),
@@ -474,9 +473,10 @@ class _SearchListScreenState extends State<SearchListScreen> {
                           },
                         );
                       },
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.filter_alt,
                         size: 30,
+                        color: Theme.of(context).colorScheme.onSurface
                       ),
                     ),
                   ),

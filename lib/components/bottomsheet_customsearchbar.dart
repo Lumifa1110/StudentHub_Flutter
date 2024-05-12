@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
 class CustomSearchBar extends StatefulWidget {
@@ -83,7 +82,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                     width: 36,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Theme.of(context).colorScheme.primaryContainer,
+                      color: Theme.of(context).colorScheme.surface,
                       border: Border.all(
                         color: Theme.of(context).colorScheme.onSurface,
                         width: 2.0,
@@ -115,7 +114,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: blackTextColor, width: 2.0),
+                  border: Border.all(color: Theme.of(context).colorScheme.onSurface, width: 2.0),
                 ),
                 child: Row(
                   children: [
@@ -161,15 +160,15 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                   itemCount: history.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
-                      color: whiteTextColor,
+                      color: Theme.of(context).colorScheme.primaryContainer,
                       margin: const EdgeInsets.only(
                         bottom: 10,
                       ),
                       child: ListTile(
                         title: Text(
                           history[index],
-                          style: const TextStyle(
-                            color: blackTextColor,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
                             fontSize: AppFonts.h2FontSize,
                             fontWeight: FontWeight.w400,
                           ),
@@ -212,7 +211,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: lightgrayColor, width: 2.0),
+          border: Border.all(color: Theme.of(context).colorScheme.surface, width: 2.0),
         ),
         child: Row(
           children: [

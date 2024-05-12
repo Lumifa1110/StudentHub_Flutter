@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/enums/project_scope.dart';
-import 'package:studenthub/utils/colors.dart';
 
 class RadioListProjectLength extends StatefulWidget {
   final ProjectScopeFlag? selectedLength;
@@ -60,7 +59,7 @@ class _RadioListProjectLengthState extends State<RadioListProjectLength> {
           ),
           Text(
             label,
-            style: const TextStyle(color: blackTextColor, fontSize: 16),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
           ),
         ],
       ),
