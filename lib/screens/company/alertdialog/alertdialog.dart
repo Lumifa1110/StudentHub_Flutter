@@ -4,13 +4,14 @@ import 'package:studenthub/utils/font.dart';
 
 class Dialog_ extends StatelessWidget {
 
-  final Future<void> Function(dynamic idProject) f_function;
+  final Future<void> Function(dynamic idProject,{int currentTab}) f_function;
   final String titleDialog;
   final dynamic project;
   final String question;
   final String textAcceptButton;
+  final int currentTab;
 
-  const Dialog_({super.key, required this.f_function, required this.titleDialog, this.project, required this.question, required this.textAcceptButton});
+  const Dialog_({super.key, required this.f_function, required this.titleDialog, this.project, required this.question, required this.textAcceptButton, required this.currentTab});
 
 
 
@@ -61,7 +62,7 @@ class Dialog_ extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                f_function(project);
+                f_function(project, currentTab: currentTab);
                 Navigator.pop(context);
               },
               child: Align(

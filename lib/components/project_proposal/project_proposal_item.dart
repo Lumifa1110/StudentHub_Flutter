@@ -178,16 +178,20 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
               Row(children: [
                 Expanded(
                     child: Container(
+                      height: 100,
                         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
                         decoration: BoxDecoration(
                             color: Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(4),
                             border: Border.all(color: Colors.black12)),
                         margin: const EdgeInsets.only(bottom: 6),
-                        child: Text(
-                          widget.itemsProposal['coverLetter'],
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface, fontSize: AppFonts.h3FontSize),
+                        child: SingleChildScrollView(
+                          child: Text(
+                            widget.itemsProposal['coverLetter'],
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface, fontSize: AppFonts.h3FontSize),
+
+                          ),
                         )))
               ]),
               // Buttons

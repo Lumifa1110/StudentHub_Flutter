@@ -68,8 +68,8 @@ class _NotificationItemState extends State<NotificationItem> {
       onTap: () async {
         switch (widget.notification.typeNotifyFlag) {
           case TypeNotifyFlag.offer:
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ViewOfferScreen(notification: widget.notification, response: widget.response)));
-           // print( widget.notification.message!.project);
+            final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ViewOfferScreen(notification: widget.notification, response: widget.response)));
+            print(result);
             break;
           case TypeNotifyFlag.interview:
             {

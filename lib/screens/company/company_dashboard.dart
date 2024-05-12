@@ -16,14 +16,15 @@ import 'package:studenthub/utils/font.dart';
 import '../../utils/timer.dart';
 
 class CompanyDashboardScreen extends StatefulWidget {
-  const CompanyDashboardScreen({super.key});
+  final int ?currentTab;
+  const CompanyDashboardScreen({super.key, this.currentTab});
 
   @override
   State<CompanyDashboardScreen> createState() => CompanyDashboardScreenState();
 }
 
 class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin  {
   @override
   bool get wantKeepAlive => true;
 
@@ -38,10 +39,13 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
   late SharedPreferences _prefs;
   bool isLoading = true;
   String errorMessage = '';
+  TabController? _tabController;
+
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(initialIndex: widget.currentTab != null ? widget.currentTab! : 0, length: 3, vsync: this); // '3' represents the number of tabs
     _loadScreen()
         .then((_) => _loadProject())
         .then((_) => _loadWorking())
@@ -49,7 +53,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
   }
 
   // reomove a project id
-  Future<void> removeAProject(dynamic projectId) async {
+  Future<void> removeAProject(dynamic projectId, {int? currentTab}) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     final response = await http.delete(
@@ -58,18 +62,19 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
       headers: {'Authorization': 'Bearer $token'},
     );
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      setState(() {
-        isLoading = true;
-        _loadScreen()
-            .then((_) => _loadProject())
-            .then((_) => _loadWorking())
-            .then((_) => _loadArchived());
-      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CompanyDashboardScreen(
+            currentTab: currentTab != null ? currentTab:0,
+          ),
+        ),
+      );
     }
   }
 
   // Start working project
-  Future<void> workingProject(dynamic project) async {
+  Future<void> workingProject(dynamic project, {int ?currentTab}) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     final Map<String, dynamic> data = {
@@ -98,7 +103,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
   }
 
   //Close a project
-  Future<void> archivedProject(dynamic project) async {
+  Future<void> archivedProject(dynamic project, {int ?currentTab}) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     final Map<String, dynamic> data = {
@@ -327,6 +332,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
                             color: Theme.of(context).colorScheme.primaryContainer,
                           ),
                           child: TabBar(
+                            controller: _tabController,
                             unselectedLabelStyle: TextStyle(
                               color: Theme.of(context).colorScheme.onSurface,
                               fontSize: AppFonts.h3FontSize,
@@ -359,6 +365,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
                         const SizedBox(height: 15),
                         Expanded(
                           child: TabBarView(
+                            controller: _tabController,
                             children: [
                               ListView.builder(
                                 itemCount: _listAllProjectFiltered.length,
@@ -486,9 +493,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
 class OptionProjectCompany extends StatefulWidget {
   final VoidCallback onTap;
   final dynamic project;
-  final Future<void> Function(dynamic idProject) removeAProject;
-  final Future<void> Function(dynamic project) workingProject;
-  final Future<void> Function(dynamic project) archivedProject;
+  final Future<void> Function(dynamic idProject, {int ?currentTab}) removeAProject;
+  final Future<void> Function(dynamic project, {int ?currentTab}) workingProject;
+  final Future<void> Function(dynamic project, {int ?currentTab}) archivedProject;
   final int currentTab;
 
   const OptionProjectCompany({
@@ -514,10 +521,10 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
             builder: (BuildContext context) {
               return SizedBox(
                 height: widget.project['typeFlag'] == 0
-                    ? 450
+                    ? 400
                     : widget.project['typeFlag'] == 1
-                        ? 400
-                        : 350,
+                        ? 350
+                        : 300,
                 child: Center(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -527,6 +534,15 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                         onPressed: () {
                           // Implement your action
                           Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProjectProposalListScreen(
+                                project: widget.project,
+                                tabShow: 0,
+                              ),
+                            ),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -539,18 +555,15 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                         onPressed: () {
                           // Implement your action
                           Navigator.pop(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0),
-                          ),
-                        ),
-                        child: const Text('View messages'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Implement your action
-                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProjectProposalListScreen(
+                                project: widget.project,
+                                tabShow: 2,
+                              ),
+                            ),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -558,6 +571,27 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                           ),
                         ),
                         child: const Text('View hired'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Implement your action
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProjectProposalListScreen(
+                                project: widget.project,
+                                tabShow: 1,
+                              ),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(0),
+                          ),
+                        ),
+                        child: const Text('View job posting'),
                       ),
                       const Divider(
                         thickness: 2,
@@ -569,23 +603,11 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                         onPressed: () {
                           // Implement your action
                           Navigator.pop(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0),
-                          ),
-                        ),
-                        child: const Text('View job posting'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Implement your action
-                          Navigator.pop(context);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  EditProjectScreen(projectId: widget.project['id']),
+                                  EditProjectScreen(projectId: widget.project['id'], currentTab: widget.currentTab,),
                             ),
                           );
                         },
@@ -608,6 +630,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                 textAcceptButton: 'Yes',
                                 question: 'Do you want to remove the project?',
                                 project: widget.project['id'],
+                                currentTab: widget.currentTab,
                                 f_function: widget.removeAProject,
                               );
                             },
@@ -647,6 +670,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                                 textAcceptButton: 'Yes',
                                                 question:
                                                     'Do you want to start working the project?',
+                                                currentTab: widget.currentTab,
                                                 project: widget.project,
                                                 f_function: widget.workingProject,
                                               );
@@ -672,6 +696,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                           titleDialog: 'Closed a project',
                                           textAcceptButton: 'Yes',
                                           question: 'Do you want to close the project?',
+                                          currentTab: widget.currentTab,
                                           project: widget.project,
                                           f_function: widget.archivedProject,
                                         );

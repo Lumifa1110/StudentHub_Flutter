@@ -12,22 +12,26 @@ import '../../../utils/timer.dart';
 
 class ProjectProposalListScreen extends StatefulWidget {
   final dynamic project;
-  const ProjectProposalListScreen({super.key, required this.project});
+  final int ?tabShow;
+  const ProjectProposalListScreen({super.key, required this.project, this.tabShow});
 
   @override
   State<ProjectProposalListScreen> createState() => _ProjectProposalListScreenState();
 }
 
-class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
+class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> with TickerProviderStateMixin  {
   late SharedPreferences _prefs;
   late dynamic _proposal;
   bool isLoading = true;
   String errorMessage = '';
   late dynamic _listItemsHired;
+  TabController? _tabController;
 
   @override
   void initState() {
     super.initState();
+    print(widget.tabShow);
+    _tabController = TabController(initialIndex: widget.tabShow != null ? widget.tabShow! : 0, length: 3, vsync: this); // '3' represents the number of tabs
     _loadProposals().then((_) => _loadHired()).then((_) => setState(() {
           isLoading = false;
         }));
@@ -193,6 +197,7 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                         Container(
                           margin: const EdgeInsets.only(bottom: 20),
                           child: TabBar(
+                            controller: _tabController,
                             labelStyle: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: AppFonts.h3FontSize),
                             unselectedLabelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                             tabs: const [
@@ -206,7 +211,9 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10.0),
                             child: ClipRect(
-                              child: TabBarView(children: [
+                              child: TabBarView(
+                                controller: _tabController,
+                                  children: [
                                 _proposal['items'].length == 0
                                     ? const Center(
                                         child: Text('These aren\'t Proposals yet'),
