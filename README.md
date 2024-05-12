@@ -11,7 +11,7 @@ https://youtu.be/iKRc5not0Tg
 https://youtu.be/bAPVDZBYlbY
 
 ### Sprint 6: Project listing + search + filter
-https://youtu.be/R24hwd91pQI
+https://youtu.be/AAenmFouqLo
 
 ### Sprint 7: Student submit proposal + Company review proposal
 https://youtu.be/UpIqk2uES_w
