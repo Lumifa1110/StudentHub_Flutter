@@ -354,7 +354,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
                             ],
                           ),
                         ),
+                        const SizedBox(height: 5),
                         CustomSearchBar(controller: searchController, placeholder: 'Search', onChange: filterProjectList),
+                        const SizedBox(height: 15),
                         Expanded(
                           child: TabBarView(
                             children: [
