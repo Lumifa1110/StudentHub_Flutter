@@ -16,7 +16,7 @@ import 'package:studenthub/utils/font.dart';
 import '../../utils/timer.dart';
 
 class CompanyDashboardScreen extends StatefulWidget {
-  final int ?currentTab;
+  final int? currentTab;
   const CompanyDashboardScreen({super.key, this.currentTab});
 
   @override
@@ -24,7 +24,7 @@ class CompanyDashboardScreen extends StatefulWidget {
 }
 
 class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
-    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin  {
+    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -41,11 +41,13 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
   String errorMessage = '';
   TabController? _tabController;
 
-
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(initialIndex: widget.currentTab != null ? widget.currentTab! : 0, length: 3, vsync: this); // '3' represents the number of tabs
+    _tabController = TabController(
+        initialIndex: widget.currentTab != null ? widget.currentTab! : 0,
+        length: 3,
+        vsync: this); // '3' represents the number of tabs
     _loadScreen()
         .then((_) => _loadProject())
         .then((_) => _loadWorking())
@@ -66,7 +68,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
         context,
         MaterialPageRoute(
           builder: (context) => CompanyDashboardScreen(
-            currentTab: currentTab != null ? currentTab:0,
+            currentTab: currentTab != null ? currentTab : 0,
           ),
         ),
       );
@@ -74,7 +76,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
   }
 
   // Start working project
-  Future<void> workingProject(dynamic project, {int ?currentTab}) async {
+  Future<void> workingProject(dynamic project, {int? currentTab}) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     final Map<String, dynamic> data = {
@@ -103,7 +105,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
   }
 
   //Close a project
-  Future<void> archivedProject(dynamic project, {int ?currentTab}) async {
+  Future<void> archivedProject(dynamic project, {int? currentTab}) async {
     _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
     final Map<String, dynamic> data = {
@@ -270,9 +272,15 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
 
   Future<void> filterProjectList() async {
     setState(() {
-      _listAllProjectFiltered = _listAllProject.where((project) => project['title'].toLowerCase().contains(searchController.text)).toList();
-      _listProjectWorkingFiltered = _listProjectWorking.where((project) => project['title'].toLowerCase().contains(searchController.text)).toList();
-      _listProjectArchivedFiltered = _listProjectArchived.where((project) => project['title'].toLowerCase().contains(searchController.text)).toList();
+      _listAllProjectFiltered = _listAllProject
+          .where((project) => project['title'].toLowerCase().contains(searchController.text))
+          .toList();
+      _listProjectWorkingFiltered = _listProjectWorking
+          .where((project) => project['title'].toLowerCase().contains(searchController.text))
+          .toList();
+      _listProjectArchivedFiltered = _listProjectArchived
+          .where((project) => project['title'].toLowerCase().contains(searchController.text))
+          .toList();
     });
   }
 
@@ -361,7 +369,10 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
                           ),
                         ),
                         const SizedBox(height: 5),
-                        CustomSearchBar(controller: searchController, placeholder: 'Search', onChange: filterProjectList),
+                        CustomSearchBar(
+                            controller: searchController,
+                            placeholder: 'Search',
+                            onChange: filterProjectList),
                         const SizedBox(height: 15),
                         Expanded(
                           child: TabBarView(
@@ -493,9 +504,9 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
 class OptionProjectCompany extends StatefulWidget {
   final VoidCallback onTap;
   final dynamic project;
-  final Future<void> Function(dynamic idProject, {int ?currentTab}) removeAProject;
-  final Future<void> Function(dynamic project, {int ?currentTab}) workingProject;
-  final Future<void> Function(dynamic project, {int ?currentTab}) archivedProject;
+  final Future<void> Function(dynamic idProject, {int? currentTab}) removeAProject;
+  final Future<void> Function(dynamic project, {int? currentTab}) workingProject;
+  final Future<void> Function(dynamic project, {int? currentTab}) archivedProject;
   final int currentTab;
 
   const OptionProjectCompany({
@@ -606,8 +617,10 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  EditProjectScreen(projectId: widget.project['id'], currentTab: widget.currentTab,),
+                              builder: (context) => EditProjectScreen(
+                                projectId: widget.project['id'],
+                                currentTab: widget.currentTab,
+                              ),
                             ),
                           );
                         },
@@ -721,11 +734,11 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
           );
         },
         child: Container(
-          height: 20,
+          height: 23,
           decoration:
-              BoxDecoration(color: AppColor.primary, borderRadius: BorderRadius.circular(10)),
+              BoxDecoration(color: AppColor.primary, borderRadius: BorderRadius.circular(12)),
           child: const Center(
-            child: FaIcon(FontAwesomeIcons.ellipsis, color: Colors.white, size: 14),
+            child: FaIcon(FontAwesomeIcons.ellipsis, color: Colors.white, size: 16),
           ),
         ));
   }
@@ -743,7 +756,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  flex: 9,
+                  flex: 7,
                   child: Text(
                     widget.project['title'],
                     style: const TextStyle(
@@ -751,7 +764,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                         fontSize: AppFonts.h1FontSize,
                         fontWeight: FontWeight.bold),
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 4,
+                    maxLines: 2,
                   ),
                 ),
                 Expanded(
@@ -811,16 +824,17 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                       height: 20,
                       width: 80,
                       decoration: BoxDecoration(
-                        color: typeFlagColors(widget.project['typeFlag']),
-                        borderRadius: BorderRadius.circular(7)
-
-                      ),
+                          color: typeFlagColors(widget.project['typeFlag']),
+                          borderRadius: BorderRadius.circular(7)),
                       child: Center(
-                        child: Text(widget.project['typeFlag'] == 0
-                            ? 'New'
-                            : widget.project['typeFlag'] == 1
-                            ? 'Working'
-                            : 'Archived', style: TextStyle(color: whiteTextColor),),
+                        child: Text(
+                          widget.project['typeFlag'] == 0
+                              ? 'New'
+                              : widget.project['typeFlag'] == 1
+                                  ? 'Working'
+                                  : 'Archived',
+                          style: TextStyle(color: whiteTextColor),
+                        ),
                       ),
                     )
                   ],
