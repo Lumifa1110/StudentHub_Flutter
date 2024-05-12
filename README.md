@@ -10,6 +10,9 @@ https://youtu.be/iKRc5not0Tg
 ### Sprint 4 + 5: Authentication + User profile creation + Company post project
 https://youtu.be/bAPVDZBYlbY
 
+### Sprint 6: Project listing + search + filter
+https://youtu.be/R24hwd91pQI
+
 ### Sprint 7: Student submit proposal + Company review proposal
 https://youtu.be/UpIqk2uES_w
 
