@@ -65,7 +65,7 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 20, left: 10, right: 10, top: 10),
+      margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 10),
       padding: const EdgeInsets.all(10),
       height: 215,
       decoration: BoxDecoration(
@@ -73,10 +73,10 @@ class _CustomProjectItemState extends State<CustomProjectItem> {
         borderRadius: const BorderRadius.all(Radius.circular(9)),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).colorScheme.shadow.withOpacity(0.6),
-            spreadRadius: 3.0,
-            blurRadius: 6.0,
-            offset: const Offset(0, 3),
+            color: Theme.of(context).colorScheme.shadow.withOpacity(0.2),
+            spreadRadius: 2.0,
+            blurRadius: 2.0,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
