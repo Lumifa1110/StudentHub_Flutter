@@ -113,7 +113,7 @@ class ProjectPostStep1PageState extends State<ProjectPostStep1Page> {
                         );
                       }
                     },
-                    style: ElevatedButton.styleFrom(shape: const RoundedRectangleBorder()),
+                    style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(15))),
                     child: const Text("Next: Score"),
                   )),
             ],

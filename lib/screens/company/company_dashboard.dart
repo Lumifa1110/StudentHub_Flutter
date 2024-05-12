@@ -160,6 +160,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
       print('status code: ${responseJson.statusCode}');
       if (responseDecode != null) {
         _listAllProject = responseDecode;
+        // print(responseDecode[0])
       }
       if (mounted) {
         // Check again if the widget is still mounted before calling setState
@@ -757,7 +758,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                   ],
                 ),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -768,17 +769,22 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                         ),
                       ],
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Text('State: '),
-                        Text(widget.project['typeFlag'] == 0
+                    Container(
+                      height: 20,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        color: typeFlagColors(widget.project['typeFlag']),
+                        borderRadius: BorderRadius.circular(7)
+
+                      ),
+                      child: Center(
+                        child: Text(widget.project['typeFlag'] == 0
                             ? 'New'
                             : widget.project['typeFlag'] == 1
-                                ? 'Working'
-                                : 'Archived')
-                      ],
-                    ),
+                            ? 'Working'
+                            : 'Archived', style: TextStyle(color: whiteTextColor),),
+                      ),
+                    )
                   ],
                 )
               ],

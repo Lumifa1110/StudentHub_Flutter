@@ -60,80 +60,80 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
                   '2/4 \t\t Next, estimate the scope of your job',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: AppFonts.h2FontSize),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
                 const Text(
                   'Consider the size of your project and the timeline',
                   style: TextStyle(fontSize: AppFonts.h3FontSize),
                 ),
                 const SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
                 const Text(
                   'How long will your project take?',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: AppFonts.h3FontSize),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ListTile(
-                  title: const Text('Less Than 1 Month', style: TextStyle(fontSize: 14)),
-                  leading: Radio(
-                    value: 0, // Set value to 3
-                    groupValue: _isChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        _isChecked = value as int;
-                      });
-                    },
-                  ),
-                ),
-                ListTile(
-                  title: const Text('1 to 3 months', style: TextStyle(fontSize: 14)),
-                  leading: Radio(
-                    value: 1, // Set value to 6
-                    groupValue: _isChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        _isChecked = value as int;
-                      });
-                    },
-                  ),
-                ),
-                ListTile(
-                  title: const Text('3 to 6 months', style: TextStyle(fontSize: 14)),
-                  leading: Radio(
-                    value: 2, // Set value to 6
-                    groupValue: _isChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        _isChecked = value as int;
-                      });
-                    },
-                  ),
-                ),
-                ListTile(
-                  title: const Text('More than 6 months', style: TextStyle(fontSize: 14)),
-                  leading: Radio(
-                    value: 3, // Set value to 6
-                    groupValue: _isChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        _isChecked = value as int;
-                      });
-                    },
+                Container(
+                  child:Column(
+                    children: [
+                      ListTile(
+                        title: const Text('Less Than 1 Month', style: TextStyle(fontSize: 14)),
+                        leading: Radio(
+                          value: 0, // Set value to 3
+                          groupValue: _isChecked,
+                          onChanged: (value) {
+                            setState(() {
+                              _isChecked = value as int;
+                            });
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text('1 to 3 months', style: TextStyle(fontSize: 14)),
+                        leading: Radio(
+                          value: 1, // Set value to 6
+                          groupValue: _isChecked,
+                          onChanged: (value) {
+                            setState(() {
+                              _isChecked = value as int;
+                            });
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text('3 to 6 months', style: TextStyle(fontSize: 14)),
+                        leading: Radio(
+                          value: 2, // Set value to 6
+                          groupValue: _isChecked,
+                          onChanged: (value) {
+                            setState(() {
+                              _isChecked = value as int;
+                            });
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text('More than 6 months', style: TextStyle(fontSize: 14)),
+                        leading: Radio(
+                          value: 3, // Set value to 6
+                          groupValue: _isChecked,
+                          onChanged: (value) {
+                            setState(() {
+                              _isChecked = value as int;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(
                   height: 20,
                 ),
                 const Text(
-                  'How many students do you want for this project?',
+                  'How many students do you want for this project? (*)',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: AppFonts.h3FontSize),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 TextField(
                   controller: _quantityStudent,
@@ -152,42 +152,63 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
                 ),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_quantityStudent.text.isEmpty) {
-                        validateTextfield(_quantityStudent.text.trim());
-                      } else {
-                        if (!_erro) {
-                          // Check if the quantity text is not empty
-                          if (_quantityStudent.text.isNotEmpty) {
-                            try {
-                              int quantity = int.parse(_quantityStudent.text);
-                              widget.box.putIfAbsent('quantityStudent', () => quantity);
-                            } catch (e) {
-                              // Handle the case where parsing fails
-                              print('Failed to parse quantity: $e');
-                              setState(() {
-                                _erro = true;
-                              });
-                              return; // Return to prevent navigation if parsing fails
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          Navigator.of(context).pop(true);
+                        },
+                        style: ElevatedButton.styleFrom(shape:  RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                        child: const Text('Back'),
+                      ),
+                      SizedBox(width: 5,),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_quantityStudent.text.isEmpty) {
+                            validateTextfield(_quantityStudent.text.trim());
+                          } else {
+                            if (!_erro) {
+                              // Check if the quantity text is not empty
+                              if (_quantityStudent.text.isNotEmpty) {
+                                try {
+                                  int quantity = int.parse(_quantityStudent.text);
+                                  if(widget.box.containsKey('quantityStudent')){
+                                    widget.box['quantityStudent'] = quantity;
+                                  }
+                                  else{
+                                    widget.box.putIfAbsent('quantityStudent', () => quantity);
+                                  }
+                                } catch (e) {
+                                  // Handle the case where parsing fails
+                                  print('Failed to parse quantity: $e');
+                                  setState(() {
+                                    _erro = true;
+                                  });
+                                  return; // Return to prevent navigation if parsing fails
+                                }
+                              }
+                              if(widget.box.containsKey('projectScore')){
+                                widget.box['projectScore'] = _isChecked;
+                              }
+                              else{
+                                widget.box.putIfAbsent('projectScore', () => _isChecked);
+                              }
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProjectPostStep3Page(
+                                    box: widget.box,
+                                  ),
+                                ),
+                              );
                             }
                           }
-
-                          widget.box.putIfAbsent('projectScore', () => _isChecked);
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProjectPostStep3Page(
-                                box: widget.box,
-                              ),
-                            ),
-                          );
-                        }
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(shape: const RoundedRectangleBorder()),
-                    child: const Text('Next: Description'),
+                        },
+                        style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                        child: const Text('Next: Description'),
+                      ),
+                    ],
                   ),
                 )
               ],

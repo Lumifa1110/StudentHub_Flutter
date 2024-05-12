@@ -67,7 +67,7 @@ class ProjectPostStep3PageState extends State<ProjectPostStep3Page> {
                 height: 20,
               ),
               const Text(
-                'Describe your project',
+                'Describe your project (*).',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(
@@ -87,25 +87,43 @@ class ProjectPostStep3PageState extends State<ProjectPostStep3Page> {
               ),
               Align(
                 alignment: Alignment.bottomRight,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (!_erro) {
-                      String description = _describe.text.isEmpty
-                          ? 'Students are looking for\n\t\t-Clear expectation about your project or deliverables\n\t\t-The skills required for your project\n\t\t-Detail about your project'
-                          : _describe.text;
-                      widget.box.putIfAbsent('description', () => description);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProjectPostStep4Page(
-                            box: widget.box,
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(shape: const RoundedRectangleBorder()),
-                  child: const Text('Review your post'),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        Navigator.of(context).pop(true);
+                      },
+                      style: ElevatedButton.styleFrom(shape:  RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                      child: const Text('Back'),
+                    ),
+                    SizedBox(width: 5,),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (!_erro) {
+                          String description = _describe.text.isEmpty
+                              ? 'Students are looking for\n\t\t-Clear expectation about your project or deliverables\n\t\t-The skills required for your project\n\t\t-Detail about your project'
+                              : _describe.text;
+                          if(widget.box.containsKey('description')){
+                            widget.box['description'] = description;
+                          }
+                          else{
+                            widget.box.putIfAbsent('description', () => description);
+                          }
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProjectPostStep4Page(
+                                box: widget.box,
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius:  BorderRadius.circular(15))),
+                      child: const Text('Review your post'),
+                    ),
+                  ],
                 ),
               )
             ],

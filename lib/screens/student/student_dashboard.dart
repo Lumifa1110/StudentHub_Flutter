@@ -83,7 +83,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
       );
 
       final List<dynamic> responseDecode = jsonDecode(response.body)['result'];
-
+      print(responseDecode[1]['project']['status']);
       for (int i = 0; i < responseDecode.length; i++) {
         if (responseDecode[i]['project']['typeFlag'] == 1) {
           _responseWorkingTab.add(responseDecode[i]);

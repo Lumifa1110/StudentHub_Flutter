@@ -36,3 +36,13 @@ class AppColor {
     }
     return Colors.blue;
  }
+
+Color typeFlagColors(int status){
+  if(status == 0){
+    return Colors.green;
+  }
+  if(status == 1){
+    return Colors.orange;
+  }
+  return Colors.grey;
+}
