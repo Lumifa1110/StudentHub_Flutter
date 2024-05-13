@@ -71,59 +71,57 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
                   'How long will your project take?',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: AppFonts.h3FontSize),
                 ),
-                Container(
-                  child:Column(
-                    children: [
-                      ListTile(
-                        title: const Text('Less Than 1 Month', style: TextStyle(fontSize: 14)),
-                        leading: Radio(
-                          value: 0, // Set value to 3
-                          groupValue: _isChecked,
-                          onChanged: (value) {
-                            setState(() {
-                              _isChecked = value as int;
-                            });
-                          },
-                        ),
+                Column(
+                  children: [
+                    ListTile(
+                      title: const Text('Less Than 1 Month', style: TextStyle(fontSize: 14)),
+                      leading: Radio(
+                        value: 0, // Set value to 3
+                        groupValue: _isChecked,
+                        onChanged: (value) {
+                          setState(() {
+                            _isChecked = value as int;
+                          });
+                        },
                       ),
-                      ListTile(
-                        title: const Text('1 to 3 months', style: TextStyle(fontSize: 14)),
-                        leading: Radio(
-                          value: 1, // Set value to 6
-                          groupValue: _isChecked,
-                          onChanged: (value) {
-                            setState(() {
-                              _isChecked = value as int;
-                            });
-                          },
-                        ),
+                    ),
+                    ListTile(
+                      title: const Text('1 to 3 months', style: TextStyle(fontSize: 14)),
+                      leading: Radio(
+                        value: 1, // Set value to 6
+                        groupValue: _isChecked,
+                        onChanged: (value) {
+                          setState(() {
+                            _isChecked = value as int;
+                          });
+                        },
                       ),
-                      ListTile(
-                        title: const Text('3 to 6 months', style: TextStyle(fontSize: 14)),
-                        leading: Radio(
-                          value: 2, // Set value to 6
-                          groupValue: _isChecked,
-                          onChanged: (value) {
-                            setState(() {
-                              _isChecked = value as int;
-                            });
-                          },
-                        ),
+                    ),
+                    ListTile(
+                      title: const Text('3 to 6 months', style: TextStyle(fontSize: 14)),
+                      leading: Radio(
+                        value: 2, // Set value to 6
+                        groupValue: _isChecked,
+                        onChanged: (value) {
+                          setState(() {
+                            _isChecked = value as int;
+                          });
+                        },
                       ),
-                      ListTile(
-                        title: const Text('More than 6 months', style: TextStyle(fontSize: 14)),
-                        leading: Radio(
-                          value: 3, // Set value to 6
-                          groupValue: _isChecked,
-                          onChanged: (value) {
-                            setState(() {
-                              _isChecked = value as int;
-                            });
-                          },
-                        ),
+                    ),
+                    ListTile(
+                      title: const Text('More than 6 months', style: TextStyle(fontSize: 14)),
+                      leading: Radio(
+                        value: 3, // Set value to 6
+                        groupValue: _isChecked,
+                        onChanged: (value) {
+                          setState(() {
+                            _isChecked = value as int;
+                          });
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 const SizedBox(
                   height: 20,
@@ -159,10 +157,11 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
                         onPressed: () async {
                           Navigator.of(context).pop(true);
                         },
-                        style: ElevatedButton.styleFrom(shape:  RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
                         child: const Text('Back'),
                       ),
-                      SizedBox(width: 5,),
+                      const SizedBox(width: 5),
                       ElevatedButton(
                         onPressed: () {
                           if (_quantityStudent.text.isEmpty) {
@@ -173,10 +172,9 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
                               if (_quantityStudent.text.isNotEmpty) {
                                 try {
                                   int quantity = int.parse(_quantityStudent.text);
-                                  if(widget.box.containsKey('quantityStudent')){
+                                  if (widget.box.containsKey('quantityStudent')) {
                                     widget.box['quantityStudent'] = quantity;
-                                  }
-                                  else{
+                                  } else {
                                     widget.box.putIfAbsent('quantityStudent', () => quantity);
                                   }
                                 } catch (e) {
@@ -188,10 +186,9 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
                                   return; // Return to prevent navigation if parsing fails
                                 }
                               }
-                              if(widget.box.containsKey('projectScore')){
+                              if (widget.box.containsKey('projectScore')) {
                                 widget.box['projectScore'] = _isChecked;
-                              }
-                              else{
+                              } else {
                                 widget.box.putIfAbsent('projectScore', () => _isChecked);
                               }
                               Navigator.push(
@@ -205,7 +202,8 @@ class ProjectPostStep2PageState extends State<ProjectPostStep2Page> {
                             }
                           }
                         },
-                        style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
                         child: const Text('Next: Description'),
                       ),
                     ],

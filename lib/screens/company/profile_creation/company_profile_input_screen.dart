@@ -195,7 +195,7 @@ class CompanySizeTile extends StatelessWidget {
   final ValueChanged<CompanySize?> onChanged;
 
   const CompanySizeTile({
-    Key? key,
+    super.key,
     required this.title,
     required this.value,
     required this.companySizeState,

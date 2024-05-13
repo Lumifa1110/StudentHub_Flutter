@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/utils/colors.dart';
@@ -52,9 +51,7 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
         },
         body: jsonEncode(data),
       );
-      if (response.statusCode == 200 || response.statusCode == 201) {
-
-      }
+      if (response.statusCode == 200 || response.statusCode == 201) {}
     } catch (e) {
       print(e);
     }
@@ -286,7 +283,9 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                 color: Theme.of(context).colorScheme.primaryContainer,
                 child: Text(
                   'Dear ${widget.response['receiver']['fullname']}.\n ${widget.response['content']}. \n   Your receipt of this offer is a result of your hard work and expertise in the field you study and work in. The company has seen potential and drive in you and believes that you will make a positive contribution to their ${widget.response['proposal']['project']['title']}project.\n   If you wish to join this project, we encourage you to accept the offer promptly. This will open up opportunities for you to develop your skills, build relationships in the industry, and contribute to an exciting and meaningful project.\n   If you have any questions about the offer or the working process, please do not hesitate to contact us. We are more than happy to assist you and provide any necessary information to help you make the most informed decision.\n   We look forward to working with you in the near future!\n   Best regards,\n     ${widget.response['sender']['fullname']} ',
-                  style: TextStyle(fontSize: AppFonts.h3FontSize, color: Theme.of(context).colorScheme.onSurface),
+                  style: TextStyle(
+                      fontSize: AppFonts.h3FontSize,
+                      color: Theme.of(context).colorScheme.onSurface),
                 ),
               ),
               const SizedBox(height: 30),
@@ -353,7 +352,11 @@ class _ViewOfferScreenState extends State<ViewOfferScreen> {
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> NotificationScreen()), (route) => false);
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => const NotificationScreen()),
+                                        (route) => false);
                                     acceptOffer();
                                   },
                                   child: const Text('OK'),

@@ -84,7 +84,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
 
       final List<dynamic> responseDecode = jsonDecode(response.body)['result'];
       for (int i = 0; i < responseDecode.length; i++) {
-        if (responseDecode[i]['project']['typeFlag'] == 1&& responseDecode[i]['statusFlag'] == 3) {
+        if (responseDecode[i]['project']['typeFlag'] == 1 && responseDecode[i]['statusFlag'] == 3) {
           _responseWorkingTab.add(responseDecode[i]);
         }
       }
@@ -104,7 +104,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
       final List<dynamic> responseDecode = jsonDecode(response.body)['result'];
 
       for (int i = 0; i < responseDecode.length; i++) {
-        if (responseDecode[i]['project']['typeFlag'] == 2 && responseDecode[i]['status'] ==3) {
+        if (responseDecode[i]['project']['typeFlag'] == 2 && responseDecode[i]['status'] == 3) {
           _responseArchivedTab.add(responseDecode[i]);
         }
       }
@@ -486,7 +486,7 @@ class _OptionItemAllProjectScreenState extends State<OptionItemAllProjectScreen>
                       borderRadius: BorderRadius.circular(10)),
                   child: Center(
                       child: Text(
-                    '${statusFlagConversed(widget.response['statusFlag'])}',
+                    statusFlagConversed(widget.response['statusFlag']),
                     style: const TextStyle(color: whiteTextColor),
                   ))),
             ],

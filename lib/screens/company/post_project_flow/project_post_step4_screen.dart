@@ -168,7 +168,9 @@ class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
                       )
                     ],
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Container(
                     width: MediaQuery.of(context).size.width,
                     child: Row(
@@ -179,15 +181,21 @@ class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
                           onPressed: () async {
                             Navigator.of(context).pop(true);
                           },
-                          style: ElevatedButton.styleFrom(shape:  RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                          style: ElevatedButton.styleFrom(
+                              shape:
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
                           child: const Text('Back'),
                         ),
-                        SizedBox(width: 5,),
+                        const SizedBox(
+                          width: 5,
+                        ),
                         ElevatedButton(
                           onPressed: () async {
                             postProject(context);
                           },
-                          style: ElevatedButton.styleFrom(shape:  RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                          style: ElevatedButton.styleFrom(
+                              shape:
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
                           child: const Text('Post job'),
                         ),
                       ],

@@ -2,18 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:studenthub/utils/colors.dart';
 import 'package:studenthub/utils/font.dart';
 
-class Dialog_ extends StatelessWidget {
-
-  final Future<void> Function(dynamic idProject,{int currentTab}) f_function;
+class DialogAlert extends StatelessWidget {
+  final Future<void> Function(dynamic idProject, {int currentTab}) fFunction;
   final String titleDialog;
   final dynamic project;
   final String question;
   final String textAcceptButton;
   final int currentTab;
 
-  const Dialog_({super.key, required this.f_function, required this.titleDialog, this.project, required this.question, required this.textAcceptButton, required this.currentTab});
-
-
+  const DialogAlert(
+      {super.key,
+      required this.fFunction,
+      required this.titleDialog,
+      this.project,
+      required this.question,
+      required this.textAcceptButton,
+      required this.currentTab});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +28,7 @@ class Dialog_ extends StatelessWidget {
         borderRadius: BorderRadius.circular(6.0),
       ),
       title: Text(
-      titleDialog,
+        titleDialog,
         style: const TextStyle(
           color: AppColor.primary,
           fontSize: AppFonts.h2FontSize,
@@ -32,16 +36,13 @@ class Dialog_ extends StatelessWidget {
         ),
         textAlign: TextAlign.center,
       ),
-      content:  Column(
+      content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(
             question,
-            style: const TextStyle(
-                color: AppFonts.primaryColor,
-                fontSize: AppFonts.h3FontSize
-            ),
+            style: const TextStyle(color: AppFonts.primaryColor, fontSize: AppFonts.h3FontSize),
             textAlign: TextAlign.left,
           ),
         ],
@@ -62,7 +63,7 @@ class Dialog_ extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                f_function(project, currentTab: currentTab);
+                fFunction(project, currentTab: currentTab);
                 Navigator.pop(context);
               },
               child: Align(

@@ -64,14 +64,16 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
       headers: {'Authorization': 'Bearer $token'},
     );
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CompanyDashboardScreen(
-            currentTab: currentTab != null ? currentTab : 0,
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CompanyDashboardScreen(
+              currentTab: currentTab ?? 0,
+            ),
           ),
-        ),
-      );
+        );
+      }
     }
   }
 
@@ -638,13 +640,13 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                             context: context,
                             builder: (BuildContext context) {
                               // return an AlertDialog
-                              return Dialog_(
+                              return DialogAlert(
                                 titleDialog: 'remove posting',
                                 textAcceptButton: 'Yes',
                                 question: 'Do you want to remove the project?',
                                 project: widget.project['id'],
                                 currentTab: widget.currentTab,
-                                f_function: widget.removeAProject,
+                                fFunction: widget.removeAProject,
                               );
                             },
                           );
@@ -678,14 +680,14 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                             context: context,
                                             builder: (BuildContext context) {
                                               // return an AlertDialog
-                                              return Dialog_(
+                                              return DialogAlert(
                                                 titleDialog: 'Start working',
                                                 textAcceptButton: 'Yes',
                                                 question:
                                                     'Do you want to start working the project?',
                                                 currentTab: widget.currentTab,
                                                 project: widget.project,
-                                                f_function: widget.workingProject,
+                                                fFunction: widget.workingProject,
                                               );
                                             },
                                           );
@@ -705,13 +707,13 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                       context: context,
                                       builder: (BuildContext context) {
                                         // return an AlertDialog
-                                        return Dialog_(
+                                        return DialogAlert(
                                           titleDialog: 'Closed a project',
                                           textAcceptButton: 'Yes',
                                           question: 'Do you want to close the project?',
                                           currentTab: widget.currentTab,
                                           project: widget.project,
-                                          f_function: widget.archivedProject,
+                                          fFunction: widget.archivedProject,
                                         );
                                       },
                                     );
@@ -833,7 +835,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                               : widget.project['typeFlag'] == 1
                                   ? 'Working'
                                   : 'Archived',
-                          style: TextStyle(color: whiteTextColor),
+                          style: const TextStyle(color: whiteTextColor),
                         ),
                       ),
                     )

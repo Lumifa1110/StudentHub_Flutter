@@ -94,20 +94,20 @@ class ProjectPostStep3PageState extends State<ProjectPostStep3Page> {
                       onPressed: () async {
                         Navigator.of(context).pop(true);
                       },
-                      style: ElevatedButton.styleFrom(shape:  RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
                       child: const Text('Back'),
                     ),
-                    SizedBox(width: 5,),
+                    const SizedBox(width: 5),
                     ElevatedButton(
                       onPressed: () {
                         if (!_erro) {
                           String description = _describe.text.isEmpty
                               ? 'Students are looking for\n\t\t-Clear expectation about your project or deliverables\n\t\t-The skills required for your project\n\t\t-Detail about your project'
                               : _describe.text;
-                          if(widget.box.containsKey('description')){
+                          if (widget.box.containsKey('description')) {
                             widget.box['description'] = description;
-                          }
-                          else{
+                          } else {
                             widget.box.putIfAbsent('description', () => description);
                           }
                           Navigator.push(
@@ -120,7 +120,8 @@ class ProjectPostStep3PageState extends State<ProjectPostStep3Page> {
                           );
                         }
                       },
-                      style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius:  BorderRadius.circular(15))),
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
                       child: const Text('Review your post'),
                     ),
                   ],
