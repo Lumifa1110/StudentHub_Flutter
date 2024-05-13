@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,7 +37,7 @@ class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
         body: jsonEncode(modelDataProjectJson),
       );
       if (response.statusCode == 201) {
-        Navigator.pushReplacementNamed(context, '/company/dashboard');
+        if (context.mounted) Navigator.pushReplacementNamed(context, '/company/dashboard');
       } else {
         print(response.body);
       }
@@ -168,10 +167,10 @@ class _ProjectPostStep4PageState extends State<ProjectPostStep4Page> {
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
-                  Container(
+                  SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Row(
                       // crossAxisAlignment: CrossAxisAlignment.end,

@@ -57,135 +57,138 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
 
   Future<void> showSearchHistory(BuildContext context) async {
     await getHistory();
-    showModalBottomSheet(
-      isDismissible: false,
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        final double screenHeight = MediaQuery.of(context).size.height;
-        final double appBarHeight = AppBar().preferredSize.height;
-        final double bottomSheetHeight = screenHeight - appBarHeight - 40;
-        return Container(
-          height: bottomSheetHeight,
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 36,
-                    width: 36,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Theme.of(context).colorScheme.surface,
-                      border: Border.all(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        width: 2.0,
-                      ),
-                    ),
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () {
-                        _searchController.clear();
-                        Navigator.pop(context, true);
-                      },
-                      icon: Icon(
-                        Icons.close,
-                        size: 18,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: 50,
-                alignment: Alignment.center,
-                padding: const EdgeInsets.only(left: 13),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: Theme.of(context).colorScheme.onSurface, width: 2.0),
-                ),
-                child: Row(
+    if (context.mounted) {
+      showModalBottomSheet(
+        isDismissible: false,
+        context: context,
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          final double screenHeight = MediaQuery.of(context).size.height;
+          final double appBarHeight = AppBar().preferredSize.height;
+          final double bottomSheetHeight = screenHeight - appBarHeight - 40;
+          return Container(
+            height: bottomSheetHeight,
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Icon(Icons.search),
-                    Expanded(
-                      child: TextField(
-                        textAlignVertical: TextAlignVertical.center,
-                        controller: _searchController,
-                        onChanged: widget.onChanged,
-                        onSubmitted: _onSubmitted,
-                        style: TextStyle(
+                    Container(
+                      height: 36,
+                      width: 36,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Theme.of(context).colorScheme.surface,
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          width: 2.0,
+                        ),
+                      ),
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () {
+                          _searchController.clear();
+                          Navigator.pop(context, true);
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          size: 18,
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
-                        decoration: InputDecoration(
-                          hintText: 'Search for projects',
-                          hintStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontSize: AppFonts.h2FontSize,
-                              fontWeight: FontWeight.w400),
-                          border: InputBorder.none,
-                          isCollapsed: true,
-                        ),
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
-                    if (_searchController.text.isNotEmpty)
-                      IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          // Clear the text when the 'x' button is pressed
-                          _searchController.clear();
-                          widget.onChanged('');
-                        },
-                      ),
                   ],
                 ),
-              ),
-              //Display search history results here
-              const SizedBox(
-                height: 20,
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: history.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      color: Theme.of(context).colorScheme.primaryContainer,
-                      margin: const EdgeInsets.only(
-                        bottom: 10,
-                      ),
-                      child: ListTile(
-                        title: Text(
-                          history[index],
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  height: 50,
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.only(left: 13),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(color: Theme.of(context).colorScheme.onSurface, width: 2.0),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.search),
+                      Expanded(
+                        child: TextField(
+                          textAlignVertical: TextAlignVertical.center,
+                          controller: _searchController,
+                          onChanged: widget.onChanged,
+                          onSubmitted: _onSubmitted,
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onSurface,
-                            fontSize: AppFonts.h2FontSize,
-                            fontWeight: FontWeight.w400,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: 'Search for projects',
+                            hintStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontSize: AppFonts.h2FontSize,
+                                fontWeight: FontWeight.w400),
+                            border: InputBorder.none,
+                            isCollapsed: true,
                           ),
                         ),
-                        onTap: () {
-                          _searchController.text = history[index];
-                          _onSubmitted(_searchController.text);
-                          // Navigator.pop(context, true); // Close the bottom sheet
-                        },
                       ),
-                    );
-                  },
+                      if (_searchController.text.isNotEmpty)
+                        IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            // Clear the text when the 'x' button is pressed
+                            _searchController.clear();
+                            widget.onChanged('');
+                          },
+                        ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        );
-      },
-    ); // Load search history before displaying
+                //Display search history results here
+                const SizedBox(
+                  height: 20,
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: history.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                        margin: const EdgeInsets.only(
+                          bottom: 10,
+                        ),
+                        child: ListTile(
+                          title: Text(
+                            history[index],
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              fontSize: AppFonts.h2FontSize,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          onTap: () {
+                            _searchController.text = history[index];
+                            _onSubmitted(_searchController.text);
+                            // Navigator.pop(context, true); // Close the bottom sheet
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
+    // Load search history before displaying
   }
 
   @override

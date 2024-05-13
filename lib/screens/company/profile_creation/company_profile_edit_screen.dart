@@ -34,6 +34,7 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
   Future<void> postCompanyProfile() async {
     // final prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString('token');
+    // ignore: non_constant_identifier_names
     final company_profile = _prefs.getString('company_profile');
     final companyId = jsonDecode(company_profile!)['id'];
     print(token);
@@ -59,21 +60,24 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
       // Handle successful response
       final updatedCompanyProfile = jsonDecode(response.body)['result'];
       await _prefs.setString('company_profile', jsonEncode(updatedCompanyProfile));
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text('Success'),
-          content: const Text('Your company profile updated successfully.'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Đóng dialog
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Success'),
+            content: const Text('Your company profile updated successfully.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Đóng dialog
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+
       print('Company profile posted successfully');
     } else {
       // Handle error response
@@ -231,7 +235,7 @@ class CompanySizeTile extends StatelessWidget {
   final ValueChanged<CompanySize?> onChanged;
 
   const CompanySizeTile({
-    Key? key,
+    super.key,
     required this.title,
     required this.value,
     required this.companySizeState,

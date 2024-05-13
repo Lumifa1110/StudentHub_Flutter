@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields
+
 import 'dart:convert';
 
 // import 'package:flutter/cupertino.dart';
@@ -143,11 +145,13 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
         );
       }
     } else {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/company/dashboard',
-        (route) => route.settings.name == '/home',
-      );
+      if (mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/company/dashboard',
+          (route) => route.settings.name == '/home',
+        );
+      }
     }
   }
 

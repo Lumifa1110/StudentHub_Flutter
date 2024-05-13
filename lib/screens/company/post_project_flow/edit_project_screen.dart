@@ -27,6 +27,7 @@ class EditProjectScreen extends StatefulWidget {
 class _EditProjectScreenState extends State<EditProjectScreen> {
   late bool isLoading = true;
   late SharedPreferences _prefs;
+  // ignore: prefer_typing_uninitialized_variables
   late final _token;
   late TextEditingController _titleProject;
   late TextEditingController _quantityStudent;
@@ -51,14 +52,16 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
     );
     if (response.statusCode == 200) {
       print(widget.currentTab);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CompanyDashboardScreen(
-            currentTab: widget.currentTab,
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CompanyDashboardScreen(
+              currentTab: widget.currentTab,
+            ),
           ),
-        ),
-      );
+        );
+      }
     } else {
       print('erro');
     }
@@ -210,7 +213,8 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                                 context: context,
                                 builder: (_) => AlertDialog(
                                   title: const Text('Success'),
-                                  content: const Text('You have successfully saved your edit project!'),
+                                  content:
+                                      const Text('You have successfully saved your edit project!'),
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () {

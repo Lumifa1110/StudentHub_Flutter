@@ -27,35 +27,39 @@ class StateForgotPasswordScreen extends State<ForgotPasswordScreen> {
         body: jsonEncode(emailForgotPassword),
       );
       if (response.statusCode == 201) {
-        showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: const Text('Success'),
-            content: const Text('We have send a new password to your email.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).popUntil(ModalRoute.withName(Navigator.defaultRouteName));
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: const Text('Success'),
+              content: const Text('We have send a new password to your email.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).popUntil(ModalRoute.withName(Navigator.defaultRouteName));
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
       } else {
-        showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: const Text('Error'),
-            content: const Text('The email you just entered does not exist. Please try again.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: const Text('Error'),
+              content: const Text('The email you just entered does not exist. Please try again.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
       }
     } catch (e) {
       print(e);

@@ -52,10 +52,12 @@ class _CompanyProfileInputScreenState extends State<CompanyProfileInputScreen> {
       List<dynamic> roles = userData['roles'];
       List<String> rolesStringList = roles.map((role) => role.toString()).toList();
       await prefs.setStringList('roles', rolesStringList);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const CompanyWelcomeScreen()),
-      );
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const CompanyWelcomeScreen()),
+        );
+      }
     }
   }
 

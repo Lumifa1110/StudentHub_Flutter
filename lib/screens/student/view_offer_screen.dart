@@ -24,6 +24,7 @@ class ViewOfferScreen extends StatefulWidget {
 class _ViewOfferScreenState extends State<ViewOfferScreen> {
   late bool isStudent = true;
   late SharedPreferences _prefs;
+  // ignore: prefer_typing_uninitialized_variables
   late final _token;
 
   Future<void> _loadingScreen() async {

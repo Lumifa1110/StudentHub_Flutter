@@ -87,7 +87,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
 
       if (role == 0) {
         if (studentProfile == 'null') {
-          Navigator.pushReplacementNamed(context, '/student');
+          if (mounted) Navigator.pushReplacementNamed(context, '/student');
           return; // Stop execution if navigating away
         }
         setState(() {

@@ -150,11 +150,13 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
         }
       }
     } else {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/student/dashboard',
-        (route) => route.settings.name == '/home',
-      );
+      if (mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/student/dashboard',
+          (route) => route.settings.name == '/home',
+        );
+      }
     }
   }
 
@@ -650,8 +652,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                               );
                             },
                           );
-
-                          Navigator.pop(context);
+                          if (context.mounted) Navigator.pop(context, true);
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -691,7 +692,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                               );
                                             },
                                           );
-                                          Navigator.pop(context, true);
+                                          if (context.mounted) Navigator.pop(context, true);
                                         },
                                         style: ElevatedButton.styleFrom(
                                           shape: RoundedRectangleBorder(
@@ -717,7 +718,7 @@ class OptionProjectCompanyState extends State<OptionProjectCompany> {
                                         );
                                       },
                                     );
-                                    Navigator.pop(context);
+                                    if (context.mounted) Navigator.pop(context, true);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(

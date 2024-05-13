@@ -78,7 +78,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
       // Check role and profile,
       if (role == 0) {
         if (studentProfile == 'null') {
-          Navigator.pushReplacementNamed(context, '/student');
+          if (mounted) Navigator.pushReplacementNamed(context, '/student');
           return;
         }
         setState(() {
@@ -86,7 +86,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
         });
       } else {
         if (companyProfile == 'null') {
-          Navigator.pushReplacementNamed(context, '/company');
+          if (mounted) Navigator.pushReplacementNamed(context, '/company');
           return;
         }
         setState(() {
@@ -264,7 +264,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
       setState(() {
         isLoading = true;
       });
-      Navigator.pop(context, true);
+      if (mounted) Navigator.pop(context, true);
       _loadScreen();
     }
   }

@@ -307,7 +307,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
               await _prefs.remove(key);
             }
           }
-          Navigator.pushReplacementNamed(context, '/signin');
+          if (mounted) Navigator.pushReplacementNamed(context, '/signin');
         } else {
           // Xử lý lỗi nếu cần
           print('Logout failed: ${response.body}');
