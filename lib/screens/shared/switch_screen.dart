@@ -300,7 +300,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
           },
         );
 
-        if (response.statusCode == 201) {
+        if (response.statusCode == 201 || response.statusCode == 200) {
           final keys = _prefs.getKeys();
           for (final key in keys) {
             if (key != 'signed_in_accounts') {

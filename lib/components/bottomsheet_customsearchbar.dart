@@ -48,8 +48,6 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
     print(searchText);
     saveSearchHistory(searchText);
     widget.onSubmitted(searchText);
-
-    // Lưu lịch sử tìm kiếm khi submit
   }
 
   Future<void> getHistory() async {
@@ -222,7 +220,10 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             const SizedBox(width: 10),
             Text(
               'Search for projects',
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w400),
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400),
             ),
           ],
         ),

@@ -12,6 +12,7 @@ import 'package:studenthub/models/company_model.dart';
 import 'package:studenthub/screens/shared/project_detail_screen.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:studenthub/utils/font.dart';
 
 class SearchListScreen extends StatefulWidget {
   final String searchQuery;
@@ -60,7 +61,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
     _scrollController = ScrollController();
     _httpClient = http.Client();
     // Initialize filteredProjects with all projects initially
-    _loadScreen();
+    _loadScreen(_searchQuery);
     _scrollController.addListener(_scrollListener);
   }
 
@@ -76,7 +77,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
     }
   }
 
-  Future<void> _loadScreen() async {
+  Future<void> _loadScreen(String searchText) async {
     try {
       _page = 1;
       _prefs = await SharedPreferences.getInstance();
@@ -97,7 +98,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
           isStudent = false;
         });
       }
-
+      _searchQuery = searchText;
       await _loadFilteredProject(token!);
 
       if (isStudent) {
@@ -122,7 +123,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
       _proposalsController.clear();
       selectedProjectScope = null;
       _searchQuery = '';
-      _loadScreen();
+      _loadScreen(_searchQuery);
       Navigator.pop(context);
     });
   }
@@ -138,7 +139,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
       'page': _page.toString(),
       'perPage': _perPage.toString(),
     };
-
+    filteredProjects.clear();
     try {
       final uri = Uri.https('api.studenthub.dev', '/api/project', queryParams);
       final response = await _httpClient.get(
@@ -263,7 +264,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
           setState(() {
             isLoading = true;
           });
-          _loadScreen();
+          _loadScreen('');
         },
       ),
       body: Column(
@@ -282,7 +283,10 @@ class _SearchListScreenState extends State<SearchListScreen> {
                   ),
                   onSubmitted: (query) => {
                     Navigator.pop(context, true),
-                    _loadScreen(),
+                    setState(() {
+                      isLoading = true;
+                    }),
+                    _loadScreen(query),
                   },
                   searchText: _searchQuery,
                 ),
@@ -399,7 +403,9 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                           height: 40,
                                           padding: const EdgeInsets.all(0),
                                           decoration: BoxDecoration(
-                                            border: Border.all(color: Theme.of(context).colorScheme.onSurface, width: 2.0),
+                                            border: Border.all(
+                                                color: Theme.of(context).colorScheme.onSurface,
+                                                width: 2.0),
                                             color: Theme.of(context).colorScheme.surface,
                                             boxShadow: [
                                               BoxShadow(
@@ -432,7 +438,9 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                           height: 40,
                                           padding: const EdgeInsets.all(0),
                                           decoration: BoxDecoration(
-                                            border: Border.all(color: Theme.of(context).colorScheme.onSurface, width: 2.0),
+                                            border: Border.all(
+                                                color: Theme.of(context).colorScheme.onSurface,
+                                                width: 2.0),
                                             color: Theme.of(context).colorScheme.surface,
                                             boxShadow: [
                                               BoxShadow(
@@ -446,7 +454,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
                                               setState(() {
                                                 isLoading = true;
                                               });
-                                              _loadScreen();
+                                              _loadScreen('');
                                               Navigator.pop(context);
                                             },
                                             style: ButtonStyle(
@@ -473,11 +481,8 @@ class _SearchListScreenState extends State<SearchListScreen> {
                           },
                         );
                       },
-                      icon: Icon(
-                        Icons.filter_alt,
-                        size: 30,
-                        color: Theme.of(context).colorScheme.onSurface
-                      ),
+                      icon: Icon(Icons.filter_alt,
+                          size: 30, color: Theme.of(context).colorScheme.onSurface),
                     ),
                   ),
                 ),
@@ -492,36 +497,46 @@ class _SearchListScreenState extends State<SearchListScreen> {
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               child: isLoading
                   ? const Center(child: CircularProgressIndicator())
-                  : ListView.builder(
-                      controller: _scrollController,
-                      itemCount: filteredProjects.length + (_loadingMore ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        if (index == filteredProjects.length && _loadingMore) {
-                          // Loading indicator for pagination
-                          return const Center(child: CircularProgressIndicator());
-                        } else {
-                          final project = filteredProjects[index];
-                          return CustomProjectItem(
-                            project: project,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProjectDetailScreen(
-                                    project: project,
-                                  ),
-                                ),
+                  : filteredProjects.isEmpty
+                      ? Center(
+                          child: Text(
+                            'Could Not Find',
+                            style: TextStyle(
+                              fontSize: AppFonts.h2FontSize,
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                        )
+                      : ListView.builder(
+                          controller: _scrollController,
+                          itemCount: filteredProjects.length + (_loadingMore ? 1 : 0),
+                          itemBuilder: (context, index) {
+                            if (index == filteredProjects.length && _loadingMore) {
+                              // Loading indicator for pagination
+                              return const Center(child: CircularProgressIndicator());
+                            } else {
+                              final project = filteredProjects[index];
+                              return CustomProjectItem(
+                                project: project,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ProjectDetailScreen(
+                                        project: project,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                canFavorite: isStudent,
+                                isFavorite: isFavoriteProject(project),
+                                onFavoriteToggle: (isFavorite) {
+                                  updateFavoriteProject(project, isFavorite);
+                                },
                               );
-                            },
-                            canFavorite: isStudent,
-                            isFavorite: isFavoriteProject(project),
-                            onFavoriteToggle: (isFavorite) {
-                              updateFavoriteProject(project, isFavorite);
-                            },
-                          );
-                        }
-                      },
-                    ),
+                            }
+                          },
+                        ),
             ),
           ),
         ],

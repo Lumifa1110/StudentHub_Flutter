@@ -350,7 +350,10 @@ class _ProjectListScreenState extends State<ProjectListScreen> with AutomaticKee
                       itemBuilder: (context, index) {
                         if (index == allProject.length && _loadingMore) {
                           // Loading indicator for pagination
-                          return const Center(child: CircularProgressIndicator());
+                          return const Padding(
+                            padding: EdgeInsets.only(bottom: 15.0),
+                            child: Center(child: CircularProgressIndicator()),
+                          );
                         } else {
                           final project = allProject[index];
                           return CustomProjectItem(

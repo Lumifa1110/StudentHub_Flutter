@@ -38,11 +38,25 @@ class _SigninScreenState extends State<SigninScreen> {
     prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     if (token != null) {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
+      final Map<String, dynamic> response = await AuthService.getUserInfo();
+
+      // Check if the response indicates Unauthorized
+      if (response['errorDetails'] == 'Unauthorized') {
+        // Token is invalid, clear token and proceed to login screen
+        final keys = prefs.getKeys();
+        for (final key in keys) {
+          if (key != 'signed_in_accounts') {
+            await prefs.remove(key);
+          }
+        }
+      } else {
+        // Token is valid, navigate to HomeScreen
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+        }
       }
     }
   }
