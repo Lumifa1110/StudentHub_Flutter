@@ -87,8 +87,6 @@ class _SwitchScreenState extends State<SwitchScreen> {
     }
   }
 
-  void showIsChanging() {}
-
   void _navigateToProfile() {
     final currole = _prefs.getInt('current_role');
     if (currole == 0) {
@@ -425,6 +423,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
               child: _roles.isNotEmpty && _currentRole != null
                   ? SingleChildScrollView(
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           for (var role in _roles)
                             CardSwitchAccount(
@@ -433,6 +432,28 @@ class _SwitchScreenState extends State<SwitchScreen> {
                               accountRole: role,
                               isSelected: role == _currentRole.toString(),
                               onTap: () => _handleRoleSelection(role),
+                            ),
+                          if (_roles.length == 1) // Kiểm tra nếu chỉ có một vai trò
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(0),
+                                ),
+                              ),
+                              onPressed: () {
+                                if (_roles.contains('0')) {
+                                  _roles.add('1');
+                                } else {
+                                  _roles.add('0');
+                                }
+                                setState(() {
+                                  _prefs.setStringList('roles', _roles);
+                                });
+                              },
+                              child: Text(
+                                'Add Role',
+                                style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                              ),
                             ),
                         ],
                       ),
