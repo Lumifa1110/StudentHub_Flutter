@@ -3,6 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:studenthub/models/index.dart';
 import 'package:studenthub/utils/font.dart';
+import 'package:studenthub/screens/index.dart';
+import 'package:studenthub/components/index.dart';
 
 class InterviewItemSecondary extends StatefulWidget {
   final Interview interview;
@@ -68,8 +70,7 @@ class _InterviewItemState extends State<InterviewItemSecondary> {
                           alignment: Alignment.centerLeft,
                           child: Text(widget.interview.title,
                               style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.primary,
+                                  color: Theme.of(context).colorScheme.primary,
                                   fontSize: AppFonts.h2FontSize,
                                   fontWeight: FontWeight.w500)))),
                   Expanded(
@@ -149,6 +150,24 @@ class _InterviewItemState extends State<InterviewItemSecondary> {
                                     fontWeight: FontWeight.w500)),
                           ]))
                 ]),
+                Row(children: [
+                  Expanded(
+                      flex: 1,
+                      child: Container(
+                          alignment: Alignment.centerRight,
+                          child: ButtonSimple(
+                            label: 'Join',
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => InterviewScreen(
+                                          conferenceId: widget.interview
+                                              .meetingRoom!.meetingRoomId)));
+                            },
+                            isButtonEnabled: true,
+                          ))),
+                ])
               ])))
     ]);
   }
