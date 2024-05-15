@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/chat_flow/conversation_item.dart';
+import 'package:studenthub/components/chat_flow/index.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/components/textfield/search_bar.dart';
 
@@ -20,7 +21,8 @@ class MessageListScreen extends StatefulWidget {
   State<MessageListScreen> createState() => _MessageListScreenState();
 }
 
-class _MessageListScreenState extends State<MessageListScreen> with AutomaticKeepAliveClientMixin {
+class _MessageListScreenState extends State<MessageListScreen>
+    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -29,18 +31,28 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
   late List<Message> messages;
   late List<Message> conversationList;
   late List<int> messageCounts;
-  final TextEditingController searchController = TextEditingController();
+  late List<Interview> interviews;
+  late List<Interview> interviewsFiltered;
+  final TextEditingController searchConversationController =
+      TextEditingController();
+  final TextEditingController searchInterviewController =
+      TextEditingController();
+  TabController? tabController;
 
   @override
   void initState() {
     super.initState();
+    tabController = TabController(initialIndex: 0, length: 2, vsync: this);
     loadUserId();
     socketConnect();
     // Filter and sort the messages to get the conversation list
     messages = [];
     conversationList = [];
     messageCounts = [];
+    interviews = [];
+    interviewsFiltered = [];
     fetchMessages();
+    fetchInterviews();
   }
 
   @override
@@ -95,15 +107,44 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
     final Map<String, dynamic> response = await MessageService.getAllMessage();
     if (mounted) {
       setState(() {
-        messages = response['result'].map<Message>((json) => Message.fromJson(json)).toList();
+        messages = response['result']
+            .map<Message>((json) => Message.fromJson(json))
+            .toList();
       });
       filterConversationList();
       getMessageCounts();
     }
   }
 
+  void fetchInterviews() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userIdTemp = prefs.getInt('userid');
+    final Map<String, dynamic> response =
+        await InterviewService.getInterviewByUserId(userIdTemp!);
+    if (mounted) {
+      setState(() {
+        interviews = response['result']
+            .map<Interview>((json) => Interview.fromJson(json))
+            .toList().where((interview) => interview.deletedAt == null).toList();
+        interviewsFiltered = response['result']
+            .map<Interview>((json) => Interview.fromJson(json))
+            .toList().where((interview) => interview.deletedAt == null).toList();
+      });
+    }
+  }
+
+  void filterInterviewList() {
+    setState(() {
+      interviewsFiltered = interviews
+          .where((interview) => interview.title
+              .toLowerCase()
+              .contains(searchInterviewController.text.toLowerCase()))
+          .toList();
+    });
+  }
+
   Future<void> filterConversationList() async {
-    print("Search text: ${searchController.text}");
+    print("Search text: ${searchConversationController.text}");
     // Create a map to store the latest message for each conversation involving user
     if (mounted) {
       final Map<String, Message> conversationsMap = {};
@@ -115,14 +156,17 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
 
         // Check if the message involves user
         if (sender!.id == userId || receiver!.id == userId) {
-          final otherPerson = sender.id == userId ? receiver!.fullname : sender.fullname;
+          final otherPerson =
+              sender.id == userId ? receiver!.fullname : sender.fullname;
 
           // Check if the other person's name matches the search query
-          if (otherPerson.toLowerCase().contains(searchController.text.toLowerCase())) {  
-
+          if (otherPerson
+              .toLowerCase()
+              .contains(searchConversationController.text.toLowerCase())) {
             // Check if the conversation has been added to the map
             if (!conversationsMap.containsKey(otherPerson) ||
-                message.createdAt.isAfter(conversationsMap[otherPerson]!.createdAt)) {
+                message.createdAt
+                    .isAfter(conversationsMap[otherPerson]!.createdAt)) {
               conversationsMap[otherPerson] = message;
             }
           }
@@ -147,8 +191,10 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
     for (final conversation in conversationList) {
       int count = 0;
       for (final message in messages) {
-        if (message.sender!.id == userId && message.receiver!.id == conversation.sender!.id ||
-            message.sender!.id == conversation.sender!.id && message.receiver!.id == userId) {
+        if (message.sender!.id == userId &&
+                message.receiver!.id == conversation.sender!.id ||
+            message.sender!.id == conversation.sender!.id &&
+                message.receiver!.id == userId) {
           count++;
         }
       }
@@ -165,38 +211,101 @@ class _MessageListScreenState extends State<MessageListScreen> with AutomaticKee
     return Scaffold(
       appBar: const AuthAppBar(canBack: false, title: 'Chat'),
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: SingleChildScrollView(
-          child: Container(
-              padding: const EdgeInsets.all(20),
+      body: DefaultTabController(
+        length: 2,
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.only(
+                  top: 20, bottom: 5, left: 20, right: 20),
               child: Column(
                 children: [
-                  CustomSearchBar(controller: searchController, placeholder: 'Search', onChange: filterConversationList),
-                  const SizedBox(height: 30),
                   Container(
-                    alignment: Alignment.centerLeft,
-                    margin: const EdgeInsets.only(bottom: 16),
-                    child: Text(
-                      'Conversations',
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontSize: AppFonts.h2FontSize,
-                          fontWeight: FontWeight.w400),
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                    ),
+                    child: TabBar(
+                      controller: tabController,
+                      unselectedLabelStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: AppFonts.h3FontSize,
+                      ),
+                      indicator: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      indicatorWeight: 0,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      labelColor: Colors.white,
+                      labelStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: AppFonts.h3FontSize,
+                      ),
+                      tabs: const [
+                        Tab(text: 'Conversation'),
+                        Tab(text: 'Interview')
+                      ],
                     ),
                   ),
-                  ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: conversationList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final message = conversationList[index];
-                        final messageCount = messageCounts[index];
-                        return ConversationItem(
-                          message: message,
-                          messageCount: messageCount,
-                        );
-                      }),
                 ],
-              ))),
+              ),
+            ),
+            Flexible(
+              child: TabBarView(
+                controller: tabController,
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: 20, right: 20, left: 20),
+                    child: Column(children: [
+                      CustomSearchBar(
+                          controller: searchConversationController,
+                          placeholder: 'Search user name',
+                          onChange: filterConversationList),
+                      const SizedBox(height: 30),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: conversationList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final message = conversationList[index];
+                            final messageCount = messageCounts[index];
+                            return ConversationItem(
+                              message: message,
+                              messageCount: messageCount,
+                            );
+                          },
+                        ),
+                      ),
+                    ]),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: 20, right: 20, left: 20),
+                    child: Column(children: [
+                      CustomSearchBar(
+                          controller: searchInterviewController,
+                          placeholder: 'Search interview title',
+                          onChange: filterInterviewList),
+                      const SizedBox(height: 30),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: interviewsFiltered.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final interview = interviewsFiltered[index];
+                            return InterviewItemSecondary(interview: interview);
+                          },
+                        ),
+                      ),
+                    ]),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
       bottomNavigationBar: const CustomBottomNavBar(initialIndex: 2),
     );
   }

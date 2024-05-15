@@ -277,13 +277,13 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
   Future<void> filterProjectList() async {
     setState(() {
       _listAllProjectFiltered = _listAllProject
-          .where((project) => project['title'].toLowerCase().contains(searchController.text))
+          .where((project) => project['title'].toLowerCase().contains(searchController.text.toLowerCase()))
           .toList();
       _listProjectWorkingFiltered = _listProjectWorking
-          .where((project) => project['title'].toLowerCase().contains(searchController.text))
+          .where((project) => project['title'].toLowerCase().contains(searchController.text.toLowerCase()))
           .toList();
       _listProjectArchivedFiltered = _listProjectArchived
-          .where((project) => project['title'].toLowerCase().contains(searchController.text))
+          .where((project) => project['title'].toLowerCase().contains(searchController.text.toLowerCase()))
           .toList();
     });
   }
@@ -305,7 +305,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
           : errorMessage.isNotEmpty
               ? Center(child: Text(errorMessage))
               : Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
                   child: DefaultTabController(
                     length: 3,
                     child: Column(
@@ -375,7 +375,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
                         const SizedBox(height: 5),
                         CustomSearchBar(
                             controller: searchController,
-                            placeholder: 'Search',
+                            placeholder: 'Search project title',
                             onChange: filterProjectList),
                         const SizedBox(height: 15),
                         Expanded(
@@ -496,6 +496,7 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
                             ],
                           ),
                         ),
+                        const SizedBox(height: 20)
                       ],
                     ),
                   ),

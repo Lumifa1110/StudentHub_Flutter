@@ -41,4 +41,14 @@ class InterviewService {
       rethrow;
     }
   }
+
+  static Future<Map<String, dynamic>> getInterviewByUserId(int userId) async {
+    try {
+      final response = await ApiService.getRequest('/api/interview/user/$userId');
+      return response;
+    } catch (e) {
+      print('Error get interview by userId-$userId: $e');
+      rethrow;
+    }
+  }
 }
