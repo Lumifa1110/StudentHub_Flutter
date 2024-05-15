@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/bottomsheet_schedule.dart';
 import 'package:studenthub/components/chat_flow/index.dart';
 import 'package:studenthub/models/index.dart';
@@ -313,12 +314,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.chatter.fullname,
-              style: const TextStyle(color: Colors.white)),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          iconTheme: const IconThemeData(color: Colors.white),
-        ),
+        appBar: AuthAppBar(canBack: true, title: widget.chatter.fullname),
         backgroundColor: Theme.of(context).colorScheme.background,
         body: Column(children: [
           Expanded(

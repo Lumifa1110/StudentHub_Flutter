@@ -11,8 +11,13 @@ import 'package:studenthub/utils/font.dart';
 class ConversationItem extends StatefulWidget {
   final Message message;
   final int messageCount;
+  final Function reloadMessageListScreen;
 
-  const ConversationItem({super.key, required this.message, required this.messageCount});
+  const ConversationItem(
+      {super.key,
+      required this.message,
+      required this.messageCount,
+      required this.reloadMessageListScreen});
 
   @override
   State<ConversationItem> createState() => _ConversationItemState();
@@ -39,22 +44,29 @@ class _ConversationItemState extends State<ConversationItem> {
     }
   }
 
+  void navigateToMessageDetailScreen() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MessageDetailScreen(
+          projectId: widget.message.project!.projectId,
+          chatter: widget.message.sender!.id == userId
+              ? widget.message.receiver!
+              : widget.message.sender!,
+        ),
+      ),
+    );
+    print(result);
+    if (result == true) {
+      widget.reloadMessageListScreen();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MessageDetailScreen(
-              projectId: widget.message.project!.projectId,
-              chatter: widget.message.sender!.id == userId
-                  ? widget.message.receiver!
-                  : widget.message.sender!,
-            ),
-          ),
-        );
-        // print(widget.message.project!.projectId);
+        navigateToMessageDetailScreen();
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
@@ -76,137 +88,193 @@ class _ConversationItemState extends State<ConversationItem> {
   }
 
   Widget _buildLoadingItem() {
-    return Row(
-      children: [
-        Expanded(
-          flex: 1,
-          child: Container(
-            alignment: Alignment.centerLeft,
-            child: _isLoading ? const UserAvatar(icon: Icons.person) : Container(),
+    return Column(children: [
+      Row(children: [
+        Container(
+          height: 40,
+          width: MediaQuery.of(context).size.width * 0.8,
+          decoration: BoxDecoration(
+            color: lightergrayColor.withOpacity(0.5),
+            borderRadius: BorderRadius.circular(6),
           ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          flex: 6,
-          child: Container(
-            padding: const EdgeInsets.only(left: 0),
-            height: 60,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 16,
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  decoration: BoxDecoration(
-                    color: lightergrayColor.withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                      child: Container(color: Colors.transparent),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Container(
-                  height: 16,
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  decoration: BoxDecoration(
-                    color: lightergrayColor.withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                      child: Container(color: Colors.transparent),
-                    ),
-                  ),
-                ),
-              ],
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+              child: Container(color: Colors.transparent),
             ),
           ),
         ),
-      ],
-    );
+      ]),
+      const SizedBox(height: 6),
+      Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Container(
+              alignment: Alignment.centerLeft,
+              child: _isLoading
+                  ? const UserAvatar(icon: Icons.person)
+                  : Container(),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            flex: 6,
+            child: Container(
+              padding: const EdgeInsets.only(left: 0),
+              height: 60,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 16,
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    decoration: BoxDecoration(
+                      color: lightergrayColor.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(6),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                        child: Container(color: Colors.transparent),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Container(
+                    height: 16,
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    decoration: BoxDecoration(
+                      color: lightergrayColor.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(6),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                        child: Container(color: Colors.transparent),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ]);
   }
 
   Widget _buildConversationItem() {
-    return Row(
-      children: [
+    return Column(children: [
+      Row(children: [
         Expanded(
           flex: 1,
-          child: Container(
-            alignment: Alignment.centerLeft,
-            child: UserAvatar(
-              icon: Icons.person,
-              backgroundColor: Theme.of(context).colorScheme.primary,
+          child: Text(
+            'from project',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontSize: AppFonts.h5FontSize,
+              fontWeight: FontWeight.w400,
             ),
           ),
-        ),
-        const SizedBox(width: 12),
+        )
+      ]),
+      Row(children: [
         Expanded(
-          flex: 6,
-          child: Container(
-            padding: const EdgeInsets.only(left: 0),
-            height: 60,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 4,
-                      child: Text(
-                        widget.message.sender!.id == userId
-                            ? widget.message.receiver!.fullname
-                            : widget.message.sender!.fullname,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontSize: AppFonts.h2FontSize,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        alignment: Alignment.centerRight,
+          flex: 1,
+          child: Text(
+            widget.message.project!.title,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: AppFonts.h3FontSize,
+              fontWeight: FontWeight.w500,
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        )
+      ]),
+      const SizedBox(height: 6),
+      Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Container(
+              alignment: Alignment.centerLeft,
+              child: UserAvatar(
+                icon: Icons.person,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            flex: 6,
+            child: Container(
+              padding: const EdgeInsets.only(left: 0),
+              height: 60,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 4,
                         child: Text(
-                          formatTimeAgo(widget.message.createdAt),
+                          widget.message.sender!.id == userId
+                              ? widget.message.receiver!.fullname
+                              : widget.message.sender!.fullname,
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.9),
-                            fontSize: AppFonts.h5FontSize,
-                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context).colorScheme.onSurface,
+                            fontSize: AppFonts.h2FontSize,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Flexible(
-                  child: Text(
-                    widget.message.content,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface,
-                      fontSize: AppFonts.h4FontSize,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            formatTimeAgo(widget.message.createdAt),
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.9),
+                              fontSize: AppFonts.h5FontSize,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                  const SizedBox(height: 4),
+                  Flexible(
+                    child: Text(
+                      widget.message.content,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: AppFonts.h4FontSize,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      ),
+    ]);
   }
 }
 

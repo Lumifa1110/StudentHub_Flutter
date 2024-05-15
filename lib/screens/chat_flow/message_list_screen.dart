@@ -1,9 +1,9 @@
 // ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:studenthub/components/authappbar.dart';
-import 'package:studenthub/components/chat_flow/conversation_item.dart';
 import 'package:studenthub/components/chat_flow/index.dart';
 import 'package:studenthub/components/custombottomnavbar.dart';
 import 'package:studenthub/components/textfield/search_bar.dart';
@@ -35,6 +35,7 @@ class _MessageListScreenState extends State<MessageListScreen>
   late List<Interview> interviewsFiltered;
   final TextEditingController searchConversationController =
       TextEditingController();
+  final TextEditingController searchProjectController = TextEditingController();
   final TextEditingController searchInterviewController =
       TextEditingController();
   TabController? tabController;
@@ -125,10 +126,14 @@ class _MessageListScreenState extends State<MessageListScreen>
       setState(() {
         interviews = response['result']
             .map<Interview>((json) => Interview.fromJson(json))
-            .toList().where((interview) => interview.deletedAt == null).toList();
+            .toList()
+            .where((interview) => interview.deletedAt == null)
+            .toList();
         interviewsFiltered = response['result']
             .map<Interview>((json) => Interview.fromJson(json))
-            .toList().where((interview) => interview.deletedAt == null).toList();
+            .toList()
+            .where((interview) => interview.deletedAt == null)
+            .toList();
       });
     }
   }
@@ -140,6 +145,14 @@ class _MessageListScreenState extends State<MessageListScreen>
               .toLowerCase()
               .contains(searchInterviewController.text.toLowerCase()))
           .toList();
+    });
+  }
+
+  void reloadScreen() {
+    setState(() {
+      interviews = [];
+      interviewsFiltered = [];
+      fetchInterviews();
     });
   }
 
@@ -158,16 +171,19 @@ class _MessageListScreenState extends State<MessageListScreen>
         if (sender!.id == userId || receiver!.id == userId) {
           final otherPerson =
               sender.id == userId ? receiver!.fullname : sender.fullname;
+          final key = '${userId}_${otherPerson}_${message.project!.projectId}';
 
           // Check if the other person's name matches the search query
           if (otherPerson
-              .toLowerCase()
-              .contains(searchConversationController.text.toLowerCase())) {
+                  .toLowerCase()
+                  .contains(searchConversationController.text.toLowerCase()) &&
+              message.project!.title
+                  .toLowerCase()
+                  .contains(searchProjectController.text.toLowerCase())) {
             // Check if the conversation has been added to the map
-            if (!conversationsMap.containsKey(otherPerson) ||
-                message.createdAt
-                    .isAfter(conversationsMap[otherPerson]!.createdAt)) {
-              conversationsMap[otherPerson] = message;
+            if (!conversationsMap.containsKey(key) ||
+                message.createdAt.isAfter(conversationsMap[key]!.createdAt)) {
+              conversationsMap[key] = message;
             }
           }
         }
@@ -262,9 +278,35 @@ class _MessageListScreenState extends State<MessageListScreen>
                     child: Column(children: [
                       CustomSearchBar(
                           controller: searchConversationController,
-                          placeholder: 'Search user name',
+                          placeholder: 'Search by user fullname',
+                          onChange: filterConversationList),
+                      const SizedBox(height: 15),
+                      CustomSearchBar(
+                          controller: searchProjectController,
+                          placeholder: 'Search by project title',
                           onChange: filterConversationList),
                       const SizedBox(height: 30),
+                      if (conversationList.isEmpty)
+                        Center(
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 100),
+                              FaIcon(
+                                FontAwesomeIcons.message,
+                                color: Theme.of(context).colorScheme.primary,
+                                size: 140,
+                              ),
+                              const SizedBox(height: 20),
+                              Text("You don't have any message",
+                                  style: TextStyle(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      fontSize: AppFonts.h2FontSize,
+                                      fontWeight: FontWeight.w500)),
+                            ],
+                          ),
+                        )
+                      else
                       Expanded(
                         child: ListView.builder(
                           itemCount: conversationList.length,
@@ -274,6 +316,7 @@ class _MessageListScreenState extends State<MessageListScreen>
                             return ConversationItem(
                               message: message,
                               messageCount: messageCount,
+                              reloadMessageListScreen: reloadScreen,
                             );
                           },
                         ),
@@ -289,15 +332,37 @@ class _MessageListScreenState extends State<MessageListScreen>
                           placeholder: 'Search interview title',
                           onChange: filterInterviewList),
                       const SizedBox(height: 30),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: interviewsFiltered.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final interview = interviewsFiltered[index];
-                            return InterviewItemSecondary(interview: interview);
-                          },
+                      if (interviews.isEmpty)
+                        Center(
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 100),
+                              FaIcon(
+                                FontAwesomeIcons.video,
+                                color: Theme.of(context).colorScheme.primary,
+                                size: 140,
+                              ),
+                              const SizedBox(height: 20),
+                              Text("You don't have any active interview",
+                                  style: TextStyle(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      fontSize: AppFonts.h2FontSize,
+                                      fontWeight: FontWeight.w500)),
+                            ],
+                          ),
+                        )
+                      else
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: interviewsFiltered.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final interview = interviewsFiltered[index];
+                              return InterviewItemSecondary(
+                                  interview: interview);
+                            },
+                          ),
                         ),
-                      ),
                     ]),
                   ),
                 ],
