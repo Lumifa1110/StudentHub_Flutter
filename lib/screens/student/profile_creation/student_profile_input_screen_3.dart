@@ -161,11 +161,12 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
         "techStackId": widget.studentTechstack.toString(),
         "skillSets": widget.studentSkillsets.map((skillset) => skillset.id).toList()
       });
+      print(studentProfileResponse);
       await prefs.setString('student_profile', jsonEncode(studentProfileResponse));
     }
 
     // GET: student profile id
-    final studentId = jsonDecode(studentProfile!)['id'].toString();
+    final studentId = jsonDecode(studentProfile!)['result']['id'].toString();
 
     // API: update student profile
     await StudentService.updateStudentProfile(studentId, {

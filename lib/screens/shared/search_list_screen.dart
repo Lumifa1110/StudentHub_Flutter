@@ -139,7 +139,6 @@ class _SearchListScreenState extends State<SearchListScreen> {
       'page': _page.toString(),
       'perPage': _perPage.toString(),
     };
-    filteredProjects.clear();
     try {
       final uri = Uri.https('api.studenthub.dev', '/api/project', queryParams);
       final response = await _httpClient.get(
