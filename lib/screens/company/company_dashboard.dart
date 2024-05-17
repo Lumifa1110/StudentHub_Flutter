@@ -277,13 +277,13 @@ class CompanyDashboardScreenState extends State<CompanyDashboardScreen>
   Future<void> filterProjectList() async {
     setState(() {
       _listAllProjectFiltered = _listAllProject
-          .where((project) => project['title'].toLowerCase().contains(searchController.text.toLowerCase()))
+          .where((project) => project['title'].toLowerCase().contains(searchController.text))
           .toList();
       _listProjectWorkingFiltered = _listProjectWorking
-          .where((project) => project['title'].toLowerCase().contains(searchController.text.toLowerCase()))
+          .where((project) => project['title'].toLowerCase().contains(searchController.text))
           .toList();
       _listProjectArchivedFiltered = _listProjectArchived
-          .where((project) => project['title'].toLowerCase().contains(searchController.text.toLowerCase()))
+          .where((project) => project['title'].toLowerCase().contains(searchController.text))
           .toList();
     });
   }

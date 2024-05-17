@@ -65,6 +65,7 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
       print(e);
     }
   }
+
   Future<void> messageCandidate() async {
     final Map<String, dynamic> data = {
       'statusFlag': 1,
@@ -85,20 +86,14 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      MessageDetailScreen(
-                          projectId: widget.itemsProposal['projectId'],
-                          chatter: Chatter(
-                              id: widget.itemsProposal['student']['userId'],
-                              fullname: widget
-                                  .itemsProposal['student']['user']['fullname']
-                          )
-                      )
-              )
-          );
+                  builder: (context) => MessageDetailScreen(
+                      projectId: widget.itemsProposal['projectId'],
+                      chatter: Chatter(
+                          id: widget.itemsProposal['student']['userId'],
+                          fullname: widget.itemsProposal['student']['user']['fullname']))));
         }
       }
-    }catch (e) {
+    } catch (e) {
       print(e);
     }
   }
@@ -178,7 +173,7 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
               Row(children: [
                 Expanded(
                     child: Container(
-                      height: 100,
+                        height: 100,
                         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
                         decoration: BoxDecoration(
                             color: Theme.of(context).colorScheme.surface,
@@ -189,8 +184,8 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                           child: Text(
                             widget.itemsProposal['coverLetter'],
                             style: TextStyle(
-                                color: Theme.of(context).colorScheme.onSurface, fontSize: AppFonts.h3FontSize),
-
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontSize: AppFonts.h3FontSize),
                           ),
                         )))
               ]),
@@ -203,10 +198,9 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                       flex: 1,
                       child: InkWell(
                         onTap: () {
-                          if(widget.itemsProposal['statusFlag']<1){
+                          if (widget.itemsProposal['statusFlag'] < 1) {
                             messageCandidate();
-                          }
-                          else{
+                          } else {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -214,11 +208,8 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                                         projectId: widget.itemsProposal['projectId'],
                                         chatter: Chatter(
                                             id: widget.itemsProposal['student']['userId'],
-                                            fullname: widget.itemsProposal['student']['user']['fullname']
-                                        )
-                                    )
-                                )
-                            );
+                                            fullname: widget.itemsProposal['student']['user']
+                                                ['fullname']))));
                           }
                         },
                         child: Container(
@@ -226,7 +217,8 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                             margin: const EdgeInsets.only(right: 12),
                             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
                             decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primary, borderRadius: BorderRadius.circular(6)),
+                                color: Theme.of(context).colorScheme.primary,
+                                borderRadius: BorderRadius.circular(6)),
                             child: const Text('Message',
                                 style: TextStyle(
                                     color: Colors.white,
@@ -238,15 +230,14 @@ class _ProjectProposalItemState extends State<ProjectProposalItem> {
                       flex: 1,
                       child: GestureDetector(
                         onTap: () {
-                          if(!sentHireOffer){
+                          if (!sentHireOffer) {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return DialogSendHire(sendHireOffer: sendHireOffer);
                               },
                             );
-                          }
-                          else{
+                          } else {
                             showDialog(
                               context: context,
                               builder: (_) => AlertDialog(

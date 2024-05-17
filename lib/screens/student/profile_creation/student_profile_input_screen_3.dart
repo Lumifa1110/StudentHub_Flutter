@@ -154,6 +154,7 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
   Future<void> handleSubmitProfile() async {
     final prefs = await SharedPreferences.getInstance();
     final studentProfile = prefs.getString('student_profile');
+    final String studentId;
 
     // IF student profile is empty -> create student profile
     if (studentProfile == 'null') {
@@ -163,10 +164,11 @@ class _StudentProfileInputScreen3State extends State<StudentProfileInputScreen3>
       });
       print(studentProfileResponse);
       await prefs.setString('student_profile', jsonEncode(studentProfileResponse));
+      studentId = studentProfileResponse['result']['id'].toString();
+    } else {
+      studentId = jsonDecode(studentProfile!)['id'].toString();
     }
-
     // GET: student profile id
-    final studentId = jsonDecode(studentProfile!)['result']['id'].toString();
 
     // API: update student profile
     await StudentService.updateStudentProfile(studentId, {

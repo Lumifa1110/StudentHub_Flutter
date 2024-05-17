@@ -12,14 +12,16 @@ class ProjectDetailTab extends StatelessWidget {
     return SingleChildScrollView(
       child: Container(
           margin: const EdgeInsets.only(bottom: 20),
-          decoration:
-              BoxDecoration(color: Theme.of(context).colorScheme.primaryContainer, borderRadius: BorderRadius.circular(6), boxShadow: [
-            BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 2))
-          ]),
+          decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              borderRadius: BorderRadius.circular(6),
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(0, 2))
+              ]),
           child: Column(
             children: [
               // Scopes
@@ -121,31 +123,32 @@ class ProjectDetailTab extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                                children: [
-                            Expanded(
-                                flex: 1,
-                                child: Icon(
-                                  Icons.description,
-                                  size: 30,
-                                  color: Theme.of(context).colorScheme.primary,
-                                )),
-                            Expanded(
-                                flex: 12,
-                                child: Container(
-                                  padding: const EdgeInsets.only(left: 20),
-                                  // height: 40,
-                                  child: Text('Description',
-                                      style: TextStyle(
-                                          color: Theme.of(context).colorScheme.primary,
-                                          fontSize: AppFonts.h3FontSize,
-                                          fontWeight: FontWeight.w500)),
-                                ))
-                          ]),
+                            Row(children: [
+                              Expanded(
+                                  flex: 1,
+                                  child: Icon(
+                                    Icons.description,
+                                    size: 30,
+                                    color: Theme.of(context).colorScheme.primary,
+                                  )),
+                              Expanded(
+                                  flex: 12,
+                                  child: Container(
+                                    padding: const EdgeInsets.only(left: 20),
+                                    // height: 40,
+                                    child: Text('Description',
+                                        style: TextStyle(
+                                            color: Theme.of(context).colorScheme.primary,
+                                            fontSize: AppFonts.h3FontSize,
+                                            fontWeight: FontWeight.w500)),
+                                  ))
+                            ]),
                             const SizedBox(height: 12),
-                            Text('     ${project['description']!}',
+                            Text(
+                              '     ${project['description']!}',
                               style: TextStyle(
-                                  color: Theme.of(context).colorScheme.onSurface, fontSize: AppFonts.h3FontSize),
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                  fontSize: AppFonts.h3FontSize),
                             ),
                           ],
                         )))

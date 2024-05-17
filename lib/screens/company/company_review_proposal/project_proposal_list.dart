@@ -12,14 +12,15 @@ import '../../../utils/timer.dart';
 
 class ProjectProposalListScreen extends StatefulWidget {
   final dynamic project;
-  final int ?tabShow;
+  final int? tabShow;
   const ProjectProposalListScreen({super.key, required this.project, this.tabShow});
 
   @override
   State<ProjectProposalListScreen> createState() => _ProjectProposalListScreenState();
 }
 
-class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> with TickerProviderStateMixin  {
+class _ProjectProposalListScreenState extends State<ProjectProposalListScreen>
+    with TickerProviderStateMixin {
   late SharedPreferences _prefs;
   late dynamic _proposal;
   bool isLoading = true;
@@ -31,7 +32,10 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> w
   void initState() {
     super.initState();
     print(widget.tabShow);
-    _tabController = TabController(initialIndex: widget.tabShow != null ? widget.tabShow! : 0, length: 3, vsync: this); // '3' represents the number of tabs
+    _tabController = TabController(
+        initialIndex: widget.tabShow != null ? widget.tabShow! : 0,
+        length: 3,
+        vsync: this); // '3' represents the number of tabs
     _loadProposals().then((_) => _loadHired()).then((_) => setState(() {
           isLoading = false;
         }));
@@ -47,6 +51,7 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> w
       );
 
       final responseDecode = jsonDecode(responseJson.body)["result"];
+      print(responseDecode);
       if (responseDecode != null) {
         _proposal = responseDecode;
       }
@@ -107,13 +112,15 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> w
                         // Project name
                         Container(
                           alignment: Alignment.centerLeft,
-                          decoration: BoxDecoration(color: Theme.of(context).colorScheme.primaryContainer, boxShadow: [
-                            BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                                offset: const Offset(0, 2))
-                          ]),
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primaryContainer,
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: const Offset(0, 2))
+                              ]),
                           padding: const EdgeInsets.only(top: 20, bottom: 12, left: 20),
                           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                             // Project Name
@@ -198,8 +205,11 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> w
                           margin: const EdgeInsets.only(bottom: 20),
                           child: TabBar(
                             controller: _tabController,
-                            labelStyle: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: AppFonts.h3FontSize),
-                            unselectedLabelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                            labelStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontSize: AppFonts.h3FontSize),
+                            unselectedLabelStyle:
+                                TextStyle(color: Theme.of(context).colorScheme.onSurface),
                             tabs: const [
                               Tab(text: 'Proposals'),
                               Tab(text: 'Detail'),
@@ -211,9 +221,7 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> w
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10.0),
                             child: ClipRect(
-                              child: TabBarView(
-                                controller: _tabController,
-                                  children: [
+                              child: TabBarView(controller: _tabController, children: [
                                 _proposal['items'].length == 0
                                     ? const Center(
                                         child: Text('These aren\'t Proposals yet'),
@@ -224,10 +232,15 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen> w
                                             shrinkWrap: true,
                                             itemCount: _proposal['items'].length,
                                             itemBuilder: (BuildContext context, int index) {
-                                              return _proposal['items'][index]['statusFlag'] != 3 ? ProjectProposalItem(
-                                                  itemsProposal: _proposal['items'][index]): _proposal['items'].length == 1?const Center(
-                                                child: Text('These aren\'t Proposals yet'),
-                                              ): null;
+                                              return _proposal['items'][index]['statusFlag'] != 3
+                                                  ? ProjectProposalItem(
+                                                      itemsProposal: _proposal['items'][index])
+                                                  : _proposal['items'].length == 1
+                                                      ? const Center(
+                                                          child:
+                                                              Text('These aren\'t Proposals yet'),
+                                                        )
+                                                      : null;
                                             }),
                                       ),
                                 ProjectDetailTab(

@@ -45,6 +45,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
   @override
   void initState() {
     super.initState();
+
     _loadScreen();
   }
 
@@ -121,7 +122,10 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
     // _token = _prefs.getString('token');
     final role = _prefs.getInt('current_role');
     print('Role: $role');
-
+    _responseSubmitProposal.clear();
+    _responseActiveProposal.clear();
+    _responseWorkingTab.clear();
+    _responseArchivedTab.clear();
     if (role == 0) {
       final profile = _prefs.getString('student_profile');
       if (profile == 'null') {
@@ -163,6 +167,9 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
       appBar: AuthAppBar(
         canBack: false,
         onRoleChanged: (result) {
+          setState(() {
+            isLoading = true;
+          });
           _loadScreen();
         },
         title: 'Dashboard',
