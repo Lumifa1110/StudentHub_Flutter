@@ -105,7 +105,6 @@ class _SearchListScreenState extends State<SearchListScreen> {
       }
 
       if (mounted) {
-        // Check if the widget is still mounted before calling setState()
         setState(() {
           isLoading = false;
         });
@@ -183,7 +182,7 @@ class _SearchListScreenState extends State<SearchListScreen> {
         if (mounted) {
           setState(() {
             filteredProjects.addAll(responseData.map((json) => Project.fromJson(json)).toList());
-            _page++; // Increment page number for next load
+            _page++;
             _loadingMore = false;
           });
         }
