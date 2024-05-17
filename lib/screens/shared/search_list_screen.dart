@@ -56,13 +56,13 @@ class _SearchListScreenState extends State<SearchListScreen> {
     setState(() {
       _searchQuery = widget.searchQuery;
     });
-    _page = 1;
+    _page = 2;
     _perPage = 10;
     _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
     _httpClient = http.Client();
     // Initialize filteredProjects with all projects initially
     _loadScreen(_searchQuery);
-    _scrollController.addListener(_scrollListener);
   }
 
   void _scrollListener() {
@@ -79,7 +79,6 @@ class _SearchListScreenState extends State<SearchListScreen> {
 
   Future<void> _loadScreen(String searchText) async {
     try {
-      _page = 1;
       _prefs = await SharedPreferences.getInstance();
       final role = _prefs.getInt('current_role');
       final studentProfile = _prefs.getString('student_profile');
@@ -136,8 +135,6 @@ class _SearchListScreenState extends State<SearchListScreen> {
         'numberOfStudents': _studentsNeededController.text.trim(),
       if (_proposalsController.text.isNotEmpty)
         'proposalsLessThan': _proposalsController.text.trim(),
-      'page': _page.toString(),
-      'perPage': _perPage.toString(),
     };
     try {
       final uri = Uri.https('api.studenthub.dev', '/api/project', queryParams);
@@ -162,15 +159,41 @@ class _SearchListScreenState extends State<SearchListScreen> {
   }
 
   Future<void> _loadNext() async {
-    _prefs = await SharedPreferences.getInstance();
-    final token = _prefs.getString('token');
-    setState(() {
-      _page++;
-    });
-    await _loadFilteredProject(token!);
-    setState(() {
-      _loadingMore = false;
-    });
+    Map<String, dynamic> queryParams = {
+      if (_searchQuery.isNotEmpty) 'title': _searchQuery,
+      if (selectedProjectScope != null) 'projectScopeFlag': selectedProjectScope!.index.toString(),
+      if (_studentsNeededController.text.isNotEmpty)
+        'numberOfStudents': _studentsNeededController.text.trim(),
+      if (_proposalsController.text.isNotEmpty)
+        'proposalsLessThan': _proposalsController.text.trim(),
+      'page': _page.toString(),
+      'perPage': _perPage.toString(),
+    };
+    try {
+      _prefs = await SharedPreferences.getInstance();
+      final token = _prefs.getString('token');
+      final uri = Uri.https('api.studenthub.dev', '/api/project', queryParams);
+      final response = await _httpClient.get(
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final List<dynamic> responseData = jsonDecode(response.body)['result'];
+        print(responseData);
+        if (mounted) {
+          setState(() {
+            filteredProjects.addAll(responseData.map((json) => Project.fromJson(json)).toList());
+            _page++; // Increment page number for next load
+            _loadingMore = false;
+          });
+        }
+      } else {
+        // Handle error
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 
   Future<void> _loadFavoriteProjects(String token, String studentProfile) async {
@@ -512,7 +535,10 @@ class _SearchListScreenState extends State<SearchListScreen> {
                           itemBuilder: (context, index) {
                             if (index == filteredProjects.length && _loadingMore) {
                               // Loading indicator for pagination
-                              return const Center(child: CircularProgressIndicator());
+                              return const Padding(
+                                padding: EdgeInsets.only(bottom: 10.0),
+                                child: Center(child: CircularProgressIndicator()),
+                              );
                             } else {
                               final project = filteredProjects[index];
                               return CustomProjectItem(
