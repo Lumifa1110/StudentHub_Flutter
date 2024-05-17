@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/authappbar.dart';
 import 'package:studenthub/components/button_simple.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:studenthub/screens/index.dart';
 
 class CompanyWelcomeScreen extends StatelessWidget {
