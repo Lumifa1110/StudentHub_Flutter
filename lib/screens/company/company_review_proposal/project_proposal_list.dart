@@ -31,12 +31,14 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen>
   @override
   void initState() {
     super.initState();
-    print(widget.tabShow);
+    // print(widget.tabShow);
     _tabController = TabController(
         initialIndex: widget.tabShow != null ? widget.tabShow! : 0,
         length: 3,
         vsync: this); // '3' represents the number of tabs
-    _loadProposals().then((_) => _loadHired()).then((_) => setState(() {
+        _loadProposals()
+            .then((_) => _loadHired())
+            .then((_) => setState(() {
           isLoading = false;
         }));
   }
@@ -51,9 +53,11 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen>
       );
 
       final responseDecode = jsonDecode(responseJson.body)["result"];
-      print(responseDecode);
+      // print(responseDecode);
       if (responseDecode != null) {
         _proposal = responseDecode;
+        // print(_proposal['items'][0]['id']);
+
       }
     } catch (e) {
       if (mounted) {
@@ -240,7 +244,7 @@ class _ProjectProposalListScreenState extends State<ProjectProposalListScreen>
                                                           child:
                                                               Text('These aren\'t Proposals yet'),
                                                         )
-                                                      : null;
+                                                      : Container();
                                             }),
                                       ),
                                 ProjectDetailTab(
